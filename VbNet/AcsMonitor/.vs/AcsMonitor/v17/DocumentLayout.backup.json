@@ -1,0 +1,57 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Administrador\\Desktop\\GitHub\\Projetos\\Projetos\\VbNet\\AcsMonitor\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{C3D08C44-B5C8-4FA3-B14F-67A2B505B412}|AcsMonitor.vbproj|c:\\users\\administrador\\desktop\\github\\projetos\\projetos\\vbnet\\acsmonitor\\frmmonitoracs.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{C3D08C44-B5C8-4FA3-B14F-67A2B505B412}|AcsMonitor.vbproj|solutionrelative:frmmonitoracs.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C3D08C44-B5C8-4FA3-B14F-67A2B505B412}|AcsMonitor.vbproj|c:\\users\\administrador\\desktop\\github\\projetos\\projetos\\vbnet\\acsmonitor\\frmmonitoracs.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
+      "RelativeMoniker": "D:0:0:{C3D08C44-B5C8-4FA3-B14F-67A2B505B412}|AcsMonitor.vbproj|solutionrelative:frmmonitoracs.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FrmMonitorAcs.vb",
+              "DocumentMoniker": "C:\\Users\\Administrador\\Desktop\\GitHub\\Projetos\\Projetos\\VbNet\\AcsMonitor\\FrmMonitorAcs.vb",
+              "RelativeDocumentMoniker": "FrmMonitorAcs.vb",
+              "ToolTip": "C:\\Users\\Administrador\\Desktop\\GitHub\\Projetos\\Projetos\\VbNet\\AcsMonitor\\FrmMonitorAcs.vb",
+              "RelativeToolTip": "FrmMonitorAcs.vb",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAYwEoAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2025-07-21T15:08:30.344Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FrmMonitorAcs.vb [Projeto]",
+              "DocumentMoniker": "C:\\Users\\Administrador\\Desktop\\GitHub\\Projetos\\Projetos\\VbNet\\AcsMonitor\\FrmMonitorAcs.vb",
+              "RelativeDocumentMoniker": "FrmMonitorAcs.vb",
+              "ToolTip": "C:\\Users\\Administrador\\Desktop\\GitHub\\Projetos\\Projetos\\VbNet\\AcsMonitor\\FrmMonitorAcs.vb [Projeto]",
+              "RelativeToolTip": "FrmMonitorAcs.vb [Projeto]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2025-07-21T15:06:47.962Z",
+              "EditorCaption": " [Projeto]"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

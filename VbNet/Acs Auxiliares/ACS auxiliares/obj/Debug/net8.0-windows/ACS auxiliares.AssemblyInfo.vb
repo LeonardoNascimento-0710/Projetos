@@ -16,7 +16,7 @@ Imports System.Reflection
 <Assembly: System.Reflection.AssemblyCompanyAttribute("ACS auxiliares"),  _
  Assembly: System.Reflection.AssemblyConfigurationAttribute("Debug"),  _
  Assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0"),  _
- Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b35c336dd9a30c8f6c44760d815f9ec4d411c077"),  _
+ Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6612746adef20319bf7033494b43528c18ecd66d"),  _
  Assembly: System.Reflection.AssemblyProductAttribute("ACS auxiliares"),  _
  Assembly: System.Reflection.AssemblyTitleAttribute("ACS auxiliares"),  _
  Assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0"),  _

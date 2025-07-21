@@ -2,6 +2,7 @@
 Imports System.Diagnostics
 Imports System.Drawing.Printing
 Imports System.IO
+Imports ClosedXML.Excel
 Imports System.Text
 Imports System.Net
 Imports Excel = Microsoft.Office.Interop.Excel
@@ -182,6 +183,8 @@ Public Class FrmAux
             Console.WriteLine("Nenhum arquivo foi selecionado.")
         End If
     End Sub
+
+
 
 #End Region
 

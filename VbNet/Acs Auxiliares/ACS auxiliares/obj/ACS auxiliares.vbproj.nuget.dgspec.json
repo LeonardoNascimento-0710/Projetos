@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Administrador\\Desktop\\GitHub\\Projetos\\VbNet\\Acs Auxiliares\\ACS auxiliares\\ACS auxiliares.vbproj": {}
+    "C:\\Users\\Administrador\\Desktop\\GitHub\\Projetos\\Projetos\\VbNet\\Acs Auxiliares\\ACS auxiliares\\ACS auxiliares.vbproj": {}
   },
   "projects": {
-    "C:\\Users\\Administrador\\Desktop\\GitHub\\Projetos\\VbNet\\Acs Auxiliares\\ACS auxiliares\\ACS auxiliares.vbproj": {
+    "C:\\Users\\Administrador\\Desktop\\GitHub\\Projetos\\Projetos\\VbNet\\Acs Auxiliares\\ACS auxiliares\\ACS auxiliares.vbproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Administrador\\Desktop\\GitHub\\Projetos\\VbNet\\Acs Auxiliares\\ACS auxiliares\\ACS auxiliares.vbproj",
+        "projectUniqueName": "C:\\Users\\Administrador\\Desktop\\GitHub\\Projetos\\Projetos\\VbNet\\Acs Auxiliares\\ACS auxiliares\\ACS auxiliares.vbproj",
         "projectName": "ACS auxiliares",
-        "projectPath": "C:\\Users\\Administrador\\Desktop\\GitHub\\Projetos\\VbNet\\Acs Auxiliares\\ACS auxiliares\\ACS auxiliares.vbproj",
+        "projectPath": "C:\\Users\\Administrador\\Desktop\\GitHub\\Projetos\\Projetos\\VbNet\\Acs Auxiliares\\ACS auxiliares\\ACS auxiliares.vbproj",
         "packagesPath": "C:\\Users\\Administrador\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Administrador\\Desktop\\GitHub\\Projetos\\VbNet\\Acs Auxiliares\\ACS auxiliares\\obj\\",
+        "outputPath": "C:\\Users\\Administrador\\Desktop\\GitHub\\Projetos\\Projetos\\VbNet\\Acs Auxiliares\\ACS auxiliares\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -51,6 +51,10 @@
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
           "dependencies": {
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.105.0, )"
+            },
             "FastReport.ReportBuilder": {
               "target": "Package",
               "version": "[2021.1.0, )"
