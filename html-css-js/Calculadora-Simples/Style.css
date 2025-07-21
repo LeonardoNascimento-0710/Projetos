@@ -1,0 +1,74 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #000000;
+    color: rgb(255, 255, 255);
+    font-family: Arial, sans-serif;
+}
+
+.calculator {
+    background-color: #000000;
+    color: rgb(255, 255, 255);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    width: 320px; /* Definido um tamanho fixo para a calculadora */
+}
+
+#display {
+    width: 93%;
+    height: 50px;
+    text-align: right;
+    font-size: 24px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #00eeff;
+    color: rgb(255, 255, 255);
+    border-radius: 5px;
+    background-color: #000000;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Divide o espaço igualmente entre os botões */
+    grid-gap: 10px; /* Espaço entre os botões */
+    color: rgb(255, 255, 255);
+    
+}
+
+button {
+    padding: 20px;
+    font-size: 18px;
+    border-style: solid;
+    background-color: #000000;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    color: rgb(255, 255, 255);
+    border-color: #00eeff;
+}
+
+button:hover {
+    background-color: #000000;
+    color: rgb(255, 255, 255);
+}
+
+button:active {
+    background-color: #000000;
+    color: rgb(255, 255, 255);
+}
+
+/* Ajustando o botão de "=" para ocupar duas colunas */
+button:nth-child(16) {
+    grid-column: span 2; /* O botão de "=" vai ocupar duas colunas */
+    background-color: #000000; /* Cor de destaque para o botão de "=" */
+    color: rgb(255, 255, 255);
+}
+
+button:nth-child(16):hover {
+    background-color: #000000;
+}
+

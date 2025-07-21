@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "TqLggcB8WuE=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Administrador\\Desktop\\GitHub\\Projetos\\VbNet\\Acs Auxiliares\\ACS auxiliares\\ACS auxiliares.vbproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Administrador\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x86\\8.0.12\\microsoft.netcore.app.runtime.win-x86.8.0.12.nupkg.sha512",
+    "C:\\Users\\Administrador\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x86\\8.0.12\\microsoft.windowsdesktop.app.runtime.win-x86.8.0.12.nupkg.sha512",
+    "C:\\Users\\Administrador\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x86\\8.0.12\\microsoft.aspnetcore.app.runtime.win-x86.8.0.12.nupkg.sha512"
+  ],
+  "logs": []
+}

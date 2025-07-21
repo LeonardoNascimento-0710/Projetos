@@ -1,0 +1,57 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Leona\\Desktop\\Projetos\\VbNet\\Banco de convers\u00E3o\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{883C5B4A-61B0-4D77-A05A-29F6F3A137F9}|Banco de convers\u00E3o.vbproj|c:\\users\\leona\\desktop\\projetos\\vbnet\\banco de convers\u00E3o\\frmbancodeconversao.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{883C5B4A-61B0-4D77-A05A-29F6F3A137F9}|Banco de convers\u00E3o.vbproj|solutionrelative:frmbancodeconversao.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{883C5B4A-61B0-4D77-A05A-29F6F3A137F9}|Banco de convers\u00E3o.vbproj|c:\\users\\leona\\desktop\\projetos\\vbnet\\banco de convers\u00E3o\\frmbancodeconversao.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
+      "RelativeMoniker": "D:0:0:{883C5B4A-61B0-4D77-A05A-29F6F3A137F9}|Banco de convers\u00E3o.vbproj|solutionrelative:frmbancodeconversao.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FrmBancoDeConversao.vb",
+              "DocumentMoniker": "C:\\Users\\Leona\\Desktop\\Projetos\\VbNet\\Banco de convers\u00E3o\\FrmBancoDeConversao.vb",
+              "RelativeDocumentMoniker": "FrmBancoDeConversao.vb",
+              "ToolTip": "C:\\Users\\Leona\\Desktop\\Projetos\\VbNet\\Banco de convers\u00E3o\\FrmBancoDeConversao.vb",
+              "RelativeToolTip": "FrmBancoDeConversao.vb",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAACMAAAAtAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2025-01-09T09:10:07.32Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FrmBancoDeConversao.vb [Design]",
+              "DocumentMoniker": "C:\\Users\\Leona\\Desktop\\Projetos\\VbNet\\Banco de convers\u00E3o\\FrmBancoDeConversao.vb",
+              "RelativeDocumentMoniker": "FrmBancoDeConversao.vb",
+              "ToolTip": "C:\\Users\\Leona\\Desktop\\Projetos\\VbNet\\Banco de convers\u00E3o\\FrmBancoDeConversao.vb [Design]",
+              "RelativeToolTip": "FrmBancoDeConversao.vb [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2025-01-09T08:59:13.939Z",
+              "EditorCaption": " [Design]"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

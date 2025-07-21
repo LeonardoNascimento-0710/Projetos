@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "jEevBMwVXLM=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Leona\\Desktop\\Projetos\\VbNet\\Banco de conversão\\Banco de conversão.vbproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Leona\\.nuget\\packages\\system.configuration.configurationmanager\\9.0.0\\system.configuration.configurationmanager.9.0.0.nupkg.sha512",
+    "C:\\Users\\Leona\\.nuget\\packages\\system.data.oledb\\9.0.0\\system.data.oledb.9.0.0.nupkg.sha512",
+    "C:\\Users\\Leona\\.nuget\\packages\\system.diagnostics.eventlog\\9.0.0\\system.diagnostics.eventlog.9.0.0.nupkg.sha512",
+    "C:\\Users\\Leona\\.nuget\\packages\\system.diagnostics.performancecounter\\9.0.0\\system.diagnostics.performancecounter.9.0.0.nupkg.sha512",
+    "C:\\Users\\Leona\\.nuget\\packages\\system.security.cryptography.protecteddata\\9.0.0\\system.security.cryptography.protecteddata.9.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,18 @@
+C:\Users\Administrador\Desktop\GitHub\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Release\net8.0-windows\ACS auxiliares.exe
+C:\Users\Administrador\Desktop\GitHub\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Release\net8.0-windows\ACS auxiliares.deps.json
+C:\Users\Administrador\Desktop\GitHub\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Release\net8.0-windows\ACS auxiliares.runtimeconfig.json
+C:\Users\Administrador\Desktop\GitHub\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Release\net8.0-windows\ACS auxiliares.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Release\net8.0-windows\ACS auxiliares.pdb
+C:\Users\Administrador\Desktop\GitHub\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Release\net8.0-windows\ACS_auxiliares.FrmAux.resources
+C:\Users\Administrador\Desktop\GitHub\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Release\net8.0-windows\ACS_auxiliares.Resources.resources
+C:\Users\Administrador\Desktop\GitHub\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Release\net8.0-windows\ACS auxiliares.vbproj.GenerateResource.cache
+C:\Users\Administrador\Desktop\GitHub\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Release\net8.0-windows\ACS auxiliares.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrador\Desktop\GitHub\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Release\net8.0-windows\ACS auxiliares.AssemblyInfoInputs.cache
+C:\Users\Administrador\Desktop\GitHub\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Release\net8.0-windows\ACS auxiliares.AssemblyInfo.vb
+C:\Users\Administrador\Desktop\GitHub\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Release\net8.0-windows\ACS auxiliares.vbproj.CoreCompileInputs.cache
+C:\Users\Administrador\Desktop\GitHub\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Release\net8.0-windows\ACS auxiliares.sourcelink.json
+C:\Users\Administrador\Desktop\GitHub\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Release\net8.0-windows\ACS auxiliares.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Release\net8.0-windows\refint\ACS auxiliares.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Release\net8.0-windows\ACS auxiliares.pdb
+C:\Users\Administrador\Desktop\GitHub\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Release\net8.0-windows\ACS auxiliares.genruntimeconfig.cache
+C:\Users\Administrador\Desktop\GitHub\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Release\net8.0-windows\ref\ACS auxiliares.dll

@@ -1,0 +1,17 @@
+C:\Users\Administrador\Documents\GitHub\Projetos\VbNet\Agenda\Agenda\obj\Debug\net8.0-windows\Agenda.FrmAgenda.resources
+C:\Users\Administrador\Documents\GitHub\Projetos\VbNet\Agenda\Agenda\obj\Debug\net8.0-windows\Agenda.vbproj.GenerateResource.cache
+C:\Users\Administrador\Documents\GitHub\Projetos\VbNet\Agenda\Agenda\obj\Debug\net8.0-windows\Agenda.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrador\Documents\GitHub\Projetos\VbNet\Agenda\Agenda\obj\Debug\net8.0-windows\Agenda.AssemblyInfoInputs.cache
+C:\Users\Administrador\Documents\GitHub\Projetos\VbNet\Agenda\Agenda\obj\Debug\net8.0-windows\Agenda.AssemblyInfo.vb
+C:\Users\Administrador\Documents\GitHub\Projetos\VbNet\Agenda\Agenda\obj\Debug\net8.0-windows\Agenda.vbproj.CoreCompileInputs.cache
+C:\Users\Administrador\Documents\GitHub\Projetos\VbNet\Agenda\Agenda\obj\Debug\net8.0-windows\Agenda.sourcelink.json
+C:\Users\Administrador\Documents\GitHub\Projetos\VbNet\Agenda\Agenda\bin\Debug\net8.0-windows\Agenda.exe
+C:\Users\Administrador\Documents\GitHub\Projetos\VbNet\Agenda\Agenda\bin\Debug\net8.0-windows\Agenda.deps.json
+C:\Users\Administrador\Documents\GitHub\Projetos\VbNet\Agenda\Agenda\bin\Debug\net8.0-windows\Agenda.runtimeconfig.json
+C:\Users\Administrador\Documents\GitHub\Projetos\VbNet\Agenda\Agenda\bin\Debug\net8.0-windows\Agenda.dll
+C:\Users\Administrador\Documents\GitHub\Projetos\VbNet\Agenda\Agenda\bin\Debug\net8.0-windows\Agenda.pdb
+C:\Users\Administrador\Documents\GitHub\Projetos\VbNet\Agenda\Agenda\obj\Debug\net8.0-windows\Agenda.dll
+C:\Users\Administrador\Documents\GitHub\Projetos\VbNet\Agenda\Agenda\obj\Debug\net8.0-windows\refint\Agenda.dll
+C:\Users\Administrador\Documents\GitHub\Projetos\VbNet\Agenda\Agenda\obj\Debug\net8.0-windows\Agenda.pdb
+C:\Users\Administrador\Documents\GitHub\Projetos\VbNet\Agenda\Agenda\obj\Debug\net8.0-windows\Agenda.genruntimeconfig.cache
+C:\Users\Administrador\Documents\GitHub\Projetos\VbNet\Agenda\Agenda\obj\Debug\net8.0-windows\ref\Agenda.dll
