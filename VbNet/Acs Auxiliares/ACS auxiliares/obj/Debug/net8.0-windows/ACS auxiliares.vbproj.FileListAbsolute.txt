@@ -179,3 +179,167 @@ C:\Users\Administrador\Desktop\GitHub\Projetos\VbNet\Acs Auxiliares\ACS auxiliar
 C:\Users\Administrador\Desktop\GitHub\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\zh-CHT\Microsoft.ReportViewer.WebForms.resources.dll
 C:\Users\Administrador\Desktop\GitHub\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\runtimes\unix\lib\netcoreapp3.0\FastReport.Compat.dll
 C:\Users\Administrador\Desktop\GitHub\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\runtimes\win\lib\netcoreapp3.0\FastReport.Compat.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ACS auxiliares.exe
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ACS auxiliares.deps.json
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ACS auxiliares.runtimeconfig.json
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ACS auxiliares.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ACS auxiliares.pdb
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\BouncyCastle.Cryptography.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ClosedXML.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ClosedXML.Parser.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.Framework.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ExcelNumberFormat.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\FastReport.Compat.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\FastReport.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\FastReport.ReportBuilder.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\Google.Protobuf.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\itextsharp.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\K4os.Compression.LZ4.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\K4os.Compression.LZ4.Streams.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\K4os.Hash.xxHash.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\Microsoft.CodeAnalysis.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\Microsoft.CodeAnalysis.CSharp.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\Microsoft.CodeAnalysis.VisualBasic.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\Microsoft.Office.Interop.Excel.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\Microsoft.ReportViewer.Common.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\Microsoft.ReportViewer.DataVisualization.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\Microsoft.ReportViewer.Design.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\Microsoft.ReportViewer.ProcessingObjectModel.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\Microsoft.ReportViewer.WebDesign.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\Microsoft.ReportViewer.WebForms.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\Microsoft.ReportViewer.WinForms.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\Microsoft.SqlServer.Types.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\MySql.Data.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\Newtonsoft.Json.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\RBush.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\SixLabors.Fonts.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\System.IO.Packaging.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\System.IO.Pipelines.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\System.Text.Encodings.Web.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\System.Text.Json.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ZstdSharp.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\cs\Microsoft.CodeAnalysis.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\de\Microsoft.CodeAnalysis.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\es\Microsoft.CodeAnalysis.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\fr\Microsoft.CodeAnalysis.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\it\Microsoft.CodeAnalysis.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ja\Microsoft.CodeAnalysis.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ko\Microsoft.CodeAnalysis.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\pl\Microsoft.CodeAnalysis.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\pt-BR\Microsoft.CodeAnalysis.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ru\Microsoft.CodeAnalysis.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\tr\Microsoft.CodeAnalysis.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\zh-Hans\Microsoft.CodeAnalysis.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\zh-Hant\Microsoft.CodeAnalysis.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\cs\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\de\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\es\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\fr\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\it\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ja\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ko\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\pl\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\pt-BR\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ru\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\tr\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\zh-Hans\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\cs\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\de\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\es\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\fr\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\it\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ja\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ko\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\pl\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\pt-BR\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ru\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\tr\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\zh-Hans\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\zh-Hant\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\de\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\de\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\de\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\de\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\de\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\de\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\es\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\es\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\es\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\es\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\es\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\es\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\fr\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\fr\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\fr\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\fr\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\fr\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\fr\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\it\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\it\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\it\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\it\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\it\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\it\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ja\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ja\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ja\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ja\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ja\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ja\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ko\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ko\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ko\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ko\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ko\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ko\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\pt\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\pt\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\pt\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\pt\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\pt\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\pt\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ru\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ru\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ru\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ru\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ru\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\ru\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\zh-CHS\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\zh-CHS\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\zh-CHS\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\zh-CHS\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\zh-CHS\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\zh-CHS\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\zh-CHT\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\zh-CHT\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\zh-CHT\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\zh-CHT\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\zh-CHT\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\zh-CHT\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\runtimes\unix\lib\netcoreapp3.0\FastReport.Compat.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\runtimes\win\lib\netcoreapp3.0\FastReport.Compat.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\runtimes\win-x64\native\comerr64.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\runtimes\win-x64\native\gssapi64.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\runtimes\win-x64\native\k5sprt64.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\runtimes\win-x64\native\krb5_64.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\runtimes\win-x64\native\krbcc64.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\bin\Debug\net8.0-windows\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Debug\net8.0-windows\ACS auxiliares.vbproj.AssemblyReference.cache
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Debug\net8.0-windows\ACS_auxiliares.FrmAux.resources
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Debug\net8.0-windows\ACS_auxiliares.FrmLicencas.resources
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Debug\net8.0-windows\ACS_auxiliares.FrmOrdemDeServico.resources
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Debug\net8.0-windows\ACS_auxiliares.Resources.resources
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Debug\net8.0-windows\ACS auxiliares.vbproj.GenerateResource.cache
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Debug\net8.0-windows\ACS auxiliares.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Debug\net8.0-windows\ACS auxiliares.AssemblyInfoInputs.cache
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Debug\net8.0-windows\ACS auxiliares.AssemblyInfo.vb
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Debug\net8.0-windows\ACS auxiliares.vbproj.CoreCompileInputs.cache
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Debug\net8.0-windows\ACS auxiliares.sourcelink.json
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Debug\net8.0-windows\ACS auxi.56C55649.Up2Date
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Debug\net8.0-windows\ACS auxiliares.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Debug\net8.0-windows\refint\ACS auxiliares.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Debug\net8.0-windows\ACS auxiliares.pdb
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Debug\net8.0-windows\ACS auxiliares.genruntimeconfig.cache
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Debug\net8.0-windows\ref\ACS auxiliares.dll

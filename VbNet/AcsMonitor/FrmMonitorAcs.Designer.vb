@@ -33,7 +33,7 @@ Partial Class FrmMonitorAcs
         DvVencimentos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         DvVencimentos.Location = New Point(13, 27)
         DvVencimentos.Name = "DvVencimentos"
-        DvVencimentos.Size = New Size(535, 175)
+        DvVencimentos.Size = New Size(535, 174)
         DvVencimentos.TabIndex = 0
         ' 
         ' LblCertificadosNfce

@@ -127,6 +127,7 @@ Partial Class FrmAux
         BtnManMobLink = New Button()
         TabSDSuper = New TabPage()
         GroupBox4 = New GroupBox()
+        LblSenhaSd = New Label()
         Button31 = New Button()
         Label49 = New Label()
         Button32 = New Button()
@@ -147,10 +148,7 @@ Partial Class FrmAux
         Button93 = New Button()
         Button94 = New Button()
         Label55 = New Label()
-        Button112 = New Button()
-        Label56 = New Label()
         Button113 = New Button()
-        Button114 = New Button()
         GroupBox3 = New GroupBox()
         Button24 = New Button()
         Label14 = New Label()
@@ -311,7 +309,7 @@ Partial Class FrmAux
         TabAux.Controls.Add(TabSDSuper)
         TabAux.Controls.Add(TabEcletica)
         TabAux.Controls.Add(TabNovaEra)
-        TabAux.Location = New Point(22, 166)
+        TabAux.Location = New Point(22, 175)
         TabAux.Name = "TabAux"
         TabAux.SelectedIndex = 0
         TabAux.Size = New Size(428, 321)
@@ -1343,6 +1341,7 @@ Partial Class FrmAux
         ' 
         ' GroupBox4
         ' 
+        GroupBox4.Controls.Add(LblSenhaSd)
         GroupBox4.Controls.Add(Button31)
         GroupBox4.Controls.Add(Label49)
         GroupBox4.Controls.Add(Button32)
@@ -1363,16 +1362,22 @@ Partial Class FrmAux
         GroupBox4.Controls.Add(Button93)
         GroupBox4.Controls.Add(Button94)
         GroupBox4.Controls.Add(Label55)
-        GroupBox4.Controls.Add(Button112)
-        GroupBox4.Controls.Add(Label56)
         GroupBox4.Controls.Add(Button113)
-        GroupBox4.Controls.Add(Button114)
         GroupBox4.Location = New Point(17, 16)
         GroupBox4.Name = "GroupBox4"
         GroupBox4.Size = New Size(182, 394)
         GroupBox4.TabIndex = 8
         GroupBox4.TabStop = False
         GroupBox4.Text = "Comandos/Processos"
+        ' 
+        ' LblSenhaSd
+        ' 
+        LblSenhaSd.AutoSize = True
+        LblSenhaSd.Location = New Point(25, 45)
+        LblSenhaSd.Name = "LblSenhaSd"
+        LblSenhaSd.Size = New Size(45, 15)
+        LblSenhaSd.TabIndex = 36
+        LblSenhaSd.Text = "Senha: "
         ' 
         ' Button31
         ' 
@@ -1554,24 +1559,6 @@ Partial Class FrmAux
         Label55.TabIndex = 18
         Label55.Text = "teste"
         ' 
-        ' Button112
-        ' 
-        Button112.Location = New Point(94, 45)
-        Button112.Name = "Button112"
-        Button112.Size = New Size(82, 23)
-        Button112.TabIndex = 17
-        Button112.Text = "CMD"
-        Button112.UseVisualStyleBackColor = True
-        ' 
-        ' Label56
-        ' 
-        Label56.AutoSize = True
-        Label56.Location = New Point(65, 27)
-        Label56.Name = "Label56"
-        Label56.Size = New Size(32, 15)
-        Label56.TabIndex = 16
-        Label56.Text = "teste"
-        ' 
         ' Button113
         ' 
         Button113.Location = New Point(8, 93)
@@ -1580,15 +1567,6 @@ Partial Class FrmAux
         Button113.TabIndex = 2
         Button113.Text = "Comando"
         Button113.UseVisualStyleBackColor = True
-        ' 
-        ' Button114
-        ' 
-        Button114.Location = New Point(8, 45)
-        Button114.Name = "Button114"
-        Button114.Size = New Size(82, 23)
-        Button114.TabIndex = 3
-        Button114.Text = "Comando"
-        Button114.UseVisualStyleBackColor = True
         ' 
         ' GroupBox3
         ' 
@@ -2851,7 +2829,7 @@ Partial Class FrmAux
         ' LblApresentacao
         ' 
         LblApresentacao.AutoSize = True
-        LblApresentacao.Location = New Point(26, 130)
+        LblApresentacao.Location = New Point(43, 146)
         LblApresentacao.Name = "LblApresentacao"
         LblApresentacao.Size = New Size(394, 15)
         LblApresentacao.TabIndex = 1
@@ -3173,10 +3151,7 @@ Partial Class FrmAux
     Friend WithEvents Button93 As Button
     Friend WithEvents Button94 As Button
     Friend WithEvents Label55 As Label
-    Friend WithEvents Button112 As Button
-    Friend WithEvents Label56 As Label
     Friend WithEvents Button113 As Button
-    Friend WithEvents Button114 As Button
     Friend WithEvents GroupBox6 As GroupBox
     Friend WithEvents Button45 As Button
     Friend WithEvents Label41 As Label
@@ -3239,5 +3214,6 @@ Partial Class FrmAux
     Friend WithEvents BtnLocalOs As Button
     Friend WithEvents RbServidor As RadioButton
     Friend WithEvents RbEstacao As RadioButton
+    Friend WithEvents LblSenhaSd As Label
 
 End Class

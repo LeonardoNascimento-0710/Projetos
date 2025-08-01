@@ -30,10 +30,11 @@ Public Class FrmMonitorAcs
         VerificarVencimentos()
 
         Await Task.Delay(15000)
+
     End Sub
 
     Private Sub CarregarDadosNaTabela()
-        Dim caminhoPlanilha As String = "C:\Monitor\Vencimento.xlsx"
+        Dim caminhoPlanilha As String = "\\192.168.15.123\c\Monitor\Vencimento.xlsx"
 
         If Not File.Exists(caminhoPlanilha) Then
             MostrarNotificacao("Erro", "Arquivo vencimentos.xlsx não encontrado.")

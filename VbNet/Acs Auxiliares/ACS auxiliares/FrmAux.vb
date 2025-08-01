@@ -22,7 +22,8 @@ Public Class FrmAux
         LblCabeçalho.Text = DateTime.Now.ToString("dddd',' dd 'de' MMMM 'de' yyyy",
                       New System.Globalization.CultureInfo("pt-BR"))
         SenhaPockets()
-        Dim Servidor As String = "192.168.15.123"
+        SenhaSd()
+        servidor = "192.168.15.123"
         If VerificarIP(Servidor) Then
             RbServidor.Checked = True
             RbEstacao.Enabled = False
@@ -241,6 +242,21 @@ Public Class FrmAux
         obj.BaixarArquivoFTP("SDSuperBancoTeste.zip", TxtFtp.Text)
     End Sub
 
+    Private Sub SenhaSd()
+        Dim agora As DateTime = DateTime.Now
+        Dim ajustada As DateTime = agora.AddHours(-1).AddDays(-1)
+        Dim mes As Integer = ajustada.Month - 1
+        Dim ano As Integer = ajustada.Year
+
+        If mes = 0 Then
+            mes = 12
+            ano -= 1
+        End If
+
+        Dim senha As String = ajustada.ToString("HH") & ajustada.ToString("dd") & mes.ToString("D2")
+
+        LblSenhaSd.Text = "Senha do dia: " & senha
+    End Sub
 
 #End Region
 
@@ -277,9 +293,17 @@ Public Class FrmAux
 
         Dim dataAtual As Date = Date.Today
 
-        Dim novaData As Date = dataAtual.AddDays(10).AddMonths(5).AddYears(1)
 
-        Dim dataFormatada As String = novaData.ToString("ddMMyy")
+        Dim dia As Integer = dataAtual.Day
+        Dim mes As Integer = dataAtual.Month
+        Dim ano As Integer = dataAtual.Year Mod 100
+
+        Dim novoDia As Integer = dia + 10
+        Dim novoMes As Integer = mes + 5
+        Dim novoAno As Integer = ano + 1
+
+
+        Dim dataFormatada As String = novoDia.ToString("D2") & novoMes.ToString("D2") & novoAno.ToString("D2")
 
         LblSenhaPocket.Text = dataFormatada
 
