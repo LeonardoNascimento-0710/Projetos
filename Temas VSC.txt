@@ -1,0 +1,101 @@
+Tema Dark red
+{
+    "workbench.colorTheme": "Dark SynthWave '84",
+    "workbench.iconTheme": "vs-minimal",
+    "editor.fontFamily": "Monocraft",
+    "workbench.settings.applyToAllProfiles": [
+        "editor.fontFamily"
+    ],
+    "files.autoSave": "onFocusChange",
+    "editor.minimap.renderCharacters": false,
+    "editor.minimap.enabled": false,
+    "explorer.confirmDelete": false,
+
+    // 🔴 Customização de cores (fundo vermelho escuro)
+    "workbench.colorCustomizations": {
+        "editor.background": "#2b0000",
+        "editor.foreground": "#ffffff",
+        "activityBar.background": "#400000",
+        "sideBar.background": "#330000",
+        "statusBar.background": "#550000",
+        "editorLineNumber.foreground": "#ff6666",
+        "editorCursor.foreground": "#ff4444",
+        "editor.selectionBackground": "#660000",
+        "editor.inactiveSelectionBackground": "#440000"
+    },
+
+    // 🎨 Sintaxe personalizada
+    "editor.tokenColorCustomizations": {
+        "comments": "#ff6666",        // comentários em vermelho claro
+        "strings": "#ffcc99",         // strings em laranja claro
+        "keywords": "#ff4444",        // palavras-chave em vermelho vivo
+        "functions": "#ff4d88",       // funções em rosa forte/magenta
+        "variables": "#ffffff",       // variáveis brancas
+        "numbers": "#ff9966"          // números em laranja avermelhado
+    }
+}
+
+
+Tema Dark cyber blue
+{
+    "workbench.colorTheme": "Default Dark+",
+    "workbench.iconTheme": "vs-minimal",
+    "editor.fontFamily": "Monocraft",
+    "workbench.settings.applyToAllProfiles": [
+        "editor.fontFamily"
+    ],
+    "files.autoSave": "onFocusChange",
+    "editor.minimap.renderCharacters": false,
+    "editor.minimap.enabled": false,
+    "explorer.confirmDelete": false,
+
+    // ⚫ Tema preto com texto branco
+    "workbench.colorCustomizations": {
+        "editor.background": "#000000",
+        "editor.foreground": "#ffffff",
+        "activityBar.background": "#111111",
+        "sideBar.background": "#0d0d0d",
+        "statusBar.background": "#111111",
+        "editorLineNumber.foreground": "#555555",
+        "editorCursor.foreground": "#00eaff",
+        "editor.selectionBackground": "#222222",
+        "editor.inactiveSelectionBackground": "#191919"
+    },
+
+    // 🎨 Sintaxe personalizada completa
+    "editor.tokenColorCustomizations": {
+        "comments": "#888888",
+        "strings": "#66ffcc",
+        "keywords": "#0055ff",
+        "functions": "#00eaff",
+        "variables": "#ffffff",
+        "numbers": "#33ccff",
+
+        "textMateRules": [
+            {
+                "scope": "punctuation.section.block",
+                "settings": { "foreground": "#555555" }  // chaves { }
+            },
+            {
+                "scope": "punctuation.section.brackets",
+                "settings": { "foreground": "#555555" }  // colchetes [ ]
+            },
+            {
+                "scope": "punctuation.parenthesis",
+                "settings": { "foreground": "#777777" }  // parênteses ( )
+            },
+            {
+                "scope": "keyword.operator",
+                "settings": { "foreground": "#ff4dff" }  // operadores + - = *
+            },
+            {
+                "scope": "support.function.builtin",
+                "settings": { "foreground": "#00eaff" }  // funções nativas
+            },
+            {
+                "scope": "entity.name.function",
+                "settings": { "foreground": "#00eaff" }  // funções definidas pelo usuário
+            }
+        ]
+    }
+}
