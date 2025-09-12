@@ -1,14 +1,39 @@
+.Container {
+    display: inline-block;
+    border: 5px solid aqua; /* cor inicial */
+    width: 255px;
+    height: 220px;
+    background-color: black;
+    animation: mudaBorda 3s infinite alternate; /* animação da borda */
+}
+
+@keyframes mudaBorda {
+    0% { border-color: aqua; }
+    25% { border-color: blue; }
+    50% { border-color: purple; }
+    75% { border-color: red; }
+    100% { border-color: yellow; }
+}
 .Jogo{
     width: 210px;
-    height: 110px;
+    height: 20px;
     padding: 5px;
+    margin: 15px;
     border-style: solid;
     border-radius: 2px;
     background-color: black;
     color: aqua;
 }
 
+#jokenpo{
+    border-style: solid;
+    background-color: black;
+    color: aqua;
+}
+
 .botao{
     color: rgb(0, 0, 0);
-    background-color: aqua;
+    background-color: rgb(255, 255, 255);
+    border-style: solid;
+    border-color: rgb(0, 0, 0);
 }
