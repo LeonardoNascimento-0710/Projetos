@@ -1,5 +1,4 @@
 //Geral
-
 const pontos = document.getElementById("pontos")
 let pontuacao = 0
 //Jokenpo
@@ -25,11 +24,11 @@ pedra.addEventListener("click", function () {
             alert("Empate!");
         } else if (escolhaAdversario === "papel") {
             alert("Você perdeu!");
-            pontuacao--;
+            pontuacao-=1;
             pontos.innerText = pontuacao
         } else if (escolhaAdversario === "tesoura") {
             alert("Você ganhou!");
-            pontuacao++
+            pontuacao+=1;
             pontos.innerText = pontuacao
         }
     }
@@ -44,7 +43,7 @@ papel.addEventListener("click", function () {
     if (escolha === "papel") {
         if (escolhaAdversario === "pedra") {
             alert("Você ganhou!")
-            pontuacao++
+            pontuacao+=1
             pontos.innerText = pontuacao
         }
         else if (escolhaAdversario === "papel") {
@@ -52,7 +51,7 @@ papel.addEventListener("click", function () {
         }
         else if (escolhaAdversario === "tesoura") {
             alert("Você Perdeu!")
-            pontuacao--;
+            pontuacao-=1;
             pontos.innerText = pontuacao
         }
     }
@@ -67,12 +66,12 @@ tesoura.addEventListener("click", function () {
     if (escolha === "tesoura") {
         if (escolhaAdversario === "pedra") {
             alert("Você Perdeu!")
-            pontuacao--;
+            pontuacao-=1;
             pontos.innerText = pontuacao
         }
         else if (escolhaAdversario === "papel") {
             alert("Você ganhou!")
-            pontuacao++
+            pontuacao+=1
             pontos.innerText = pontuacao
         }
         else if (escolhaAdversario === "tesoura") {
@@ -92,12 +91,13 @@ advinhar.addEventListener("click", function () {
 
     if (numpalpite === numsorteado) {
         alert("Você acertou! O número era " + numsorteado);
-        pontuacao + 10 
+        pontuacao += 10 
         pontos.innerText = pontuacao;
         advnumero.value = "";
     } else {
         alert("Você errou! O número era " + numsorteado);
-        pontuacao--;
+        pontuacao-=1;
+        pontos.innerText = pontuacao;
         advnumero.value = ""; 
     }
 });

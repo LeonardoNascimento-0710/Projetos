@@ -1,7 +1,14 @@
+/*texto*/
+.texto{
+    margin-left: 35%;
+}
+#pontos{
+    margin-left: 0;
+}
 /*container dos jogos*/
-
 .Container {
     display: inline-block;
+    margin-left: 35%;
     border: 5px solid aqua; 
     width: 275px;
     height: 240px;
