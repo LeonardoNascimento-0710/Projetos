@@ -14,7 +14,7 @@
     25% { border-color: blue; }
     50% { border-color: purple; }
     75% { border-color: red; }
-    100% { border-color: yellow; }
+    100% { border-color: rgb(38, 255, 0); }
 }
 
 /*Div dos jogos */
