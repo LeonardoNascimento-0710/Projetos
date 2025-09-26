@@ -343,3 +343,4 @@ C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS
 C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Debug\net8.0-windows\ACS auxiliares.pdb
 C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Debug\net8.0-windows\ACS auxiliares.genruntimeconfig.cache
 C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Debug\net8.0-windows\ref\ACS auxiliares.dll
+C:\Users\Administrador\Desktop\GitHub\Projetos\Projetos\VbNet\Acs Auxiliares\ACS auxiliares\obj\Debug\net8.0-windows\ACS_auxiliares.FrmConversorXlsx.resources

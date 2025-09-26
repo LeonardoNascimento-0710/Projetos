@@ -7,6 +7,9 @@
     <Compile Update="FrmAux.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="FrmConversorXlsx.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="FrmOrdemDeServico.vb">
       <SubType>Form</SubType>
     </Compile>

@@ -258,6 +258,14 @@ Public Class FrmAux
         LblSenhaSd.Text = "Senha do dia: " & senha
     End Sub
 
+    Private Sub BtnImportar_Click(sender As Object, e As EventArgs) Handles BtnImportar.Click
+
+        Dim frm As New FrmConversorXlsx
+        frm.Show()
+
+    End Sub
+
+
 #End Region
 
 #Region "Eclética"
@@ -359,6 +367,45 @@ Public Class FrmAux
             RbServidor.Checked = False
         End If
     End Sub
+
+    Private Sub TxtCnpjIcms_KeyDown(sender As Object, e As KeyEventArgs) Handles TxtCnpjIcms.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            Dim resp = MessageBox.Show("Deseja atualizar o campo para 'S'? (Clique em Não para '<NULL>')",
+                                       "Confirmação",
+                                       MessageBoxButtons.YesNoCancel,
+                                       MessageBoxIcon.Question)
+
+            If resp = DialogResult.Cancel Then Exit Sub
+
+            Dim novoValor As String
+            If resp = DialogResult.Yes Then
+                novoValor = "S"
+            Else
+                novoValor = "NULL"
+            End If
+
+            Dim entrada As String = TxtCnpjIcms.Text
+            Dim lista As String() = entrada.Split(","c)
+
+            Dim sb As New System.Text.StringBuilder()
+
+            For Each item In lista
+                Dim cnpj = item.Trim().Replace(".", "").Replace("/", "").Replace("-", "").Replace(" ", "")
+                If cnpj.Length = 14 Then
+                    cnpj = cnpj.Insert(2, ".").Insert(6, ".").Insert(10, "/").Insert(15, "-")
+                    sb.AppendLine("UPDATE fornecedores Set WSUBSTITUICAOEMBUTIDA = " & novoValor & " WHERE WCNPJ = '" & cnpj)
+                End If
+            Next
+
+            Dim desktopPath As String = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+            Dim filePath As String = Path.Combine(desktopPath, "cnpjICMS.txt")
+            File.WriteAllText(filePath, sb.ToString())
+            MessageBox.Show("Comando gerado com sucesso!")
+            TxtCnpjIcms.Text = ""
+        End If
+
+    End Sub
+
 
 #End Region
 
