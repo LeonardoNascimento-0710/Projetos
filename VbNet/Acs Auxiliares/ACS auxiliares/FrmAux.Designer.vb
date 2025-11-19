@@ -127,6 +127,7 @@ Partial Class FrmAux
         BtnManMobLink = New Button()
         TabSDSuper = New TabPage()
         GroupBox4 = New GroupBox()
+        TxtCnpjIcms = New TextBox()
         LblSenhaSd = New Label()
         Button31 = New Button()
         Label49 = New Label()
@@ -142,13 +143,11 @@ Partial Class FrmAux
         Button89 = New Button()
         Button90 = New Button()
         Label53 = New Label()
-        Button91 = New Button()
-        Label54 = New Label()
+        BtnImportar = New Button()
+        LblConversorXlsx = New Label()
         Button92 = New Button()
-        Button93 = New Button()
-        Button94 = New Button()
-        Label55 = New Label()
-        Button113 = New Button()
+        Label4 = New Label()
+        LblIcmsFornecedor = New Label()
         GroupBox3 = New GroupBox()
         Button24 = New Button()
         Label14 = New Label()
@@ -1341,6 +1340,7 @@ Partial Class FrmAux
         ' 
         ' GroupBox4
         ' 
+        GroupBox4.Controls.Add(TxtCnpjIcms)
         GroupBox4.Controls.Add(LblSenhaSd)
         GroupBox4.Controls.Add(Button31)
         GroupBox4.Controls.Add(Label49)
@@ -1356,19 +1356,24 @@ Partial Class FrmAux
         GroupBox4.Controls.Add(Button89)
         GroupBox4.Controls.Add(Button90)
         GroupBox4.Controls.Add(Label53)
-        GroupBox4.Controls.Add(Button91)
-        GroupBox4.Controls.Add(Label54)
+        GroupBox4.Controls.Add(BtnImportar)
+        GroupBox4.Controls.Add(LblConversorXlsx)
         GroupBox4.Controls.Add(Button92)
-        GroupBox4.Controls.Add(Button93)
-        GroupBox4.Controls.Add(Button94)
-        GroupBox4.Controls.Add(Label55)
-        GroupBox4.Controls.Add(Button113)
+        GroupBox4.Controls.Add(Label4)
+        GroupBox4.Controls.Add(LblIcmsFornecedor)
         GroupBox4.Location = New Point(17, 16)
         GroupBox4.Name = "GroupBox4"
         GroupBox4.Size = New Size(182, 394)
         GroupBox4.TabIndex = 8
         GroupBox4.TabStop = False
         GroupBox4.Text = "Comandos/Processos"
+        ' 
+        ' TxtCnpjIcms
+        ' 
+        TxtCnpjIcms.Location = New Point(8, 93)
+        TxtCnpjIcms.Name = "TxtCnpjIcms"
+        TxtCnpjIcms.Size = New Size(168, 23)
+        TxtCnpjIcms.TabIndex = 36
         ' 
         ' LblSenhaSd
         ' 
@@ -1463,7 +1468,7 @@ Partial Class FrmAux
         ' Label52
         ' 
         Label52.AutoSize = True
-        Label52.Location = New Point(65, 213)
+        Label52.Location = New Point(75, 213)
         Label52.Name = "Label52"
         Label52.Size = New Size(32, 15)
         Label52.TabIndex = 44
@@ -1499,29 +1504,29 @@ Partial Class FrmAux
         ' Label53
         ' 
         Label53.AutoSize = True
-        Label53.Location = New Point(38, 171)
+        Label53.Location = New Point(75, 170)
         Label53.Name = "Label53"
         Label53.Size = New Size(32, 15)
         Label53.TabIndex = 40
         Label53.Text = "teste"
         ' 
-        ' Button91
+        ' BtnImportar
         ' 
-        Button91.Location = New Point(94, 140)
-        Button91.Name = "Button91"
-        Button91.Size = New Size(82, 23)
-        Button91.TabIndex = 39
-        Button91.Text = "CMD"
-        Button91.UseVisualStyleBackColor = True
+        BtnImportar.Location = New Point(48, 144)
+        BtnImportar.Name = "BtnImportar"
+        BtnImportar.Size = New Size(82, 23)
+        BtnImportar.TabIndex = 39
+        BtnImportar.Text = "Importar"
+        BtnImportar.UseVisualStyleBackColor = True
         ' 
-        ' Label54
+        ' LblConversorXlsx
         ' 
-        Label54.AutoSize = True
-        Label54.Location = New Point(65, 122)
-        Label54.Name = "Label54"
-        Label54.Size = New Size(32, 15)
-        Label54.TabIndex = 38
-        Label54.Text = "teste"
+        LblConversorXlsx.AutoSize = True
+        LblConversorXlsx.Location = New Point(38, 122)
+        LblConversorXlsx.Name = "LblConversorXlsx"
+        LblConversorXlsx.Size = New Size(101, 15)
+        LblConversorXlsx.TabIndex = 38
+        LblConversorXlsx.Text = "Conversor de Xlsx"
         ' 
         ' Button92
         ' 
@@ -1532,41 +1537,24 @@ Partial Class FrmAux
         Button92.Text = "Comando"
         Button92.UseVisualStyleBackColor = True
         ' 
-        ' Button93
+        ' Label4
         ' 
-        Button93.Location = New Point(8, 140)
-        Button93.Name = "Button93"
-        Button93.Size = New Size(82, 23)
-        Button93.TabIndex = 37
-        Button93.Text = "Comando"
-        Button93.UseVisualStyleBackColor = True
+        Label4.AutoSize = True
+        Label4.Location = New Point(298, -40)
+        Label4.Name = "Label4"
+        Label4.Size = New Size(32, 15)
+        Label4.TabIndex = 18
+        Label4.Text = "teste"
         ' 
-        ' Button94
+        ' LblIcmsFornecedor
         ' 
-        Button94.Location = New Point(94, 93)
-        Button94.Name = "Button94"
-        Button94.Size = New Size(82, 23)
-        Button94.TabIndex = 19
-        Button94.Text = "CMD"
-        Button94.UseVisualStyleBackColor = True
-        ' 
-        ' Label55
-        ' 
-        Label55.AutoSize = True
-        Label55.Location = New Point(38, 76)
-        Label55.Name = "Label55"
-        Label55.Size = New Size(32, 15)
-        Label55.TabIndex = 18
-        Label55.Text = "teste"
-        ' 
-        ' Button113
-        ' 
-        Button113.Location = New Point(8, 93)
-        Button113.Name = "Button113"
-        Button113.Size = New Size(82, 23)
-        Button113.TabIndex = 2
-        Button113.Text = "Comando"
-        Button113.UseVisualStyleBackColor = True
+        LblIcmsFornecedor.AutoSize = True
+        LblIcmsFornecedor.Location = New Point(11, 76)
+        LblIcmsFornecedor.Name = "LblIcmsFornecedor"
+        LblIcmsFornecedor.Size = New Size(162, 15)
+        LblIcmsFornecedor.TabIndex = 18
+        LblIcmsFornecedor.Text = "Alterar ICMS ST Fornecedores"
+        LblIcmsFornecedor.TextAlign = ContentAlignment.TopRight
         ' 
         ' GroupBox3
         ' 
@@ -3145,13 +3133,10 @@ Partial Class FrmAux
     Friend WithEvents Button89 As Button
     Friend WithEvents Button90 As Button
     Friend WithEvents Label53 As Label
-    Friend WithEvents Button91 As Button
-    Friend WithEvents Label54 As Label
+    Friend WithEvents BtnImportar As Button
+    Friend WithEvents LblConversorXlsx As Label
     Friend WithEvents Button92 As Button
-    Friend WithEvents Button93 As Button
-    Friend WithEvents Button94 As Button
-    Friend WithEvents Label55 As Label
-    Friend WithEvents Button113 As Button
+    Friend WithEvents LblIcmsFornecedor As Label
     Friend WithEvents GroupBox6 As GroupBox
     Friend WithEvents Button45 As Button
     Friend WithEvents Label41 As Label
@@ -3215,5 +3200,7 @@ Partial Class FrmAux
     Friend WithEvents RbServidor As RadioButton
     Friend WithEvents RbEstacao As RadioButton
     Friend WithEvents LblSenhaSd As Label
+    Friend WithEvents TxtCnpjIcms As TextBox
+    Friend WithEvents Label4 As Label
 
 End Class

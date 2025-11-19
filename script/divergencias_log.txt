@@ -1,0 +1,19 @@
+2025-09-25 21:54:49,949 [INFO] Início do processamento
+2025-09-25 21:54:49,949 [INFO] Origem (cópia): copia de lancamentos.xlsx
+2025-09-25 21:54:49,949 [INFO] Destino (contas a pagar): contas a pagar250925.xlsx
+2025-09-25 21:54:49,950 [INFO] Fornecedores: fornecedor.xlsx
+2025-09-25 21:54:49,950 [INFO] Saída: comparacao_resultado.xlsx
+2025-09-25 21:54:49,950 [INFO] Log: divergencias_log.txt
+2025-09-25 21:55:25,552 [INFO] [ORIGEM] Linhas: 159399, Colunas: 63
+2025-09-25 21:55:25,552 [INFO] [DESTINO] Linhas: 21127, Colunas: 8
+2025-09-25 21:55:25,552 [INFO] [FORNECEDOR] Linhas: 696, Colunas: 12
+2025-09-25 21:55:25,555 [INFO] [ORIGEM] Colunas detectadas: {'credor': 'credor', 'venc': 'vencimento', 'valor': 'valor', 'parcela': 'parcela', 'totalparcelas': 'totalparcelas', 'historico': 'historico', 'cnpj': 'docliquidacao'}
+2025-09-25 21:55:25,555 [INFO] [DESTINO] Colunas detectadas: {'credor': 'Credor', 'venc': 'Vencimento', 'valor': 'Valor', 'parc': 'Parc', 'historico': 'historico', 'cnpj': None}
+2025-09-25 21:55:25,556 [INFO] [FORNECEDOR] Colunas detectadas: {'nome': 'Razao Social', 'cnpj': 'CPF - CNPJ', 'alias': None}
+2025-09-25 21:55:25,581 [INFO] [FORNECEDOR] Entradas no mapa: 674
+2025-09-25 21:55:35,066 [INFO] [ORIGEM] Datas nulas: 0 | Valores nulos: 0
+2025-09-25 21:55:35,067 [INFO] [DESTINO] Datas nulas: 0 | Valores nulos: 0
+2025-09-25 21:55:35,207 [INFO] Realizando merge com key1 (venc-valor-parc-hist)
+2025-09-25 21:55:35,574 [INFO] Realizando merge com key2 (venc-valor-parc) para registros restantes
+2025-09-25 21:55:35,925 [INFO] Realizando merge com key3 (venc-valor) para registros restantes
+2025-09-25 21:57:11,673 [INFO] Concluído. Ja_no_destino: 0, Para_inserir: 159399, Divergencias: 0, Duvidas: 133558
