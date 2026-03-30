@@ -14,7 +14,7 @@ Public Class FrmBancoHoras
 #Region "Painel e Visual"
 
     Private Sub BtnRetornar_Click(sender As Object, e As EventArgs) Handles BtnRetornar.Click
-        Me.Dispose()
+        Dispose
     End Sub
 
     Private Sub BtnGravar_Click(sender As Object, e As EventArgs) Handles BtnGravar.Click
@@ -62,7 +62,7 @@ Public Class FrmBancoHoras
     Private Function TestarConexao() As Boolean
         Try
             Using conn As New MySqlConnection(
-            "server=localhost;database=projects;user id=root;password=0710;"
+            "server=localhost;database=projects;user id=root;password=root;"
         )
                 conn.Open()
                 Return True
@@ -87,7 +87,7 @@ Public Class FrmBancoHoras
     Private Sub CarregarLojas()
         Try
             Using conn As New MySqlConnection(
-            "server=localhost;database=projects;user id=root;password=0710;"
+            "server=localhost;database=projects;user id=root;password=root;"
         )
                 conn.Open()
 
@@ -122,7 +122,7 @@ Public Class FrmBancoHoras
 
         Try
             Using conn As New MySqlConnection(
-            "server=localhost;database=projects;user id=root;password=0710;"
+            "server=localhost;database=projects;user id=root;password=root;"
         )
                 conn.Open()
 
@@ -222,7 +222,7 @@ Public Class FrmBancoHoras
                Convert.ToInt32(row.Cells("utilizados").Value))
 
             Using conn As New MySqlConnection(
-            "server=localhost;database=projects;user id=root;password=0710;"
+            "server=localhost;database=projects;user id=root;password=root;"
         )
                 conn.Open()
 
@@ -264,7 +264,7 @@ Public Class FrmBancoHoras
     Private Sub CarregarPorLoja()
         Try
             Using conn As New MySqlConnection(
-            "server=localhost;database=projects;user id=root;password=0710;"
+            "server=localhost;database=projects;user id=root;password=root;"
         )
                 conn.Open()
 
@@ -375,7 +375,7 @@ Public Class FrmBancoHoras
             Dim dt As New DataTable
 
             Using conn As New MySqlConnection(
-                "server=localhost;database=projects;user id=root;password=0710;"
+                "server=localhost;database=projects;user id=root;password=root;"
             )
                 conn.Open()
 

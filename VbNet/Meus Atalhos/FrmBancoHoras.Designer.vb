@@ -24,6 +24,8 @@ Partial Class FrmBancoHoras
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FrmBancoHoras))
         GrpBanco = New GroupBox()
+        TxtQntdUlt = New TextBox()
+        LblQtd = New Label()
         ChkUtilizado = New CheckBox()
         TxtOs = New TextBox()
         LblOs = New Label()
@@ -47,11 +49,11 @@ Partial Class FrmBancoHoras
         GrpHist = New GroupBox()
         DtHist = New DataGridView()
         BtnExportar = New Button()
-        TxtQntdUlt = New TextBox()
-        LblQtd = New Label()
+        Panel1 = New Panel()
         GrpBanco.SuspendLayout()
         GrpHist.SuspendLayout()
         CType(DtHist, ComponentModel.ISupportInitialize).BeginInit()
+        Panel1.SuspendLayout()
         SuspendLayout()
         ' 
         ' GrpBanco
@@ -82,12 +84,28 @@ Partial Class FrmBancoHoras
         GrpBanco.TabIndex = 0
         GrpBanco.TabStop = False
         ' 
+        ' TxtQntdUlt
+        ' 
+        TxtQntdUlt.Location = New Point(274, 213)
+        TxtQntdUlt.Name = "TxtQntdUlt"
+        TxtQntdUlt.Size = New Size(74, 23)
+        TxtQntdUlt.TabIndex = 22
+        ' 
+        ' LblQtd
+        ' 
+        LblQtd.AutoSize = True
+        LblQtd.Location = New Point(275, 195)
+        LblQtd.Name = "LblQtd"
+        LblQtd.Size = New Size(80, 15)
+        LblQtd.TabIndex = 21
+        LblQtd.Text = "QUANTIDADE"
+        ' 
         ' ChkUtilizado
         ' 
         ChkUtilizado.AutoSize = True
         ChkUtilizado.Location = New Point(183, 217)
         ChkUtilizado.Name = "ChkUtilizado"
-        ChkUtilizado.Size = New Size(85, 19)
+        ChkUtilizado.Size = New Size(84, 19)
         ChkUtilizado.TabIndex = 19
         ChkUtilizado.Text = "UTILIZADO"
         ChkUtilizado.UseVisualStyleBackColor = True
@@ -121,7 +139,7 @@ Partial Class FrmBancoHoras
         ChkSemData.AutoSize = True
         ChkSemData.Location = New Point(69, 80)
         ChkSemData.Name = "ChkSemData"
-        ChkSemData.Size = New Size(81, 19)
+        ChkSemData.Size = New Size(80, 19)
         ChkSemData.TabIndex = 18
         ChkSemData.Text = "SEM DATA"
         ChkSemData.UseVisualStyleBackColor = True
@@ -138,7 +156,7 @@ Partial Class FrmBancoHoras
         LblMotivo.AutoSize = True
         LblMotivo.Location = New Point(125, 221)
         LblMotivo.Name = "LblMotivo"
-        LblMotivo.Size = New Size(52, 15)
+        LblMotivo.Size = New Size(51, 15)
         LblMotivo.TabIndex = 16
         LblMotivo.Text = "MOTIVO"
         ' 
@@ -178,7 +196,7 @@ Partial Class FrmBancoHoras
         LblExtra.AutoSize = True
         LblExtra.Location = New Point(21, 221)
         LblExtra.Name = "LblExtra"
-        LblExtra.Size = New Size(84, 15)
+        LblExtra.Size = New Size(83, 15)
         LblExtra.TabIndex = 9
         LblExtra.Text = "HORAS EXTRA"
         ' 
@@ -237,16 +255,16 @@ Partial Class FrmBancoHoras
         ' 
         ' BtnGravar
         ' 
-        BtnGravar.Location = New Point(338, 308)
+        BtnGravar.Location = New Point(351, 7)
         BtnGravar.Name = "BtnGravar"
         BtnGravar.Size = New Size(87, 49)
         BtnGravar.TabIndex = 0
-        BtnGravar.Text = "Gravar" + vbCr + " Registro"
+        BtnGravar.Text = "Gravar" & vbCr & " Registro"
         BtnGravar.UseVisualStyleBackColor = True
         ' 
         ' BtnRetornar
         ' 
-        BtnRetornar.Location = New Point(556, 308)
+        BtnRetornar.Location = New Point(569, 7)
         BtnRetornar.Name = "BtnRetornar"
         BtnRetornar.Size = New Size(87, 49)
         BtnRetornar.TabIndex = 1
@@ -273,39 +291,33 @@ Partial Class FrmBancoHoras
         ' 
         ' BtnExportar
         ' 
-        BtnExportar.Location = New Point(447, 307)
+        BtnExportar.Location = New Point(460, 6)
         BtnExportar.Name = "BtnExportar"
         BtnExportar.Size = New Size(87, 49)
         BtnExportar.TabIndex = 3
         BtnExportar.Text = "Exportar Registros"
         BtnExportar.UseVisualStyleBackColor = True
         ' 
-        ' TxtQntdUlt
+        ' Panel1
         ' 
-        TxtQntdUlt.Location = New Point(274, 213)
-        TxtQntdUlt.Name = "TxtQntdUlt"
-        TxtQntdUlt.Size = New Size(74, 23)
-        TxtQntdUlt.TabIndex = 22
-        ' 
-        ' LblQtd
-        ' 
-        LblQtd.AutoSize = True
-        LblQtd.Location = New Point(275, 195)
-        LblQtd.Name = "LblQtd"
-        LblQtd.Size = New Size(81, 15)
-        LblQtd.TabIndex = 21
-        LblQtd.Text = "QUANTIDADE"
+        Panel1.BackColor = SystemColors.ControlDarkDark
+        Panel1.Controls.Add(BtnExportar)
+        Panel1.Controls.Add(BtnGravar)
+        Panel1.Controls.Add(BtnRetornar)
+        Panel1.Location = New Point(-10, 317)
+        Panel1.Name = "Panel1"
+        Panel1.Size = New Size(1062, 107)
+        Panel1.TabIndex = 4
         ' 
         ' FrmBancoHoras
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(1024, 368)
+        BackColor = SystemColors.ActiveCaption
+        ClientSize = New Size(1024, 382)
         ControlBox = False
-        Controls.Add(BtnExportar)
+        Controls.Add(Panel1)
         Controls.Add(GrpHist)
-        Controls.Add(BtnRetornar)
-        Controls.Add(BtnGravar)
         Controls.Add(GrpBanco)
         Icon = CType(resources.GetObject("$this.Icon"), Icon)
         MaximizeBox = False
@@ -317,6 +329,7 @@ Partial Class FrmBancoHoras
         GrpBanco.PerformLayout()
         GrpHist.ResumeLayout(False)
         CType(DtHist, ComponentModel.ISupportInitialize).EndInit()
+        Panel1.ResumeLayout(False)
         ResumeLayout(False)
     End Sub
 
@@ -346,4 +359,5 @@ Partial Class FrmBancoHoras
     Friend WithEvents BtnExportar As Button
     Friend WithEvents TxtQntdUlt As TextBox
     Friend WithEvents LblQtd As Label
+    Friend WithEvents Panel1 As Panel
 End Class

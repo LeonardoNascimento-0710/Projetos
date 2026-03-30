@@ -60,7 +60,7 @@ Partial Class FrmMeusAuxiliares
         Button30 = New Button()
         Button31 = New Button()
         Button32 = New Button()
-        Button33 = New Button()
+        BtnConversorFilizola = New Button()
         BtnFdbforXlsx = New Button()
         BrnBancoHoras = New Button()
         TabMenu.SuspendLayout()
@@ -98,6 +98,7 @@ Partial Class FrmMeusAuxiliares
         ' 
         ' TabDownloads
         ' 
+        TabDownloads.BackColor = Color.Transparent
         TabDownloads.Controls.Add(Button15)
         TabDownloads.Controls.Add(Button12)
         TabDownloads.Controls.Add(Button16)
@@ -122,7 +123,6 @@ Partial Class FrmMeusAuxiliares
         TabDownloads.Size = New Size(438, 325)
         TabDownloads.TabIndex = 0
         TabDownloads.Text = "Downloads"
-        TabDownloads.UseVisualStyleBackColor = True
         ' 
         ' Button15
         ' 
@@ -263,6 +263,7 @@ Partial Class FrmMeusAuxiliares
         ' 
         ' TabPage2
         ' 
+        TabPage2.BackColor = Color.Transparent
         TabPage2.Controls.Add(Button18)
         TabPage2.Controls.Add(Button19)
         TabPage2.Controls.Add(Button20)
@@ -278,7 +279,7 @@ Partial Class FrmMeusAuxiliares
         TabPage2.Controls.Add(Button30)
         TabPage2.Controls.Add(Button31)
         TabPage2.Controls.Add(Button32)
-        TabPage2.Controls.Add(Button33)
+        TabPage2.Controls.Add(BtnConversorFilizola)
         TabPage2.Controls.Add(BtnFdbforXlsx)
         TabPage2.Controls.Add(BrnBancoHoras)
         TabPage2.Location = New Point(4, 24)
@@ -287,11 +288,10 @@ Partial Class FrmMeusAuxiliares
         TabPage2.Size = New Size(438, 325)
         TabPage2.TabIndex = 1
         TabPage2.Text = "Atalhos"
-        TabPage2.UseVisualStyleBackColor = True
         ' 
         ' Button18
         ' 
-        Button18.Location = New Point(307, 282)
+        Button18.Location = New Point(307, 283)
         Button18.Name = "Button18"
         Button18.Size = New Size(125, 37)
         Button18.TabIndex = 23
@@ -299,7 +299,7 @@ Partial Class FrmMeusAuxiliares
         ' 
         ' Button19
         ' 
-        Button19.Location = New Point(307, 227)
+        Button19.Location = New Point(307, 228)
         Button19.Name = "Button19"
         Button19.Size = New Size(125, 37)
         Button19.TabIndex = 32
@@ -307,7 +307,7 @@ Partial Class FrmMeusAuxiliares
         ' 
         ' Button20
         ' 
-        Button20.Location = New Point(157, 282)
+        Button20.Location = New Point(157, 283)
         Button20.Name = "Button20"
         Button20.Size = New Size(125, 37)
         Button20.TabIndex = 20
@@ -315,7 +315,7 @@ Partial Class FrmMeusAuxiliares
         ' 
         ' Button21
         ' 
-        Button21.Location = New Point(6, 282)
+        Button21.Location = New Point(6, 283)
         Button21.Name = "Button21"
         Button21.Size = New Size(125, 37)
         Button21.TabIndex = 18
@@ -323,7 +323,7 @@ Partial Class FrmMeusAuxiliares
         ' 
         ' Button22
         ' 
-        Button22.Location = New Point(157, 227)
+        Button22.Location = New Point(157, 228)
         Button22.Name = "Button22"
         Button22.Size = New Size(125, 37)
         Button22.TabIndex = 31
@@ -331,7 +331,7 @@ Partial Class FrmMeusAuxiliares
         ' 
         ' Button23
         ' 
-        Button23.Location = New Point(6, 227)
+        Button23.Location = New Point(6, 228)
         Button23.Name = "Button23"
         Button23.Size = New Size(125, 37)
         Button23.TabIndex = 30
@@ -339,7 +339,7 @@ Partial Class FrmMeusAuxiliares
         ' 
         ' Button24
         ' 
-        Button24.Location = New Point(307, 173)
+        Button24.Location = New Point(307, 174)
         Button24.Name = "Button24"
         Button24.Size = New Size(125, 37)
         Button24.TabIndex = 29
@@ -347,7 +347,7 @@ Partial Class FrmMeusAuxiliares
         ' 
         ' Button25
         ' 
-        Button25.Location = New Point(157, 173)
+        Button25.Location = New Point(157, 174)
         Button25.Name = "Button25"
         Button25.Size = New Size(125, 37)
         Button25.TabIndex = 28
@@ -355,7 +355,7 @@ Partial Class FrmMeusAuxiliares
         ' 
         ' Button26
         ' 
-        Button26.Location = New Point(6, 173)
+        Button26.Location = New Point(6, 174)
         Button26.Name = "Button26"
         Button26.Size = New Size(125, 37)
         Button26.TabIndex = 27
@@ -363,7 +363,7 @@ Partial Class FrmMeusAuxiliares
         ' 
         ' Button27
         ' 
-        Button27.Location = New Point(307, 119)
+        Button27.Location = New Point(307, 120)
         Button27.Name = "Button27"
         Button27.Size = New Size(125, 37)
         Button27.TabIndex = 26
@@ -371,7 +371,7 @@ Partial Class FrmMeusAuxiliares
         ' 
         ' Button28
         ' 
-        Button28.Location = New Point(157, 119)
+        Button28.Location = New Point(157, 120)
         Button28.Name = "Button28"
         Button28.Size = New Size(125, 37)
         Button28.TabIndex = 25
@@ -379,7 +379,7 @@ Partial Class FrmMeusAuxiliares
         ' 
         ' Button29
         ' 
-        Button29.Location = New Point(6, 119)
+        Button29.Location = New Point(6, 120)
         Button29.Name = "Button29"
         Button29.Size = New Size(125, 37)
         Button29.TabIndex = 24
@@ -387,7 +387,7 @@ Partial Class FrmMeusAuxiliares
         ' 
         ' Button30
         ' 
-        Button30.Location = New Point(307, 61)
+        Button30.Location = New Point(307, 62)
         Button30.Name = "Button30"
         Button30.Size = New Size(125, 37)
         Button30.TabIndex = 22
@@ -395,7 +395,7 @@ Partial Class FrmMeusAuxiliares
         ' 
         ' Button31
         ' 
-        Button31.Location = New Point(157, 61)
+        Button31.Location = New Point(157, 62)
         Button31.Name = "Button31"
         Button31.Size = New Size(125, 37)
         Button31.TabIndex = 21
@@ -403,23 +403,24 @@ Partial Class FrmMeusAuxiliares
         ' 
         ' Button32
         ' 
-        Button32.Location = New Point(6, 61)
+        Button32.Location = New Point(6, 62)
         Button32.Name = "Button32"
         Button32.Size = New Size(125, 37)
         Button32.TabIndex = 19
         Button32.UseVisualStyleBackColor = True
         ' 
-        ' Button33
+        ' BtnConversorFilizola
         ' 
-        Button33.Location = New Point(307, 5)
-        Button33.Name = "Button33"
-        Button33.Size = New Size(125, 37)
-        Button33.TabIndex = 17
-        Button33.UseVisualStyleBackColor = True
+        BtnConversorFilizola.Location = New Point(307, 6)
+        BtnConversorFilizola.Name = "BtnConversorFilizola"
+        BtnConversorFilizola.Size = New Size(125, 37)
+        BtnConversorFilizola.TabIndex = 17
+        BtnConversorFilizola.Text = "Balança Filizola" & vbCrLf
+        BtnConversorFilizola.UseVisualStyleBackColor = True
         ' 
         ' BtnFdbforXlsx
         ' 
-        BtnFdbforXlsx.Location = New Point(157, 5)
+        BtnFdbforXlsx.Location = New Point(157, 6)
         BtnFdbforXlsx.Name = "BtnFdbforXlsx"
         BtnFdbforXlsx.Size = New Size(125, 37)
         BtnFdbforXlsx.TabIndex = 16
@@ -428,7 +429,7 @@ Partial Class FrmMeusAuxiliares
         ' 
         ' BrnBancoHoras
         ' 
-        BrnBancoHoras.Location = New Point(6, 5)
+        BrnBancoHoras.Location = New Point(6, 6)
         BrnBancoHoras.Name = "BrnBancoHoras"
         BrnBancoHoras.Size = New Size(125, 37)
         BrnBancoHoras.TabIndex = 15
@@ -439,6 +440,7 @@ Partial Class FrmMeusAuxiliares
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
+        BackColor = SystemColors.ActiveCaption
         ClientSize = New Size(470, 464)
         Controls.Add(TabMenu)
         Controls.Add(LblTitulo)
@@ -494,7 +496,7 @@ Partial Class FrmMeusAuxiliares
     Friend WithEvents Button30 As Button
     Friend WithEvents Button31 As Button
     Friend WithEvents Button32 As Button
-    Friend WithEvents Button33 As Button
+    Friend WithEvents BtnConversorFilizola As Button
     Friend WithEvents BtnFdbforXlsx As Button
     Friend WithEvents BrnBancoHoras As Button
 

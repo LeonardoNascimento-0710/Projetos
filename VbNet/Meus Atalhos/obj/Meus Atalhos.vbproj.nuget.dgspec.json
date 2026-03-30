@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Leo_f\\OneDrive\\Área de Trabalho\\GitHub\\Projetos\\VbNet\\Meus Atalhos\\Meus Atalhos.vbproj": {}
+    "C:\\Users\\Administrador\\Desktop\\Git\\Projetos\\VbNet\\Meus Atalhos\\Meus Atalhos.vbproj": {}
   },
   "projects": {
-    "C:\\Users\\Leo_f\\OneDrive\\Área de Trabalho\\GitHub\\Projetos\\VbNet\\Meus Atalhos\\Meus Atalhos.vbproj": {
+    "C:\\Users\\Administrador\\Desktop\\Git\\Projetos\\VbNet\\Meus Atalhos\\Meus Atalhos.vbproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Leo_f\\OneDrive\\Área de Trabalho\\GitHub\\Projetos\\VbNet\\Meus Atalhos\\Meus Atalhos.vbproj",
+        "projectUniqueName": "C:\\Users\\Administrador\\Desktop\\Git\\Projetos\\VbNet\\Meus Atalhos\\Meus Atalhos.vbproj",
         "projectName": "Meus Atalhos",
-        "projectPath": "C:\\Users\\Leo_f\\OneDrive\\Área de Trabalho\\GitHub\\Projetos\\VbNet\\Meus Atalhos\\Meus Atalhos.vbproj",
-        "packagesPath": "C:\\Users\\Leo_f\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Leo_f\\OneDrive\\Área de Trabalho\\GitHub\\Projetos\\VbNet\\Meus Atalhos\\obj\\",
+        "projectPath": "C:\\Users\\Administrador\\Desktop\\Git\\Projetos\\VbNet\\Meus Atalhos\\Meus Atalhos.vbproj",
+        "packagesPath": "C:\\Users\\Administrador\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Administrador\\Desktop\\Git\\Projetos\\VbNet\\Meus Atalhos\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Leo_f\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Administrador\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -44,7 +45,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "10.0.200"
       },
       "frameworks": {
         "net8.0-windows7.0": {
@@ -58,9 +59,29 @@
               "target": "Package",
               "version": "[10.3.4, )"
             },
+            "Microsoft.Identity.Client": {
+              "target": "Package",
+              "version": "[4.83.1, )"
+            },
+            "Microsoft.IdentityModel.Abstractions": {
+              "target": "Package",
+              "version": "[8.17.0, )"
+            },
             "MySql.Data": {
               "target": "Package",
               "version": "[9.6.0, )"
+            },
+            "MySqlConnector": {
+              "target": "Package",
+              "version": "[2.5.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.4, )"
+            },
+            "System.Text.Json": {
+              "target": "Package",
+              "version": "[10.0.5, )"
             }
           },
           "imports": [
@@ -82,7 +103,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.310/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -56,3 +56,56 @@ C:\Users\Leo_f\OneDrive\Área de Trabalho\GitHub\Projetos\VbNet\Meus Atalhos\bin
 C:\Users\Leo_f\OneDrive\Área de Trabalho\GitHub\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\SixLabors.Fonts.dll
 C:\Users\Leo_f\OneDrive\Área de Trabalho\GitHub\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\System.IO.Packaging.dll
 C:\Users\Leo_f\OneDrive\Área de Trabalho\GitHub\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\FirebirdSql.Data.FirebirdClient.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\Meus Atalhos.exe
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\Meus Atalhos.deps.json
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\Meus Atalhos.runtimeconfig.json
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\Meus Atalhos.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\Meus Atalhos.pdb
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\BouncyCastle.Cryptography.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\ClosedXML.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\ClosedXML.Parser.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.Framework.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\ExcelNumberFormat.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\FirebirdSql.Data.FirebirdClient.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\Google.Protobuf.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\K4os.Compression.LZ4.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\K4os.Compression.LZ4.Streams.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\K4os.Hash.xxHash.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\MySql.Data.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\RBush.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\SixLabors.Fonts.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\System.IO.Packaging.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\System.IO.Pipelines.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\ZstdSharp.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\runtimes\win-x64\native\comerr64.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\runtimes\win-x64\native\gssapi64.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\runtimes\win-x64\native\k5sprt64.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\runtimes\win-x64\native\krb5_64.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\runtimes\win-x64\native\krbcc64.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\obj\Debug\net8.0-windows\Meus Atalhos.vbproj.AssemblyReference.cache
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\obj\Debug\net8.0-windows\Meus_Atalhos.FrmBancoHoras.resources
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\obj\Debug\net8.0-windows\Meus_Atalhos.FrmMeusAuxiliares.resources
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\obj\Debug\net8.0-windows\Meus Atalhos.vbproj.GenerateResource.cache
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\obj\Debug\net8.0-windows\Meus Atalhos.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\obj\Debug\net8.0-windows\Meus Atalhos.AssemblyInfoInputs.cache
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\obj\Debug\net8.0-windows\Meus Atalhos.AssemblyInfo.vb
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\obj\Debug\net8.0-windows\Meus Atalhos.vbproj.CoreCompileInputs.cache
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\obj\Debug\net8.0-windows\Meus Atalhos.sourcelink.json
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\obj\Debug\net8.0-windows\Meus Ata.745059F0.Up2Date
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\obj\Debug\net8.0-windows\Meus Atalhos.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\obj\Debug\net8.0-windows\refint\Meus Atalhos.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\obj\Debug\net8.0-windows\Meus Atalhos.pdb
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\obj\Debug\net8.0-windows\Meus Atalhos.genruntimeconfig.cache
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\obj\Debug\net8.0-windows\ref\Meus Atalhos.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\Microsoft.Identity.Client.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\MySqlConnector.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\Newtonsoft.Json.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\System.Text.Encodings.Web.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\System.Text.Json.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\bin\Debug\net8.0-windows\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\obj\Debug\net8.0-windows\Meus_Atalhos.FrmConversorBalancaFilizola.resources
+C:\Users\Administrador\Desktop\Git\Projetos\VbNet\Meus Atalhos\obj\Debug\net8.0-windows\Meus_Atalhos.Resources.resources

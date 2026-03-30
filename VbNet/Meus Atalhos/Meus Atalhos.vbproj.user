@@ -4,6 +4,9 @@
     <Compile Update="FrmBancoHoras.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="FrmConversorBalancaFilizola.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="FrmMeusAuxiliares.vb">
       <SubType>Form</SubType>
     </Compile>

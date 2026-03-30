@@ -121,6 +121,11 @@ Public Class FrmMeusAuxiliares
         frm.Show()
 
     End Sub
+
+    Private Sub BtnConversorFilizola_Click(sender As Object, e As EventArgs) Handles BtnConversorFilizola.Click
+        Dim frm As New FrmConversorBalancaFilizola
+        frm.Show()
+    End Sub
     Private Sub BtnFdbforXlsx_Click(sender As Object, e As EventArgs) Handles BtnFdbforXlsx.Click
 
         Dim caminhoFdb As String = ""
@@ -227,7 +232,6 @@ Public Class FrmMeusAuxiliares
         End Try
 
     End Sub
-
 
 #End Region
 
