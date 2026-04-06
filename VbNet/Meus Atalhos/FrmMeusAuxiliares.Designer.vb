@@ -80,11 +80,11 @@ Partial Class FrmMeusAuxiliares
         ' LblTitulo
         ' 
         LblTitulo.AutoSize = True
-        LblTitulo.Location = New Point(43, 20)
+        LblTitulo.Location = New Point(140, 18)
         LblTitulo.Name = "LblTitulo"
-        LblTitulo.Size = New Size(381, 15)
+        LblTitulo.Size = New Size(192, 15)
         LblTitulo.TabIndex = 1
-        LblTitulo.Text = "Programa Feito para juntar todos os comandos e utilizarios do dia a dia"
+        LblTitulo.Text = "Selecione a opção desejada abaixo:"
         ' 
         ' TabMenu
         ' 

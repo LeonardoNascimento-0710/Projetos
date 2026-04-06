@@ -8,6 +8,8 @@ Imports System.Data
 Public Class FrmMeusAuxiliares
 
     Private Sub FrmMeusAuxiliares_Load(sender As Object, e As EventArgs) Handles Me.Load
+
+
         Me.FormBorderStyle = FormBorderStyle.FixedSingle
         Me.MaximizeBox = False
 

@@ -3,20 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\Administrador\\Desktop\\Git\\Projetos\\VbNet\\Meus Atalhos\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F87A61B6-8B84-4916-88DB-2EE784BD9196}|Meus Atalhos.vbproj|c:\\users\\administrador\\desktop\\git\\projetos\\vbnet\\meus atalhos\\frmconversorbalancafilizola.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
-      "RelativeMoniker": "D:0:0:{F87A61B6-8B84-4916-88DB-2EE784BD9196}|Meus Atalhos.vbproj|solutionrelative:frmconversorbalancafilizola.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{F87A61B6-8B84-4916-88DB-2EE784BD9196}|Meus Atalhos.vbproj|c:\\users\\administrador\\desktop\\git\\projetos\\vbnet\\meus atalhos\\frmmeusauxiliares.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
       "RelativeMoniker": "D:0:0:{F87A61B6-8B84-4916-88DB-2EE784BD9196}|Meus Atalhos.vbproj|solutionrelative:frmmeusauxiliares.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F87A61B6-8B84-4916-88DB-2EE784BD9196}|Meus Atalhos.vbproj|c:\\users\\administrador\\desktop\\git\\projetos\\vbnet\\meus atalhos\\frmbancohoras.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
-      "RelativeMoniker": "D:0:0:{F87A61B6-8B84-4916-88DB-2EE784BD9196}|Meus Atalhos.vbproj|solutionrelative:frmbancohoras.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F87A61B6-8B84-4916-88DB-2EE784BD9196}|Meus Atalhos.vbproj|c:\\users\\administrador\\desktop\\git\\projetos\\vbnet\\meus atalhos\\frmbancohoras.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
-      "RelativeMoniker": "D:0:0:{F87A61B6-8B84-4916-88DB-2EE784BD9196}|Meus Atalhos.vbproj|solutionrelative:frmbancohoras.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,7 +14,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -34,44 +22,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "FrmBancoHoras.vb",
-              "DocumentMoniker": "C:\\Users\\Administrador\\Desktop\\Git\\Projetos\\VbNet\\Meus Atalhos\\FrmBancoHoras.vb",
-              "RelativeDocumentMoniker": "FrmBancoHoras.vb",
-              "ToolTip": "C:\\Users\\Administrador\\Desktop\\Git\\Projetos\\VbNet\\Meus Atalhos\\FrmBancoHoras.vb",
-              "RelativeToolTip": "FrmBancoHoras.vb",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2026-03-27T13:27:02.607Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "FrmBancoHoras.vb [Projeto]",
-              "DocumentMoniker": "C:\\Users\\Administrador\\Desktop\\Git\\Projetos\\VbNet\\Meus Atalhos\\FrmBancoHoras.vb",
-              "RelativeDocumentMoniker": "FrmBancoHoras.vb",
-              "ToolTip": "C:\\Users\\Administrador\\Desktop\\Git\\Projetos\\VbNet\\Meus Atalhos\\FrmBancoHoras.vb [Projeto]",
-              "RelativeToolTip": "FrmBancoHoras.vb [Projeto]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2026-03-27T13:11:33.635Z",
-              "EditorCaption": " [Projeto]"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "FrmConversorBalancaFilizola.vb [Projeto]",
-              "DocumentMoniker": "C:\\Users\\Administrador\\Desktop\\Git\\Projetos\\VbNet\\Meus Atalhos\\FrmConversorBalancaFilizola.vb",
-              "RelativeDocumentMoniker": "FrmConversorBalancaFilizola.vb",
-              "ToolTip": "C:\\Users\\Administrador\\Desktop\\Git\\Projetos\\VbNet\\Meus Atalhos\\FrmConversorBalancaFilizola.vb [Projeto]*",
-              "RelativeToolTip": "FrmConversorBalancaFilizola.vb [Projeto]*",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2026-03-27T12:28:44.872Z",
-              "EditorCaption": " [Projeto]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
               "Title": "FrmMeusAuxiliares.vb [Projeto]",
               "DocumentMoniker": "C:\\Users\\Administrador\\Desktop\\Git\\Projetos\\VbNet\\Meus Atalhos\\FrmMeusAuxiliares.vb",
               "RelativeDocumentMoniker": "FrmMeusAuxiliares.vb",
