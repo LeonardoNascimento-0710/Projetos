@@ -16,7 +16,7 @@ Imports System.Reflection
 <Assembly: System.Reflection.AssemblyCompanyAttribute("Banco de conversão"),  _
  Assembly: System.Reflection.AssemblyConfigurationAttribute("Debug"),  _
  Assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0"),  _
- Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a883974869cf6ff5c6556f7d5dd99d49236350b7"),  _
+ Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+813d6abf17c39c0ac498a981f93ca046e1656c5e"),  _
  Assembly: System.Reflection.AssemblyProductAttribute("Banco de conversão"),  _
  Assembly: System.Reflection.AssemblyTitleAttribute("Banco de conversão"),  _
  Assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0"),  _

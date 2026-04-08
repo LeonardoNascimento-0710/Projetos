@@ -285,23 +285,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Leona\\.nuget\\packages\\": {},
+    "C:\\Users\\Administrador\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Leona\\Desktop\\Projetos\\VbNet\\Banco de conversão\\Banco de conversão.vbproj",
+      "projectUniqueName": "C:\\Users\\Administrador\\Desktop\\Git\\Projetos\\VbNet\\Banco de conversão\\Banco de conversão.vbproj",
       "projectName": "Banco de conversão",
-      "projectPath": "C:\\Users\\Leona\\Desktop\\Projetos\\VbNet\\Banco de conversão\\Banco de conversão.vbproj",
-      "packagesPath": "C:\\Users\\Leona\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Leona\\Desktop\\Projetos\\VbNet\\Banco de conversão\\obj\\",
+      "projectPath": "C:\\Users\\Administrador\\Desktop\\Git\\Projetos\\VbNet\\Banco de conversão\\Banco de conversão.vbproj",
+      "packagesPath": "C:\\Users\\Administrador\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Administrador\\Desktop\\Git\\Projetos\\VbNet\\Banco de conversão\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Leona\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Administrador\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -328,7 +328,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "10.0.200"
     },
     "frameworks": {
       "net8.0-windows7.0": {
@@ -358,7 +359,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
