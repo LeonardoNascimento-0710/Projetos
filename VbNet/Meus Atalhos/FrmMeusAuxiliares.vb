@@ -15,8 +15,37 @@ Public Class FrmMeusAuxiliares
 
     End Sub
 
-#Region "Downloads"
+#Region "Botões e containers"
+    Private Sub BrnBancoHoras_Click(sender As Object, e As EventArgs) Handles BrnBancoHoras.Click
+        Dim frm As New FrmBancoHoras
+        frm.Show()
+    End Sub
+
+    Private Sub BtnConversorFilizola_Click(sender As Object, e As EventArgs) Handles BtnConversorFilizola.Click
+        Dim frm As New FrmConversorBalancaFilizola
+        frm.Show()
+    End Sub
+
+    Private Sub BtnConversorSD_Click(sender As Object, e As EventArgs) Handles BtnConversorSD.Click
+        Dim frm As New FrmBancoSD()
+        frm.Show()
+    End Sub
+
     Private Sub BtnBaixar_Click(sender As Object, e As EventArgs) Handles BtnDowloadVideos.Click
+        BaixarVideos()
+    End Sub
+
+    Private Sub BtnConverter_Click(sender As Object, e As EventArgs) Handles BtnConversor.Click
+        ConverterVideos()
+    End Sub
+
+    Private Sub BtnFdbforXlsx_Click(sender As Object, e As EventArgs) Handles BtnFdbforXlsx.Click
+        FdbforXlsx()
+    End Sub
+#End Region
+
+#Region "Downloads"
+    Private Sub BaixarVideos()
 
         Dim link = InputBox("Cole o link da playlist do YouTube:", "Baixar Playlist")
 
@@ -54,7 +83,7 @@ Public Class FrmMeusAuxiliares
 
     End Sub
 
-    Private Sub BtnConverter_Click(sender As Object, e As EventArgs) Handles BtnConversor.Click
+    Private Sub ConverterVideos()
         Dim pasta As String = ""
 
         Using fbd As New FolderBrowserDialog()
@@ -117,18 +146,8 @@ Public Class FrmMeusAuxiliares
 #End Region
 
 #Region "Atalhos"
-    Private Sub BrnBancoHoras_Click(sender As Object, e As EventArgs) Handles BrnBancoHoras.Click
 
-        Dim frm As New FrmBancoHoras
-        frm.Show()
-
-    End Sub
-
-    Private Sub BtnConversorFilizola_Click(sender As Object, e As EventArgs) Handles BtnConversorFilizola.Click
-        Dim frm As New FrmConversorBalancaFilizola
-        frm.Show()
-    End Sub
-    Private Sub BtnFdbforXlsx_Click(sender As Object, e As EventArgs) Handles BtnFdbforXlsx.Click
+    Private Sub FdbforXlsx()
 
         Dim caminhoFdb As String = ""
         Dim caminhoXlsx As String = ""

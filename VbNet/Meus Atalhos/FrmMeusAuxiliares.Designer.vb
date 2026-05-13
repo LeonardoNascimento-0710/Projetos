@@ -59,7 +59,7 @@ Partial Class FrmMeusAuxiliares
         Button29 = New Button()
         Button30 = New Button()
         Button31 = New Button()
-        Button32 = New Button()
+        BtnConversorSD = New Button()
         BtnConversorFilizola = New Button()
         BtnFdbforXlsx = New Button()
         BrnBancoHoras = New Button()
@@ -278,7 +278,7 @@ Partial Class FrmMeusAuxiliares
         TabPage2.Controls.Add(Button29)
         TabPage2.Controls.Add(Button30)
         TabPage2.Controls.Add(Button31)
-        TabPage2.Controls.Add(Button32)
+        TabPage2.Controls.Add(BtnConversorSD)
         TabPage2.Controls.Add(BtnConversorFilizola)
         TabPage2.Controls.Add(BtnFdbforXlsx)
         TabPage2.Controls.Add(BrnBancoHoras)
@@ -401,13 +401,14 @@ Partial Class FrmMeusAuxiliares
         Button31.TabIndex = 21
         Button31.UseVisualStyleBackColor = True
         ' 
-        ' Button32
+        ' BtnConversorSD
         ' 
-        Button32.Location = New Point(6, 62)
-        Button32.Name = "Button32"
-        Button32.Size = New Size(125, 37)
-        Button32.TabIndex = 19
-        Button32.UseVisualStyleBackColor = True
+        BtnConversorSD.Location = New Point(6, 62)
+        BtnConversorSD.Name = "BtnConversorSD"
+        BtnConversorSD.Size = New Size(125, 37)
+        BtnConversorSD.TabIndex = 19
+        BtnConversorSD.Text = "Banco SD"
+        BtnConversorSD.UseVisualStyleBackColor = True
         ' 
         ' BtnConversorFilizola
         ' 
@@ -495,7 +496,7 @@ Partial Class FrmMeusAuxiliares
     Friend WithEvents Button29 As Button
     Friend WithEvents Button30 As Button
     Friend WithEvents Button31 As Button
-    Friend WithEvents Button32 As Button
+    Friend WithEvents BtnConversorSD As Button
     Friend WithEvents BtnConversorFilizola As Button
     Friend WithEvents BtnFdbforXlsx As Button
     Friend WithEvents BrnBancoHoras As Button
