@@ -58,7 +58,7 @@ Partial Class FrmMeusAuxiliares
         Button28 = New Button()
         Button29 = New Button()
         Button30 = New Button()
-        Button31 = New Button()
+        BtnConversorToledo = New Button()
         BtnConversorSD = New Button()
         BtnConversorFilizola = New Button()
         BtnFdbforXlsx = New Button()
@@ -80,6 +80,7 @@ Partial Class FrmMeusAuxiliares
         ' LblTitulo
         ' 
         LblTitulo.AutoSize = True
+        LblTitulo.ForeColor = Color.White
         LblTitulo.Location = New Point(140, 18)
         LblTitulo.Name = "LblTitulo"
         LblTitulo.Size = New Size(192, 15)
@@ -277,7 +278,7 @@ Partial Class FrmMeusAuxiliares
         TabPage2.Controls.Add(Button28)
         TabPage2.Controls.Add(Button29)
         TabPage2.Controls.Add(Button30)
-        TabPage2.Controls.Add(Button31)
+        TabPage2.Controls.Add(BtnConversorToledo)
         TabPage2.Controls.Add(BtnConversorSD)
         TabPage2.Controls.Add(BtnConversorFilizola)
         TabPage2.Controls.Add(BtnFdbforXlsx)
@@ -393,17 +394,18 @@ Partial Class FrmMeusAuxiliares
         Button30.TabIndex = 22
         Button30.UseVisualStyleBackColor = True
         ' 
-        ' Button31
+        ' BtnConversorToledo
         ' 
-        Button31.Location = New Point(157, 62)
-        Button31.Name = "Button31"
-        Button31.Size = New Size(125, 37)
-        Button31.TabIndex = 21
-        Button31.UseVisualStyleBackColor = True
+        BtnConversorToledo.Location = New Point(157, 62)
+        BtnConversorToledo.Name = "BtnConversorToledo"
+        BtnConversorToledo.Size = New Size(125, 37)
+        BtnConversorToledo.TabIndex = 21
+        BtnConversorToledo.Text = "Balança Toledo"
+        BtnConversorToledo.UseVisualStyleBackColor = True
         ' 
         ' BtnConversorSD
         ' 
-        BtnConversorSD.Location = New Point(6, 62)
+        BtnConversorSD.Location = New Point(307, 6)
         BtnConversorSD.Name = "BtnConversorSD"
         BtnConversorSD.Size = New Size(125, 37)
         BtnConversorSD.TabIndex = 19
@@ -412,7 +414,7 @@ Partial Class FrmMeusAuxiliares
         ' 
         ' BtnConversorFilizola
         ' 
-        BtnConversorFilizola.Location = New Point(307, 6)
+        BtnConversorFilizola.Location = New Point(6, 62)
         BtnConversorFilizola.Name = "BtnConversorFilizola"
         BtnConversorFilizola.Size = New Size(125, 37)
         BtnConversorFilizola.TabIndex = 17
@@ -441,7 +443,7 @@ Partial Class FrmMeusAuxiliares
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        BackColor = SystemColors.ActiveCaption
+        BackColor = Color.FromArgb(CByte(134), CByte(29), CByte(29))
         ClientSize = New Size(470, 464)
         Controls.Add(TabMenu)
         Controls.Add(LblTitulo)
@@ -495,7 +497,7 @@ Partial Class FrmMeusAuxiliares
     Friend WithEvents Button28 As Button
     Friend WithEvents Button29 As Button
     Friend WithEvents Button30 As Button
-    Friend WithEvents Button31 As Button
+    Friend WithEvents BtnConversorToledo As Button
     Friend WithEvents BtnConversorSD As Button
     Friend WithEvents BtnConversorFilizola As Button
     Friend WithEvents BtnFdbforXlsx As Button

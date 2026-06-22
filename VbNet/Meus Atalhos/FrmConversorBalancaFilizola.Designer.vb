@@ -34,7 +34,7 @@ Partial Class FrmConversorBalancaFilizola
         ' 
         ' BtnLimparArquivo
         ' 
-        BtnLimparArquivo.Location = New Point(12, 26)
+        BtnLimparArquivo.Location = New Point(15, 26)
         BtnLimparArquivo.Name = "BtnLimparArquivo"
         BtnLimparArquivo.Size = New Size(100, 44)
         BtnLimparArquivo.TabIndex = 0
@@ -43,7 +43,7 @@ Partial Class FrmConversorBalancaFilizola
         ' 
         ' BtnGerarUpdate
         ' 
-        BtnGerarUpdate.Location = New Point(133, 26)
+        BtnGerarUpdate.Location = New Point(136, 26)
         BtnGerarUpdate.Name = "BtnGerarUpdate"
         BtnGerarUpdate.Size = New Size(100, 44)
         BtnGerarUpdate.TabIndex = 1
@@ -52,7 +52,7 @@ Partial Class FrmConversorBalancaFilizola
         ' 
         ' BtnRetornar
         ' 
-        BtnRetornar.Location = New Point(130, 6)
+        BtnRetornar.Location = New Point(132, 7)
         BtnRetornar.Name = "BtnRetornar"
         BtnRetornar.Size = New Size(63, 43)
         BtnRetornar.TabIndex = 2
@@ -65,7 +65,7 @@ Partial Class FrmConversorBalancaFilizola
         Panel1.Controls.Add(BtnRetornar)
         Panel1.Location = New Point(-5, 160)
         Panel1.Name = "Panel1"
-        Panel1.Size = New Size(619, 107)
+        Panel1.Size = New Size(326, 63)
         Panel1.TabIndex = 3
         ' 
         ' Panel2
@@ -82,7 +82,7 @@ Partial Class FrmConversorBalancaFilizola
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        BackColor = SystemColors.ActiveCaption
+        BackColor = Color.FromArgb(CByte(134), CByte(29), CByte(29))
         ClientSize = New Size(317, 216)
         Controls.Add(Panel2)
         Controls.Add(Panel1)

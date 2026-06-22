@@ -17,18 +17,39 @@ Public Class FrmMeusAuxiliares
 
 #Region "Botões e containers"
     Private Sub BrnBancoHoras_Click(sender As Object, e As EventArgs) Handles BrnBancoHoras.Click
-        Dim frm As New FrmBancoHoras
-        frm.Show()
+
+        Me.Hide()
+
+        Using frm As New FrmBancoHoras
+            frm.ShowDialog()
+        End Using
+
+        Me.Show()
+
     End Sub
 
     Private Sub BtnConversorFilizola_Click(sender As Object, e As EventArgs) Handles BtnConversorFilizola.Click
-        Dim frm As New FrmConversorBalancaFilizola
-        frm.Show()
+
+        Me.Hide()
+
+        Using frm As New FrmConversorBalancaFilizola
+            frm.ShowDialog()
+        End Using
+
+        Me.Show()
+
     End Sub
 
     Private Sub BtnConversorSD_Click(sender As Object, e As EventArgs) Handles BtnConversorSD.Click
-        Dim frm As New FrmBancoSD()
-        frm.Show()
+
+        Me.Hide()
+
+        Using frm As New FrmBancoSD()
+            frm.ShowDialog()
+        End Using
+
+        Me.Show()
+
     End Sub
 
     Private Sub BtnBaixar_Click(sender As Object, e As EventArgs) Handles BtnDowloadVideos.Click
@@ -42,6 +63,18 @@ Public Class FrmMeusAuxiliares
     Private Sub BtnFdbforXlsx_Click(sender As Object, e As EventArgs) Handles BtnFdbforXlsx.Click
         FdbforXlsx()
     End Sub
+    Private Sub BtnConversorToledo_Click(sender As Object, e As EventArgs) Handles BtnConversorToledo.Click
+
+        Me.Hide()
+
+        Using frm As New FrmConversorBalancaToledo
+            frm.ShowDialog()
+        End Using
+
+        Me.Show()
+
+    End Sub
+
 #End Region
 
 #Region "Downloads"
@@ -253,6 +286,8 @@ Public Class FrmMeusAuxiliares
         End Try
 
     End Sub
+
+
 
 #End Region
 

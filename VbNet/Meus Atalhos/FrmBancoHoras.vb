@@ -62,7 +62,7 @@ Public Class FrmBancoHoras
     Private Function TestarConexao() As Boolean
         Try
             Using conn As New MySqlConnection(
-            "server=localhost;database=projects;user id=root;password=root;"
+            "server=localhost;port=3307;database=projects;user id=root;password=root;"
         )
                 conn.Open()
                 Return True
@@ -79,7 +79,6 @@ Public Class FrmBancoHoras
             inicioValor = TxtSemData.Text
             fimValor = TxtSemData.Text
         Else
-            ' Datas
             inicioValor = DtpInicio.Value.ToString("dd/MM/yyyy")
             fimValor = DtpFinal.Value.ToString("dd/MM/yyyy")
         End If
@@ -87,7 +86,7 @@ Public Class FrmBancoHoras
     Private Sub CarregarLojas()
         Try
             Using conn As New MySqlConnection(
-            "server=localhost;database=projects;user id=root;password=root;"
+            "server=localhost;port=3307;database=projects;user id=root;password=root;"
         )
                 conn.Open()
 
@@ -122,7 +121,7 @@ Public Class FrmBancoHoras
 
         Try
             Using conn As New MySqlConnection(
-            "server=localhost;database=projects;user id=root;password=root;"
+            "server=localhost;port=3307;database=projects;user id=root;password=root;"
         )
                 conn.Open()
 
@@ -222,7 +221,7 @@ Public Class FrmBancoHoras
                Convert.ToInt32(row.Cells("utilizados").Value))
 
             Using conn As New MySqlConnection(
-            "server=localhost;database=projects;user id=root;password=root;"
+            "server=localhost;port=3307;database=projects;user id=root;password=root;"
         )
                 conn.Open()
 
@@ -264,7 +263,7 @@ Public Class FrmBancoHoras
     Private Sub CarregarPorLoja()
         Try
             Using conn As New MySqlConnection(
-            "server=localhost;database=projects;user id=root;password=root;"
+            "server=localhost;port=3307;database=projects;user id=root;password=root;"
         )
                 conn.Open()
 
@@ -375,7 +374,7 @@ Public Class FrmBancoHoras
             Dim dt As New DataTable
 
             Using conn As New MySqlConnection(
-                "server=localhost;database=projects;user id=root;password=root;"
+                "server=localhost;port=3307;database=projects;user id=root;password=root;"
             )
                 conn.Open()
 
@@ -387,13 +386,11 @@ Public Class FrmBancoHoras
             Using wb As New XLWorkbook()
                 Dim ws = wb.Worksheets.Add("BancoHoras")
 
-                ' Cabeçalhos em negrito
                 For col As Integer = 0 To dt.Columns.Count - 1
                     ws.Cell(1, col + 1).Value = dt.Columns(col).ColumnName
                     ws.Cell(1, col + 1).Style.Font.Bold = True
                 Next
 
-                ' Dados (TRUE/FALSE → SIM/NÃO apenas no Excel)
                 For row As Integer = 0 To dt.Rows.Count - 1
                     For col As Integer = 0 To dt.Columns.Count - 1
 

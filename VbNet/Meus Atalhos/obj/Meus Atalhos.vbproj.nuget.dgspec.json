@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Administrador\\Desktop\\Git\\Projetos\\VbNet\\Meus Atalhos\\Meus Atalhos.vbproj": {}
+    "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\Meus Atalhos\\Meus Atalhos.vbproj": {}
   },
   "projects": {
-    "C:\\Users\\Administrador\\Desktop\\Git\\Projetos\\VbNet\\Meus Atalhos\\Meus Atalhos.vbproj": {
+    "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\Meus Atalhos\\Meus Atalhos.vbproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Administrador\\Desktop\\Git\\Projetos\\VbNet\\Meus Atalhos\\Meus Atalhos.vbproj",
+        "projectUniqueName": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\Meus Atalhos\\Meus Atalhos.vbproj",
         "projectName": "Meus Atalhos",
-        "projectPath": "C:\\Users\\Administrador\\Desktop\\Git\\Projetos\\VbNet\\Meus Atalhos\\Meus Atalhos.vbproj",
+        "projectPath": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\Meus Atalhos\\Meus Atalhos.vbproj",
         "packagesPath": "C:\\Users\\Administrador\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Administrador\\Desktop\\Git\\Projetos\\VbNet\\Meus Atalhos\\obj\\",
+        "outputPath": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\Meus Atalhos\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -105,7 +105,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

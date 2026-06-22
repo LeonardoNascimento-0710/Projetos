@@ -86,7 +86,7 @@ Partial Class FrmBancoHoras
         ' 
         ' TxtQntdUlt
         ' 
-        TxtQntdUlt.Location = New Point(274, 213)
+        TxtQntdUlt.Location = New Point(275, 213)
         TxtQntdUlt.Name = "TxtQntdUlt"
         TxtQntdUlt.Size = New Size(74, 23)
         TxtQntdUlt.TabIndex = 22
@@ -94,6 +94,7 @@ Partial Class FrmBancoHoras
         ' LblQtd
         ' 
         LblQtd.AutoSize = True
+        LblQtd.ForeColor = Color.White
         LblQtd.Location = New Point(275, 195)
         LblQtd.Name = "LblQtd"
         LblQtd.Size = New Size(80, 15)
@@ -103,7 +104,8 @@ Partial Class FrmBancoHoras
         ' ChkUtilizado
         ' 
         ChkUtilizado.AutoSize = True
-        ChkUtilizado.Location = New Point(183, 217)
+        ChkUtilizado.ForeColor = Color.White
+        ChkUtilizado.Location = New Point(185, 217)
         ChkUtilizado.Name = "ChkUtilizado"
         ChkUtilizado.Size = New Size(84, 19)
         ChkUtilizado.TabIndex = 19
@@ -120,6 +122,7 @@ Partial Class FrmBancoHoras
         ' LblOs
         ' 
         LblOs.AutoSize = True
+        LblOs.ForeColor = Color.White
         LblOs.Location = New Point(275, 147)
         LblOs.Name = "LblOs"
         LblOs.Size = New Size(22, 15)
@@ -137,6 +140,7 @@ Partial Class FrmBancoHoras
         ' ChkSemData
         ' 
         ChkSemData.AutoSize = True
+        ChkSemData.ForeColor = Color.White
         ChkSemData.Location = New Point(69, 80)
         ChkSemData.Name = "ChkSemData"
         ChkSemData.Size = New Size(80, 19)
@@ -154,7 +158,8 @@ Partial Class FrmBancoHoras
         ' LblMotivo
         ' 
         LblMotivo.AutoSize = True
-        LblMotivo.Location = New Point(125, 221)
+        LblMotivo.ForeColor = Color.White
+        LblMotivo.Location = New Point(117, 225)
         LblMotivo.Name = "LblMotivo"
         LblMotivo.Size = New Size(51, 15)
         LblMotivo.TabIndex = 16
@@ -178,6 +183,7 @@ Partial Class FrmBancoHoras
         ' LblDiasFora
         ' 
         LblDiasFora.AutoSize = True
+        LblDiasFora.ForeColor = Color.White
         LblDiasFora.Location = New Point(275, 80)
         LblDiasFora.Name = "LblDiasFora"
         LblDiasFora.Size = New Size(65, 15)
@@ -194,7 +200,8 @@ Partial Class FrmBancoHoras
         ' LblExtra
         ' 
         LblExtra.AutoSize = True
-        LblExtra.Location = New Point(21, 221)
+        LblExtra.ForeColor = Color.White
+        LblExtra.Location = New Point(21, 224)
         LblExtra.Name = "LblExtra"
         LblExtra.Size = New Size(83, 15)
         LblExtra.TabIndex = 9
@@ -203,6 +210,7 @@ Partial Class FrmBancoHoras
         ' LblFim
         ' 
         LblFim.AutoSize = True
+        LblFim.ForeColor = Color.White
         LblFim.Location = New Point(21, 148)
         LblFim.Name = "LblFim"
         LblFim.Size = New Size(27, 15)
@@ -221,6 +229,7 @@ Partial Class FrmBancoHoras
         ' LblInicio
         ' 
         LblInicio.AutoSize = True
+        LblInicio.ForeColor = Color.White
         LblInicio.Location = New Point(21, 81)
         LblInicio.Name = "LblInicio"
         LblInicio.Size = New Size(42, 15)
@@ -247,6 +256,7 @@ Partial Class FrmBancoHoras
         ' LblLoja
         ' 
         LblLoja.AutoSize = True
+        LblLoja.ForeColor = Color.White
         LblLoja.Location = New Point(21, 26)
         LblLoja.Name = "LblLoja"
         LblLoja.Size = New Size(34, 15)
@@ -255,7 +265,7 @@ Partial Class FrmBancoHoras
         ' 
         ' BtnGravar
         ' 
-        BtnGravar.Location = New Point(351, 7)
+        BtnGravar.Location = New Point(379, 7)
         BtnGravar.Name = "BtnGravar"
         BtnGravar.Size = New Size(87, 49)
         BtnGravar.TabIndex = 0
@@ -264,7 +274,7 @@ Partial Class FrmBancoHoras
         ' 
         ' BtnRetornar
         ' 
-        BtnRetornar.Location = New Point(569, 7)
+        BtnRetornar.Location = New Point(597, 7)
         BtnRetornar.Name = "BtnRetornar"
         BtnRetornar.Size = New Size(87, 49)
         BtnRetornar.TabIndex = 1
@@ -274,12 +284,13 @@ Partial Class FrmBancoHoras
         ' GrpHist
         ' 
         GrpHist.Controls.Add(DtHist)
+        GrpHist.ForeColor = Color.White
         GrpHist.Location = New Point(398, 12)
         GrpHist.Name = "GrpHist"
         GrpHist.Size = New Size(605, 290)
         GrpHist.TabIndex = 2
         GrpHist.TabStop = False
-        GrpHist.Text = "histórico"
+        GrpHist.Text = "HISTÓRICO"
         ' 
         ' DtHist
         ' 
@@ -291,7 +302,7 @@ Partial Class FrmBancoHoras
         ' 
         ' BtnExportar
         ' 
-        BtnExportar.Location = New Point(460, 6)
+        BtnExportar.Location = New Point(488, 6)
         BtnExportar.Name = "BtnExportar"
         BtnExportar.Size = New Size(87, 49)
         BtnExportar.TabIndex = 3
@@ -313,7 +324,7 @@ Partial Class FrmBancoHoras
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        BackColor = SystemColors.ActiveCaption
+        BackColor = Color.FromArgb(CByte(134), CByte(29), CByte(29))
         ClientSize = New Size(1024, 382)
         ControlBox = False
         Controls.Add(Panel1)

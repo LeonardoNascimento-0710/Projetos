@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Yr1roAMd4s0=",
+  "dgSpecHash": "W+farR13U0c=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Administrador\\Desktop\\Git\\Projetos\\VbNet\\Meus Atalhos\\Meus Atalhos.vbproj",
+  "projectFilePath": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\Meus Atalhos\\Meus Atalhos.vbproj",
   "expectedPackageFiles": [
     "C:\\Users\\Administrador\\.nuget\\packages\\bouncycastle.cryptography\\2.6.2\\bouncycastle.cryptography.2.6.2.nupkg.sha512",
     "C:\\Users\\Administrador\\.nuget\\packages\\closedxml\\0.105.0\\closedxml.0.105.0.nupkg.sha512",

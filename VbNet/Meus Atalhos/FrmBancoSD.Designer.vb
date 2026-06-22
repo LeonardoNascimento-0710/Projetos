@@ -29,7 +29,7 @@ Partial Class FrmBancoSD
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        BackColor = SystemColors.ActiveCaption
+        BackColor = Color.FromArgb(CByte(134), CByte(29), CByte(29))
         ClientSize = New Size(450, 450)
         Icon = CType(resources.GetObject("$this.Icon"), Icon)
         MaximizeBox = False

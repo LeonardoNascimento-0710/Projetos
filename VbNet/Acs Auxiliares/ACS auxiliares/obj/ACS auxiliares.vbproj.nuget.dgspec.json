@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Administrador\\Desktop\\GitHub\\Projetos\\Projetos\\VbNet\\Acs Auxiliares\\ACS auxiliares\\ACS auxiliares.vbproj": {}
+    "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\Acs Auxiliares\\ACS auxiliares\\ACS auxiliares.vbproj": {}
   },
   "projects": {
-    "C:\\Users\\Administrador\\Desktop\\GitHub\\Projetos\\Projetos\\VbNet\\Acs Auxiliares\\ACS auxiliares\\ACS auxiliares.vbproj": {
+    "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\Acs Auxiliares\\ACS auxiliares\\ACS auxiliares.vbproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Administrador\\Desktop\\GitHub\\Projetos\\Projetos\\VbNet\\Acs Auxiliares\\ACS auxiliares\\ACS auxiliares.vbproj",
+        "projectUniqueName": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\Acs Auxiliares\\ACS auxiliares\\ACS auxiliares.vbproj",
         "projectName": "ACS auxiliares",
-        "projectPath": "C:\\Users\\Administrador\\Desktop\\GitHub\\Projetos\\Projetos\\VbNet\\Acs Auxiliares\\ACS auxiliares\\ACS auxiliares.vbproj",
+        "projectPath": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\Acs Auxiliares\\ACS auxiliares\\ACS auxiliares.vbproj",
         "packagesPath": "C:\\Users\\Administrador\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Administrador\\Desktop\\GitHub\\Projetos\\Projetos\\VbNet\\Acs Auxiliares\\ACS auxiliares\\obj\\",
+        "outputPath": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\Acs Auxiliares\\ACS auxiliares\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -30,7 +30,8 @@
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net8.0-windows7.0": {
+          "net8.0-windows": {
+            "framework": "net8.0-windows7.0",
             "targetAlias": "net8.0-windows",
             "projectReferences": {}
           }
@@ -45,10 +46,11 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
-        "net8.0-windows7.0": {
+        "net8.0-windows": {
+          "framework": "net8.0-windows7.0",
           "targetAlias": "net8.0-windows",
           "dependencies": {
             "ClosedXML": {
@@ -103,7 +105,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
