@@ -40,14 +40,14 @@ Partial Class FrmConversorBalancaToledo
         LblCodNutri = New Label()
         LblCodnutridesc = New Label()
         Panel2 = New Panel()
-        Label1 = New Label()
         CmbPorcao = New ComboBox()
+        Label1 = New Label()
         CmbQtdePorcao = New ComboBox()
-        TxtPorcao = New TextBox()
+        TxtPorcaointeira = New TextBox()
         LblCompl2 = New Label()
         LblCompl1 = New Label()
         CmbTipoPorcao = New ComboBox()
-        TxtQtdeTotal = New TextBox()
+        Txtporcoes = New TextBox()
         LblPorcao = New Label()
         GroupBox1 = New GroupBox()
         ChkSodio = New CheckBox()
@@ -133,7 +133,7 @@ Partial Class FrmConversorBalancaToledo
         ' LblCodSD
         ' 
         LblCodSD.AutoSize = True
-        LblCodSD.Location = New Point(111, 137)
+        LblCodSD.Location = New Point(106, 137)
         LblCodSD.Name = "LblCodSD"
         LblCodSD.Size = New Size(13, 15)
         LblCodSD.TabIndex = 34
@@ -280,28 +280,19 @@ Partial Class FrmConversorBalancaToledo
         ' Panel2
         ' 
         Panel2.BackColor = Color.DarkGray
-        Panel2.Controls.Add(Label1)
         Panel2.Controls.Add(CmbPorcao)
+        Panel2.Controls.Add(Label1)
         Panel2.Controls.Add(CmbQtdePorcao)
-        Panel2.Controls.Add(TxtPorcao)
+        Panel2.Controls.Add(TxtPorcaointeira)
         Panel2.Controls.Add(LblCompl2)
         Panel2.Controls.Add(LblCompl1)
         Panel2.Controls.Add(CmbTipoPorcao)
-        Panel2.Controls.Add(TxtQtdeTotal)
+        Panel2.Controls.Add(Txtporcoes)
         Panel2.Controls.Add(LblPorcao)
         Panel2.Location = New Point(8, 31)
         Panel2.Name = "Panel2"
         Panel2.Size = New Size(461, 78)
         Panel2.TabIndex = 29
-        ' 
-        ' Label1
-        ' 
-        Label1.AutoSize = True
-        Label1.Location = New Point(109, 9)
-        Label1.Name = "Label1"
-        Label1.Size = New Size(252, 15)
-        Label1.TabIndex = 20
-        Label1.Text = "QUANTIDADE DE PORÇÕES POR EMBALAGEM"
         ' 
         ' CmbPorcao
         ' 
@@ -313,6 +304,15 @@ Partial Class FrmConversorBalancaToledo
         CmbPorcao.Size = New Size(123, 23)
         CmbPorcao.TabIndex = 19
         ' 
+        ' Label1
+        ' 
+        Label1.AutoSize = True
+        Label1.Location = New Point(109, 9)
+        Label1.Name = "Label1"
+        Label1.Size = New Size(252, 15)
+        Label1.TabIndex = 20
+        Label1.Text = "QUANTIDADE DE PORÇÕES POR EMBALAGEM"
+        ' 
         ' CmbQtdePorcao
         ' 
         CmbQtdePorcao.DropDownStyle = ComboBoxStyle.DropDownList
@@ -323,12 +323,12 @@ Partial Class FrmConversorBalancaToledo
         CmbQtdePorcao.Size = New Size(48, 23)
         CmbQtdePorcao.TabIndex = 18
         ' 
-        ' TxtPorcao
+        ' TxtPorcaointeira
         ' 
-        TxtPorcao.Location = New Point(207, 42)
-        TxtPorcao.Name = "TxtPorcao"
-        TxtPorcao.Size = New Size(47, 23)
-        TxtPorcao.TabIndex = 17
+        TxtPorcaointeira.Location = New Point(207, 42)
+        TxtPorcaointeira.Name = "TxtPorcaointeira"
+        TxtPorcaointeira.Size = New Size(47, 23)
+        TxtPorcaointeira.TabIndex = 17
         ' 
         ' LblCompl2
         ' 
@@ -358,12 +358,12 @@ Partial Class FrmConversorBalancaToledo
         CmbTipoPorcao.Size = New Size(70, 23)
         CmbTipoPorcao.TabIndex = 14
         ' 
-        ' TxtQtdeTotal
+        ' Txtporcoes
         ' 
-        TxtQtdeTotal.Location = New Point(58, 42)
-        TxtQtdeTotal.Name = "TxtQtdeTotal"
-        TxtQtdeTotal.Size = New Size(47, 23)
-        TxtQtdeTotal.TabIndex = 13
+        Txtporcoes.Location = New Point(58, 42)
+        Txtporcoes.Name = "Txtporcoes"
+        Txtporcoes.Size = New Size(47, 23)
+        Txtporcoes.TabIndex = 13
         ' 
         ' LblPorcao
         ' 
@@ -734,11 +734,11 @@ Partial Class FrmConversorBalancaToledo
     Friend WithEvents Label1 As Label
     Friend WithEvents CmbPorcao As ComboBox
     Friend WithEvents CmbQtdePorcao As ComboBox
-    Friend WithEvents TxtPorcao As TextBox
+    Friend WithEvents TxtPorcaointeira As TextBox
     Friend WithEvents LblCompl2 As Label
     Friend WithEvents LblCompl1 As Label
     Friend WithEvents CmbTipoPorcao As ComboBox
-    Friend WithEvents TxtQtdeTotal As TextBox
+    Friend WithEvents Txtporcoes As TextBox
     Friend WithEvents LblPorcao As Label
     Friend WithEvents CmbMedida As ComboBox
     Friend WithEvents LblMedida As Label

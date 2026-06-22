@@ -5,6 +5,8 @@ Imports System.IO
 
 Public Class FrmConversorBalancaToledo
 
+    Private CarregandoDados As Boolean = False
+
     Private conn As New MySqlConnection(
         "server=localhost;port=3307;database=projects;user id=root;password=root;")
 
@@ -156,8 +158,8 @@ Public Class FrmConversorBalancaToledo
 (
     codigo,
     codigo_sd,
+    porcoes_embalagens,
     porcoes,
-    qtd_porcao,
     unidade,
     medida_inteira,
     medida_decimal,
@@ -186,8 +188,8 @@ VALUES
 (
     @codigo,
     @codigo_sd,
+    @porcoes_embalagens,
     @porcoes,
-    @qtd_porcao,
     @unidade,
     @medida_inteira,
     @medida_decimal,
@@ -248,8 +250,8 @@ VALUES
 
                 pos += 1
 
+                Dim porcoes_embalagens As Integer = Integer.Parse(dados.Substring(pos, 3)) : pos += 3
                 Dim porcoes As Integer = Integer.Parse(dados.Substring(pos, 3)) : pos += 3
-                Dim qtdPorcao As Integer = Integer.Parse(dados.Substring(pos, 3)) : pos += 3
                 Dim unidade As String = dados.Substring(pos, 1) : pos += 1
                 Dim medidaInteira As Integer = Integer.Parse(dados.Substring(pos, 2)) : pos += 2
                 Dim medidaDecimal As Integer = Integer.Parse(dados.Substring(pos, 1)) : pos += 1
@@ -284,8 +286,8 @@ VALUES
 
                 cmd.Parameters.AddWithValue("@codigo", codigo)
                 cmd.Parameters.AddWithValue("@codigo_sd", codigoSistema)
+                cmd.Parameters.AddWithValue("@porcoes_embalagens", porcoes_embalagens)
                 cmd.Parameters.AddWithValue("@porcoes", porcoes)
-                cmd.Parameters.AddWithValue("@qtd_porcao", qtdPorcao)
                 cmd.Parameters.AddWithValue("@unidade", unidade)
                 cmd.Parameters.AddWithValue("@medida_inteira", medidaInteira)
                 cmd.Parameters.AddWithValue("@medida_decimal", medidaDecimal)
@@ -439,9 +441,9 @@ VALUES
                 TxtValidade.Text = dr("validade").ToString()
                 LblCodNutri.Text = dr("cod_nutri").ToString()
 
-                TxtQtdeTotal.Text = dr("qtd_porcao").ToString()
+                Txtporcoes.Text = dr("porcoes").ToString()
 
-                TxtPorcao.Text = dr("medida_inteira").ToString()
+                TxtPorcaointeira.Text = dr("medida_inteira").ToString()
 
                 If dr("unidade").ToString() = "0" Then
                     CmbTipoPorcao.SelectedIndex = 0
@@ -546,7 +548,7 @@ END AS 'Venda',
 i.validade AS 'Validade',
 i.cod_nutri AS 'Cod. Nutri',
 
-n.qtd_porcao AS 'Qtd. Porção',
+n.porcoes AS 'Qtd. Porção',
 n.unidade AS 'Unidade',
 n.medida_inteira AS 'Medida',
 n.medida_decimal AS 'Fração',
@@ -609,32 +611,35 @@ ORDER BY i.codigo"
 
     Private Function GerarInsertNutricional(dr As MySqlDataReader) As String
 
-        Dim descricao As String = dr("descricao").ToString().Replace("'", "''")
+        Dim descricao As String =
+    dr("descricao").ToString().
+    Replace("'", "''")
 
         Return String.Format(
-        "INSERT INTO NUTRICIONAIS (WIDNUTRICIONAL,WNOMENUTRICIONAL,WSTATUS,WPORCAO,WPORCAOUNIDADE,WQTDINTEIRA,WQTDFRACIONADA,WQTDUNIDADE,WVALORENERGETICO,WVALORCARBOIDRATOS,WVALORPROTEINAS,WVALORGORDURASTOTAIS,WVALORGORDURASSATURADAS,WVALORGORDURASTRANS,WVALORFIBRAALIMENTAR,WVALORSODIO,WIDANTIGO,WPORCAO100G,WPORCAOUNIDADE100G,WQTDINTEIRA100G,WQTDFRACIONADA100G,WQTDUNIDADE100G,WVALORENERGETICO100G,WVALORCARBOIDRATOS100G,WVALORPROTEINAS100G,WVALORGORDURASTOTAIS100G,WVALORGORDURASSATURADAS100G,WVALORGORDURASTRANS100G,WVALORFIBRAALIMENTAR100G,WVALORSODIO100G,WVALORLACTOSE100G,WVALORGALACTOSE100G,WPORCOESEMBALAGEM100G,WVALORACUCARESTOTAIS100G,WVALORACUCARESADD100G,WALTOEMACUCARESADD100G,WALTOEMGORDURASSATURADAS100G,WALTOEMSODIO100G,WHABILITARCAMPOSRDC429) VALUES ({0},'{1}','0',0,0,0,0,0,0,0,0,0,0,0,0,0,0,{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},1,{17},{18},'{19}','{20}','{21}','S');",
-        dr("codigo_sd"),
-        descricao,
-        dr("porcoes"),
-        dr("unidade"),
-        dr("medida_inteira"),
-        dr("medida_decimal"),
-        dr("medida_caseira"),
-        dr("valor_energetico"),
-        FBDecimal(dr("carboidratos")),
-        FBDecimal(dr("proteinas")),
-        FBDecimal(dr("gorduras_totais")),
-        FBDecimal(dr("gorduras_saturadas")),
-        FBDecimal(dr("gorduras_trans")),
-        FBDecimal(dr("fibras")),
-        FBDecimal(dr("sodio")),
-        FBDecimal(dr("lactose")),
-        FBDecimal(dr("galactose")),
-        FBDecimal(dr("acucares_totais")),
-        FBDecimal(dr("acucares_adicionados")),
-        dr("alto_acucar"),
-        dr("alto_gordura"),
-        dr("alto_sodio"))
+    "INSERT INTO NUTRICIONAIS (WIDNUTRICIONAL,WNOMENUTRICIONAL,WSTATUS,WPORCAO,WPORCAOUNIDADE,WQTDINTEIRA,WQTDFRACIONADA,WQTDUNIDADE,WVALORENERGETICO,WVALORCARBOIDRATOS,WVALORPROTEINAS,WVALORGORDURASTOTAIS,WVALORGORDURASSATURADAS,WVALORGORDURASTRANS,WVALORFIBRAALIMENTAR,WVALORSODIO,WIDANTIGO,WPORCAO100G,WPORCAOUNIDADE100G,WQTDINTEIRA100G,WQTDFRACIONADA100G,WQTDUNIDADE100G,WVALORENERGETICO100G,WVALORCARBOIDRATOS100G,WVALORPROTEINAS100G,WVALORGORDURASTOTAIS100G,WVALORGORDURASSATURADAS100G,WVALORGORDURASTRANS100G,WVALORFIBRAALIMENTAR100G,WVALORSODIO100G,WVALORLACTOSE100G,WVALORGALACTOSE100G,WPORCOESEMBALAGEM100G,WVALORACUCARESTOTAIS100G,WVALORACUCARESADD100G,WALTOEMACUCARESADD100G,WALTOEMGORDURASSATURADAS100G,WALTOEMSODIO100G,WHABILITARCAMPOSRDC429) " &
+    "VALUES ({0},'{1}',NULL,NULL,0,NULL,0,0,0,0,0,0,0,0,0,0,0,{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},1,{17},{18},'{19}','{20}','{21}','S');",
+    dr("codigo_sd"),
+    descricao,
+    dr("porcoes"),
+    dr("unidade"),
+    dr("medida_inteira"),
+    dr("medida_decimal"),
+    dr("medida_caseira"),
+    dr("valor_energetico"),
+    FBDecimal(dr("carboidratos")),
+    FBDecimal(dr("proteinas")),
+    FBDecimal(dr("gorduras_totais")),
+    FBDecimal(dr("gorduras_saturadas")),
+    FBDecimal(dr("gorduras_trans")),
+    FBDecimal(dr("fibras")),
+    FBDecimal(dr("sodio")),
+    FBDecimal(dr("lactose")),
+    FBDecimal(dr("galactose")),
+    FBDecimal(dr("acucares_totais")),
+    FBDecimal(dr("acucares_adicionados")),
+    dr("alto_acucar"),
+    dr("alto_gordura"),
+    dr("alto_sodio"))
 
     End Function
 
@@ -796,16 +801,134 @@ ORDER BY i.codigo"
                                     validade As Integer) As String
 
         Return String.Format(
-        "UPDATE PRODUTOS " &
+        "UPDATE PRODUTOS P " &
         "SET WIDNUTRICIONAL = {0}, " &
         "WVALIDADE = {1}, " &
         "WFRACIONADO = 'S' " &
-        "WHERE WIDPRODUTO = {2};",
+        "WHERE EXISTS (" &
+        "SELECT 1 FROM CODIGOSPRO C " &
+        "WHERE C.WIDPRODUTO = P.WIDPRODUTO " &
+        "AND C.WCODIGOPRO = {2}" &
+        ");",
         codigoNutricional,
         validade,
         codigoProduto)
 
     End Function
+
+    Private Sub AtualizarBancoNutri()
+
+        If CarregandoDados Then Exit Sub
+        If String.IsNullOrWhiteSpace(LblCodNutri.Text) Then Exit Sub
+
+        Try
+
+            Dim conn As New MySqlConnection(
+            "server=localhost;port=3307;database=projects;user id=root;password=root;")
+
+            conn.Open()
+
+                Dim sql As String =
+                "UPDATE balanca_toledo_nutri SET " &
+                "porcoes_embalagens = @porcoes_embalagens, " &
+                "porcoes = @porcoes, " &
+                "unidade = @unidade, " &
+                "medida_inteira = @medida_inteira, " &
+                "medida_caseira = @medida_caseira, " &
+                "valor_energetico = @valor_energetico, " &
+                "carboidratos = @carboidratos, " &
+                "acucares_totais = @acucares_totais, " &
+                "acucares_adicionados = @acucares_adicionados, " &
+                "proteinas = @proteinas, " &
+                "gorduras_totais = @gorduras_totais, " &
+                "gorduras_saturadas = @gorduras_saturadas, " &
+                "gorduras_trans = @gorduras_trans, " &
+                "fibras = @fibras, " &
+                "sodio = @sodio, " &
+                "lactose = @lactose, " &
+                "galactose = @galactose, " &
+                "alto_acucar = @alto_acucar, " &
+                "alto_gordura = @alto_gordura, " &
+                "alto_sodio = @alto_sodio " &
+                "WHERE codigo = @codigo"
+
+            Using cmd As New MySqlCommand(sql, conn)
+
+                cmd.Parameters.AddWithValue("@porcoes_embalagens", Val(Txtporcoes.Text))
+                cmd.Parameters.AddWithValue("@porcoes", Val(TxtPorcaointeira.Text))
+
+                cmd.Parameters.AddWithValue("@unidade", CmbTipoPorcao.Text)
+
+                cmd.Parameters.AddWithValue("@medida_inteira", Val(CmbQtdePorcao.Text))
+                cmd.Parameters.AddWithValue("@medida_caseira", Val(CmbPorcao.SelectedValue))
+
+                cmd.Parameters.AddWithValue("@valor_energetico", Val(TxtVlrEnergetico.Text))
+                cmd.Parameters.AddWithValue("@carboidratos", Val(TxtCarb.Text))
+                cmd.Parameters.AddWithValue("@acucares_totais", Val(TxtAcucarTotais.Text))
+                cmd.Parameters.AddWithValue("@acucares_adicionados", Val(TxtAcucarAdc.Text))
+                cmd.Parameters.AddWithValue("@proteinas", Val(TxtPoteina.Text))
+                cmd.Parameters.AddWithValue("@gorduras_totais", Val(TxtGorduraTotais.Text))
+                cmd.Parameters.AddWithValue("@gorduras_saturadas", Val(TxtGordurasSaturadas.Text))
+                cmd.Parameters.AddWithValue("@gorduras_trans", Val(TxtGordurasTrans.Text))
+                cmd.Parameters.AddWithValue("@fibras", Val(TxtFibraAlimentar.Text))
+                cmd.Parameters.AddWithValue("@sodio", Val(TxtSodio.Text))
+                cmd.Parameters.AddWithValue("@lactose", Val(TxtLactose.Text))
+                cmd.Parameters.AddWithValue("@galactose", Val(TxtGalactose.Text))
+
+                cmd.Parameters.AddWithValue("@alto_acucar", If(ChkAcucarAdc.Checked, "1", "0"))
+                cmd.Parameters.AddWithValue("@alto_gordura", If(ChkGordurasSaturadas.Checked, "1", "0"))
+                cmd.Parameters.AddWithValue("@alto_sodio", If(ChkSodio.Checked, "1", "0"))
+
+                cmd.Parameters.AddWithValue("@codigo", CInt(LblCodNutri.Text))
+
+                cmd.ExecuteNonQuery()
+
+            End Using
+
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+
+    End Sub
+
+    Private Sub Campos_TextChanged(sender As Object, e As EventArgs) _
+Handles Txtporcoes.TextChanged,
+        TxtPorcaointeira.TextChanged,
+        TxtVlrEnergetico.TextChanged,
+        TxtCarb.TextChanged,
+        TxtAcucarTotais.TextChanged,
+        TxtAcucarAdc.TextChanged,
+        TxtLactose.TextChanged,
+        TxtGalactose.TextChanged,
+        TxtPoteina.TextChanged,
+        TxtGorduraTotais.TextChanged,
+        TxtGordurasSaturadas.TextChanged,
+        TxtGordurasTrans.TextChanged,
+        TxtFibraAlimentar.TextChanged,
+        TxtSodio.TextChanged
+
+        AtualizarBancoNutri()
+
+    End Sub
+
+    Private Sub Campos_ComboChanged(sender As Object, e As EventArgs) _
+Handles CmbPorcao.SelectedIndexChanged,
+        CmbQtdePorcao.SelectedIndexChanged,
+        CmbTipoPorcao.SelectedIndexChanged
+
+        AtualizarBancoNutri()
+
+    End Sub
+
+    Private Sub Campos_CheckChanged(sender As Object, e As EventArgs) _
+Handles ChkAcucarAdc.CheckedChanged,
+        ChkGordurasSaturadas.CheckedChanged,
+        ChkSodio.CheckedChanged
+
+        AtualizarBancoNutri()
+
+    End Sub
+
 
 #End Region
 
