@@ -454,7 +454,7 @@ Partial Class FrmMeusAuxiliares
         MinimizeBox = False
         Name = "FrmMeusAuxiliares"
         StartPosition = FormStartPosition.CenterScreen
-        Text = "Auxiliares"
+        Text = "Atalhos"
         TabMenu.ResumeLayout(False)
         TabDownloads.ResumeLayout(False)
         TabPage2.ResumeLayout(False)

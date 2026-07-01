@@ -37,6 +37,7 @@ Partial Class FrmConversorBalancaToledo
         TxtDescricao = New TextBox()
         LblDescricao = New Label()
         TbNutricionais = New TabPage()
+        BtnAtuNutri = New Button()
         LblCodNutri = New Label()
         LblCodnutridesc = New Label()
         Panel2 = New Panel()
@@ -78,6 +79,8 @@ Partial Class FrmConversorBalancaToledo
         LblCarb = New Label()
         LblVlrEnergetico = New Label()
         TbAdicionais = New TabPage()
+        TextBox1 = New TextBox()
+        Label2 = New Label()
         Panel1 = New Panel()
         BtnExportar = New Button()
         BtnImportarArquivos = New Button()
@@ -88,6 +91,7 @@ Partial Class FrmConversorBalancaToledo
         TbNutricionais.SuspendLayout()
         Panel2.SuspendLayout()
         GroupBox1.SuspendLayout()
+        TbAdicionais.SuspendLayout()
         Panel1.SuspendLayout()
         SuspendLayout()
         ' 
@@ -185,7 +189,6 @@ Partial Class FrmConversorBalancaToledo
         ' 
         ' CmbCodItem
         ' 
-        CmbCodItem.DropDownStyle = ComboBoxStyle.DropDownList
         CmbCodItem.FormattingEnabled = True
         CmbCodItem.Location = New Point(106, 17)
         CmbCodItem.Name = "CmbCodItem"
@@ -221,6 +224,7 @@ Partial Class FrmConversorBalancaToledo
         ' 
         ' TbNutricionais
         ' 
+        TbNutricionais.Controls.Add(BtnAtuNutri)
         TbNutricionais.Controls.Add(LblCodNutri)
         TbNutricionais.Controls.Add(LblCodnutridesc)
         TbNutricionais.Controls.Add(Panel2)
@@ -256,6 +260,15 @@ Partial Class FrmConversorBalancaToledo
         TbNutricionais.TabIndex = 0
         TbNutricionais.Text = "Nutricionais"
         TbNutricionais.UseVisualStyleBackColor = True
+        ' 
+        ' BtnAtuNutri
+        ' 
+        BtnAtuNutri.Location = New Point(338, 336)
+        BtnAtuNutri.Name = "BtnAtuNutri"
+        BtnAtuNutri.Size = New Size(74, 23)
+        BtnAtuNutri.TabIndex = 33
+        BtnAtuNutri.Text = "Atualizar "
+        BtnAtuNutri.UseVisualStyleBackColor = True
         ' 
         ' LblCodNutri
         ' 
@@ -379,7 +392,7 @@ Partial Class FrmConversorBalancaToledo
         GroupBox1.Controls.Add(ChkSodio)
         GroupBox1.Controls.Add(ChkGordurasSaturadas)
         GroupBox1.Controls.Add(ChkAcucarAdc)
-        GroupBox1.Location = New Point(300, 260)
+        GroupBox1.Location = New Point(301, 204)
         GroupBox1.Name = "GroupBox1"
         GroupBox1.Size = New Size(164, 99)
         GroupBox1.TabIndex = 24
@@ -610,6 +623,8 @@ Partial Class FrmConversorBalancaToledo
         ' 
         ' TbAdicionais
         ' 
+        TbAdicionais.Controls.Add(TextBox1)
+        TbAdicionais.Controls.Add(Label2)
         TbAdicionais.Location = New Point(4, 24)
         TbAdicionais.Name = "TbAdicionais"
         TbAdicionais.Padding = New Padding(3)
@@ -617,6 +632,22 @@ Partial Class FrmConversorBalancaToledo
         TbAdicionais.TabIndex = 1
         TbAdicionais.Text = "Adicionais"
         TbAdicionais.UseVisualStyleBackColor = True
+        ' 
+        ' TextBox1
+        ' 
+        TextBox1.Location = New Point(22, 37)
+        TextBox1.Name = "TextBox1"
+        TextBox1.Size = New Size(180, 23)
+        TextBox1.TabIndex = 1
+        ' 
+        ' Label2
+        ' 
+        Label2.AutoSize = True
+        Label2.Location = New Point(22, 19)
+        Label2.Name = "Label2"
+        Label2.Size = New Size(48, 15)
+        Label2.TabIndex = 0
+        Label2.Text = "Receita:"
         ' 
         ' Panel1
         ' 
@@ -670,7 +701,6 @@ Partial Class FrmConversorBalancaToledo
         MdiChildrenMinimizedAnchorBottom = False
         MinimizeBox = False
         Name = "FrmConversorBalancaToledo"
-        ShowInTaskbar = False
         StartPosition = FormStartPosition.CenterScreen
         Text = "Conversor Toledo"
         GrpNutricional.ResumeLayout(False)
@@ -683,6 +713,8 @@ Partial Class FrmConversorBalancaToledo
         Panel2.PerformLayout()
         GroupBox1.ResumeLayout(False)
         GroupBox1.PerformLayout()
+        TbAdicionais.ResumeLayout(False)
+        TbAdicionais.PerformLayout()
         Panel1.ResumeLayout(False)
         ResumeLayout(False)
     End Sub
@@ -746,4 +778,7 @@ Partial Class FrmConversorBalancaToledo
     Friend WithEvents LblValidade As Label
     Friend WithEvents LblCodSD As Label
     Friend WithEvents LblCodSdText As Label
+    Friend WithEvents BtnAtuNutri As Button
+    Friend WithEvents TextBox1 As TextBox
+    Friend WithEvents Label2 As Label
 End Class

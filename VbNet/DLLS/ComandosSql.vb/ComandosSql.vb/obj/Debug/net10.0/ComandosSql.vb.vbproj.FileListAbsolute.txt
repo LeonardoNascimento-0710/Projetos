@@ -1,0 +1,13 @@
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\DLLS\ComandosSql.vb\ComandosSql.vb\bin\Debug\net10.0\ComandosSql.vb.deps.json
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\DLLS\ComandosSql.vb\ComandosSql.vb\bin\Debug\net10.0\ComandosSql.vb.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\DLLS\ComandosSql.vb\ComandosSql.vb\bin\Debug\net10.0\ComandosSql.vb.pdb
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\DLLS\ComandosSql.vb\ComandosSql.vb\obj\Debug\net10.0\ComandosSql.vb.vbproj.AssemblyReference.cache
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\DLLS\ComandosSql.vb\ComandosSql.vb\obj\Debug\net10.0\ComandosSql.vb.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\DLLS\ComandosSql.vb\ComandosSql.vb\obj\Debug\net10.0\ComandosSql.vb.AssemblyInfoInputs.cache
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\DLLS\ComandosSql.vb\ComandosSql.vb\obj\Debug\net10.0\ComandosSql.vb.AssemblyInfo.vb
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\DLLS\ComandosSql.vb\ComandosSql.vb\obj\Debug\net10.0\ComandosSql.vb.vbproj.CoreCompileInputs.cache
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\DLLS\ComandosSql.vb\ComandosSql.vb\obj\Debug\net10.0\ComandosSql.vb.sourcelink.json
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\DLLS\ComandosSql.vb\ComandosSql.vb\obj\Debug\net10.0\ComandosSql.vb.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\DLLS\ComandosSql.vb\ComandosSql.vb\obj\Debug\net10.0\refint\ComandosSql.vb.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\DLLS\ComandosSql.vb\ComandosSql.vb\obj\Debug\net10.0\ComandosSql.vb.pdb
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\DLLS\ComandosSql.vb\ComandosSql.vb\obj\Debug\net10.0\ref\ComandosSql.vb.dll

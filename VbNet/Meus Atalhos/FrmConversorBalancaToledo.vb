@@ -2,6 +2,8 @@
 Imports MySql.Data.MySqlClient
 Imports System.Data
 Imports System.IO
+Imports ComandosSQL.Banco
+Imports ComandosSQL.Models
 
 Public Class FrmConversorBalancaToledo
 
@@ -9,6 +11,72 @@ Public Class FrmConversorBalancaToledo
 
     Private conn As New MySqlConnection(
         "server=localhost;port=3307;database=projects;user id=root;password=root;")
+
+    Private Sub FrmConversorBalancaToledo_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        Dim cfg As New ConfiguracaoBanco With {
+            .Servidor = "localhost",
+            .Porta = 3307,
+            .Usuario = "root",
+            .Senha = "root",
+            .Banco = "projects"
+}
+
+        Dim resultado As ResultadoValidacao =
+        InstaladorBanco.ValidarInstalacao(
+            cfg,
+            IO.Path.Combine(Application.StartupPath, "Instalacao.sql"))
+
+        Select Case resultado
+
+            Case ResultadoValidacao.Ok
+
+                If Not VerificadorEstrutura.ValidarTabelas(cfg) Then
+
+                    MessageBox.Show(
+                    "Erro ao validar as tabelas.",
+                    "Erro",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error)
+
+                    Exit Sub
+
+                End If
+
+            Case ResultadoValidacao.MySQLNaoEncontrado
+
+                MessageBox.Show(
+                "MySQL não encontrado." &
+                vbCrLf &
+                "Instale o MySQL e tente novamente.",
+                "Atenção",
+                MessageBoxButtons.OK, MessageBoxIcon.Warning)
+
+                Process.Start(New ProcessStartInfo(
+                "https://dev.mysql.com/downloads/installer/") With {
+                .UseShellExecute = True
+            })
+
+                Me.Close()
+
+            Case ResultadoValidacao.ScriptNaoEncontrado
+
+                MessageBox.Show(
+                "Arquivo Instalacao.sql não encontrado.",
+                "Erro",
+                MessageBoxButtons.OK, MessageBoxIcon.Error)
+
+                Me.Close()
+
+            Case ResultadoValidacao.ErroInstalacao
+
+                MessageBox.Show(
+                InstaladorBanco.UltimoErro,
+                "Erro",
+                MessageBoxButtons.OK, MessageBoxIcon.Error)
+
+        End Select
+
+    End Sub
 
 #Region "Containers e Botões"
 
@@ -31,6 +99,38 @@ Public Class FrmConversorBalancaToledo
                 If ofd.ShowDialog <> DialogResult.OK Then Exit Sub
 
                 ImportarNutri(ofd.FileName)
+
+                If MessageBox.Show("Deseja importar o arquivo TXTINFO?",
+                               "Conversor Toledo",
+                               MessageBoxButtons.YesNo,
+                               MessageBoxIcon.Question) = DialogResult.Yes Then
+
+                    ofd.Title = "Selecione o arquivo TXTINFO.TXT"
+
+                    If ofd.ShowDialog = DialogResult.OK Then
+
+                        ImportarInfo(ofd.FileName)
+
+                    End If
+
+                End If
+
+
+
+                If MessageBox.Show("Deseja importar o arquivo TXTFORN?",
+                               "Conversor Toledo",
+                               MessageBoxButtons.YesNo,
+                               MessageBoxIcon.Question) = DialogResult.Yes Then
+
+                    ofd.Title = "Selecione o arquivo TXTFORN.TXT"
+
+                    If ofd.ShowDialog = DialogResult.OK Then
+
+                        ImportarFornecedor(ofd.FileName)
+
+                    End If
+
+                End If
 
             End Using
 
@@ -72,14 +172,41 @@ Public Class FrmConversorBalancaToledo
 
         End Using
 
+        LimparCampos()
+
     End Sub
 
     Private Sub BtnRetornar_Click(sender As Object, e As EventArgs) Handles BtnRetornar.Click
         Me.Dispose()
     End Sub
 
-#End Region
+    Private Sub BtnAtuNutri_Click(sender As Object, e As EventArgs) Handles BtnAtuNutri.Click
+        AtualizarBancoNutri()
+    End Sub
 
+    Private Sub CmbCodItem_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CmbCodItem.SelectedIndexChanged
+
+        If CmbCodItem.Text <> "" Then
+
+            BuscarProduto()
+
+        End If
+
+    End Sub
+
+    Private Sub CmbCodItem_KeyDown(sender As Object, e As KeyEventArgs) Handles CmbCodItem.KeyDown
+
+        If e.KeyCode = Keys.Enter Then
+
+            e.SuppressKeyPress = True
+
+            BuscarProduto()
+
+        End If
+
+    End Sub
+
+#End Region
 
 #Region "Funções"
 
@@ -91,10 +218,10 @@ Public Class FrmConversorBalancaToledo
         cmd.ExecuteNonQuery()
 
         cmd.CommandText =
-    "INSERT INTO balanca_toledo_itens
-    (tipo,codigo,validade,descricao,cod_nutri)
-    VALUES
-    (@tipo,@codigo,@validade,@descricao,@codnutri)"
+"INSERT INTO balanca_toledo_itens
+(tipo,codigo,validade,descricao,cod_receita,cod_forn,cod_nutri)
+VALUES
+(@tipo,@codigo,@validade,@descricao,@codreceita,@codforn,@codnutri)"
 
         cmd.Parameters.Clear()
 
@@ -102,6 +229,8 @@ Public Class FrmConversorBalancaToledo
         cmd.Parameters.Add("@codigo", MySqlDbType.Int32)
         cmd.Parameters.Add("@validade", MySqlDbType.Int32)
         cmd.Parameters.Add("@descricao", MySqlDbType.VarChar)
+        cmd.Parameters.Add("@codreceita", MySqlDbType.Int32)
+        cmd.Parameters.Add("@codforn", MySqlDbType.Int32)
         cmd.Parameters.Add("@codnutri", MySqlDbType.Int32)
 
         For Each linha As String In IO.File.ReadLines(caminho)
@@ -121,28 +250,31 @@ Public Class FrmConversorBalancaToledo
                 cmd.Parameters("@descricao").Value =
                 linha.Substring(18, 25).Trim()
 
+                cmd.Parameters("@codreceita").Value =
+                Integer.Parse(linha.Substring(68, 6))
+
+                cmd.Parameters("@codforn").Value =
+                Integer.Parse(linha.Substring(86, 4))
+
                 cmd.Parameters("@codnutri").Value =
                 Integer.Parse(linha.Substring(78, 6))
 
                 cmd.ExecuteNonQuery()
 
-            Catch
-                Continue For
+            Catch ex As Exception
+
+                MessageBox.Show(
+        "Erro na linha:" & vbCrLf & vbCrLf &
+        linha & vbCrLf & vbCrLf &
+        ex.Message)
+
+                Exit Sub
+
             End Try
 
         Next
 
         conn.Close()
-
-    End Sub
-
-    Private Sub CmbCodItem_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CmbCodItem.SelectedIndexChanged
-
-        If CmbCodItem.Text <> "" Then
-
-            BuscarProduto()
-
-        End If
 
     End Sub
 
@@ -333,6 +465,79 @@ VALUES
         conn.Close()
 
         AtualizarDescricaoNutri()
+
+    End Sub
+
+    Private Sub ImportarInfo(caminho As String)
+
+        conn.Open()
+
+        Dim cmd As New MySqlCommand(
+            "UPDATE balanca_toledo_itens
+         SET receita=@receita
+         WHERE cod_receita=@codigo", conn)
+
+        cmd.Parameters.Add("@receita", MySqlDbType.VarChar)
+        cmd.Parameters.Add("@codigo", MySqlDbType.Int32)
+
+        For Each linha As String In IO.File.ReadLines(caminho)
+
+            Try
+
+                If linha.Trim = "" Then Continue For
+
+                cmd.Parameters("@codigo").Value =
+                Integer.Parse(linha.Substring(0, 6))
+
+                cmd.Parameters("@receita").Value =
+                linha.Substring(106).Trim()
+
+                cmd.ExecuteNonQuery()
+
+            Catch ex As Exception
+                MessageBox.Show(ex.ToString())
+                Exit Sub
+            End Try
+
+        Next
+
+        conn.Close()
+
+    End Sub
+
+    Private Sub ImportarFornecedor(caminho As String)
+
+        conn.Open()
+
+        Dim cmd As New MySqlCommand(
+        "UPDATE balanca_toledo_itens
+         SET fornecedor=@fornecedor
+         WHERE cod_forn=@codigo", conn)
+
+        cmd.Parameters.Add("@fornecedor", MySqlDbType.VarChar)
+        cmd.Parameters.Add("@codigo", MySqlDbType.Int32)
+
+        For Each linha As String In IO.File.ReadLines(caminho)
+
+            Try
+
+                If linha.Trim = "" Then Continue For
+
+                cmd.Parameters("@codigo").Value =
+                Integer.Parse(linha.Substring(0, 4))
+
+                cmd.Parameters("@fornecedor").Value =
+                linha.Substring(104).Trim()
+
+                cmd.ExecuteNonQuery()
+
+            Catch
+                Continue For
+            End Try
+
+        Next
+
+        conn.Close()
 
     End Sub
 
@@ -655,6 +860,7 @@ ORDER BY i.codigo"
 
         Dim numeroArquivo As Integer = 1
         Dim contador As Integer = 0
+        Dim ultimoCodigoSD As Integer = 0
 
         Dim caminhoArquivo As String =
         IO.Path.Combine(
@@ -667,6 +873,8 @@ ORDER BY i.codigo"
         System.Text.Encoding.UTF8)
 
         While dr.Read()
+
+            ultimoCodigoSD = Convert.ToInt32(dr("codigo_sd"))
 
             sw.Write(GerarInsertNutricional(dr) & Environment.NewLine)
 
@@ -693,6 +901,9 @@ ORDER BY i.codigo"
 
         End While
 
+        sw.WriteLine()
+        Dim codigoGenerator As Integer = ultimoCodigoSD \ 10
+        sw.WriteLine("SET GENERATOR GENIDNUTRICIONAL TO " & codigoGenerator & ";")
         sw.Close()
 
         dr.Close()
@@ -818,114 +1029,117 @@ ORDER BY i.codigo"
 
     Private Sub AtualizarBancoNutri()
 
-        If CarregandoDados Then Exit Sub
-        If String.IsNullOrWhiteSpace(LblCodNutri.Text) Then Exit Sub
-
         Try
-
-            Dim conn As New MySqlConnection(
-            "server=localhost;port=3307;database=projects;user id=root;password=root;")
 
             conn.Open()
 
-                Dim sql As String =
-                "UPDATE balanca_toledo_nutri SET " &
-                "porcoes_embalagens = @porcoes_embalagens, " &
-                "porcoes = @porcoes, " &
-                "unidade = @unidade, " &
-                "medida_inteira = @medida_inteira, " &
-                "medida_caseira = @medida_caseira, " &
-                "valor_energetico = @valor_energetico, " &
-                "carboidratos = @carboidratos, " &
-                "acucares_totais = @acucares_totais, " &
-                "acucares_adicionados = @acucares_adicionados, " &
-                "proteinas = @proteinas, " &
-                "gorduras_totais = @gorduras_totais, " &
-                "gorduras_saturadas = @gorduras_saturadas, " &
-                "gorduras_trans = @gorduras_trans, " &
-                "fibras = @fibras, " &
-                "sodio = @sodio, " &
-                "lactose = @lactose, " &
-                "galactose = @galactose, " &
-                "alto_acucar = @alto_acucar, " &
-                "alto_gordura = @alto_gordura, " &
-                "alto_sodio = @alto_sodio " &
-                "WHERE codigo = @codigo"
+            Dim sql As String =
+            "UPDATE balanca_toledo_nutri SET
+            porcoes = @porcoes,
+            unidade = @unidade,
+            medida_inteira = @medida_inteira,
+            medida_decimal = @medida_decimal,
+            medida_caseira = @medida_caseira,
+            valor_energetico = @valor_energetico,
+            carboidratos = @carboidratos,
+            acucares_totais = @acucares_totais,
+            acucares_adicionados = @acucares_adicionados,
+            proteinas = @proteinas,
+            gorduras_totais = @gorduras_totais,
+            gorduras_saturadas = @gorduras_saturadas,
+            gorduras_trans = @gorduras_trans,
+            fibras = @fibras,
+            sodio = @sodio,
+            lactose = @lactose,
+            galactose = @galactose,
+            codigo_sd = @codigo_sd,
+            alto_acucar = @alto_acucar,
+            alto_gordura = @alto_gordura,
+            alto_sodio = @alto_sodio
+         WHERE codigo = @codigo"
 
             Using cmd As New MySqlCommand(sql, conn)
 
-                cmd.Parameters.AddWithValue("@porcoes_embalagens", Val(Txtporcoes.Text))
-                cmd.Parameters.AddWithValue("@porcoes", Val(TxtPorcaointeira.Text))
-
-                cmd.Parameters.AddWithValue("@unidade", CmbTipoPorcao.Text)
-
-                cmd.Parameters.AddWithValue("@medida_inteira", Val(CmbQtdePorcao.Text))
-                cmd.Parameters.AddWithValue("@medida_caseira", Val(CmbPorcao.SelectedValue))
-
-                cmd.Parameters.AddWithValue("@valor_energetico", Val(TxtVlrEnergetico.Text))
-                cmd.Parameters.AddWithValue("@carboidratos", Val(TxtCarb.Text))
-                cmd.Parameters.AddWithValue("@acucares_totais", Val(TxtAcucarTotais.Text))
-                cmd.Parameters.AddWithValue("@acucares_adicionados", Val(TxtAcucarAdc.Text))
-                cmd.Parameters.AddWithValue("@proteinas", Val(TxtPoteina.Text))
-                cmd.Parameters.AddWithValue("@gorduras_totais", Val(TxtGorduraTotais.Text))
-                cmd.Parameters.AddWithValue("@gorduras_saturadas", Val(TxtGordurasSaturadas.Text))
-                cmd.Parameters.AddWithValue("@gorduras_trans", Val(TxtGordurasTrans.Text))
-                cmd.Parameters.AddWithValue("@fibras", Val(TxtFibraAlimentar.Text))
-                cmd.Parameters.AddWithValue("@sodio", Val(TxtSodio.Text))
-                cmd.Parameters.AddWithValue("@lactose", Val(TxtLactose.Text))
-                cmd.Parameters.AddWithValue("@galactose", Val(TxtGalactose.Text))
-
-                cmd.Parameters.AddWithValue("@alto_acucar", If(ChkAcucarAdc.Checked, "1", "0"))
-                cmd.Parameters.AddWithValue("@alto_gordura", If(ChkGordurasSaturadas.Checked, "1", "0"))
-                cmd.Parameters.AddWithValue("@alto_sodio", If(ChkSodio.Checked, "1", "0"))
-
-                cmd.Parameters.AddWithValue("@codigo", CInt(LblCodNutri.Text))
-
+                cmd.Parameters.AddWithValue("@codigo", LblCodNutri.Text)
+                cmd.Parameters.AddWithValue("@porcoes", Txtporcoes.Text)
+                cmd.Parameters.AddWithValue("@unidade", CmbTipoPorcao.SelectedIndex)
+                cmd.Parameters.AddWithValue("@medida_inteira", TxtPorcaointeira.Text)
+                cmd.Parameters.AddWithValue("@medida_decimal", CmbQtdePorcao.SelectedIndex)
+                cmd.Parameters.AddWithValue("@medida_caseira", CmbPorcao.SelectedIndex)
+                cmd.Parameters.AddWithValue("@valor_energetico", TxtVlrEnergetico.Text)
+                cmd.Parameters.AddWithValue("@codigo_sd", LblCodSD.Text)
+                cmd.Parameters.AddWithValue("@alto_acucar", If(ChkAcucarAdc.Checked, 1, 0))
+                cmd.Parameters.AddWithValue("@alto_gordura", If(ChkGordurasSaturadas.Checked, 1, 0))
+                cmd.Parameters.AddWithValue("@alto_sodio", If(ChkSodio.Checked, 1, 0))
+                cmd.Parameters.AddWithValue("@carboidratos", FBDecimal(TxtCarb.Text))
+                cmd.Parameters.AddWithValue("@acucares_totais", FBDecimal(TxtAcucarTotais.Text))
+                cmd.Parameters.AddWithValue("@acucares_adicionados", FBDecimal(TxtAcucarAdc.Text))
+                cmd.Parameters.AddWithValue("@proteinas", FBDecimal(TxtPoteina.Text))
+                cmd.Parameters.AddWithValue("@gorduras_totais", FBDecimal(TxtGorduraTotais.Text))
+                cmd.Parameters.AddWithValue("@gorduras_saturadas", FBDecimal(TxtGordurasSaturadas.Text))
+                cmd.Parameters.AddWithValue("@gorduras_trans", FBDecimal(TxtGordurasTrans.Text))
+                cmd.Parameters.AddWithValue("@fibras", FBDecimal(TxtFibraAlimentar.Text))
+                cmd.Parameters.AddWithValue("@sodio", FBDecimal(TxtSodio.Text))
+                cmd.Parameters.AddWithValue("@lactose", FBDecimal(TxtLactose.Text))
+                cmd.Parameters.AddWithValue("@galactose", FBDecimal(TxtGalactose.Text))
                 cmd.ExecuteNonQuery()
 
             End Using
 
+            MessageBox.Show("Dados atualizados com sucesso!")
+
         Catch ex As Exception
+
             MessageBox.Show(ex.Message)
+
+        Finally
+
+            If conn.State = ConnectionState.Open Then
+                conn.Close()
+            End If
+
+            LimparCampos()
+
         End Try
 
     End Sub
 
-    Private Sub Campos_TextChanged(sender As Object, e As EventArgs) _
-Handles Txtporcoes.TextChanged,
-        TxtPorcaointeira.TextChanged,
-        TxtVlrEnergetico.TextChanged,
-        TxtCarb.TextChanged,
-        TxtAcucarTotais.TextChanged,
-        TxtAcucarAdc.TextChanged,
-        TxtLactose.TextChanged,
-        TxtGalactose.TextChanged,
-        TxtPoteina.TextChanged,
-        TxtGorduraTotais.TextChanged,
-        TxtGordurasSaturadas.TextChanged,
-        TxtGordurasTrans.TextChanged,
-        TxtFibraAlimentar.TextChanged,
-        TxtSodio.TextChanged
+    Private Sub LimparCampos()
 
-        AtualizarBancoNutri()
+        CmbCodItem.Text = ""
+        CmbMedida.SelectedIndex = -1
 
-    End Sub
+        TxtDescricao.Clear()
+        TxtValidade.Clear()
 
-    Private Sub Campos_ComboChanged(sender As Object, e As EventArgs) _
-Handles CmbPorcao.SelectedIndexChanged,
-        CmbQtdePorcao.SelectedIndexChanged,
-        CmbTipoPorcao.SelectedIndexChanged
+        LblCodNutri.Text = ""
+        LblCodSD.Text = ""
 
-        AtualizarBancoNutri()
+        Txtporcoes.Clear()
+        TxtPorcaointeira.Clear()
 
-    End Sub
+        CmbTipoPorcao.SelectedIndex = -1
+        CmbQtdePorcao.SelectedIndex = -1
+        CmbPorcao.SelectedIndex = -1
 
-    Private Sub Campos_CheckChanged(sender As Object, e As EventArgs) _
-Handles ChkAcucarAdc.CheckedChanged,
-        ChkGordurasSaturadas.CheckedChanged,
-        ChkSodio.CheckedChanged
+        TxtVlrEnergetico.Clear()
+        TxtCarb.Clear()
+        TxtAcucarTotais.Clear()
+        TxtAcucarAdc.Clear()
+        TxtPoteina.Clear()
+        TxtGorduraTotais.Clear()
+        TxtGordurasSaturadas.Clear()
+        TxtGordurasTrans.Clear()
+        TxtFibraAlimentar.Clear()
+        TxtSodio.Clear()
+        TxtLactose.Clear()
+        TxtGalactose.Clear()
 
-        AtualizarBancoNutri()
+        ChkAcucarAdc.Checked = False
+        ChkGordurasSaturadas.Checked = False
+        ChkSodio.Checked = False
+
+        CmbCodItem.Focus()
 
     End Sub
 

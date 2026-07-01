@@ -1,0 +1,54 @@
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\Meus Atalhos.exe
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\Meus Atalhos.deps.json
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\Meus Atalhos.runtimeconfig.json
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\Meus Atalhos.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\Meus Atalhos.pdb
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\BouncyCastle.Cryptography.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\ClosedXML.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\ClosedXML.Parser.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\DocumentFormat.OpenXml.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\DocumentFormat.OpenXml.Framework.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\ExcelNumberFormat.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\FirebirdSql.Data.FirebirdClient.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\Google.Protobuf.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\K4os.Compression.LZ4.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\K4os.Compression.LZ4.Streams.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\K4os.Hash.xxHash.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\Microsoft.Identity.Client.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\MySql.Data.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\MySqlConnector.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\Newtonsoft.Json.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\RBush.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\SixLabors.Fonts.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\ZstdSharp.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\runtimes\win-x64\native\comerr64.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\runtimes\win-x64\native\gssapi64.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\runtimes\win-x64\native\k5sprt64.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\runtimes\win-x64\native\krb5_64.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\runtimes\win-x64\native\krbcc64.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\Microsoft.Windows.SDK.NET.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\WinRT.Runtime.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\ComandosSql.vb.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\ComandosSql.vb.pdb
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\obj\Debug\net10.0-windows10.0.17763.0\Meus Atalhos.vbproj.AssemblyReference.cache
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\obj\Debug\net10.0-windows10.0.17763.0\Meus_Atalhos.FrmBancoHoras.resources
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\obj\Debug\net10.0-windows10.0.17763.0\Meus_Atalhos.FrmBancoSD.resources
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\obj\Debug\net10.0-windows10.0.17763.0\Meus_Atalhos.FrmConversorBalancaFilizola.resources
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\obj\Debug\net10.0-windows10.0.17763.0\Meus_Atalhos.FrmConversorBalancaToledo.resources
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\obj\Debug\net10.0-windows10.0.17763.0\Meus_Atalhos.FrmMeusAuxiliares.resources
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\obj\Debug\net10.0-windows10.0.17763.0\Meus_Atalhos.Resources.resources
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\obj\Debug\net10.0-windows10.0.17763.0\Meus Atalhos.vbproj.GenerateResource.cache
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\obj\Debug\net10.0-windows10.0.17763.0\Meus Atalhos.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\obj\Debug\net10.0-windows10.0.17763.0\Meus Atalhos.AssemblyInfoInputs.cache
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\obj\Debug\net10.0-windows10.0.17763.0\Meus Atalhos.AssemblyInfo.vb
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\obj\Debug\net10.0-windows10.0.17763.0\Meus Atalhos.vbproj.CoreCompileInputs.cache
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\obj\Debug\net10.0-windows10.0.17763.0\Meus Atalhos.sourcelink.json
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\obj\Debug\net10.0-windows10.0.17763.0\Meus Ata.745059F0.Up2Date
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\obj\Debug\net10.0-windows10.0.17763.0\Meus Atalhos.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\obj\Debug\net10.0-windows10.0.17763.0\refint\Meus Atalhos.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\obj\Debug\net10.0-windows10.0.17763.0\Meus Atalhos.pdb
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\obj\Debug\net10.0-windows10.0.17763.0\Meus Atalhos.genruntimeconfig.cache
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\obj\Debug\net10.0-windows10.0.17763.0\ref\Meus Atalhos.dll
