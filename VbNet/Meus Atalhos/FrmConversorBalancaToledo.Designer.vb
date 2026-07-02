@@ -79,8 +79,10 @@ Partial Class FrmConversorBalancaToledo
         LblCarb = New Label()
         LblVlrEnergetico = New Label()
         TbAdicionais = New TabPage()
-        TextBox1 = New TextBox()
-        Label2 = New Label()
+        LblFornName = New Label()
+        LblForn = New Label()
+        TxtReceita = New TextBox()
+        Label3 = New Label()
         Panel1 = New Panel()
         BtnExportar = New Button()
         BtnImportarArquivos = New Button()
@@ -146,7 +148,7 @@ Partial Class FrmConversorBalancaToledo
         ' LblCodSdText
         ' 
         LblCodSdText.AutoSize = True
-        LblCodSdText.Location = New Point(24, 137)
+        LblCodSdText.Location = New Point(26, 137)
         LblCodSdText.Name = "LblCodSdText"
         LblCodSdText.Size = New Size(63, 15)
         LblCodSdText.TabIndex = 33
@@ -165,7 +167,7 @@ Partial Class FrmConversorBalancaToledo
         ' LblMedida
         ' 
         LblMedida.AutoSize = True
-        LblMedida.Location = New Point(13, 108)
+        LblMedida.Location = New Point(17, 108)
         LblMedida.Name = "LblMedida"
         LblMedida.Size = New Size(81, 15)
         LblMedida.TabIndex = 31
@@ -181,7 +183,7 @@ Partial Class FrmConversorBalancaToledo
         ' LblValidade
         ' 
         LblValidade.AutoSize = True
-        LblValidade.Location = New Point(11, 79)
+        LblValidade.Location = New Point(15, 79)
         LblValidade.Name = "LblValidade"
         LblValidade.Size = New Size(84, 15)
         LblValidade.TabIndex = 29
@@ -199,7 +201,7 @@ Partial Class FrmConversorBalancaToledo
         ' 
         LblCodigo.AutoSize = True
         LblCodigo.ForeColor = Color.Black
-        LblCodigo.Location = New Point(30, 21)
+        LblCodigo.Location = New Point(34, 21)
         LblCodigo.Name = "LblCodigo"
         LblCodigo.Size = New Size(46, 15)
         LblCodigo.TabIndex = 0
@@ -209,14 +211,14 @@ Partial Class FrmConversorBalancaToledo
         ' 
         TxtDescricao.Location = New Point(106, 46)
         TxtDescricao.Name = "TxtDescricao"
-        TxtDescricao.Size = New Size(233, 23)
+        TxtDescricao.Size = New Size(331, 23)
         TxtDescricao.TabIndex = 6
         ' 
         ' LblDescricao
         ' 
         LblDescricao.AutoSize = True
         LblDescricao.ForeColor = Color.Black
-        LblDescricao.Location = New Point(24, 50)
+        LblDescricao.Location = New Point(28, 50)
         LblDescricao.Name = "LblDescricao"
         LblDescricao.Size = New Size(58, 15)
         LblDescricao.TabIndex = 5
@@ -623,8 +625,10 @@ Partial Class FrmConversorBalancaToledo
         ' 
         ' TbAdicionais
         ' 
-        TbAdicionais.Controls.Add(TextBox1)
-        TbAdicionais.Controls.Add(Label2)
+        TbAdicionais.Controls.Add(LblFornName)
+        TbAdicionais.Controls.Add(LblForn)
+        TbAdicionais.Controls.Add(TxtReceita)
+        TbAdicionais.Controls.Add(Label3)
         TbAdicionais.Location = New Point(4, 24)
         TbAdicionais.Name = "TbAdicionais"
         TbAdicionais.Padding = New Padding(3)
@@ -633,21 +637,40 @@ Partial Class FrmConversorBalancaToledo
         TbAdicionais.Text = "Adicionais"
         TbAdicionais.UseVisualStyleBackColor = True
         ' 
-        ' TextBox1
+        ' LblFornName
         ' 
-        TextBox1.Location = New Point(22, 37)
-        TextBox1.Name = "TextBox1"
-        TextBox1.Size = New Size(180, 23)
-        TextBox1.TabIndex = 1
+        LblFornName.AutoSize = True
+        LblFornName.Location = New Point(32, 232)
+        LblFornName.Name = "LblFornName"
+        LblFornName.Size = New Size(0, 15)
+        LblFornName.TabIndex = 40
         ' 
-        ' Label2
+        ' LblForn
         ' 
-        Label2.AutoSize = True
-        Label2.Location = New Point(22, 19)
-        Label2.Name = "Label2"
-        Label2.Size = New Size(48, 15)
-        Label2.TabIndex = 0
-        Label2.Text = "Receita:"
+        LblForn.AutoSize = True
+        LblForn.Location = New Point(32, 207)
+        LblForn.Name = "LblForn"
+        LblForn.Size = New Size(67, 15)
+        LblForn.TabIndex = 39
+        LblForn.Text = "Fornecedor"
+        ' 
+        ' TxtReceita
+        ' 
+        TxtReceita.Location = New Point(32, 48)
+        TxtReceita.Multiline = True
+        TxtReceita.Name = "TxtReceita"
+        TxtReceita.ReadOnly = True
+        TxtReceita.Size = New Size(413, 147)
+        TxtReceita.TabIndex = 38
+        ' 
+        ' Label3
+        ' 
+        Label3.AutoSize = True
+        Label3.Location = New Point(32, 30)
+        Label3.Name = "Label3"
+        Label3.Size = New Size(45, 15)
+        Label3.TabIndex = 37
+        Label3.Text = "Receita"
         ' 
         ' Panel1
         ' 
@@ -779,6 +802,8 @@ Partial Class FrmConversorBalancaToledo
     Friend WithEvents LblCodSD As Label
     Friend WithEvents LblCodSdText As Label
     Friend WithEvents BtnAtuNutri As Button
-    Friend WithEvents TextBox1 As TextBox
-    Friend WithEvents Label2 As Label
+    Friend WithEvents LblFornName As Label
+    Friend WithEvents LblForn As Label
+    Friend WithEvents TxtReceita As TextBox
+    Friend WithEvents Label3 As Label
 End Class

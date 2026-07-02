@@ -710,6 +710,8 @@ VALUES
                 TxtLactose.Text = dr("lactose").ToString()
                 TxtGalactose.Text = dr("galactose").ToString()
                 LblCodSD.Text = dr("codigo_sd").ToString()
+                TxtReceita.Text = dr("receita").ToString()
+                LblFornName.Text = dr("fornecedor").ToString()
 
                 ChkAcucarAdc.Checked = (dr("alto_acucar").ToString() = "1")
                 ChkGordurasSaturadas.Checked = (dr("alto_gordura").ToString() = "1")
@@ -742,7 +744,7 @@ VALUES
             conn.Open()
 
             Dim sql As String =
-    "SELECT
+    "Select
 
 i.codigo AS 'Código',
 i.descricao AS 'Descrição',
@@ -938,14 +940,10 @@ ORDER BY i.codigo"
         conn.Open()
 
         Dim sql As String =
-    "SELECT
-        i.codigo,
-        i.validade,
-        n.codigo_sd
-     FROM balanca_toledo_itens i
-     INNER JOIN balanca_toledo_nutri n
-        ON i.cod_nutri = n.codigo
-     ORDER BY i.codigo"
+        "SELECT i.codigo, i.validade, i.receita, i.fornecedor, n.codigo_sd " &
+        "FROM balanca_toledo_itens i " &
+        "LEFT JOIN balanca_toledo_nutri n ON i.cod_nutri = n.codigo " &
+        "ORDER BY i.codigo"
 
         Dim cmd As New MySqlCommand(sql, conn)
 
@@ -966,13 +964,19 @@ ORDER BY i.codigo"
 
         While dr.Read()
 
+            Dim codigoNutricional As Integer = 0
+
+            If Not IsDBNull(dr("codigo_sd")) Then
+                codigoNutricional = CInt(dr("codigo_sd"))
+            End If
+
             sw.WriteLine(
-            GerarUpdateProduto(
-                CInt(dr("codigo")),
-                CInt(dr("codigo_sd")),
-                CInt(dr("validade"))
-            )
-        )
+        GerarUpdateProduto(
+            CInt(dr("codigo")),
+            codigoNutricional,
+            CInt(dr("validade")),
+            dr("receita").ToString(),
+            dr("fornecedor").ToString()))
 
             contador += 1
 
@@ -985,14 +989,14 @@ ORDER BY i.codigo"
                 contador = 0
 
                 caminhoArquivo =
-                IO.Path.Combine(
-                    pastaDestino,
-                    $"ATUALIZA_PRODUTOS_{numeroArquivo:000}.sql")
+        IO.Path.Combine(
+            pastaDestino,
+            $"ATUALIZA_PRODUTOS_{numeroArquivo:000}.sql")
 
                 sw = New IO.StreamWriter(
-                caminhoArquivo,
-                False,
-                System.Text.Encoding.UTF8)
+            caminhoArquivo,
+            False,
+            System.Text.Encoding.UTF8)
 
             End If
 
@@ -1009,21 +1013,60 @@ ORDER BY i.codigo"
 
     Private Function GerarUpdateProduto(codigoProduto As Integer,
                                     codigoNutricional As Integer,
-                                    validade As Integer) As String
+                                    validade As Integer,
+                                    receita As String,
+                                    fornecedor As String) As String
 
-        Return String.Format(
-        "UPDATE PRODUTOS P " &
-        "SET WIDNUTRICIONAL = {0}, " &
-        "WVALIDADE = {1}, " &
-        "WFRACIONADO = 'S' " &
-        "WHERE EXISTS (" &
-        "SELECT 1 FROM CODIGOSPRO C " &
-        "WHERE C.WIDPRODUTO = P.WIDPRODUTO " &
-        "AND C.WCODIGOPRO = {2}" &
-        ");",
-        codigoNutricional,
-        validade,
-        codigoProduto)
+        Dim receitaSQL As String =
+        If(String.IsNullOrWhiteSpace(receita),
+           "NULL",
+           "'" & receita.Replace("'", "''") & "'")
+
+        Dim fornecedorSQL As String =
+        If(String.IsNullOrWhiteSpace(fornecedor),
+           "NULL",
+           "'" & fornecedor.Replace("'", "''") & "'")
+
+
+        If codigoNutricional > 0 Then
+
+            Return String.Format(
+            "UPDATE PRODUTOS P " &
+            "SET WIDNUTRICIONAL = {0}, " &
+            "WVALIDADE = {1}, " &
+            "WFRACIONADO = 'S', " &
+            "WBALRECEITA = {3}, " &
+            "WBALFORNECEDOR = {4} " &
+            "WHERE EXISTS (" &
+            "SELECT 1 FROM CODIGOSPRO C " &
+            "WHERE C.WIDPRODUTO = P.WIDPRODUTO " &
+            "AND C.WCODIGOPRO = {2}" &
+            ");",
+            codigoNutricional,
+            validade,
+            codigoProduto,
+            receitaSQL,
+            fornecedorSQL)
+
+        Else
+
+            Return String.Format(
+            "UPDATE PRODUTOS P " &
+            "SET WVALIDADE = {0}, " &
+            "WFRACIONADO = 'S', " &
+            "WBALRECEITA = {2}, " &
+            "WBALFORNECEDOR = {3} " &
+            "WHERE EXISTS (" &
+            "SELECT 1 FROM CODIGOSPRO C " &
+            "WHERE C.WIDPRODUTO = P.WIDPRODUTO " &
+            "AND C.WCODIGOPRO = {1}" &
+            ");",
+            validade,
+            codigoProduto,
+            receitaSQL,
+            fornecedorSQL)
+
+        End If
 
     End Function
 
@@ -1142,7 +1185,6 @@ ORDER BY i.codigo"
         CmbCodItem.Focus()
 
     End Sub
-
 
 #End Region
 
