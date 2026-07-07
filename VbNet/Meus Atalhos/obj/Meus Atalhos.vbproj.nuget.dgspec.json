@@ -63,7 +63,7 @@
             },
             "Microsoft.Identity.Client": {
               "target": "Package",
-              "version": "[4.85.1, )"
+              "version": "[4.85.2, )"
             },
             "Microsoft.IdentityModel.Abstractions": {
               "target": "Package",
@@ -75,11 +75,15 @@
             },
             "MySqlConnector": {
               "target": "Package",
-              "version": "[2.6.0, )"
+              "version": "[2.6.1, )"
             },
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.4, )"
+            },
+            "QuestPDF": {
+              "target": "Package",
+              "version": "[2026.7.0, )"
             }
           },
           "imports": [

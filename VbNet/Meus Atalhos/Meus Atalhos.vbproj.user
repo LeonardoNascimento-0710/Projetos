@@ -1,19 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Compile Update="FrmBancoHoras.vb">
+    <Compile Update="Atalhos\FrmBancoHoras.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="FrmBancoSD.vb">
+    <Compile Update="Atalhos\FrmConversorBalancaFilizola.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="FrmConversorBalancaFilizola.vb">
+    <Compile Update="Atalhos\FrmConversorBalancaToledo.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="FrmConversorBalancaToledo.vb">
+    <Compile Update="Downloads\FrmDownloadsConversor.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="FrmMeusAuxiliares.vb">
+    <Compile Update="Geral\FrmMeusAuxiliares.vb">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
