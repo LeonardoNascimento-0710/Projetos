@@ -1,0 +1,6 @@
+Versão 0.0.1
+
+- Estrutura inicial criada.
+- Solution criada.
+- Projeto Core criado.
+- Estrutura de pastas criada.

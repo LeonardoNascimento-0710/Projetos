@@ -65,9 +65,9 @@ Partial Class FrmMeusAuxiliares
         ' 
         ' BtnDowloadVideos
         ' 
-        BtnDowloadVideos.Location = New Point(6, 12)
+        BtnDowloadVideos.Location = New Point(7, 13)
         BtnDowloadVideos.Name = "BtnDowloadVideos"
-        BtnDowloadVideos.Size = New Size(125, 37)
+        BtnDowloadVideos.Size = New Size(143, 39)
         BtnDowloadVideos.TabIndex = 0
         BtnDowloadVideos.Text = "Baixar Playlists"
         BtnDowloadVideos.UseVisualStyleBackColor = True
@@ -76,10 +76,11 @@ Partial Class FrmMeusAuxiliares
         ' 
         TabMenu.Controls.Add(TabDownloads)
         TabMenu.Controls.Add(TabPage2)
-        TabMenu.Location = New Point(12, 77)
+        TabMenu.Font = New Font("Monocraft", 8.999999F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        TabMenu.Location = New Point(14, 82)
         TabMenu.Name = "TabMenu"
         TabMenu.SelectedIndex = 0
-        TabMenu.Size = New Size(446, 310)
+        TabMenu.Size = New Size(510, 331)
         TabMenu.TabIndex = 2
         ' 
         ' TabDownloads
@@ -100,122 +101,122 @@ Partial Class FrmMeusAuxiliares
         TabDownloads.Controls.Add(Button5)
         TabDownloads.Controls.Add(Button2)
         TabDownloads.Controls.Add(BtnDowloadVideos)
-        TabDownloads.Location = New Point(4, 24)
+        TabDownloads.Location = New Point(4, 25)
         TabDownloads.Name = "TabDownloads"
         TabDownloads.Padding = New Padding(3)
-        TabDownloads.Size = New Size(438, 282)
+        TabDownloads.Size = New Size(502, 302)
         TabDownloads.TabIndex = 0
         TabDownloads.Text = "Downloads"
         ' 
         ' Button1
         ' 
-        Button1.Location = New Point(157, 12)
+        Button1.Location = New Point(179, 13)
         Button1.Name = "Button1"
-        Button1.Size = New Size(125, 37)
+        Button1.Size = New Size(143, 39)
         Button1.TabIndex = 15
         Button1.UseVisualStyleBackColor = True
         ' 
         ' Button12
         ' 
-        Button12.Location = New Point(307, 234)
+        Button12.Location = New Point(351, 250)
         Button12.Name = "Button12"
-        Button12.Size = New Size(125, 37)
+        Button12.Size = New Size(143, 39)
         Button12.TabIndex = 14
         Button12.UseVisualStyleBackColor = True
         ' 
         ' Button13
         ' 
-        Button13.Location = New Point(157, 234)
+        Button13.Location = New Point(179, 250)
         Button13.Name = "Button13"
-        Button13.Size = New Size(125, 37)
+        Button13.Size = New Size(143, 39)
         Button13.TabIndex = 13
         Button13.UseVisualStyleBackColor = True
         ' 
         ' Button14
         ' 
-        Button14.Location = New Point(6, 234)
+        Button14.Location = New Point(7, 250)
         Button14.Name = "Button14"
-        Button14.Size = New Size(125, 37)
+        Button14.Size = New Size(143, 39)
         Button14.TabIndex = 12
         Button14.UseVisualStyleBackColor = True
         ' 
         ' Button9
         ' 
-        Button9.Location = New Point(307, 180)
+        Button9.Location = New Point(351, 192)
         Button9.Name = "Button9"
-        Button9.Size = New Size(125, 37)
+        Button9.Size = New Size(143, 39)
         Button9.TabIndex = 11
         Button9.UseVisualStyleBackColor = True
         ' 
         ' Button10
         ' 
-        Button10.Location = New Point(157, 180)
+        Button10.Location = New Point(179, 192)
         Button10.Name = "Button10"
-        Button10.Size = New Size(125, 37)
+        Button10.Size = New Size(143, 39)
         Button10.TabIndex = 10
         Button10.UseVisualStyleBackColor = True
         ' 
         ' Button11
         ' 
-        Button11.Location = New Point(6, 180)
+        Button11.Location = New Point(7, 192)
         Button11.Name = "Button11"
-        Button11.Size = New Size(125, 37)
+        Button11.Size = New Size(143, 39)
         Button11.TabIndex = 9
         Button11.UseVisualStyleBackColor = True
         ' 
         ' Button6
         ' 
-        Button6.Location = New Point(307, 126)
+        Button6.Location = New Point(351, 134)
         Button6.Name = "Button6"
-        Button6.Size = New Size(125, 37)
+        Button6.Size = New Size(143, 39)
         Button6.TabIndex = 8
         Button6.UseVisualStyleBackColor = True
         ' 
         ' Button7
         ' 
-        Button7.Location = New Point(157, 126)
+        Button7.Location = New Point(179, 134)
         Button7.Name = "Button7"
-        Button7.Size = New Size(125, 37)
+        Button7.Size = New Size(143, 39)
         Button7.TabIndex = 7
         Button7.UseVisualStyleBackColor = True
         ' 
         ' Button8
         ' 
-        Button8.Location = New Point(6, 126)
+        Button8.Location = New Point(7, 134)
         Button8.Name = "Button8"
-        Button8.Size = New Size(125, 37)
+        Button8.Size = New Size(143, 39)
         Button8.TabIndex = 6
         Button8.UseVisualStyleBackColor = True
         ' 
         ' Button3
         ' 
-        Button3.Location = New Point(307, 68)
+        Button3.Location = New Point(351, 73)
         Button3.Name = "Button3"
-        Button3.Size = New Size(125, 37)
+        Button3.Size = New Size(143, 39)
         Button3.TabIndex = 5
         Button3.UseVisualStyleBackColor = True
         ' 
         ' Button4
         ' 
-        Button4.Location = New Point(157, 68)
+        Button4.Location = New Point(179, 73)
         Button4.Name = "Button4"
-        Button4.Size = New Size(125, 37)
+        Button4.Size = New Size(143, 39)
         Button4.TabIndex = 4
         Button4.UseVisualStyleBackColor = True
         ' 
         ' Button5
         ' 
-        Button5.Location = New Point(6, 68)
+        Button5.Location = New Point(7, 73)
         Button5.Name = "Button5"
-        Button5.Size = New Size(125, 37)
+        Button5.Size = New Size(143, 39)
         Button5.TabIndex = 3
         Button5.UseVisualStyleBackColor = True
         ' 
         ' Button2
         ' 
-        Button2.Location = New Point(307, 12)
+        Button2.Location = New Point(351, 13)
         Button2.Name = "Button2"
-        Button2.Size = New Size(125, 37)
+        Button2.Size = New Size(143, 39)
         Button2.TabIndex = 2
         Button2.UseVisualStyleBackColor = True
         ' 
@@ -237,133 +238,133 @@ Partial Class FrmMeusAuxiliares
         TabPage2.Controls.Add(BtnConversorFilizola)
         TabPage2.Controls.Add(BtnFdbforXlsx)
         TabPage2.Controls.Add(BrnBancoHoras)
-        TabPage2.Location = New Point(4, 24)
+        TabPage2.Location = New Point(4, 25)
         TabPage2.Name = "TabPage2"
         TabPage2.Padding = New Padding(3)
-        TabPage2.Size = New Size(438, 282)
+        TabPage2.Size = New Size(502, 302)
         TabPage2.TabIndex = 1
         TabPage2.Text = "Atalhos"
         ' 
         ' Button15
         ' 
-        Button15.Location = New Point(157, 68)
+        Button15.Location = New Point(179, 73)
         Button15.Name = "Button15"
-        Button15.Size = New Size(125, 37)
+        Button15.Size = New Size(143, 39)
         Button15.TabIndex = 33
         Button15.UseVisualStyleBackColor = True
         ' 
         ' Button19
         ' 
-        Button19.Location = New Point(307, 234)
+        Button19.Location = New Point(351, 250)
         Button19.Name = "Button19"
-        Button19.Size = New Size(125, 37)
+        Button19.Size = New Size(143, 39)
         Button19.TabIndex = 32
         Button19.UseVisualStyleBackColor = True
         ' 
         ' Button22
         ' 
-        Button22.Location = New Point(157, 234)
+        Button22.Location = New Point(179, 250)
         Button22.Name = "Button22"
-        Button22.Size = New Size(125, 37)
+        Button22.Size = New Size(143, 39)
         Button22.TabIndex = 31
         Button22.UseVisualStyleBackColor = True
         ' 
         ' Button23
         ' 
-        Button23.Location = New Point(6, 234)
+        Button23.Location = New Point(7, 250)
         Button23.Name = "Button23"
-        Button23.Size = New Size(125, 37)
+        Button23.Size = New Size(143, 39)
         Button23.TabIndex = 30
         Button23.UseVisualStyleBackColor = True
         ' 
         ' Button24
         ' 
-        Button24.Location = New Point(307, 180)
+        Button24.Location = New Point(351, 192)
         Button24.Name = "Button24"
-        Button24.Size = New Size(125, 37)
+        Button24.Size = New Size(143, 39)
         Button24.TabIndex = 29
         Button24.UseVisualStyleBackColor = True
         ' 
         ' Button25
         ' 
-        Button25.Location = New Point(157, 180)
+        Button25.Location = New Point(179, 192)
         Button25.Name = "Button25"
-        Button25.Size = New Size(125, 37)
+        Button25.Size = New Size(143, 39)
         Button25.TabIndex = 28
         Button25.UseVisualStyleBackColor = True
         ' 
         ' Button26
         ' 
-        Button26.Location = New Point(6, 180)
+        Button26.Location = New Point(7, 192)
         Button26.Name = "Button26"
-        Button26.Size = New Size(125, 37)
+        Button26.Size = New Size(143, 39)
         Button26.TabIndex = 27
         Button26.UseVisualStyleBackColor = True
         ' 
         ' Button27
         ' 
-        Button27.Location = New Point(307, 126)
+        Button27.Location = New Point(351, 134)
         Button27.Name = "Button27"
-        Button27.Size = New Size(125, 37)
+        Button27.Size = New Size(143, 39)
         Button27.TabIndex = 26
         Button27.UseVisualStyleBackColor = True
         ' 
         ' Button28
         ' 
-        Button28.Location = New Point(157, 126)
+        Button28.Location = New Point(179, 134)
         Button28.Name = "Button28"
-        Button28.Size = New Size(125, 37)
+        Button28.Size = New Size(143, 39)
         Button28.TabIndex = 25
         Button28.UseVisualStyleBackColor = True
         ' 
         ' Button29
         ' 
-        Button29.Location = New Point(6, 126)
+        Button29.Location = New Point(7, 134)
         Button29.Name = "Button29"
-        Button29.Size = New Size(125, 37)
+        Button29.Size = New Size(143, 39)
         Button29.TabIndex = 24
         Button29.UseVisualStyleBackColor = True
         ' 
         ' btn
         ' 
-        btn.Location = New Point(307, 68)
+        btn.Location = New Point(351, 73)
         btn.Name = "btn"
-        btn.Size = New Size(125, 37)
+        btn.Size = New Size(143, 39)
         btn.TabIndex = 22
         btn.UseVisualStyleBackColor = True
         ' 
         ' BtnConversorToledo
         ' 
-        BtnConversorToledo.Location = New Point(307, 12)
+        BtnConversorToledo.Location = New Point(351, 13)
         BtnConversorToledo.Name = "BtnConversorToledo"
-        BtnConversorToledo.Size = New Size(125, 37)
+        BtnConversorToledo.Size = New Size(143, 39)
         BtnConversorToledo.TabIndex = 21
         BtnConversorToledo.Text = "Balança Toledo"
         BtnConversorToledo.UseVisualStyleBackColor = True
         ' 
         ' BtnConversorFilizola
         ' 
-        BtnConversorFilizola.Location = New Point(157, 12)
+        BtnConversorFilizola.Location = New Point(179, 13)
         BtnConversorFilizola.Name = "BtnConversorFilizola"
-        BtnConversorFilizola.Size = New Size(125, 37)
+        BtnConversorFilizola.Size = New Size(143, 39)
         BtnConversorFilizola.TabIndex = 17
         BtnConversorFilizola.Text = "Balança Filizola" & vbCrLf
         BtnConversorFilizola.UseVisualStyleBackColor = True
         ' 
         ' BtnFdbforXlsx
         ' 
-        BtnFdbforXlsx.Location = New Point(6, 68)
+        BtnFdbforXlsx.Location = New Point(7, 73)
         BtnFdbforXlsx.Name = "BtnFdbforXlsx"
-        BtnFdbforXlsx.Size = New Size(125, 37)
+        BtnFdbforXlsx.Size = New Size(143, 39)
         BtnFdbforXlsx.TabIndex = 16
         BtnFdbforXlsx.Text = "Conversor FDB"
         BtnFdbforXlsx.UseVisualStyleBackColor = True
         ' 
         ' BrnBancoHoras
         ' 
-        BrnBancoHoras.Location = New Point(6, 12)
+        BrnBancoHoras.Location = New Point(7, 13)
         BrnBancoHoras.Name = "BrnBancoHoras"
-        BrnBancoHoras.Size = New Size(125, 37)
+        BrnBancoHoras.Size = New Size(143, 39)
         BrnBancoHoras.TabIndex = 15
         BrnBancoHoras.Text = "Banco Horas"
         BrnBancoHoras.UseVisualStyleBackColor = True
@@ -371,31 +372,31 @@ Partial Class FrmMeusAuxiliares
         ' Panel1
         ' 
         Panel1.BackColor = SystemColors.ControlDarkDark
-        Panel1.Location = New Point(-1, 416)
+        Panel1.Location = New Point(-1, 444)
         Panel1.Name = "Panel1"
-        Panel1.Size = New Size(475, 50)
+        Panel1.Size = New Size(543, 53)
         Panel1.TabIndex = 5
         ' 
         ' LblTitulo
         ' 
         LblTitulo.AutoSize = True
         LblTitulo.ForeColor = Color.White
-        LblTitulo.Location = New Point(29, 35)
+        LblTitulo.Location = New Point(97, 22)
         LblTitulo.Name = "LblTitulo"
-        LblTitulo.Size = New Size(412, 30)
+        LblTitulo.Size = New Size(343, 48)
         LblTitulo.TabIndex = 6
-        LblTitulo.Text = "Programa feito para facilitar o dia a dia além de  alguns atalhos interessantes." & vbCrLf & vbCrLf
+        LblTitulo.Text = "Programa feito para facilitar o dia a dia " & vbCrLf & "além de alguns atalhos interessantes." & vbCrLf & vbCrLf
         ' 
         ' FrmMeusAuxiliares
         ' 
-        AutoScaleDimensions = New SizeF(7F, 15F)
+        AutoScaleDimensions = New SizeF(8F, 16F)
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.FromArgb(CByte(134), CByte(29), CByte(29))
-        ClientSize = New Size(470, 464)
+        ClientSize = New Size(537, 495)
         Controls.Add(LblTitulo)
         Controls.Add(Panel1)
         Controls.Add(TabMenu)
-        Font = New Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Font = New Font("Monocraft", 8.999999F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         FormBorderStyle = FormBorderStyle.FixedSingle
         Icon = CType(resources.GetObject("$this.Icon"), Icon)
         MaximizeBox = False

@@ -3,20 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\Meus Atalhos\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F87A61B6-8B84-4916-88DB-2EE784BD9196}|Meus Atalhos.vbproj|c:\\users\\administrador\\onedrive\\desktop\\projetos\\projetos\\vbnet\\meus atalhos\\geral\\frmmeusauxiliares.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
-      "RelativeMoniker": "D:0:0:{F87A61B6-8B84-4916-88DB-2EE784BD9196}|Meus Atalhos.vbproj|solutionrelative:geral\\frmmeusauxiliares.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
+      "AbsoluteMoniker": "D:0:0:{F87A61B6-8B84-4916-88DB-2EE784BD9196}|Meus Atalhos.vbproj|c:\\users\\administrador\\onedrive\\desktop\\projetos\\projetos\\vbnet\\meus atalhos\\downloads\\frmdownloadsconversor.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{F87A61B6-8B84-4916-88DB-2EE784BD9196}|Meus Atalhos.vbproj|solutionrelative:downloads\\frmdownloadsconversor.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F87A61B6-8B84-4916-88DB-2EE784BD9196}|Meus Atalhos.vbproj|c:\\users\\administrador\\onedrive\\desktop\\projetos\\projetos\\vbnet\\meus atalhos\\downloads\\frmdownloadsconversor.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
       "RelativeMoniker": "D:0:0:{F87A61B6-8B84-4916-88DB-2EE784BD9196}|Meus Atalhos.vbproj|solutionrelative:downloads\\frmdownloadsconversor.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F87A61B6-8B84-4916-88DB-2EE784BD9196}|Meus Atalhos.vbproj|c:\\users\\administrador\\onedrive\\desktop\\projetos\\projetos\\vbnet\\meus atalhos\\downloads\\frmdownloadsconversor.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
-      "RelativeMoniker": "D:0:0:{F87A61B6-8B84-4916-88DB-2EE784BD9196}|Meus Atalhos.vbproj|solutionrelative:downloads\\frmdownloadsconversor.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F87A61B6-8B84-4916-88DB-2EE784BD9196}|Meus Atalhos.vbproj|c:\\users\\administrador\\onedrive\\desktop\\projetos\\projetos\\vbnet\\meus atalhos\\geral\\frmmeusauxiliares.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
-      "RelativeMoniker": "D:0:0:{F87A61B6-8B84-4916-88DB-2EE784BD9196}|Meus Atalhos.vbproj|solutionrelative:geral\\frmmeusauxiliares.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+      "AbsoluteMoniker": "D:0:0:{F87A61B6-8B84-4916-88DB-2EE784BD9196}|Meus Atalhos.vbproj|c:\\users\\administrador\\onedrive\\desktop\\projetos\\projetos\\vbnet\\meus atalhos\\geral\\frmmeusauxiliares.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
+      "RelativeMoniker": "D:0:0:{F87A61B6-8B84-4916-88DB-2EE784BD9196}|Meus Atalhos.vbproj|solutionrelative:geral\\frmmeusauxiliares.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,33 +22,19 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "FrmMeusAuxiliares.vb",
+              "DocumentIndex": 2,
+              "Title": "FrmMeusAuxiliares.vb [Projeto]",
               "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\Meus Atalhos\\Geral\\FrmMeusAuxiliares.vb",
               "RelativeDocumentMoniker": "Geral\\FrmMeusAuxiliares.vb",
-              "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\Meus Atalhos\\Geral\\FrmMeusAuxiliares.vb",
-              "RelativeToolTip": "Geral\\FrmMeusAuxiliares.vb",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAALoAAAAAAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\Meus Atalhos\\Geral\\FrmMeusAuxiliares.vb [Projeto]",
+              "RelativeToolTip": "Geral\\FrmMeusAuxiliares.vb [Projeto]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2026-07-07T20:45:33.365Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "FrmDownloadsConversor.vb",
-              "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\Meus Atalhos\\Downloads\\FrmDownloadsConversor.vb",
-              "RelativeDocumentMoniker": "Downloads\\FrmDownloadsConversor.vb",
-              "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\Meus Atalhos\\Downloads\\FrmDownloadsConversor.vb",
-              "RelativeToolTip": "Downloads\\FrmDownloadsConversor.vb",
-              "ViewState": "AgIAAGIAAAAAAAAAAAAMwHYAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2026-07-07T11:56:25.94Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-08T12:28:32.943Z",
+              "EditorCaption": " [Projeto]"
             },
             {
               "$type": "Document",
@@ -63,20 +45,21 @@
               "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\Meus Atalhos\\Downloads\\FrmDownloadsConversor.vb [Projeto]",
               "RelativeToolTip": "Downloads\\FrmDownloadsConversor.vb [Projeto]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2026-07-07T11:52:52.139Z",
+              "WhenOpened": "2026-07-08T12:24:50.932Z",
               "EditorCaption": " [Projeto]"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "FrmMeusAuxiliares.vb [Projeto]",
-              "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\Meus Atalhos\\Geral\\FrmMeusAuxiliares.vb",
-              "RelativeDocumentMoniker": "Geral\\FrmMeusAuxiliares.vb",
-              "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\Meus Atalhos\\Geral\\FrmMeusAuxiliares.vb [Projeto]",
-              "RelativeToolTip": "Geral\\FrmMeusAuxiliares.vb [Projeto]",
+              "Title": "FrmDownloadsConversor.vb",
+              "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\Meus Atalhos\\Downloads\\FrmDownloadsConversor.vb",
+              "RelativeDocumentMoniker": "Downloads\\FrmDownloadsConversor.vb",
+              "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\Meus Atalhos\\Downloads\\FrmDownloadsConversor.vb",
+              "RelativeToolTip": "Downloads\\FrmDownloadsConversor.vb",
+              "ViewState": "AgIAADAAAAAAAAAAAAAAwI0BAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2026-07-07T11:31:20.492Z",
-              "EditorCaption": " [Projeto]"
+              "WhenOpened": "2026-07-07T11:56:25.94Z",
+              "EditorCaption": ""
             }
           ]
         }

@@ -1,0 +1,32 @@
+# Tactical Studio
+
+## Etapa 1.1
+
+Data:
+08/07/2026
+
+### Objetivo
+
+Criar a estrutura principal da interface.
+
+### Controles
+
+FrmPrincipal
+
+PnlSuperior
+
+PnlEsquerdo
+
+PnlDireito
+
+PnlCentral
+
+PnlInferior
+
+### Status
+
+Concluído.
+
+### Próxima etapa
+
+Criar o sistema de temas.

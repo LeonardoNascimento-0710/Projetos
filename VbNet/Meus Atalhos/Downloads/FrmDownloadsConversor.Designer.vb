@@ -32,27 +32,30 @@ Partial Class FrmDownloadsConversor
         TxtLog = New RichTextBox()
         BtnSelecionarPlaylist = New Button()
         Panel1 = New Panel()
+        BtnRetornar = New Button()
         BtnCancelar = New Button()
         BtnConversor = New Button()
-        BtnRetornar = New Button()
+        GrpDownload = New GroupBox()
         Panel1.SuspendLayout()
+        GrpDownload.SuspendLayout()
         SuspendLayout()
         ' 
         ' PbDownload
         ' 
-        PbDownload.Location = New Point(12, 61)
+        PbDownload.Location = New Point(22, 62)
+        PbDownload.Margin = New Padding(4, 3, 4, 3)
         PbDownload.Name = "PbDownload"
-        PbDownload.Size = New Size(368, 23)
-        PbDownload.Style = ProgressBarStyle.Continuous
+        PbDownload.Size = New Size(589, 24)
         PbDownload.TabIndex = 0
         ' 
         ' LblVideo
         ' 
         LblVideo.AutoSize = True
         LblVideo.ForeColor = Color.White
-        LblVideo.Location = New Point(12, 21)
+        LblVideo.Location = New Point(22, 17)
+        LblVideo.Margin = New Padding(4, 0, 4, 0)
         LblVideo.Name = "LblVideo"
-        LblVideo.Size = New Size(46, 15)
+        LblVideo.Size = New Size(63, 16)
         LblVideo.TabIndex = 1
         LblVideo.Text = "VÍDEO: "
         ' 
@@ -60,9 +63,10 @@ Partial Class FrmDownloadsConversor
         ' 
         LblNome.AutoSize = True
         LblNome.ForeColor = Color.White
-        LblNome.Location = New Point(12, 41)
+        LblNome.Location = New Point(22, 38)
+        LblNome.Margin = New Padding(4, 0, 4, 0)
         LblNome.Name = "LblNome"
-        LblNome.Size = New Size(48, 15)
+        LblNome.Size = New Size(55, 16)
         LblNome.TabIndex = 2
         LblNome.Text = "NOME: "
         ' 
@@ -70,9 +74,10 @@ Partial Class FrmDownloadsConversor
         ' 
         LblVelocidade.AutoSize = True
         LblVelocidade.ForeColor = Color.White
-        LblVelocidade.Location = New Point(12, 89)
+        LblVelocidade.Location = New Point(22, 90)
+        LblVelocidade.Margin = New Padding(4, 0, 4, 0)
         LblVelocidade.Name = "LblVelocidade"
-        LblVelocidade.Size = New Size(79, 15)
+        LblVelocidade.Size = New Size(95, 16)
         LblVelocidade.TabIndex = 3
         LblVelocidade.Text = "VELOCIDADE:"
         ' 
@@ -80,9 +85,10 @@ Partial Class FrmDownloadsConversor
         ' 
         LblETA.AutoSize = True
         LblETA.ForeColor = Color.White
-        LblETA.Location = New Point(12, 109)
+        LblETA.Location = New Point(22, 112)
+        LblETA.Margin = New Padding(4, 0, 4, 0)
         LblETA.Name = "LblETA"
-        LblETA.Size = New Size(29, 15)
+        LblETA.Size = New Size(39, 16)
         LblETA.TabIndex = 4
         LblETA.Text = "ETA:"
         ' 
@@ -90,25 +96,31 @@ Partial Class FrmDownloadsConversor
         ' 
         LblStatus.AutoSize = True
         LblStatus.ForeColor = Color.White
-        LblStatus.Location = New Point(12, 129)
+        LblStatus.Location = New Point(22, 133)
+        LblStatus.Margin = New Padding(4, 0, 4, 0)
         LblStatus.Name = "LblStatus"
-        LblStatus.Size = New Size(48, 15)
+        LblStatus.Size = New Size(63, 16)
         LblStatus.TabIndex = 5
         LblStatus.Text = "STATUS:"
         ' 
         ' TxtLog
         ' 
-        TxtLog.Location = New Point(12, 149)
+        TxtLog.Enabled = False
+        TxtLog.Font = New Font("Monocraft", 8.999999F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        TxtLog.Location = New Point(22, 154)
+        TxtLog.Margin = New Padding(4, 3, 4, 3)
         TxtLog.Name = "TxtLog"
-        TxtLog.Size = New Size(368, 69)
+        TxtLog.Size = New Size(589, 71)
         TxtLog.TabIndex = 6
         TxtLog.Text = ""
         ' 
         ' BtnSelecionarPlaylist
         ' 
-        BtnSelecionarPlaylist.Location = New Point(51, 14)
+        BtnSelecionarPlaylist.Font = New Font("Monocraft", 8.999999F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        BtnSelecionarPlaylist.Location = New Point(22, 251)
+        BtnSelecionarPlaylist.Margin = New Padding(4, 3, 4, 3)
         BtnSelecionarPlaylist.Name = "BtnSelecionarPlaylist"
-        BtnSelecionarPlaylist.Size = New Size(87, 49)
+        BtnSelecionarPlaylist.Size = New Size(124, 43)
         BtnSelecionarPlaylist.TabIndex = 7
         BtnSelecionarPlaylist.Text = "Selecionar Playlist"
         BtnSelecionarPlaylist.UseVisualStyleBackColor = True
@@ -116,21 +128,32 @@ Partial Class FrmDownloadsConversor
         ' Panel1
         ' 
         Panel1.BackColor = SystemColors.ControlDarkDark
-        Panel1.Controls.Add(BtnCancelar)
-        Panel1.Controls.Add(BtnConversor)
         Panel1.Controls.Add(BtnRetornar)
-        Panel1.Controls.Add(BtnSelecionarPlaylist)
-        Panel1.Location = New Point(0, 236)
+        Panel1.Location = New Point(-6, 347)
+        Panel1.Margin = New Padding(4, 3, 4, 3)
         Panel1.Name = "Panel1"
-        Panel1.Size = New Size(411, 77)
+        Panel1.Size = New Size(662, 62)
         Panel1.TabIndex = 8
+        ' 
+        ' BtnRetornar
+        ' 
+        BtnRetornar.Font = New Font("Monocraft", 8.999999F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        BtnRetornar.Location = New Point(284, 15)
+        BtnRetornar.Margin = New Padding(4, 3, 4, 3)
+        BtnRetornar.Name = "BtnRetornar"
+        BtnRetornar.Size = New Size(100, 34)
+        BtnRetornar.TabIndex = 1
+        BtnRetornar.Text = "Retornar"
+        BtnRetornar.UseVisualStyleBackColor = True
         ' 
         ' BtnCancelar
         ' 
         BtnCancelar.Enabled = False
-        BtnCancelar.Location = New Point(162, 14)
+        BtnCancelar.Font = New Font("Monocraft", 8.999999F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        BtnCancelar.Location = New Point(327, 262)
+        BtnCancelar.Margin = New Padding(4, 3, 4, 3)
         BtnCancelar.Name = "BtnCancelar"
-        BtnCancelar.Size = New Size(87, 49)
+        BtnCancelar.Size = New Size(91, 21)
         BtnCancelar.TabIndex = 9
         BtnCancelar.Text = "Cancelar"
         BtnCancelar.UseVisualStyleBackColor = True
@@ -138,37 +161,45 @@ Partial Class FrmDownloadsConversor
         ' 
         ' BtnConversor
         ' 
-        BtnConversor.Location = New Point(162, 14)
+        BtnConversor.Font = New Font("Monocraft", 8.999999F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        BtnConversor.Location = New Point(173, 251)
+        BtnConversor.Margin = New Padding(4, 3, 4, 3)
         BtnConversor.Name = "BtnConversor"
-        BtnConversor.Size = New Size(87, 49)
+        BtnConversor.Size = New Size(124, 42)
         BtnConversor.TabIndex = 8
         BtnConversor.Text = "Converter para Mp3" & vbCrLf
         BtnConversor.UseVisualStyleBackColor = True
         ' 
-        ' BtnRetornar
+        ' GrpDownload
         ' 
-        BtnRetornar.Location = New Point(272, 15)
-        BtnRetornar.Name = "BtnRetornar"
-        BtnRetornar.Size = New Size(87, 49)
-        BtnRetornar.TabIndex = 1
-        BtnRetornar.Text = "Retornar"
-        BtnRetornar.UseVisualStyleBackColor = True
+        GrpDownload.Controls.Add(LblVideo)
+        GrpDownload.Controls.Add(BtnCancelar)
+        GrpDownload.Controls.Add(BtnConversor)
+        GrpDownload.Controls.Add(PbDownload)
+        GrpDownload.Controls.Add(LblNome)
+        GrpDownload.Controls.Add(LblVelocidade)
+        GrpDownload.Controls.Add(TxtLog)
+        GrpDownload.Controls.Add(LblETA)
+        GrpDownload.Controls.Add(LblStatus)
+        GrpDownload.Controls.Add(BtnSelecionarPlaylist)
+        GrpDownload.Location = New Point(12, 12)
+        GrpDownload.Name = "GrpDownload"
+        GrpDownload.Size = New Size(632, 316)
+        GrpDownload.TabIndex = 10
+        GrpDownload.TabStop = False
         ' 
         ' FrmDownloadsConversor
         ' 
-        AutoScaleDimensions = New SizeF(7F, 15F)
+        AutoScaleDimensions = New SizeF(8F, 16F)
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.FromArgb(CByte(134), CByte(29), CByte(29))
-        ClientSize = New Size(401, 312)
+        ClientSize = New Size(656, 409)
+        Controls.Add(GrpDownload)
         Controls.Add(Panel1)
-        Controls.Add(TxtLog)
-        Controls.Add(LblStatus)
-        Controls.Add(LblETA)
-        Controls.Add(LblVelocidade)
-        Controls.Add(LblNome)
-        Controls.Add(LblVideo)
-        Controls.Add(PbDownload)
+        Font = New Font("Monocraft", 8.999999F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        FormBorderStyle = FormBorderStyle.FixedSingle
         Icon = CType(resources.GetObject("$this.Icon"), Icon)
+        Margin = New Padding(4, 3, 4, 3)
         MaximizeBox = False
         MdiChildrenMinimizedAnchorBottom = False
         MinimizeBox = False
@@ -176,8 +207,9 @@ Partial Class FrmDownloadsConversor
         StartPosition = FormStartPosition.CenterScreen
         Text = "Downloads"
         Panel1.ResumeLayout(False)
+        GrpDownload.ResumeLayout(False)
+        GrpDownload.PerformLayout()
         ResumeLayout(False)
-        PerformLayout()
     End Sub
 
     Friend WithEvents PbDownload As ProgressBar
@@ -192,4 +224,5 @@ Partial Class FrmDownloadsConversor
     Friend WithEvents BtnRetornar As Button
     Friend WithEvents BtnConversor As Button
     Friend WithEvents BtnCancelar As Button
+    Friend WithEvents GrpDownload As GroupBox
 End Class

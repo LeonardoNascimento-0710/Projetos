@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>TacticalStudio.Core</RootNamespace>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Rendering\" />
+    <Folder Include="Projeto\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Eventos\" />
+    <Folder Include="Enums\" />
+    <Folder Include="Util\" />
+    <Folder Include="Objetos\" />
+  </ItemGroup>
+
+</Project>

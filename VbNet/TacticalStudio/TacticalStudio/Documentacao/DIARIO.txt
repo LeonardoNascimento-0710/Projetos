@@ -1,0 +1,40 @@
+=========================================================
+PROJETO : Tactical Studio
+VERSÃO  : 0.0.1
+
+FASE    : 1 - Interface
+ETAPA   : 1.2
+
+Objetivo:
+Criar a interface principal.
+
+Status:
+EM DESENVOLVIMENTO
+=========================================================
+=========================================================
+PROJETO : Tactical Studio
+VERSÃO  : 0.0.1
+
+FASE    : 2
+ETAPA   : 2.1
+
+✔ Estrutura criada
+✔ Tema criado
+✔ Primeiro desenho na tela
+
+Status:
+CONCLUÍDO
+=========================================================
+=========================================================
+PROJETO : Tactical Studio
+VERSÃO  : 0.0.1
+
+FASE    : 3 - Modelo de Dados
+ETAPA   : 3.1
+
+Objetivo:
+Criar a primeira classe do domínio do sistema.
+
+Status:
+EM DESENVOLVIMENTO
+=========================================================

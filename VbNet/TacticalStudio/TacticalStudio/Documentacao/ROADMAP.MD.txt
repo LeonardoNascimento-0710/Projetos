@@ -1,0 +1,8 @@
+ROADMAP
+
+FASE 0 - Preparação
+FASE 1 - Interface
+FASE 2 - Campo
+FASE 3 - Objetos
+FASE 4 - Ferramentas
+FASE 5 - Projetos

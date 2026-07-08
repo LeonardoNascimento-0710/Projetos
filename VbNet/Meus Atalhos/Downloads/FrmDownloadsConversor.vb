@@ -169,7 +169,6 @@ Public Class FrmDownloadsConversor
 
     Private Sub AtualizarProgresso(linha As String)
 
-
         If linha.Contains("Downloading item") Then
 
             Dim m = System.Text.RegularExpressions.Regex.Match(
@@ -197,8 +196,13 @@ Public Class FrmDownloadsConversor
 
             Me.BeginInvoke(Sub()
 
-                               LblNome.Text =
-                               IO.Path.GetFileNameWithoutExtension(nome)
+                               Dim nomeArquivo As String = IO.Path.GetFileNameWithoutExtension(nome)
+
+                               If nomeArquivo.Length > 70 Then
+                                   nomeArquivo = nomeArquivo.Substring(0, 70) & "..."
+                               End If
+
+                               LblNome.Text = nomeArquivo
 
                            End Sub)
 
@@ -214,8 +218,13 @@ Public Class FrmDownloadsConversor
 
             Me.BeginInvoke(Sub()
 
-                               LblNome.Text =
-                               IO.Path.GetFileNameWithoutExtension(nome)
+                               Dim nomeArquivo As String = IO.Path.GetFileNameWithoutExtension(nome)
+
+                               If nomeArquivo.Length > 70 Then
+                                   nomeArquivo = nomeArquivo.Substring(0, 70) & "..."
+                               End If
+
+                               LblNome.Text = nomeArquivo
 
                                PbDownload.Value = 100
 
@@ -246,12 +255,10 @@ Public Class FrmDownloadsConversor
                                r.Groups(1).Value & "%"
 
                                LblVelocidade.Text =
-                               "Velocidade: " &
-                               r.Groups(3).Value
+                               "Velocidade: " & r.Groups(3).Value
 
                                LblETA.Text =
-                               "ETA: " &
-                               r.Groups(4).Value
+                               "ETA: " & r.Groups(4).Value
 
                            End Sub)
 
