@@ -19,3 +19,4 @@ C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\T
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\TacticalStudio.Core.pdb
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio\obj\Debug\net10.0-windows\TacticalStudio.vbproj.AssemblyReference.cache
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio\obj\Debug\net10.0-windows\Tactical.4E285E0F.Up2Date
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio\obj\Debug\net10.0-windows\TacticalStudio.CampoTatico.resources

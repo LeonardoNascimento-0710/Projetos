@@ -1,6 +1,4 @@
-﻿Imports TacticalStudio.Core.Classe
-
-Namespace Classes
+﻿Namespace Classes
 
     Public Class Jogador
         Inherits ObjetoCampo

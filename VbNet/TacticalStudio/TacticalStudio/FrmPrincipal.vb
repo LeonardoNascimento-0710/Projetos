@@ -1,15 +1,23 @@
-﻿Imports TacticalStudio.Core.Classes
-
+﻿Imports TacticalStudio.Core.Enums
 Public Class FrmPrincipal
 
-    Private ReadOnly Jogadores As New List(Of Jogador)
-    Private JogadorSelecionado As Jogador = Nothing
-    Private Arrastando As Boolean = False
-    Private OffsetMouse As PointF
+    Private CampoCanvas As CampoTatico
 
-    Private Sub FrmPrincipal_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub FrmPrincipal_Load(
+        sender As Object,
+        e As EventArgs) Handles MyBase.Load
 
-        Me.BackColor = Tema.Fundo
+        AplicarTema()
+
+        CriarCampoTatico()
+
+    End Sub
+
+    Private Sub AplicarTema()
+
+        BackColor = Tema.Fundo
+        ForeColor = Tema.Texto
+        Font = Tema.FontePadrao
 
         PnlSuperior.BackColor = Tema.CorPrimaria
         PnlEsquerdo.BackColor = Tema.Painel
@@ -17,208 +25,75 @@ Public Class FrmPrincipal
         PnlInferior.BackColor = Tema.Painel
         PnlCentral.BackColor = Tema.Fundo
 
-        Me.ForeColor = Tema.Texto
-        Me.Font = Tema.FontePadrao
-
-        Dim jogador As New Jogador()
-
-        jogador.Numero = 10
-        jogador.Nome = "Centroavante"
-
-        jogador.Posicao.X = 50
-        jogador.Posicao.Y = 50
-
-        Jogadores.Add(jogador)
-
-        PnlCentral.Invalidate()
-
     End Sub
 
-    Private Sub PnlCentral_MouseDown(sender As Object,
-                                 e As MouseEventArgs) Handles PnlCentral.MouseDown
+    Private Sub CriarCampoTatico()
 
-        Dim margem As Integer = 40
+        CampoCanvas = New CampoTatico With {
+        .Dock = DockStyle.Fill
+    }
 
-        Dim campo As New Rectangle(
-        margem,
-        margem,
-        PnlCentral.Width - margem * 2,
-        PnlCentral.Height - margem * 2)
+        PnlCentral.Controls.Clear()
+        PnlCentral.Controls.Add(CampoCanvas)
 
-        JogadorSelecionado = Nothing
+        CampoCanvas.AdicionarJogador(
+        10,
+        "Centroavante",
+        42,
+        50)
 
-        For Each jogador In Jogadores
+        CampoCanvas.AdicionarJogador(
+        9,
+        "Atacante",
+        62,
+        35)
 
-            Dim x As Single = CSng(campo.Left + (jogador.Posicao.X / 100.0F) * campo.Width)
-            Dim y As Single = CSng(campo.Top + (jogador.Posicao.Y / 100.0F) * campo.Height)
+        CampoCanvas.AdicionarBola(
+        52,
+        50)
 
-            Dim raio As Integer = 18
+        CampoCanvas.AdicionarCone(
+    CorCone.Laranja,
+    30,
+    30)
 
-            Dim distancia As Double =
-            Math.Sqrt((e.X - x) ^ 2 + (e.Y - y) ^ 2)
+        CampoCanvas.AdicionarCone(
+            CorCone.Amarelo,
+            30,
+            45)
 
-            If distancia <= raio Then
+        CampoCanvas.AdicionarCone(
+            CorCone.Azul,
+            30,
+            60)
+        CampoCanvas.AdicionarGol(
+    OrientacaoGol.Direita,
+    10,
+    50)
 
-                JogadorSelecionado = jogador
+        CampoCanvas.AdicionarGol(
+            OrientacaoGol.Esquerda,
+            90,
+            50)
 
-                OffsetMouse = New PointF(
-                e.X - x,
-                e.Y - y)
+        CampoCanvas.AdicionarGol(
+            OrientacaoGol.Baixo,
+            50,
+            18)
+        CampoCanvas.AdicionarManequim(
+    CorManequim.Amarelo,
+    70,
+    30)
 
-                Arrastando = True
+        CampoCanvas.AdicionarManequim(
+            CorManequim.Vermelho,
+            70,
+            50)
 
-                Exit For
-
-            End If
-
-        Next
-
-        PnlCentral.Invalidate()
-
+        CampoCanvas.AdicionarManequim(
+            CorManequim.Azul,
+            70,
+            70)
     End Sub
-
-    Private Sub PnlCentral_MouseMove(sender As Object,
-                                 e As MouseEventArgs) Handles PnlCentral.MouseMove
-
-        If Not Arrastando Then Exit Sub
-
-        If JogadorSelecionado Is Nothing Then Exit Sub
-
-        Dim margem As Integer = 40
-
-        Dim campo As New Rectangle(
-        margem,
-        margem,
-        PnlCentral.Width - margem * 2,
-        PnlCentral.Height - margem * 2)
-
-        Dim x As Single = e.X - OffsetMouse.X
-        Dim y As Single = e.Y - OffsetMouse.Y
-
-        JogadorSelecionado.Posicao.X =
-        ((x - campo.Left) / campo.Width) * 100.0F
-
-        JogadorSelecionado.Posicao.Y =
-        ((y - campo.Top) / campo.Height) * 100.0F
-
-        PnlCentral.Invalidate()
-
-    End Sub
-
-    Private Sub PnlCentral_MouseUp(sender As Object,
-                               e As MouseEventArgs) Handles PnlCentral.MouseUp
-
-        Arrastando = False
-
-    End Sub
-
-#Region "Campo"
-
-    Private Sub PnlCentral_Paint(sender As Object, e As PaintEventArgs) Handles PnlCentral.Paint
-
-        e.Graphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-
-        DesenharCampo(e.Graphics)
-
-    End Sub
-
-    Private Sub DesenharCampo(g As Graphics)
-
-        g.Clear(PnlCentral.BackColor)
-
-        Dim margem As Integer = 40
-
-        Dim campo As New Rectangle(
-        margem,
-        margem,
-        PnlCentral.Width - margem * 2,
-        PnlCentral.Height - margem * 2)
-
-        DesenharLinhas(g, campo)
-
-        DesenharJogadores(g, campo)
-
-    End Sub
-
-    Private Sub DesenharLinhas(g As Graphics, campo As Rectangle)
-
-        Using caneta As New Pen(Color.White, 3)
-
-            g.DrawRectangle(caneta, campo)
-
-            g.DrawLine(caneta,
-                       campo.Left + campo.Width \ 2,
-                       campo.Top,
-                       campo.Left + campo.Width \ 2,
-                       campo.Bottom)
-
-            Dim raio As Integer = 70
-
-            g.DrawEllipse(caneta,
-                          campo.Left + campo.Width \ 2 - raio,
-                          campo.Top + campo.Height \ 2 - raio,
-                          raio * 2,
-                          raio * 2)
-
-        End Using
-
-    End Sub
-
-    Private Sub DesenharJogadores(g As Graphics, campo As Rectangle)
-
-        For Each jogador In Jogadores
-
-            Dim x As Single = CSng(campo.Left + (jogador.Posicao.X / 100.0) * campo.Width)
-            Dim y As Single = CSng(campo.Top + (jogador.Posicao.Y / 100.0) * campo.Height)
-
-            Dim raio As Integer = 18
-
-            Using pincel As New SolidBrush(Color.Red)
-
-                g.FillEllipse(
-                    pincel,
-                    x - raio,
-                    y - raio,
-                    raio * 2,
-                    raio * 2)
-
-                If jogador Is JogadorSelecionado Then
-
-                    Using caneta As New Pen(Color.Gold, 3)
-
-                        g.DrawEllipse(
-                            caneta,
-                            x - raio - 3,
-                            y - raio - 3,
-                            raio * 2 + 6,
-                            raio * 2 + 6)
-
-                    End Using
-
-                End If
-
-            End Using
-
-            Using fonte As New Font("Segoe UI", 9, FontStyle.Bold),
-                  brushTexto As New SolidBrush(Color.White)
-
-                Dim texto = jogador.Numero.ToString()
-
-                Dim tamanho = g.MeasureString(texto, fonte)
-
-                g.DrawString(
-                    texto,
-                    fonte,
-                    brushTexto,
-                    x - tamanho.Width / 2,
-                    y - tamanho.Height / 2)
-
-            End Using
-
-        Next
-
-    End Sub
-
-#End Region
 
 End Class

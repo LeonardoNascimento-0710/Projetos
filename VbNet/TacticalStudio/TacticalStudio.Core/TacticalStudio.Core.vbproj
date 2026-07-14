@@ -10,7 +10,6 @@
     <Folder Include="Projeto\" />
     <Folder Include="Interfaces\" />
     <Folder Include="Eventos\" />
-    <Folder Include="Enums\" />
     <Folder Include="Util\" />
     <Folder Include="Objetos\" />
   </ItemGroup>

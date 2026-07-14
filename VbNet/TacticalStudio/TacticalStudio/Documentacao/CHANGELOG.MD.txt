@@ -1,6 +1,317 @@
-Versão 0.0.1
+TACTICALSTUDIO
+DOCUMENTAÇÃO DE ALTERAÇÕES DO PROJETO
 
-- Estrutura inicial criada.
-- Solution criada.
-- Projeto Core criado.
-- Estrutura de pastas criada.
+Projeto: TacticalStudio
+Tecnologia: VB.NET / Windows Forms / .NET 10
+Objetivo: Sistema de gerenciamento tático para treinadores de futebol
+
+======================================================================
+1. OBJETIVO DESTE ARQUIVO
+======================================================================
+
+Este documento registra as alterações realizadas no projeto TacticalStudio.
+
+A cada nova etapa do desenvolvimento, este arquivo poderá ser atualizado com:
+
+- Arquivos criados;
+- Arquivos alterados;
+- Funcionalidades adicionadas;
+- Correções efetuadas;
+- Decisões de arquitetura;
+- Pendências;
+- Próximas etapas.
+
+======================================================================
+2. REFERÊNCIA VISUAL DO PROJETO
+======================================================================
+
+O projeto pretende chegar a uma prancheta tática com aparência semelhante
+a um campo de treinamento de futebol, contendo:
+
+- Campo com faixas de gramado;
+- Jogadores movimentáveis;
+- Jogadores de equipes diferentes;
+- Goleiros;
+- Bola;
+- Cones;
+- Gols;
+- Manequins;
+- Linhas contínuas;
+- Linhas tracejadas;
+- Áreas delimitadas;
+- Numeração das etapas do exercício;
+- Sistema de seleção e movimentação dos objetos;
+- Controle de camadas;
+- Futuro suporte a sprites.
+
+======================================================================
+3. DECISÃO DE ARQUITETURA
+======================================================================
+
+Foi definido que o FrmPrincipal não será responsável por desenhar e
+movimentar diretamente os elementos do campo.
+
+Responsabilidades definidas:
+
+FrmPrincipal
+- Controlar menus;
+- Controlar painéis;
+- Inicializar o campo tático;
+- Gerenciar a interface principal;
+- Acionar ferramentas e comandos.
+
+CampoTatico
+- Desenhar o gramado;
+- Desenhar as marcações do campo;
+- Desenhar os objetos táticos;
+- Selecionar objetos;
+- Movimentar objetos;
+- Converter posições percentuais para coordenadas de tela;
+- Impedir que os objetos saiam da área do campo.
+
+TacticalStudio.Core
+- Armazenar as classes de domínio;
+- Representar jogadores, bola e futuros objetos;
+- Manter propriedades independentes da interface gráfica.
+
+======================================================================
+4. ETAPA 1 - CENTRALIZAÇÃO DO CAMPO TÁTICO
+======================================================================
+
+STATUS: CONCLUÍDA
+
+Arquivo alterado:
+- Controles\CampoTatico.vb
+
+Alterações realizadas:
+
+- O CampoTatico passou a herdar UserControl;
+- Foi ativado DoubleBuffered para evitar cintilação;
+- Foi criado o desenho do gramado;
+- Foram criadas faixas alternadas no gramado;
+- Foram desenhadas as linhas externas;
+- Foi desenhada a linha central;
+- Foi desenhado o círculo central;
+- Foi desenhado o ponto central;
+- Foram desenhadas as grandes áreas;
+- Foram desenhadas as pequenas áreas;
+- Foi criado suporte inicial a jogadores;
+- Os jogadores passaram a usar posição percentual;
+- Foi implementada a seleção de jogadores;
+- Foi implementado o arraste com o mouse;
+- Foi criada uma borda dourada para indicar seleção;
+- O jogador foi impedido de sair da área do campo.
+
+Arquivo alterado:
+- FrmPrincipal.vb
+
+Alterações realizadas:
+
+- Foi removida do formulário a responsabilidade de desenhar o campo;
+- Foi criado o objeto CampoCanvas;
+- O CampoTatico passou a ser inserido dentro do PnlCentral;
+- O FrmPrincipal passou a inicializar o campo;
+- Foi adicionado um jogador inicial para validação.
+
+Arquivo alterado:
+- TacticalStudio.Core\Classes\Jogador.vb
+
+Alteração realizada:
+
+- Foi removido um Imports incorreto ou desnecessário;
+- A classe continuou dentro do namespace TacticalStudio.Core.Classes.
+
+Resultado da etapa:
+
+- O campo passou a funcionar como um componente independente;
+- O jogador passou a ser selecionável e arrastável;
+- A posição passou a permanecer proporcional ao redimensionamento;
+- O FrmPrincipal ficou mais limpo.
+
+======================================================================
+5. ETAPA 2 - SISTEMA GENÉRICO DE OBJETOS E BOLA
+======================================================================
+
+STATUS: CONCLUÍDA
+
+Arquivo criado:
+- TacticalStudio.Core\Classes\Bola.vb
+
+Estrutura:
+
+- A classe Bola herda ObjetoCampo;
+- A bola utiliza a posição e as propriedades comuns da classe base;
+- A classe está preparada para receber novas propriedades futuramente.
+
+Arquivo alterado:
+- Controles\CampoTatico.vb
+
+Alterações realizadas:
+
+- A lista exclusiva de jogadores foi substituída por uma lista de
+  ObjetoCampo;
+- Jogadores e bolas passaram a compartilhar o mesmo sistema de seleção;
+- Jogadores e bolas passaram a compartilhar o mesmo sistema de arraste;
+- Foi criado o método AdicionarJogador;
+- Foi criado o método AdicionarBola;
+- Foi criado o método LimparObjetos;
+- Foi criado o método DesenharObjetos;
+- Foi criado o método DesenharJogador;
+- Foi criado o método DesenharBola;
+- Foi criado o método DesenharSelecao;
+- Foi criado o método LocalizarObjetoNaPosicao;
+- Foi criado o método MoverObjetoSelecionado;
+- Foi criado o método DeselecionarTodos;
+- Foi criada a identificação visual da bola;
+- Foi criada uma sombra para a bola;
+- Foi criada uma área de clique maior que o tamanho visual da bola;
+- O cursor passa a mudar para Hand sobre objetos;
+- Durante o arraste, o cursor passa a usar SizeAll;
+- O sistema identifica primeiro o objeto desenhado por último;
+- A movimentação passou a respeitar o tamanho visual de cada objeto.
+
+Arquivo alterado:
+- FrmPrincipal.vb
+
+Alterações realizadas no método CriarCampoTatico:
+
+- Foi mantida a criação do CampoCanvas;
+- Foram adicionados dois jogadores de teste;
+- Foi adicionada uma bola de teste;
+- Os objetos foram posicionados por porcentagem.
+
+Resultado da etapa:
+
+- Dois jogadores podem ser selecionados e movimentados;
+- A bola pode ser selecionada e movimentada;
+- O mesmo sistema de movimentação poderá ser reutilizado por cones,
+  gols, manequins e outros objetos;
+- A estrutura ficou preparada para crescimento sem repetir lógica.
+
+======================================================================
+6. ESTRUTURA ATUAL DE OBJETOS
+======================================================================
+
+ObjetoCampo
+- Classe base dos objetos exibidos no campo;
+- Deve concentrar propriedades comuns;
+- Exemplos de propriedades:
+  - Posicao;
+  - Visivel;
+  - Selecionado.
+
+Jogador
+- Herda ObjetoCampo;
+- Possui número;
+- Possui nome;
+- Atualmente é desenhado como um círculo vermelho com número.
+
+Bola
+- Herda ObjetoCampo;
+- Atualmente é desenhada diretamente com Graphics;
+- Possui corpo branco, contorno e detalhes escuros.
+
+======================================================================
+7. FUNCIONALIDADES ATUAIS
+======================================================================
+
+- Campo responsivo;
+- Gramado com faixas;
+- Marcações principais;
+- Jogadores;
+- Bola;
+- Seleção de objetos;
+- Arraste pelo mouse;
+- Limitação dos objetos dentro do campo;
+- Cursor interativo;
+- Posição percentual;
+- Arquitetura preparada para novos tipos de objetos.
+
+======================================================================
+8. PENDÊNCIAS IDENTIFICADAS
+======================================================================
+
+- Criar cones;
+- Criar gols;
+- Criar goleiros;
+- Criar manequins;
+- Criar linhas táticas;
+- Criar linhas tracejadas;
+- Criar setas;
+- Criar áreas delimitadas;
+- Criar textos e numeração;
+- Criar exclusão de objetos;
+- Criar duplicação de objetos;
+- Criar alteração de cor dos jogadores;
+- Criar equipes diferentes;
+- Criar controle de orientação dos jogadores;
+- Criar sprites;
+- Criar gerenciador de camadas;
+- Criar salvamento dos exercícios;
+- Criar carregamento dos exercícios;
+- Criar desfazer e refazer;
+- Criar exportação para imagem ou PDF;
+- Criar barra de ferramentas;
+- Criar painel de propriedades;
+- Criar zoom;
+- Criar movimentação do campo;
+- Criar suporte a diferentes tipos de campo.
+
+======================================================================
+9. PRÓXIMA ETAPA SUGERIDA
+======================================================================
+
+Criar o objeto Cone e validar novamente o sistema genérico de objetos.
+
+Objetivos da próxima etapa:
+
+- Criar a classe Cone;
+- Adicionar cones ao CampoTatico;
+- Desenhar cones com aparência simples;
+- Permitir seleção;
+- Permitir movimentação;
+- Manter os cones dentro do campo;
+- Preparar a base da futura barra de ferramentas.
+
+Após o cone, a sequência recomendada é:
+
+1. Gol;
+2. Manequim;
+3. Linhas e setas;
+4. Áreas delimitadas;
+5. Jogadores com equipes e cores;
+6. Sprites;
+7. Painel de ferramentas;
+8. Salvamento e carregamento.
+
+======================================================================
+10. MODELO PARA AS PRÓXIMAS ATUALIZAÇÕES
+======================================================================
+
+ETAPA:
+STATUS:
+
+Arquivo criado:
+-
+
+Arquivo alterado:
+-
+
+Alterações realizadas:
+-
+
+Correções:
+-
+
+Resultado:
+-
+
+Pendências:
+-
+
+Próxima etapa:
+-
+
+======================================================================
+FIM DO DOCUMENTO
+======================================================================
