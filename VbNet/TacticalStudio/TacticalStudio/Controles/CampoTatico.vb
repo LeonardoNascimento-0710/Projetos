@@ -14,6 +14,31 @@ Public Class CampoTatico
     Private _arrastando As Boolean
     Private _offsetMouse As PointF
 
+    Private Enum ModoManipulacaoCampo
+
+        Nenhum
+        MoverObjeto
+        LinhaInicio
+        LinhaFim
+        AreaSuperiorEsquerda
+        AreaSuperiorDireita
+        AreaInferiorEsquerda
+        AreaInferiorDireita
+
+    End Enum
+
+    Private _modoManipulacao As ModoManipulacaoCampo = ModoManipulacaoCampo.Nenhum
+
+    Private _mouseInicialLinha As PointF
+
+    Private _inicioOriginalLinha As PointF
+
+    Private _fimOriginalLinha As PointF
+
+    Private Const RaioManipulador As Single = 8.0F
+    Private Const TamanhoMinimoArea As Single = 20.0F
+    Private Const ComprimentoMinimoLinha As Single = 15.0F
+
     Private _ferramentaAtual As FerramentaCampo =
     FerramentaCampo.Selecionar
 
@@ -2670,19 +2695,94 @@ Public Class CampoTatico
 
         End If
 
-        DeselecionarTodos()
+        'Primeiro verifica as alças do objeto
+        'que já está selecionado.
+        Dim manipuladorAtual As ModoManipulacaoCampo =
+        LocalizarManipuladorSelecionado(
+            e.Location,
+            campo)
 
-        _objetoSelecionado =
+        If manipuladorAtual <>
+       ModoManipulacaoCampo.Nenhum Then
+
+            IniciarManipulacaoPorAlca(manipuladorAtual, e.Location, campo)
+
+            Exit Sub
+
+        End If
+
+        Dim objetoClicado As ObjetoCampo =
         LocalizarObjetoNaPosicao(
             e.Location,
             campo)
 
-        If _objetoSelecionado IsNot Nothing Then
+        If objetoClicado Is Nothing Then
 
-            _objetoSelecionado.Selecionado = True
+            DeselecionarTodos()
+
+            _arrastando = False
+
+            _modoManipulacao =
+            ModoManipulacaoCampo.Nenhum
 
             RaiseEvent ObjetoSelecionadoAlterado(
-        _objetoSelecionado)
+            Nothing)
+
+            Cursor = Cursors.Default
+
+            Invalidate()
+
+            Exit Sub
+
+        End If
+
+        'Seleciona o objeto antes de verificar novamente
+        'se o clique ocorreu em uma ponta ou canto.
+        If _objetoSelecionado IsNot objetoClicado Then
+
+            DeselecionarTodos()
+
+            _objetoSelecionado =
+            objetoClicado
+
+            _objetoSelecionado.Selecionado =
+            True
+
+            RaiseEvent ObjetoSelecionadoAlterado(
+            _objetoSelecionado)
+
+            Invalidate()
+
+        End If
+
+        'Depois de selecionar, verifica novamente as alças.
+        'Isso permite clicar diretamente na ponta de uma linha
+        'que ainda não estava selecionada.
+        Dim manipuladorNovo As ModoManipulacaoCampo =
+        LocalizarManipuladorSelecionado(
+            e.Location,
+            campo)
+
+        If manipuladorNovo <>
+       ModoManipulacaoCampo.Nenhum Then
+
+            IniciarManipulacaoPorAlca(manipuladorNovo, e.Location, campo)
+
+            Exit Sub
+
+        End If
+
+        'Se não clicou em uma alça, move o objeto inteiro.
+        If TypeOf _objetoSelecionado Is LinhaTatica Then
+
+            PrepararManipulacaoLinha(
+        DirectCast(
+            _objetoSelecionado,
+            LinhaTatica),
+        e.Location,
+        campo)
+
+        Else
 
             Dim centro As PointF =
         ObterCentroObjetoTela(
@@ -2690,52 +2790,48 @@ Public Class CampoTatico
             campo)
 
             _offsetMouse = New PointF(
-            e.X - centro.X,
-            e.Y - centro.Y)
-
-            _arrastando = True
-
-            Capture = True
-            Cursor = Cursors.SizeAll
-
-        Else
-
-            _arrastando = False
-
-            RaiseEvent ObjetoSelecionadoAlterado(
-        Nothing)
+        e.X - centro.X,
+        e.Y - centro.Y)
 
         End If
+
+        _modoManipulacao =
+    ModoManipulacaoCampo.MoverObjeto
+
+        _arrastando = True
+
+        Capture = True
+        Cursor = Cursors.SizeAll
 
         Invalidate()
 
     End Sub
 
     Protected Overrides Sub OnMouseMove(
-        e As MouseEventArgs)
+    e As MouseEventArgs)
 
         MyBase.OnMouseMove(e)
 
         Dim campo As RectangleF =
-            ObterRetanguloCampo()
+        ObterRetanguloCampo()
 
         If FerramentaAtual <>
-   FerramentaCampo.Selecionar Then
+       FerramentaCampo.Selecionar Then
 
             Cursor = Cursors.Cross
 
             If _criacaoEmAndamento Then
 
                 _pontoPreviewTela =
-            New PointF(
-                LimitarSingle(
-                    e.X,
-                    campo.Left,
-                    campo.Right),
-                LimitarSingle(
-                    e.Y,
-                    campo.Top,
-                    campo.Bottom))
+                New PointF(
+                    LimitarSingle(
+                        e.X,
+                        campo.Left,
+                        campo.Right),
+                    LimitarSingle(
+                        e.Y,
+                        campo.Top,
+                        campo.Bottom))
 
                 Invalidate()
 
@@ -2746,11 +2842,22 @@ Public Class CampoTatico
         End If
 
         If _arrastando AndAlso
-           _objetoSelecionado IsNot Nothing Then
+       _objetoSelecionado IsNot Nothing Then
 
-            MoverObjetoSelecionado(
+            If _modoManipulacao =
+           ModoManipulacaoCampo.MoverObjeto Then
+
+                MoverObjetoSelecionado(
                 e.Location,
                 campo)
+
+            Else
+
+                RedimensionarObjetoSelecionado(
+                e.Location,
+                campo)
+
+            End If
 
             Invalidate()
 
@@ -2758,21 +2865,41 @@ Public Class CampoTatico
 
         End If
 
+        Dim manipulador As ModoManipulacaoCampo =
+        LocalizarManipuladorSelecionado(
+            e.Location,
+            campo)
+
+        If manipulador <>
+       ModoManipulacaoCampo.Nenhum Then
+
+            Cursor =
+            ObterCursorManipulador(
+                manipulador)
+
+            Exit Sub
+
+        End If
+
         Dim objetoSobMouse As ObjetoCampo =
-            LocalizarObjetoNaPosicao(
-                e.Location,
-                campo)
+        LocalizarObjetoNaPosicao(
+            e.Location,
+            campo)
 
         If objetoSobMouse IsNot Nothing Then
+
             Cursor = Cursors.Hand
+
         Else
+
             Cursor = Cursors.Default
+
         End If
 
     End Sub
 
     Protected Overrides Sub OnMouseUp(
-        e As MouseEventArgs)
+    e As MouseEventArgs)
 
         MyBase.OnMouseUp(e)
 
@@ -2782,8 +2909,21 @@ Public Class CampoTatico
 
         _arrastando = False
 
+        _modoManipulacao =
+        ModoManipulacaoCampo.Nenhum
+
         Capture = False
-        Cursor = Cursors.Default
+
+        If FerramentaAtual =
+       FerramentaCampo.Selecionar Then
+
+            Cursor = Cursors.Default
+
+        Else
+
+            Cursor = Cursors.Cross
+
+        End If
 
     End Sub
 
@@ -2880,81 +3020,75 @@ Public Class CampoTatico
     localMouse As Point,
     campo As RectangleF)
 
-        Dim inicio As PointF =
-        ConverterPercentualParaTela(
-            linha.Posicao,
-            campo)
-
-        Dim fim As PointF =
-        ConverterPercentualParaTela(
-            linha.PosicaoFinal,
-            campo)
-
-        Dim centroAtual As New PointF(
-        (inicio.X + fim.X) / 2.0F,
-        (inicio.Y + fim.Y) / 2.0F)
-
-        Dim centroDesejado As New PointF(
-        localMouse.X - _offsetMouse.X,
-        localMouse.Y - _offsetMouse.Y)
-
         Dim deltaX As Single =
-        centroDesejado.X - centroAtual.X
+        localMouse.X -
+        _mouseInicialLinha.X
 
         Dim deltaY As Single =
-        centroDesejado.Y - centroAtual.Y
+        localMouse.Y -
+        _mouseInicialLinha.Y
 
-        Dim menorX As Single =
-        Math.Min(inicio.X, fim.X)
+        Dim menorXOriginal As Single =
+        Math.Min(
+            _inicioOriginalLinha.X,
+            _fimOriginalLinha.X)
 
-        Dim maiorX As Single =
-        Math.Max(inicio.X, fim.X)
+        Dim maiorXOriginal As Single =
+        Math.Max(
+            _inicioOriginalLinha.X,
+            _fimOriginalLinha.X)
 
-        Dim menorY As Single =
-        Math.Min(inicio.Y, fim.Y)
+        Dim menorYOriginal As Single =
+        Math.Min(
+            _inicioOriginalLinha.Y,
+            _fimOriginalLinha.Y)
 
-        Dim maiorY As Single =
-        Math.Max(inicio.Y, fim.Y)
+        Dim maiorYOriginal As Single =
+        Math.Max(
+            _inicioOriginalLinha.Y,
+            _fimOriginalLinha.Y)
 
-        deltaX = LimitarSingle(
-        deltaX,
-        campo.Left - menorX,
-        campo.Right - maiorX)
+        deltaX =
+        LimitarSingle(
+            deltaX,
+            campo.Left - menorXOriginal,
+            campo.Right - maiorXOriginal)
 
-        deltaY = LimitarSingle(
-        deltaY,
-        campo.Top - menorY,
-        campo.Bottom - maiorY)
+        deltaY =
+        LimitarSingle(
+            deltaY,
+            campo.Top - menorYOriginal,
+            campo.Bottom - maiorYOriginal)
 
         Dim novoInicio As New PointF(
-        inicio.X + deltaX,
-        inicio.Y + deltaY)
+        _inicioOriginalLinha.X + deltaX,
+        _inicioOriginalLinha.Y + deltaY)
 
         Dim novoFim As New PointF(
-        fim.X + deltaX,
-        fim.Y + deltaY)
+        _fimOriginalLinha.X + deltaX,
+        _fimOriginalLinha.Y + deltaY)
 
-        Dim percentualInicial As Posicao =
+        Dim percentualInicio As Posicao =
         ConverterTelaParaPercentual(
             novoInicio,
             campo)
 
-        Dim percentualFinal As Posicao =
+        Dim percentualFim As Posicao =
         ConverterTelaParaPercentual(
             novoFim,
             campo)
 
         linha.Posicao.X =
-        percentualInicial.X
+        percentualInicio.X
 
         linha.Posicao.Y =
-        percentualInicial.Y
+        percentualInicio.Y
 
         linha.PosicaoFinal.X =
-        percentualFinal.X
+        percentualFim.X
 
         linha.PosicaoFinal.Y =
-        percentualFinal.Y
+        percentualFim.Y
 
     End Sub
 
@@ -3307,6 +3441,8 @@ Public Class CampoTatico
         _objetoSelecionado = Nothing
         _arrastando = False
 
+        _modoManipulacao = ModoManipulacaoCampo.Nenhum
+
         Capture = False
 
         RaiseEvent ObjetoSelecionadoAlterado(
@@ -3343,6 +3479,515 @@ Public Class CampoTatico
             e.SuppressKeyPress = True
 
         End If
+
+    End Sub
+
+    Private Function ObterCursorManipulador(
+    modo As ModoManipulacaoCampo) As Cursor
+
+        Select Case modo
+
+            Case ModoManipulacaoCampo.LinhaInicio,
+             ModoManipulacaoCampo.LinhaFim
+
+                Return Cursors.Cross
+
+            Case ModoManipulacaoCampo.AreaSuperiorEsquerda,
+             ModoManipulacaoCampo.AreaInferiorDireita
+
+                Return Cursors.SizeNWSE
+
+            Case ModoManipulacaoCampo.AreaSuperiorDireita,
+             ModoManipulacaoCampo.AreaInferiorEsquerda
+
+                Return Cursors.SizeNESW
+
+            Case Else
+
+                Return Cursors.Default
+
+        End Select
+
+    End Function
+
+    Private Function PontoDentroDoRaio(
+    localMouse As Point,
+    ponto As PointF,
+    raio As Single) As Boolean
+
+        Dim diferencaX As Single =
+        localMouse.X - ponto.X
+
+        Dim diferencaY As Single =
+        localMouse.Y - ponto.Y
+
+        Dim distanciaQuadrada As Single =
+        diferencaX * diferencaX +
+        diferencaY * diferencaY
+
+        Return distanciaQuadrada <=
+        raio * raio
+
+    End Function
+
+    Private Sub NormalizarAreaSelecionada(
+    area As AreaTatica,
+    campo As RectangleF)
+
+        Dim retangulo As RectangleF =
+        ObterRetanguloArea(
+            area,
+            campo)
+
+        Dim superiorEsquerda As Posicao =
+        ConverterTelaParaPercentual(
+            New PointF(
+                retangulo.Left,
+                retangulo.Top),
+            campo)
+
+        Dim inferiorDireita As Posicao =
+        ConverterTelaParaPercentual(
+            New PointF(
+                retangulo.Right,
+                retangulo.Bottom),
+            campo)
+
+        area.Posicao.X =
+        superiorEsquerda.X
+
+        area.Posicao.Y =
+        superiorEsquerda.Y
+
+        area.PosicaoFinal.X =
+        inferiorDireita.X
+
+        area.PosicaoFinal.Y =
+        inferiorDireita.Y
+
+    End Sub
+
+    Private Sub RedimensionarObjetoSelecionado(
+    localMouse As Point,
+    campo As RectangleF)
+
+        If _objetoSelecionado Is Nothing Then
+            Exit Sub
+        End If
+
+        Dim pontoTela As New PointF(
+        LimitarSingle(
+            localMouse.X,
+            campo.Left,
+            campo.Right),
+        LimitarSingle(
+            localMouse.Y,
+            campo.Top,
+            campo.Bottom))
+
+        If TypeOf _objetoSelecionado Is LinhaTatica Then
+
+            RedimensionarLinhaSelecionada(
+            DirectCast(
+                _objetoSelecionado,
+                LinhaTatica),
+            pontoTela,
+            campo)
+
+            Exit Sub
+
+        End If
+
+        If TypeOf _objetoSelecionado Is AreaTatica Then
+
+            RedimensionarAreaSelecionada(
+            DirectCast(
+                _objetoSelecionado,
+                AreaTatica),
+            pontoTela,
+            campo)
+
+        End If
+
+    End Sub
+
+    Private Sub RedimensionarLinhaSelecionada(
+    linha As LinhaTatica,
+    pontoTela As PointF,
+    campo As RectangleF)
+
+        Dim pontoOposto As PointF
+
+        Select Case _modoManipulacao
+
+            Case ModoManipulacaoCampo.LinhaInicio
+
+                pontoOposto =
+                _fimOriginalLinha
+
+            Case ModoManipulacaoCampo.LinhaFim
+
+                pontoOposto =
+                _inicioOriginalLinha
+
+            Case Else
+
+                Exit Sub
+
+        End Select
+
+        Dim diferencaX As Single =
+        pontoTela.X -
+        pontoOposto.X
+
+        Dim diferencaY As Single =
+        pontoTela.Y -
+        pontoOposto.Y
+
+        Dim distanciaQuadrada As Single =
+        diferencaX * diferencaX +
+        diferencaY * diferencaY
+
+        If distanciaQuadrada <
+       ComprimentoMinimoLinha *
+       ComprimentoMinimoLinha Then
+
+            Exit Sub
+
+        End If
+
+        Dim percentual As Posicao =
+        ConverterTelaParaPercentual(
+            pontoTela,
+            campo)
+
+        Select Case _modoManipulacao
+
+            Case ModoManipulacaoCampo.LinhaInicio
+
+                linha.Posicao.X =
+                percentual.X
+
+                linha.Posicao.Y =
+                percentual.Y
+
+            Case ModoManipulacaoCampo.LinhaFim
+
+                linha.PosicaoFinal.X =
+                percentual.X
+
+                linha.PosicaoFinal.Y =
+                percentual.Y
+
+        End Select
+
+    End Sub
+
+    Private Sub RedimensionarAreaSelecionada(
+    area As AreaTatica,
+    pontoTela As PointF,
+    campo As RectangleF)
+
+        Dim superiorEsquerda As PointF =
+        ConverterPercentualParaTela(
+            area.Posicao,
+            campo)
+
+        Dim inferiorDireita As PointF =
+        ConverterPercentualParaTela(
+            area.PosicaoFinal,
+            campo)
+
+        Dim esquerda As Single =
+        superiorEsquerda.X
+
+        Dim topo As Single =
+        superiorEsquerda.Y
+
+        Dim direita As Single =
+        inferiorDireita.X
+
+        Dim inferior As Single =
+        inferiorDireita.Y
+
+        Select Case _modoManipulacao
+
+            Case ModoManipulacaoCampo.AreaSuperiorEsquerda
+
+                esquerda =
+                Math.Min(
+                    pontoTela.X,
+                    direita - TamanhoMinimoArea)
+
+                topo =
+                Math.Min(
+                    pontoTela.Y,
+                    inferior - TamanhoMinimoArea)
+
+            Case ModoManipulacaoCampo.AreaSuperiorDireita
+
+                direita =
+                Math.Max(
+                    pontoTela.X,
+                    esquerda + TamanhoMinimoArea)
+
+                topo =
+                Math.Min(
+                    pontoTela.Y,
+                    inferior - TamanhoMinimoArea)
+
+            Case ModoManipulacaoCampo.AreaInferiorEsquerda
+
+                esquerda =
+                Math.Min(
+                    pontoTela.X,
+                    direita - TamanhoMinimoArea)
+
+                inferior =
+                Math.Max(
+                    pontoTela.Y,
+                    topo + TamanhoMinimoArea)
+
+            Case ModoManipulacaoCampo.AreaInferiorDireita
+
+                direita =
+                Math.Max(
+                    pontoTela.X,
+                    esquerda + TamanhoMinimoArea)
+
+                inferior =
+                Math.Max(
+                    pontoTela.Y,
+                    topo + TamanhoMinimoArea)
+
+        End Select
+
+        esquerda =
+        LimitarSingle(
+            esquerda,
+            campo.Left,
+            campo.Right)
+
+        direita =
+        LimitarSingle(
+            direita,
+            campo.Left,
+            campo.Right)
+
+        topo =
+        LimitarSingle(
+            topo,
+            campo.Top,
+            campo.Bottom)
+
+        inferior =
+        LimitarSingle(
+            inferior,
+            campo.Top,
+            campo.Bottom)
+
+        Dim percentualInicial As Posicao =
+        ConverterTelaParaPercentual(
+            New PointF(
+                esquerda,
+                topo),
+            campo)
+
+        Dim percentualFinal As Posicao =
+        ConverterTelaParaPercentual(
+            New PointF(
+                direita,
+                inferior),
+            campo)
+
+        area.Posicao.X =
+        percentualInicial.X
+
+        area.Posicao.Y =
+        percentualInicial.Y
+
+        area.PosicaoFinal.X =
+        percentualFinal.X
+
+        area.PosicaoFinal.Y =
+        percentualFinal.Y
+
+    End Sub
+
+    Private Function LocalizarManipuladorSelecionado(
+    localMouse As Point,
+    campo As RectangleF) As ModoManipulacaoCampo
+
+        If _objetoSelecionado Is Nothing Then
+            Return ModoManipulacaoCampo.Nenhum
+        End If
+
+        If TypeOf _objetoSelecionado Is LinhaTatica Then
+
+            Dim linha As LinhaTatica =
+            DirectCast(
+                _objetoSelecionado,
+                LinhaTatica)
+
+            Dim inicio As PointF =
+            ConverterPercentualParaTela(
+                linha.Posicao,
+                campo)
+
+            Dim fim As PointF =
+            ConverterPercentualParaTela(
+                linha.PosicaoFinal,
+                campo)
+
+            If PontoDentroDoRaio(
+            localMouse,
+            inicio,
+            RaioManipulador) Then
+
+                Return ModoManipulacaoCampo.LinhaInicio
+
+            End If
+
+            If PontoDentroDoRaio(
+            localMouse,
+            fim,
+            RaioManipulador) Then
+
+                Return ModoManipulacaoCampo.LinhaFim
+
+            End If
+
+        End If
+
+        If TypeOf _objetoSelecionado Is AreaTatica Then
+
+            Dim area As AreaTatica =
+            DirectCast(
+                _objetoSelecionado,
+                AreaTatica)
+
+            Dim retangulo As RectangleF =
+            ObterRetanguloArea(
+                area,
+                campo)
+
+            Dim superiorEsquerda As New PointF(
+            retangulo.Left,
+            retangulo.Top)
+
+            Dim superiorDireita As New PointF(
+            retangulo.Right,
+            retangulo.Top)
+
+            Dim inferiorEsquerda As New PointF(
+            retangulo.Left,
+            retangulo.Bottom)
+
+            Dim inferiorDireita As New PointF(
+            retangulo.Right,
+            retangulo.Bottom)
+
+            If PontoDentroDoRaio(
+            localMouse,
+            superiorEsquerda,
+            RaioManipulador) Then
+
+                Return ModoManipulacaoCampo.AreaSuperiorEsquerda
+
+            End If
+
+            If PontoDentroDoRaio(
+            localMouse,
+            superiorDireita,
+            RaioManipulador) Then
+
+                Return ModoManipulacaoCampo.AreaSuperiorDireita
+
+            End If
+
+            If PontoDentroDoRaio(
+            localMouse,
+            inferiorEsquerda,
+            RaioManipulador) Then
+
+                Return ModoManipulacaoCampo.AreaInferiorEsquerda
+
+            End If
+
+            If PontoDentroDoRaio(
+            localMouse,
+            inferiorDireita,
+            RaioManipulador) Then
+
+                Return ModoManipulacaoCampo.AreaInferiorDireita
+
+            End If
+
+        End If
+
+        Return ModoManipulacaoCampo.Nenhum
+
+    End Function
+
+    Private Sub IniciarManipulacaoPorAlca(
+    modo As ModoManipulacaoCampo,
+    localMouse As Point,
+    campo As RectangleF)
+
+        If _objetoSelecionado Is Nothing Then
+            Exit Sub
+        End If
+
+        If TypeOf _objetoSelecionado Is AreaTatica Then
+
+            NormalizarAreaSelecionada(
+            DirectCast(
+                _objetoSelecionado,
+                AreaTatica),
+            campo)
+
+        End If
+
+        If TypeOf _objetoSelecionado Is LinhaTatica Then
+
+            PrepararManipulacaoLinha(
+            DirectCast(
+                _objetoSelecionado,
+                LinhaTatica),
+            localMouse,
+            campo)
+
+        End If
+
+        _modoManipulacao = modo
+        _arrastando = True
+
+        Capture = True
+
+        Cursor =
+        ObterCursorManipulador(modo)
+
+    End Sub
+
+    Private Sub PrepararManipulacaoLinha(
+    linha As LinhaTatica,
+    localMouse As Point,
+    campo As RectangleF)
+
+        _mouseInicialLinha =
+        New PointF(
+            localMouse.X,
+            localMouse.Y)
+
+        _inicioOriginalLinha =
+        ConverterPercentualParaTela(
+            linha.Posicao,
+            campo)
+
+        _fimOriginalLinha =
+        ConverterPercentualParaTela(
+            linha.PosicaoFinal,
+            campo)
 
     End Sub
 
