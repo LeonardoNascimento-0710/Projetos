@@ -58,6 +58,20 @@ Public Class CampoTatico
     Public Event ObjetoCriado(
     objeto As ObjetoCampo)
 
+    Public Event ObjetoSelecionadoAlterado(
+    objeto As ObjetoCampo)
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public ReadOnly Property ObjetoSelecionadoAtual As ObjetoCampo
+
+        Get
+            Return _objetoSelecionado
+        End Get
+
+    End Property
+
     <Browsable(False)>
     <DesignerSerializationVisibility(
     DesignerSerializationVisibility.Hidden)>
@@ -570,6 +584,9 @@ Public Class CampoTatico
         objeto.Selecionado = True
 
         RaiseEvent ObjetoCriado(objeto)
+
+        RaiseEvent ObjetoSelecionadoAlterado(
+        objeto)
 
         Invalidate()
 
@@ -2664,10 +2681,13 @@ Public Class CampoTatico
 
             _objetoSelecionado.Selecionado = True
 
+            RaiseEvent ObjetoSelecionadoAlterado(
+        _objetoSelecionado)
+
             Dim centro As PointF =
-            ObterCentroObjetoTela(
-                _objetoSelecionado,
-                campo)
+        ObterCentroObjetoTela(
+            _objetoSelecionado,
+            campo)
 
             _offsetMouse = New PointF(
             e.X - centro.X,
@@ -2681,6 +2701,9 @@ Public Class CampoTatico
         Else
 
             _arrastando = False
+
+            RaiseEvent ObjetoSelecionadoAlterado(
+        Nothing)
 
         End If
 
@@ -3286,6 +3309,9 @@ Public Class CampoTatico
 
         Capture = False
 
+        RaiseEvent ObjetoSelecionadoAlterado(
+        Nothing)
+
         Invalidate()
 
     End Sub
@@ -3323,7 +3349,9 @@ Public Class CampoTatico
     Private Sub DeselecionarTodos()
 
         For Each objeto As ObjetoCampo In _objetos
+
             objeto.Selecionado = False
+
         Next
 
         _objetoSelecionado = Nothing
