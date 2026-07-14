@@ -1,15 +1,20 @@
-﻿Imports TacticalStudio.Core.Enums
+﻿Imports System.Collections.Generic
+Imports TacticalStudio.Core.Enums
 Public Class FrmPrincipal
 
     Private CampoCanvas As CampoTatico
 
+    Private ReadOnly _botoesFerramentas As New Dictionary(Of FerramentaCampo, Button)()
+
     Private Sub FrmPrincipal_Load(
-        sender As Object,
-        e As EventArgs) Handles MyBase.Load
+    sender As Object,
+    e As EventArgs) Handles MyBase.Load
 
         AplicarTema()
 
         CriarCampoTatico()
+
+        CriarBarraFerramentas()
 
     End Sub
 
@@ -33,178 +38,238 @@ Public Class FrmPrincipal
         .Dock = DockStyle.Fill
     }
 
+        AddHandler CampoCanvas.FerramentaAtualAlterada,
+        AddressOf CampoCanvas_FerramentaAtualAlterada
+
         PnlCentral.Controls.Clear()
         PnlCentral.Controls.Add(CampoCanvas)
 
-        CampoCanvas.AdicionarJogador(
-        10,
-        "Centroavante",
-        42,
-        50)
+    End Sub
 
-        CampoCanvas.AdicionarJogador(
-        9,
-        "Atacante",
-        62,
-        35)
+    Private Sub CriarBarraFerramentas()
 
-        CampoCanvas.AdicionarBola(
-        52,
-        50)
+        PnlEsquerdo.Controls.Clear()
+        _botoesFerramentas.Clear()
 
-        CampoCanvas.AdicionarCone(
-    CorCone.Laranja,
-    30,
-    30)
+        Dim painelFerramentas As New FlowLayoutPanel With {
+            .Dock = DockStyle.Fill,
+            .FlowDirection = FlowDirection.TopDown,
+            .WrapContents = False,
+            .AutoScroll = True,
+            .BackColor = Tema.Painel,
+            .Padding = New Padding(6)
+        }
 
-        CampoCanvas.AdicionarCone(
-            CorCone.Amarelo,
-            30,
-            45)
+        Dim larguraBotao As Integer =
+            Math.Max(
+                120,
+                PnlEsquerdo.ClientSize.Width - 24)
 
-        CampoCanvas.AdicionarCone(
-            CorCone.Azul,
-            30,
-            60)
-        CampoCanvas.AdicionarGol(
-    OrientacaoGol.Direita,
-    10,
-    50)
+        Dim titulo As New Label With {
+            .Text = "FERRAMENTAS",
+            .ForeColor = Tema.Texto,
+            .Font = New Font(
+                "Segoe UI",
+                10.0F,
+                FontStyle.Bold),
+            .Width = larguraBotao,
+            .Height = 34,
+            .TextAlign = ContentAlignment.MiddleLeft
+        }
 
-        CampoCanvas.AdicionarGol(
-            OrientacaoGol.Esquerda,
-            90,
-            50)
+        painelFerramentas.Controls.Add(titulo)
 
-        CampoCanvas.AdicionarGol(
-            OrientacaoGol.Baixo,
-            50,
-            18)
-        CampoCanvas.AdicionarManequim(
-    CorManequim.Amarelo,
-    70,
-    30)
+        AdicionarBotaoFerramenta(
+            painelFerramentas,
+            FerramentaCampo.Selecionar,
+            "Selecionar",
+            larguraBotao)
 
-        CampoCanvas.AdicionarManequim(
-            CorManequim.Vermelho,
-            70,
-            50)
+        AdicionarBotaoFerramenta(
+            painelFerramentas,
+            FerramentaCampo.Jogador,
+            "Jogador",
+            larguraBotao)
 
-        CampoCanvas.AdicionarManequim(
-            CorManequim.Azul,
-            70,
-            70)
-        CampoCanvas.AdicionarLinha(
-    TipoLinhaTatica.Continua,
-    CorLinhaTatica.Branca,
-    15,
-    15,
-    35,
-    25,
-    3.0F)
+        AdicionarBotaoFerramenta(
+            painelFerramentas,
+            FerramentaCampo.Bola,
+            "Bola",
+            larguraBotao)
 
-        CampoCanvas.AdicionarLinha(
-            TipoLinhaTatica.Tracejada,
-            CorLinhaTatica.Amarela,
-            40,
-            75,
-            65,
-            65,
-            3.0F)
+        AdicionarBotaoFerramenta(
+            painelFerramentas,
+            FerramentaCampo.Cone,
+            "Cone",
+            larguraBotao)
 
-        CampoCanvas.AdicionarLinha(
-            TipoLinhaTatica.Seta,
-            CorLinhaTatica.Vermelha,
-            55,
-            35,
-            78,
-            42,
-            4.0F)
-        CampoCanvas.AdicionarAreaTatica(
-    CorAreaTatica.Amarela,
-    18,
-    18,
-    38,
-    42,
-    True,
-    40,
-    2.5F)
+        AdicionarBotaoFerramenta(
+            painelFerramentas,
+            FerramentaCampo.Gol,
+            "Gol",
+            larguraBotao)
 
-        CampoCanvas.AdicionarAreaTatica(
-            CorAreaTatica.Azul,
-            60,
-            55,
-            83,
-            80,
-            False,
-            35,
-            3.0F)
+        AdicionarBotaoFerramenta(
+            painelFerramentas,
+            FerramentaCampo.Manequim,
+            "Manequim",
+            larguraBotao)
 
-        CampoCanvas.AdicionarAreaTatica(
-            CorAreaTatica.Vermelha,
-            42,
-            20,
-            56,
-            38,
-            True,
-            30,
-            2.0F)
+        AdicionarBotaoFerramenta(
+            painelFerramentas,
+            FerramentaCampo.LinhaContinua,
+            "Linha",
+            larguraBotao)
 
-        CampoCanvas.AdicionarMarcador(
-    "1",
-    CorMarcadorTatico.Branco,
-    15,
-    18,
-    36.0F)
+        AdicionarBotaoFerramenta(
+            painelFerramentas,
+            FerramentaCampo.LinhaTracejada,
+            "Linha tracejada",
+            larguraBotao)
 
-        CampoCanvas.AdicionarMarcador(
-            "2",
-            CorMarcadorTatico.Amarelo,
-            48,
-            48,
-            36.0F)
+        AdicionarBotaoFerramenta(
+            painelFerramentas,
+            FerramentaCampo.Seta,
+            "Seta",
+            larguraBotao)
 
-        CampoCanvas.AdicionarMarcador(
-            "3",
-            CorMarcadorTatico.Vermelho,
-            82,
-            75,
-            36.0F)
+        AdicionarBotaoFerramenta(
+            painelFerramentas,
+            FerramentaCampo.Area,
+            "Área",
+            larguraBotao)
 
-        CampoCanvas.AdicionarMarcador(
-            "A",
-            CorMarcadorTatico.Azul,
-            75,
-            20,
-            36.0F)
+        AdicionarBotaoFerramenta(
+            painelFerramentas,
+            FerramentaCampo.Marcador,
+            "Marcador",
+            larguraBotao)
 
-        CampoCanvas.AdicionarTextoTatico(
-    "PRESSÃO ALTA",
-    CorTextoTatico.Branco,
-    50,
-    10,
-    20.0F,
-    True,
-    True)
+        AdicionarBotaoFerramenta(
+            painelFerramentas,
+            FerramentaCampo.Texto,
+            "Texto",
+            larguraBotao)
 
-        CampoCanvas.AdicionarTextoTatico(
-            "Passe rápido",
-            CorTextoTatico.Amarelo,
-            25,
-            82,
-            17.0F,
-            True,
-            False)
+        PnlEsquerdo.Controls.Add(painelFerramentas)
 
-        CampoCanvas.AdicionarTextoTatico(
-            "Zona defensiva",
-            CorTextoTatico.Azul,
-            75,
-            88,
-            16.0F,
-            False,
-            True)
+        AtualizarBotoesFerramentas(
+            FerramentaCampo.Selecionar)
 
     End Sub
+
+    Private Sub AdicionarBotaoFerramenta(
+    painel As FlowLayoutPanel,
+    ferramenta As FerramentaCampo,
+    texto As String,
+    largura As Integer)
+
+        Dim botao As New Button With {
+            .Text = texto,
+            .Tag = ferramenta,
+            .Width = largura,
+            .Height = 36,
+            .Margin = New Padding(0, 3, 0, 3),
+            .FlatStyle = FlatStyle.Flat,
+            .TextAlign = ContentAlignment.MiddleLeft,
+            .Cursor = Cursors.Hand,
+            .BackColor = Tema.Painel,
+            .ForeColor = Tema.Texto
+        }
+
+        botao.FlatAppearance.BorderColor =
+            Tema.Borda
+
+        botao.FlatAppearance.MouseOverBackColor =
+            Color.FromArgb(55, 55, 55)
+
+        botao.FlatAppearance.MouseDownBackColor =
+            Tema.CorPrimaria
+
+        AddHandler botao.Click,
+            AddressOf BotaoFerramenta_Click
+
+        _botoesFerramentas.Add(
+            ferramenta,
+            botao)
+
+        painel.Controls.Add(botao)
+
+    End Sub
+
+    Private Sub BotaoFerramenta_Click(
+    sender As Object,
+    e As EventArgs)
+
+        Dim botao As Button =
+            TryCast(sender, Button)
+
+        If botao Is Nothing Then
+            Exit Sub
+        End If
+
+        If botao.Tag Is Nothing Then
+            Exit Sub
+        End If
+
+        Dim ferramenta As FerramentaCampo =
+    CType(botao.Tag, FerramentaCampo)
+
+        CampoCanvas.FerramentaAtual =
+            ferramenta
+
+        AtualizarBotoesFerramentas(
+            ferramenta)
+
+        CampoCanvas.Focus()
+
+    End Sub
+
+    Private Sub CampoCanvas_FerramentaAtualAlterada(
+    ferramenta As FerramentaCampo)
+
+        AtualizarBotoesFerramentas(
+        ferramenta)
+
+    End Sub
+
+    Private Sub AtualizarBotoesFerramentas(
+    ferramentaAtual As FerramentaCampo)
+
+        For Each item As KeyValuePair(
+            Of FerramentaCampo,
+            Button) In _botoesFerramentas
+
+            Dim botao As Button =
+                item.Value
+
+            If item.Key = ferramentaAtual Then
+
+                botao.BackColor =
+                    Tema.CorPrimaria
+
+                botao.ForeColor =
+                    Color.White
+
+                botao.FlatAppearance.BorderColor =
+                    Color.White
+
+            Else
+
+                botao.BackColor =
+                    Tema.Painel
+
+                botao.ForeColor =
+                    Tema.Texto
+
+                botao.FlatAppearance.BorderColor =
+                    Tema.Borda
+
+            End If
+
+        Next
+
+    End Sub
+
 
 End Class

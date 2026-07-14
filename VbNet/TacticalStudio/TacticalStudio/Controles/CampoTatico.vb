@@ -1,4 +1,5 @@
-﻿Imports System.Drawing
+﻿Imports System.ComponentModel
+Imports System.Drawing
 Imports System.Drawing.Drawing2D
 Imports System.Windows.Forms
 Imports TacticalStudio.Core.Classes
@@ -13,6 +14,15 @@ Public Class CampoTatico
     Private _arrastando As Boolean
     Private _offsetMouse As PointF
 
+    Private _ferramentaAtual As FerramentaCampo =
+    FerramentaCampo.Selecionar
+
+    Private _criacaoEmAndamento As Boolean
+
+    Private _pontoInicialCriacao As Posicao
+
+    Private _pontoPreviewTela As PointF
+
     Private Const MargemCampo As Single = 35.0F
     Private Const RaioJogador As Single = 18.0F
     Private Const RaioBola As Single = 10.0F
@@ -26,20 +36,60 @@ Public Class CampoTatico
 
         DoubleBuffered = True
         ResizeRedraw = True
+        TabStop = True
 
         Dock = DockStyle.Fill
         BackColor = Tema.Fundo
 
         SetStyle(
-            ControlStyles.AllPaintingInWmPaint Or
-            ControlStyles.UserPaint Or
-            ControlStyles.OptimizedDoubleBuffer Or
-            ControlStyles.ResizeRedraw,
-            True)
+        ControlStyles.AllPaintingInWmPaint Or
+        ControlStyles.UserPaint Or
+        ControlStyles.OptimizedDoubleBuffer Or
+        ControlStyles.ResizeRedraw,
+        True)
 
         UpdateStyles()
 
     End Sub
+
+    Public Event FerramentaAtualAlterada(
+    ferramenta As FerramentaCampo)
+
+    Public Event ObjetoCriado(
+    objeto As ObjetoCampo)
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public Property FerramentaAtual As FerramentaCampo
+
+        Get
+            Return _ferramentaAtual
+        End Get
+
+        Set(value As FerramentaCampo)
+
+            If _ferramentaAtual = value Then
+                Exit Property
+            End If
+
+            _ferramentaAtual = value
+
+            CancelarCriacao()
+
+            If value = FerramentaCampo.Selecionar Then
+                Cursor = Cursors.Default
+            Else
+                Cursor = Cursors.Cross
+            End If
+
+            RaiseEvent FerramentaAtualAlterada(value)
+
+            Invalidate()
+
+        End Set
+
+    End Property
 
 #Region "Adicionar objetos"
 
@@ -322,6 +372,218 @@ Public Class CampoTatico
 
     End Function
 
+    Private Sub ExecutarFerramentaAtual(
+    localMouse As Point,
+    campo As RectangleF)
+
+        Dim percentual As Posicao =
+        ConverterTelaParaPercentual(
+            New PointF(
+                localMouse.X,
+                localMouse.Y),
+            campo)
+
+        Dim objetoCriado As ObjetoCampo = Nothing
+
+        Select Case FerramentaAtual
+
+            Case FerramentaCampo.Jogador
+
+                objetoCriado =
+                AdicionarJogador(
+                    1,
+                    "Jogador",
+                    percentual.X,
+                    percentual.Y)
+
+            Case FerramentaCampo.Bola
+
+                objetoCriado =
+                AdicionarBola(
+                    percentual.X,
+                    percentual.Y)
+
+            Case FerramentaCampo.Cone
+
+                objetoCriado =
+                AdicionarCone(
+                    CorCone.Laranja,
+                    percentual.X,
+                    percentual.Y)
+
+            Case FerramentaCampo.Gol
+
+                objetoCriado =
+                AdicionarGol(
+                    OrientacaoGol.Direita,
+                    percentual.X,
+                    percentual.Y)
+
+            Case FerramentaCampo.Manequim
+
+                objetoCriado =
+                AdicionarManequim(
+                    CorManequim.Amarelo,
+                    percentual.X,
+                    percentual.Y)
+
+            Case FerramentaCampo.Marcador
+
+                objetoCriado =
+                AdicionarMarcador(
+                    "1",
+                    CorMarcadorTatico.Branco,
+                    percentual.X,
+                    percentual.Y,
+                    36.0F)
+
+            Case FerramentaCampo.Texto
+
+                objetoCriado =
+                AdicionarTextoTatico(
+                    "Nova instrução",
+                    CorTextoTatico.Branco,
+                    percentual.X,
+                    percentual.Y,
+                    18.0F,
+                    True,
+                    True)
+
+            Case FerramentaCampo.LinhaContinua,
+             FerramentaCampo.LinhaTracejada,
+             FerramentaCampo.Seta,
+             FerramentaCampo.Area
+
+                ExecutarFerramentaDoisPontos(
+                percentual,
+                localMouse)
+
+                Exit Sub
+
+        End Select
+
+        If objetoCriado IsNot Nothing Then
+
+            SelecionarObjetoCriado(
+            objetoCriado)
+
+        End If
+
+    End Sub
+
+    Private Sub ExecutarFerramentaDoisPontos(
+    percentual As Posicao,
+    localMouse As Point)
+
+        If Not _criacaoEmAndamento Then
+
+            _pontoInicialCriacao =
+            New Posicao(
+                percentual.X,
+                percentual.Y)
+
+            _pontoPreviewTela =
+            New PointF(
+                localMouse.X,
+                localMouse.Y)
+
+            _criacaoEmAndamento = True
+
+            Invalidate()
+
+            Exit Sub
+
+        End If
+
+        Dim objetoCriado As ObjetoCampo = Nothing
+
+        Select Case FerramentaAtual
+
+            Case FerramentaCampo.LinhaContinua
+
+                objetoCriado =
+                AdicionarLinha(
+                    TipoLinhaTatica.Continua,
+                    CorLinhaTatica.Branca,
+                    _pontoInicialCriacao.X,
+                    _pontoInicialCriacao.Y,
+                    percentual.X,
+                    percentual.Y,
+                    3.0F)
+
+            Case FerramentaCampo.LinhaTracejada
+
+                objetoCriado =
+                AdicionarLinha(
+                    TipoLinhaTatica.Tracejada,
+                    CorLinhaTatica.Amarela,
+                    _pontoInicialCriacao.X,
+                    _pontoInicialCriacao.Y,
+                    percentual.X,
+                    percentual.Y,
+                    3.0F)
+
+            Case FerramentaCampo.Seta
+
+                objetoCriado =
+                AdicionarLinha(
+                    TipoLinhaTatica.Seta,
+                    CorLinhaTatica.Vermelha,
+                    _pontoInicialCriacao.X,
+                    _pontoInicialCriacao.Y,
+                    percentual.X,
+                    percentual.Y,
+                    4.0F)
+
+            Case FerramentaCampo.Area
+
+                objetoCriado =
+                AdicionarAreaTatica(
+                    CorAreaTatica.Amarela,
+                    _pontoInicialCriacao.X,
+                    _pontoInicialCriacao.Y,
+                    percentual.X,
+                    percentual.Y,
+                    True,
+                    40,
+                    2.5F)
+
+        End Select
+
+        CancelarCriacao()
+
+        If objetoCriado IsNot Nothing Then
+
+            SelecionarObjetoCriado(
+            objetoCriado)
+
+        End If
+
+    End Sub
+
+    Private Sub SelecionarObjetoCriado(
+    objeto As ObjetoCampo)
+
+        DeselecionarTodos()
+
+        _objetoSelecionado = objeto
+        objeto.Selecionado = True
+
+        RaiseEvent ObjetoCriado(objeto)
+
+        Invalidate()
+
+    End Sub
+
+    Private Sub CancelarCriacao()
+
+        _criacaoEmAndamento = False
+        _pontoInicialCriacao = Nothing
+
+        Invalidate()
+
+    End Sub
+
     Public Sub LimparObjetos()
 
         _objetos.Clear()
@@ -363,6 +625,10 @@ Public Class CampoTatico
         DesenharGramado(g, campo)
         DesenharMarcacoes(g, campo)
         DesenharObjetos(g, campo)
+
+        DesenharPreVisualizacao(
+    g,
+    campo)
 
     End Sub
 
@@ -525,6 +791,138 @@ Public Class CampoTatico
             alturaPequenaArea)
 
     End Sub
+
+    Private Sub DesenharPreVisualizacao(
+    g As Graphics,
+    campo As RectangleF)
+
+        If Not _criacaoEmAndamento Then
+            Exit Sub
+        End If
+
+        If _pontoInicialCriacao Is Nothing Then
+            Exit Sub
+        End If
+
+        Dim inicio As PointF =
+        ConverterPercentualParaTela(
+            _pontoInicialCriacao,
+            campo)
+
+        Dim fim As New PointF(
+        LimitarSingle(
+            _pontoPreviewTela.X,
+            campo.Left,
+            campo.Right),
+        LimitarSingle(
+            _pontoPreviewTela.Y,
+            campo.Top,
+            campo.Bottom))
+
+        Using caneta As New Pen(
+        Color.Gold,
+        2.0F)
+
+            caneta.DashStyle =
+            DashStyle.Dash
+
+            caneta.StartCap =
+            LineCap.Round
+
+            caneta.EndCap =
+            LineCap.Round
+
+            Select Case FerramentaAtual
+
+                Case FerramentaCampo.LinhaContinua,
+                 FerramentaCampo.LinhaTracejada
+
+                    g.DrawLine(
+                    caneta,
+                    inicio,
+                    fim)
+
+                Case FerramentaCampo.Seta
+
+                    Using ponta As New AdjustableArrowCap(
+                    5.0F,
+                    7.0F,
+                    True)
+
+                        caneta.CustomEndCap = ponta
+
+                        g.DrawLine(
+                        caneta,
+                        inicio,
+                        fim)
+
+                    End Using
+
+                Case FerramentaCampo.Area
+
+                    Dim esquerda As Single =
+                    Math.Min(
+                        inicio.X,
+                        fim.X)
+
+                    Dim topo As Single =
+                    Math.Min(
+                        inicio.Y,
+                        fim.Y)
+
+                    Dim largura As Single =
+                    Math.Abs(
+                        fim.X -
+                        inicio.X)
+
+                    Dim altura As Single =
+                    Math.Abs(
+                        fim.Y -
+                        inicio.Y)
+
+                    Dim retangulo As New RectangleF(
+                    esquerda,
+                    topo,
+                    largura,
+                    altura)
+
+                    Using preenchimento As New SolidBrush(
+                    Color.FromArgb(
+                        35,
+                        Color.Gold))
+
+                        g.FillRectangle(
+                        preenchimento,
+                        retangulo)
+
+                    End Using
+
+                    g.DrawRectangle(
+                    caneta,
+                    retangulo.X,
+                    retangulo.Y,
+                    retangulo.Width,
+                    retangulo.Height)
+
+            End Select
+
+        End Using
+
+        Using pincel As New SolidBrush(
+        Color.Gold)
+
+            g.FillEllipse(
+            pincel,
+            inicio.X - 5.0F,
+            inicio.Y - 5.0F,
+            10.0F,
+            10.0F)
+
+        End Using
+
+    End Sub
+
+
 
 #End Region
 
@@ -2215,36 +2613,65 @@ Public Class CampoTatico
 #Region "Mouse"
 
     Protected Overrides Sub OnMouseDown(
-        e As MouseEventArgs)
+    e As MouseEventArgs)
 
         MyBase.OnMouseDown(e)
+
+        Focus()
+
+        Dim campo As RectangleF =
+        ObterRetanguloCampo()
+
+        If e.Button = MouseButtons.Right Then
+
+            CancelarCriacao()
+
+            Exit Sub
+
+        End If
 
         If e.Button <> MouseButtons.Left Then
             Exit Sub
         End If
 
-        Dim campo As RectangleF =
-            ObterRetanguloCampo()
+        If Not campo.Contains(
+        CSng(e.X),
+        CSng(e.Y)) Then
+
+            Exit Sub
+
+        End If
+
+        If FerramentaAtual <>
+       FerramentaCampo.Selecionar Then
+
+            ExecutarFerramentaAtual(
+            e.Location,
+            campo)
+
+            Exit Sub
+
+        End If
 
         DeselecionarTodos()
 
         _objetoSelecionado =
-            LocalizarObjetoNaPosicao(
-                e.Location,
-                campo)
+        LocalizarObjetoNaPosicao(
+            e.Location,
+            campo)
 
         If _objetoSelecionado IsNot Nothing Then
 
             _objetoSelecionado.Selecionado = True
 
             Dim centro As PointF =
-    ObterCentroObjetoTela(
-        _objetoSelecionado,
-        campo)
+            ObterCentroObjetoTela(
+                _objetoSelecionado,
+                campo)
 
             _offsetMouse = New PointF(
-                e.X - centro.X,
-                e.Y - centro.Y)
+            e.X - centro.X,
+            e.Y - centro.Y)
 
             _arrastando = True
 
@@ -2268,6 +2695,32 @@ Public Class CampoTatico
 
         Dim campo As RectangleF =
             ObterRetanguloCampo()
+
+        If FerramentaAtual <>
+   FerramentaCampo.Selecionar Then
+
+            Cursor = Cursors.Cross
+
+            If _criacaoEmAndamento Then
+
+                _pontoPreviewTela =
+            New PointF(
+                LimitarSingle(
+                    e.X,
+                    campo.Left,
+                    campo.Right),
+                LimitarSingle(
+                    e.Y,
+                    campo.Top,
+                    campo.Bottom))
+
+                Invalidate()
+
+            End If
+
+            Exit Sub
+
+        End If
 
         If _arrastando AndAlso
            _objetoSelecionado IsNot Nothing Then
@@ -2816,6 +3269,54 @@ Public Class CampoTatico
 
         area.PosicaoFinal.Y =
         percentualFinal.Y
+
+    End Sub
+
+    Public Sub ExcluirSelecionado()
+
+        If _objetoSelecionado Is Nothing Then
+            Exit Sub
+        End If
+
+        _objetos.Remove(
+        _objetoSelecionado)
+
+        _objetoSelecionado = Nothing
+        _arrastando = False
+
+        Capture = False
+
+        Invalidate()
+
+    End Sub
+
+    Protected Overrides Sub OnKeyDown(
+    e As KeyEventArgs)
+
+        MyBase.OnKeyDown(e)
+
+        If e.KeyCode = Keys.Delete Then
+
+            ExcluirSelecionado()
+
+            e.Handled = True
+            e.SuppressKeyPress = True
+
+            Exit Sub
+
+        End If
+
+        If e.KeyCode = Keys.Escape Then
+
+            CancelarCriacao()
+
+            FerramentaAtual =
+            FerramentaCampo.Selecionar
+
+            e.Handled = True
+            e.SuppressKeyPress = True
+
+        End If
 
     End Sub
 
