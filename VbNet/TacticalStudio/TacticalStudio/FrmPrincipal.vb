@@ -150,6 +150,34 @@ Public Class FrmPrincipal
             30,
             2.0F)
 
+        CampoCanvas.AdicionarMarcador(
+    "1",
+    CorMarcadorTatico.Branco,
+    15,
+    18,
+    36.0F)
+
+        CampoCanvas.AdicionarMarcador(
+            "2",
+            CorMarcadorTatico.Amarelo,
+            48,
+            48,
+            36.0F)
+
+        CampoCanvas.AdicionarMarcador(
+            "3",
+            CorMarcadorTatico.Vermelho,
+            82,
+            75,
+            36.0F)
+
+        CampoCanvas.AdicionarMarcador(
+            "A",
+            CorMarcadorTatico.Azul,
+            75,
+            20,
+            36.0F)
+
     End Sub
 
 End Class

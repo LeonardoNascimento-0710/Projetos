@@ -240,6 +240,45 @@ Public Class CampoTatico
 
     End Function
 
+    Public Function AdicionarMarcador(
+    texto As String,
+    cor As CorMarcadorTatico,
+    xPercentual As Double,
+    yPercentual As Double,
+    Optional diametro As Single = 34.0F) As MarcadorTatico
+
+        If String.IsNullOrWhiteSpace(texto) Then
+            texto = "1"
+        End If
+
+        If diametro < 22.0F Then
+            diametro = 22.0F
+        End If
+
+        If diametro > 80.0F Then
+            diametro = 80.0F
+        End If
+
+        Dim marcador As New MarcadorTatico With {
+        .Texto = texto.Trim(),
+        .Cor = cor,
+        .Diametro = diametro
+    }
+
+        marcador.Posicao.X =
+        LimitarPercentual(xPercentual)
+
+        marcador.Posicao.Y =
+        LimitarPercentual(yPercentual)
+
+        _objetos.Add(marcador)
+
+        Invalidate()
+
+        Return marcador
+
+    End Function
+
     Public Sub LimparObjetos()
 
         _objetos.Clear()
@@ -452,8 +491,6 @@ Public Class CampoTatico
     g As Graphics,
     campo As RectangleF)
 
-        'As áreas são desenhadas primeiro para permanecerem
-        'atrás dos jogadores, bolas, cones e demais objetos.
         For Each objeto As ObjetoCampo In _objetos
 
             If Not objeto.Visivel Then
@@ -477,8 +514,10 @@ Public Class CampoTatico
                 Continue For
             End If
 
-            If TypeOf objeto Is AreaTatica Then
+            If TypeOf objeto Is AreaTatica OrElse TypeOf objeto Is MarcadorTatico Then
+
                 Continue For
+
             End If
 
             If TypeOf objeto Is Jogador Then
@@ -522,6 +561,25 @@ Public Class CampoTatico
                 g,
                 DirectCast(objeto, LinhaTatica),
                 campo)
+
+            End If
+
+        Next
+
+        For Each objeto As ObjetoCampo In _objetos
+
+            If Not objeto.Visivel Then
+                Continue For
+            End If
+
+            If TypeOf objeto Is MarcadorTatico Then
+
+                DesenharMarcadorTatico(
+                    g,
+                    DirectCast(
+                        objeto,
+                        MarcadorTatico),
+                    campo)
 
             End If
 
@@ -1721,6 +1779,167 @@ Public Class CampoTatico
 
     End Function
 
+    Private Sub DesenharMarcadorTatico(
+    g As Graphics,
+    marcador As MarcadorTatico,
+    campo As RectangleF)
+
+        Dim centro As PointF =
+        ConverterPercentualParaTela(
+            marcador.Posicao,
+            campo)
+
+        Dim raio As Single =
+        marcador.Diametro / 2.0F
+
+        Dim corFundo As Color =
+        ObterCorMarcador(
+            marcador.Cor)
+
+        Dim corTexto As Color =
+        ObterCorTextoMarcador(
+            marcador.Cor)
+
+        Using pincelSombra As New SolidBrush(
+        Color.FromArgb(85, 0, 0, 0))
+
+            g.FillEllipse(
+            pincelSombra,
+            centro.X - raio + 3.0F,
+            centro.Y - raio + 4.0F,
+            marcador.Diametro,
+            marcador.Diametro)
+
+        End Using
+
+        Using pincelFundo As New SolidBrush(
+        corFundo)
+
+            g.FillEllipse(
+            pincelFundo,
+            centro.X - raio,
+            centro.Y - raio,
+            marcador.Diametro,
+            marcador.Diametro)
+
+        End Using
+
+        Using canetaBorda As New Pen(
+        Color.FromArgb(210, 30, 30, 30),
+        2.0F)
+
+            g.DrawEllipse(
+            canetaBorda,
+            centro.X - raio,
+            centro.Y - raio,
+            marcador.Diametro,
+            marcador.Diametro)
+
+        End Using
+
+        Dim tamanhoFonte As Single =
+        Math.Max(
+            9.0F,
+            marcador.Diametro * 0.38F)
+
+        Using fonte As New Font(
+        "Segoe UI",
+        tamanhoFonte,
+        FontStyle.Bold,
+        GraphicsUnit.Pixel)
+
+            Using pincelTexto As New SolidBrush(
+            corTexto)
+
+                Using formato As New StringFormat()
+
+                    formato.Alignment =
+                    StringAlignment.Center
+
+                    formato.LineAlignment =
+                    StringAlignment.Center
+
+                    Dim areaTexto As New RectangleF(
+                    centro.X - raio,
+                    centro.Y - raio,
+                    marcador.Diametro,
+                    marcador.Diametro)
+
+                    g.DrawString(
+                    marcador.Texto,
+                    fonte,
+                    pincelTexto,
+                    areaTexto,
+                    formato)
+
+                End Using
+
+            End Using
+
+        End Using
+
+        If marcador Is _objetoSelecionado Then
+
+            DesenharSelecao(
+            g,
+            centro,
+            raio)
+
+        End If
+
+    End Sub
+
+    Private Function ObterCorMarcador(
+    cor As CorMarcadorTatico) As Color
+
+        Select Case cor
+
+            Case CorMarcadorTatico.Branco
+                Return Color.FromArgb(245, 245, 245)
+
+            Case CorMarcadorTatico.Preto
+                Return Color.FromArgb(35, 35, 35)
+
+            Case CorMarcadorTatico.Amarelo
+                Return Color.FromArgb(245, 205, 35)
+
+            Case CorMarcadorTatico.Vermelho
+                Return Color.FromArgb(205, 45, 45)
+
+            Case CorMarcadorTatico.Azul
+                Return Color.FromArgb(45, 115, 210)
+
+            Case CorMarcadorTatico.Verde
+                Return Color.FromArgb(45, 165, 85)
+
+            Case Else
+                Return Color.White
+
+        End Select
+
+    End Function
+
+    Private Function ObterCorTextoMarcador(
+    cor As CorMarcadorTatico) As Color
+
+        Select Case cor
+
+            Case CorMarcadorTatico.Branco,
+             CorMarcadorTatico.Amarelo
+
+                Return Color.FromArgb(
+                30,
+                30,
+                30)
+
+            Case Else
+
+                Return Color.White
+
+        End Select
+
+    End Function
+
     Private Sub DesenharSelecao(
         g As Graphics,
         centro As PointF,
@@ -2348,6 +2567,22 @@ Public Class CampoTatico
 
         End If
 
+        If TypeOf objeto Is MarcadorTatico Then
+
+            Dim marcador As MarcadorTatico =
+        DirectCast(
+            objeto,
+            MarcadorTatico)
+
+            Dim raio As Single =
+        marcador.Diametro / 2.0F
+
+            Return New SizeF(
+        raio,
+        raio)
+
+        End If
+
         Return New SizeF(
             15.0F,
             15.0F)
@@ -2367,6 +2602,17 @@ Public Class CampoTatico
 
         If TypeOf objeto Is Cone Then
             Return RaioCone + 5.0F
+        End If
+
+        If TypeOf objeto Is MarcadorTatico Then
+
+            Dim marcador As MarcadorTatico =
+        DirectCast(
+            objeto,
+            MarcadorTatico)
+
+            Return marcador.Diametro / 2.0F + 5.0F
+
         End If
 
         Return 20.0F
