@@ -191,6 +191,55 @@ Public Class CampoTatico
 
     End Function
 
+    Public Function AdicionarAreaTatica(
+    cor As CorAreaTatica,
+    xInicial As Double,
+    yInicial As Double,
+    xFinal As Double,
+    yFinal As Double,
+    Optional tracejada As Boolean = True,
+    Optional opacidade As Integer = 45,
+    Optional espessura As Single = 2.5F) As AreaTatica
+
+        If opacidade < 0 Then
+            opacidade = 0
+        End If
+
+        If opacidade > 255 Then
+            opacidade = 255
+        End If
+
+        If espessura < 1.0F Then
+            espessura = 1.0F
+        End If
+
+        Dim area As New AreaTatica With {
+        .Cor = cor,
+        .Tracejada = tracejada,
+        .Opacidade = opacidade,
+        .Espessura = espessura
+    }
+
+        area.Posicao.X =
+        LimitarPercentual(xInicial)
+
+        area.Posicao.Y =
+        LimitarPercentual(yInicial)
+
+        area.PosicaoFinal.X =
+        LimitarPercentual(xFinal)
+
+        area.PosicaoFinal.Y =
+        LimitarPercentual(yFinal)
+
+        _objetos.Add(area)
+
+        Invalidate()
+
+        Return area
+
+    End Function
+
     Public Sub LimparObjetos()
 
         _objetos.Clear()
@@ -400,8 +449,27 @@ Public Class CampoTatico
 #Region "Desenho dos objetos"
 
     Private Sub DesenharObjetos(
-        g As Graphics,
-        campo As RectangleF)
+    g As Graphics,
+    campo As RectangleF)
+
+        'As áreas são desenhadas primeiro para permanecerem
+        'atrás dos jogadores, bolas, cones e demais objetos.
+        For Each objeto As ObjetoCampo In _objetos
+
+            If Not objeto.Visivel Then
+                Continue For
+            End If
+
+            If TypeOf objeto Is AreaTatica Then
+
+                DesenharAreaTatica(
+                g,
+                DirectCast(objeto, AreaTatica),
+                campo)
+
+            End If
+
+        Next
 
         For Each objeto As ObjetoCampo In _objetos
 
@@ -409,50 +477,53 @@ Public Class CampoTatico
                 Continue For
             End If
 
+            If TypeOf objeto Is AreaTatica Then
+                Continue For
+            End If
+
             If TypeOf objeto Is Jogador Then
 
                 DesenharJogador(
-                    g,
-                    DirectCast(objeto, Jogador),
-                    campo)
+                g,
+                DirectCast(objeto, Jogador),
+                campo)
 
             ElseIf TypeOf objeto Is Bola Then
 
                 DesenharBola(
-        g,
-        DirectCast(objeto, Bola),
-        campo)
+                g,
+                DirectCast(objeto, Bola),
+                campo)
 
             ElseIf TypeOf objeto Is Cone Then
 
                 DesenharCone(
-        g,
-        DirectCast(objeto, Cone),
-        campo)
+                g,
+                DirectCast(objeto, Cone),
+                campo)
 
             ElseIf TypeOf objeto Is Gol Then
 
                 DesenharGol(
-        g,
-        DirectCast(objeto, Gol),
-        campo)
+                g,
+                DirectCast(objeto, Gol),
+                campo)
 
             ElseIf TypeOf objeto Is Manequim Then
 
                 DesenharManequim(
-        g,
-        DirectCast(objeto, Manequim),
-        campo)
+                g,
+                DirectCast(objeto, Manequim),
+                campo)
 
             ElseIf TypeOf objeto Is LinhaTatica Then
 
                 DesenharLinhaTatica(
-        g,
-        DirectCast(objeto, LinhaTatica),
-        campo)
+                g,
+                DirectCast(objeto, LinhaTatica),
+                campo)
 
             End If
-
 
         Next
 
@@ -1501,6 +1572,155 @@ Public Class CampoTatico
 
     End Function
 
+    Private Sub DesenharAreaTatica(
+    g As Graphics,
+    area As AreaTatica,
+    campo As RectangleF)
+
+        Dim retangulo As RectangleF =
+        ObterRetanguloArea(
+            area,
+            campo)
+
+        If retangulo.Width < 1.0F OrElse
+       retangulo.Height < 1.0F Then
+
+            Exit Sub
+
+        End If
+
+        Dim corArea As Color =
+        ObterCorAreaTatica(
+            area.Cor)
+
+        Using pincelPreenchimento As New SolidBrush(
+        Color.FromArgb(
+            area.Opacidade,
+            corArea))
+
+            g.FillRectangle(
+            pincelPreenchimento,
+            retangulo)
+
+        End Using
+
+        Using canetaBorda As New Pen(
+        corArea,
+        area.Espessura)
+
+            canetaBorda.LineJoin =
+            LineJoin.Round
+
+            If area.Tracejada Then
+
+                canetaBorda.DashStyle =
+                DashStyle.Dash
+
+            End If
+
+            g.DrawRectangle(
+            canetaBorda,
+            retangulo.X,
+            retangulo.Y,
+            retangulo.Width,
+            retangulo.Height)
+
+        End Using
+
+        If area Is _objetoSelecionado Then
+
+            DesenharSelecaoArea(
+            g,
+            retangulo)
+
+        End If
+
+    End Sub
+
+    Private Sub DesenharSelecaoArea(
+    g As Graphics,
+    retangulo As RectangleF)
+
+        DesenharSelecaoRetangular(
+        g,
+        retangulo)
+
+        Dim pontos() As PointF = {
+        New PointF(
+            retangulo.Left,
+            retangulo.Top),
+        New PointF(
+            retangulo.Right,
+            retangulo.Top),
+        New PointF(
+            retangulo.Left,
+            retangulo.Bottom),
+        New PointF(
+            retangulo.Right,
+            retangulo.Bottom)
+    }
+
+        Using pincel As New SolidBrush(
+        Color.Gold)
+
+            Using borda As New Pen(
+            Color.FromArgb(80, 60, 10),
+            1.2F)
+
+                For Each ponto As PointF In pontos
+
+                    Dim marcador As New RectangleF(
+                    ponto.X - 4.0F,
+                    ponto.Y - 4.0F,
+                    8.0F,
+                    8.0F)
+
+                    g.FillRectangle(
+                    pincel,
+                    marcador)
+
+                    g.DrawRectangle(
+                    borda,
+                    marcador.X,
+                    marcador.Y,
+                    marcador.Width,
+                    marcador.Height)
+
+                Next
+
+            End Using
+
+        End Using
+
+    End Sub
+
+    Private Function ObterCorAreaTatica(
+    cor As CorAreaTatica) As Color
+
+        Select Case cor
+
+            Case CorAreaTatica.Branca
+                Return Color.White
+
+            Case CorAreaTatica.Amarela
+                Return Color.FromArgb(245, 210, 35)
+
+            Case CorAreaTatica.Vermelha
+                Return Color.FromArgb(220, 45, 45)
+
+            Case CorAreaTatica.Azul
+                Return Color.FromArgb(45, 125, 230)
+
+            Case CorAreaTatica.Verde
+                Return Color.FromArgb(45, 185, 95)
+
+            Case Else
+                Return Color.White
+
+        End Select
+
+    End Function
+
     Private Sub DesenharSelecao(
         g As Graphics,
         centro As PointF,
@@ -1661,6 +1881,19 @@ Public Class CampoTatico
 
         End If
 
+        If TypeOf _objetoSelecionado Is AreaTatica Then
+
+            MoverAreaSelecionada(
+        DirectCast(
+            _objetoSelecionado,
+            AreaTatica),
+        localMouse,
+        campo)
+
+            Exit Sub
+
+        End If
+
         Dim metadeTamanho As SizeF =
         ObterMetadeTamanhoVisual(
             _objetoSelecionado)
@@ -1784,6 +2017,8 @@ Public Class CampoTatico
     localMouse As Point,
     campo As RectangleF) As ObjetoCampo
 
+        'Primeiro procura jogadores, bolas, linhas,
+        'cones, gols e manequins.
         For indice As Integer =
         _objetos.Count - 1 To 0 Step -1
 
@@ -1791,6 +2026,36 @@ Public Class CampoTatico
             _objetos(indice)
 
             If Not objeto.Visivel Then
+                Continue For
+            End If
+
+            If TypeOf objeto Is AreaTatica Then
+                Continue For
+            End If
+
+            If EstaSobreObjeto(
+            objeto,
+            localMouse,
+            campo) Then
+
+                Return objeto
+
+            End If
+
+        Next
+
+        'Somente depois procura áreas táticas.
+        For indice As Integer =
+        _objetos.Count - 1 To 0 Step -1
+
+            Dim objeto As ObjetoCampo =
+            _objetos(indice)
+
+            If Not objeto.Visivel Then
+                Continue For
+            End If
+
+            If Not TypeOf objeto Is AreaTatica Then
                 Continue For
             End If
 
@@ -1883,6 +2148,24 @@ Public Class CampoTatico
 
         End If
 
+        If TypeOf objeto Is AreaTatica Then
+
+            Dim area As AreaTatica =
+        DirectCast(
+            objeto,
+            AreaTatica)
+
+            Dim retangulo As RectangleF =
+        ObterRetanguloArea(
+            area,
+            campo)
+
+            Return retangulo.Contains(
+        localMouse.X,
+        localMouse.Y)
+
+        End If
+
         Dim raioSelecao As Single =
         ObterRaioSelecao(objeto)
 
@@ -1900,6 +2183,99 @@ Public Class CampoTatico
         raioSelecao * raioSelecao
 
     End Function
+
+    Private Sub MoverAreaSelecionada(
+    area As AreaTatica,
+    localMouse As Point,
+    campo As RectangleF)
+
+        Dim pontoInicial As PointF =
+        ConverterPercentualParaTela(
+            area.Posicao,
+            campo)
+
+        Dim pontoFinal As PointF =
+        ConverterPercentualParaTela(
+            area.PosicaoFinal,
+            campo)
+
+        Dim centroAtual As New PointF(
+        (pontoInicial.X + pontoFinal.X) / 2.0F,
+        (pontoInicial.Y + pontoFinal.Y) / 2.0F)
+
+        Dim centroDesejado As New PointF(
+        localMouse.X - _offsetMouse.X,
+        localMouse.Y - _offsetMouse.Y)
+
+        Dim deltaX As Single =
+        centroDesejado.X -
+        centroAtual.X
+
+        Dim deltaY As Single =
+        centroDesejado.Y -
+        centroAtual.Y
+
+        Dim menorX As Single =
+        Math.Min(
+            pontoInicial.X,
+            pontoFinal.X)
+
+        Dim maiorX As Single =
+        Math.Max(
+            pontoInicial.X,
+            pontoFinal.X)
+
+        Dim menorY As Single =
+        Math.Min(
+            pontoInicial.Y,
+            pontoFinal.Y)
+
+        Dim maiorY As Single =
+        Math.Max(
+            pontoInicial.Y,
+            pontoFinal.Y)
+
+        deltaX = LimitarSingle(
+        deltaX,
+        campo.Left - menorX,
+        campo.Right - maiorX)
+
+        deltaY = LimitarSingle(
+        deltaY,
+        campo.Top - menorY,
+        campo.Bottom - maiorY)
+
+        Dim novoInicial As New PointF(
+        pontoInicial.X + deltaX,
+        pontoInicial.Y + deltaY)
+
+        Dim novoFinal As New PointF(
+        pontoFinal.X + deltaX,
+        pontoFinal.Y + deltaY)
+
+        Dim percentualInicial As Posicao =
+        ConverterTelaParaPercentual(
+            novoInicial,
+            campo)
+
+        Dim percentualFinal As Posicao =
+        ConverterTelaParaPercentual(
+            novoFinal,
+            campo)
+
+        area.Posicao.X =
+        percentualInicial.X
+
+        area.Posicao.Y =
+        percentualInicial.Y
+
+        area.PosicaoFinal.X =
+        percentualFinal.X
+
+        area.PosicaoFinal.Y =
+        percentualFinal.Y
+
+    End Sub
 
     Private Sub DeselecionarTodos()
 
@@ -2030,6 +2406,48 @@ Public Class CampoTatico
         centro.Y - AlturaManequim / 2.0F,
         LarguraManequim,
         AlturaManequim)
+
+    End Function
+
+    Private Function ObterRetanguloArea(
+    area As AreaTatica,
+    campo As RectangleF) As RectangleF
+
+        Dim pontoInicial As PointF =
+        ConverterPercentualParaTela(
+            area.Posicao,
+            campo)
+
+        Dim pontoFinal As PointF =
+        ConverterPercentualParaTela(
+            area.PosicaoFinal,
+            campo)
+
+        Dim esquerda As Single =
+        Math.Min(
+            pontoInicial.X,
+            pontoFinal.X)
+
+        Dim topo As Single =
+        Math.Min(
+            pontoInicial.Y,
+            pontoFinal.Y)
+
+        Dim largura As Single =
+        Math.Abs(
+            pontoFinal.X -
+            pontoInicial.X)
+
+        Dim altura As Single =
+        Math.Abs(
+            pontoFinal.Y -
+            pontoInicial.Y)
+
+        Return New RectangleF(
+        esquerda,
+        topo,
+        largura,
+        altura)
 
     End Function
 
@@ -2178,24 +2596,26 @@ Public Class CampoTatico
     objeto As ObjetoCampo,
     campo As RectangleF) As PointF
 
-        If TypeOf objeto Is LinhaTatica Then
+        If TypeOf objeto Is AreaTatica Then
 
-            Dim linha As LinhaTatica =
-                DirectCast(objeto, LinhaTatica)
+            Dim area As AreaTatica =
+        DirectCast(
+            objeto,
+            AreaTatica)
 
-            Dim inicio As PointF =
-                ConverterPercentualParaTela(
-                    linha.Posicao,
-                    campo)
+            Dim pontoInicial As PointF =
+        ConverterPercentualParaTela(
+            area.Posicao,
+            campo)
 
-            Dim fim As PointF =
-                ConverterPercentualParaTela(
-                    linha.PosicaoFinal,
-                    campo)
+            Dim pontoFinal As PointF =
+        ConverterPercentualParaTela(
+            area.PosicaoFinal,
+            campo)
 
             Return New PointF(
-                (inicio.X + fim.X) / 2.0F,
-                (inicio.Y + fim.Y) / 2.0F)
+        (pontoInicial.X + pontoFinal.X) / 2.0F,
+        (pontoInicial.Y + pontoFinal.Y) / 2.0F)
 
         End If
 

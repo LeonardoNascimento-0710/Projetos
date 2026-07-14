@@ -120,6 +120,36 @@ Public Class FrmPrincipal
             78,
             42,
             4.0F)
+        CampoCanvas.AdicionarAreaTatica(
+    CorAreaTatica.Amarela,
+    18,
+    18,
+    38,
+    42,
+    True,
+    40,
+    2.5F)
+
+        CampoCanvas.AdicionarAreaTatica(
+            CorAreaTatica.Azul,
+            60,
+            55,
+            83,
+            80,
+            False,
+            35,
+            3.0F)
+
+        CampoCanvas.AdicionarAreaTatica(
+            CorAreaTatica.Vermelha,
+            42,
+            20,
+            56,
+            38,
+            True,
+            30,
+            2.0F)
+
     End Sub
 
 End Class
