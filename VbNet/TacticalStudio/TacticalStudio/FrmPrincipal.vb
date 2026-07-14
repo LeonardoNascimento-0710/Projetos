@@ -178,6 +178,33 @@ Public Class FrmPrincipal
             20,
             36.0F)
 
+        CampoCanvas.AdicionarTextoTatico(
+    "PRESSÃO ALTA",
+    CorTextoTatico.Branco,
+    50,
+    10,
+    20.0F,
+    True,
+    True)
+
+        CampoCanvas.AdicionarTextoTatico(
+            "Passe rápido",
+            CorTextoTatico.Amarelo,
+            25,
+            82,
+            17.0F,
+            True,
+            False)
+
+        CampoCanvas.AdicionarTextoTatico(
+            "Zona defensiva",
+            CorTextoTatico.Azul,
+            75,
+            88,
+            16.0F,
+            False,
+            True)
+
     End Sub
 
 End Class

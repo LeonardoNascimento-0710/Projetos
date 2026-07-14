@@ -279,6 +279,49 @@ Public Class CampoTatico
 
     End Function
 
+    Public Function AdicionarTextoTatico(
+    texto As String,
+    cor As CorTextoTatico,
+    xPercentual As Double,
+    yPercentual As Double,
+    Optional tamanhoFonte As Single = 18.0F,
+    Optional negrito As Boolean = True,
+    Optional fundoVisivel As Boolean = True) As TextoTatico
+
+        If String.IsNullOrWhiteSpace(texto) Then
+            texto = "Instrução"
+        End If
+
+        If tamanhoFonte < 8.0F Then
+            tamanhoFonte = 8.0F
+        End If
+
+        If tamanhoFonte > 48.0F Then
+            tamanhoFonte = 48.0F
+        End If
+
+        Dim objetoTexto As New TextoTatico With {
+        .Texto = texto.Trim(),
+        .Cor = cor,
+        .TamanhoFonte = tamanhoFonte,
+        .Negrito = negrito,
+        .FundoVisivel = fundoVisivel
+    }
+
+        objetoTexto.Posicao.X =
+        LimitarPercentual(xPercentual)
+
+        objetoTexto.Posicao.Y =
+        LimitarPercentual(yPercentual)
+
+        _objetos.Add(objetoTexto)
+
+        Invalidate()
+
+        Return objetoTexto
+
+    End Function
+
     Public Sub LimparObjetos()
 
         _objetos.Clear()
@@ -514,7 +557,9 @@ Public Class CampoTatico
                 Continue For
             End If
 
-            If TypeOf objeto Is AreaTatica OrElse TypeOf objeto Is MarcadorTatico Then
+            If TypeOf objeto Is AreaTatica OrElse
+           TypeOf objeto Is MarcadorTatico OrElse
+           TypeOf objeto Is TextoTatico Then
 
                 Continue For
 
@@ -572,14 +617,29 @@ Public Class CampoTatico
                 Continue For
             End If
 
+            If TypeOf objeto Is TextoTatico Then
+
+                DesenharTextoTatico(
+                g,
+                DirectCast(objeto, TextoTatico),
+                campo)
+
+            End If
+
+        Next
+
+        For Each objeto As ObjetoCampo In _objetos
+
+            If Not objeto.Visivel Then
+                Continue For
+            End If
+
             If TypeOf objeto Is MarcadorTatico Then
 
                 DesenharMarcadorTatico(
-                    g,
-                    DirectCast(
-                        objeto,
-                        MarcadorTatico),
-                    campo)
+                g,
+                DirectCast(objeto, MarcadorTatico),
+                campo)
 
             End If
 
@@ -1940,6 +2000,196 @@ Public Class CampoTatico
 
     End Function
 
+    Private Sub DesenharTextoTatico(
+    g As Graphics,
+    texto As TextoTatico,
+    campo As RectangleF)
+
+        Dim centro As PointF =
+        ConverterPercentualParaTela(
+            texto.Posicao,
+            campo)
+
+        Dim retangulo As RectangleF =
+        ObterRetanguloTextoTatico(
+            centro,
+            texto)
+
+        Dim corTexto As Color =
+        ObterCorTextoTatico(
+            texto.Cor)
+
+        Using fonte As Font =
+        CriarFonteTextoTatico(texto)
+
+            If texto.FundoVisivel Then
+
+                Using pincelSombra As New SolidBrush(
+                Color.FromArgb(75, 0, 0, 0))
+
+                    g.FillRectangle(
+                    pincelSombra,
+                    retangulo.X + 3.0F,
+                    retangulo.Y + 3.0F,
+                    retangulo.Width,
+                    retangulo.Height)
+
+                End Using
+
+                Using pincelFundo As New SolidBrush(
+                Color.FromArgb(175, 25, 25, 25))
+
+                    g.FillRectangle(
+                    pincelFundo,
+                    retangulo)
+
+                End Using
+
+                Using bordaFundo As New Pen(
+                Color.FromArgb(150, 255, 255, 255),
+                1.0F)
+
+                    g.DrawRectangle(
+                    bordaFundo,
+                    retangulo.X,
+                    retangulo.Y,
+                    retangulo.Width,
+                    retangulo.Height)
+
+                End Using
+
+            End If
+
+            Dim areaTexto As Rectangle =
+            Rectangle.Round(retangulo)
+
+            Dim formato As TextFormatFlags =
+            TextFormatFlags.HorizontalCenter Or
+            TextFormatFlags.VerticalCenter Or
+            TextFormatFlags.SingleLine Or
+            TextFormatFlags.NoPadding
+
+            Dim areaSombra As New Rectangle(
+            areaTexto.X + 1,
+            areaTexto.Y + 1,
+            areaTexto.Width,
+            areaTexto.Height)
+
+            TextRenderer.DrawText(
+            g,
+            texto.Texto,
+            fonte,
+            areaSombra,
+            Color.FromArgb(185, 0, 0, 0),
+            formato)
+
+            TextRenderer.DrawText(
+            g,
+            texto.Texto,
+            fonte,
+            areaTexto,
+            corTexto,
+            formato)
+
+        End Using
+
+        If texto Is _objetoSelecionado Then
+
+            DesenharSelecaoRetangular(
+            g,
+            retangulo)
+
+        End If
+
+    End Sub
+
+    Private Function CriarFonteTextoTatico(
+    texto As TextoTatico) As Font
+
+        Dim estilo As FontStyle =
+        FontStyle.Regular
+
+        If texto.Negrito Then
+            estilo = FontStyle.Bold
+        End If
+
+        Return New Font(
+        "Segoe UI",
+        texto.TamanhoFonte,
+        estilo,
+        GraphicsUnit.Pixel)
+
+    End Function
+
+    Private Function ObterTamanhoTextoTatico(
+    texto As TextoTatico) As SizeF
+
+        Using fonte As Font =
+        CriarFonteTextoTatico(texto)
+
+            Dim tamanho As Size =
+            TextRenderer.MeasureText(
+                texto.Texto,
+                fonte,
+                New Size(
+                    Integer.MaxValue,
+                    Integer.MaxValue),
+                TextFormatFlags.SingleLine Or
+                TextFormatFlags.NoPadding)
+
+            Return New SizeF(
+            tamanho.Width + 16.0F,
+            tamanho.Height + 10.0F)
+
+        End Using
+
+    End Function
+
+    Private Function ObterRetanguloTextoTatico(
+    centro As PointF,
+    texto As TextoTatico) As RectangleF
+
+        Dim tamanho As SizeF =
+        ObterTamanhoTextoTatico(texto)
+
+        Return New RectangleF(
+        centro.X - tamanho.Width / 2.0F,
+        centro.Y - tamanho.Height / 2.0F,
+        tamanho.Width,
+        tamanho.Height)
+
+    End Function
+
+    Private Function ObterCorTextoTatico(
+    cor As CorTextoTatico) As Color
+
+        Select Case cor
+
+            Case CorTextoTatico.Branco
+                Return Color.White
+
+            Case CorTextoTatico.Preto
+                Return Color.FromArgb(25, 25, 25)
+
+            Case CorTextoTatico.Amarelo
+                Return Color.FromArgb(250, 215, 35)
+
+            Case CorTextoTatico.Vermelho
+                Return Color.FromArgb(235, 55, 55)
+
+            Case CorTextoTatico.Azul
+                Return Color.FromArgb(70, 145, 245)
+
+            Case CorTextoTatico.Verde
+                Return Color.FromArgb(65, 205, 110)
+
+            Case Else
+                Return Color.White
+
+        End Select
+
+    End Function
+
     Private Sub DesenharSelecao(
         g As Graphics,
         centro As PointF,
@@ -2236,8 +2486,6 @@ Public Class CampoTatico
     localMouse As Point,
     campo As RectangleF) As ObjetoCampo
 
-        'Primeiro procura jogadores, bolas, linhas,
-        'cones, gols e manequins.
         For indice As Integer =
         _objetos.Count - 1 To 0 Step -1
 
@@ -2248,7 +2496,7 @@ Public Class CampoTatico
                 Continue For
             End If
 
-            If TypeOf objeto Is AreaTatica Then
+            If Not TypeOf objeto Is MarcadorTatico Then
                 Continue For
             End If
 
@@ -2263,7 +2511,60 @@ Public Class CampoTatico
 
         Next
 
-        'Somente depois procura áreas táticas.
+        For indice As Integer =
+        _objetos.Count - 1 To 0 Step -1
+
+            Dim objeto As ObjetoCampo =
+            _objetos(indice)
+
+            If Not objeto.Visivel Then
+                Continue For
+            End If
+
+            If Not TypeOf objeto Is TextoTatico Then
+                Continue For
+            End If
+
+            If EstaSobreObjeto(
+            objeto,
+            localMouse,
+            campo) Then
+
+                Return objeto
+
+            End If
+
+        Next
+
+        For indice As Integer =
+        _objetos.Count - 1 To 0 Step -1
+
+            Dim objeto As ObjetoCampo =
+            _objetos(indice)
+
+            If Not objeto.Visivel Then
+                Continue For
+            End If
+
+            If TypeOf objeto Is AreaTatica OrElse
+           TypeOf objeto Is MarcadorTatico OrElse
+           TypeOf objeto Is TextoTatico Then
+
+                Continue For
+
+            End If
+
+            If EstaSobreObjeto(
+            objeto,
+            localMouse,
+            campo) Then
+
+                Return objeto
+
+            End If
+
+        Next
+
         For indice As Integer =
         _objetos.Count - 1 To 0 Step -1
 
@@ -2302,6 +2603,28 @@ Public Class CampoTatico
         ConverterPercentualParaTela(
             objeto.Posicao,
             campo)
+
+        If TypeOf objeto Is TextoTatico Then
+
+            Dim texto As TextoTatico =
+        DirectCast(
+            objeto,
+            TextoTatico)
+
+            Dim area As RectangleF =
+        ObterRetanguloTextoTatico(
+            centro,
+            texto)
+
+            area.Inflate(
+        4.0F,
+        4.0F)
+
+            Return area.Contains(
+        localMouse.X,
+        localMouse.Y)
+
+        End If
 
         If TypeOf objeto Is LinhaTatica Then
 
@@ -2583,6 +2906,21 @@ Public Class CampoTatico
 
         End If
 
+        If TypeOf objeto Is TextoTatico Then
+
+            Dim texto As TextoTatico =
+        DirectCast(
+            objeto,
+            TextoTatico)
+
+            Dim tamanho As SizeF =
+        ObterTamanhoTextoTatico(texto)
+
+            Return New SizeF(
+        tamanho.Width / 2.0F,
+        tamanho.Height / 2.0F)
+
+        End If
         Return New SizeF(
             15.0F,
             15.0F)
