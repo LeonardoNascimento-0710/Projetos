@@ -151,6 +151,46 @@ Public Class CampoTatico
 
     End Function
 
+    Public Function AdicionarLinha(
+    tipo As TipoLinhaTatica,
+    cor As CorLinhaTatica,
+    xInicial As Double,
+    yInicial As Double,
+    xFinal As Double,
+    yFinal As Double,
+    Optional espessura As Single = 3.0F) As LinhaTatica
+
+        Dim linha As New LinhaTatica With {
+        .Tipo = tipo,
+        .Cor = cor
+    }
+
+        If espessura < 1.0F Then
+            espessura = 1.0F
+        End If
+
+        linha.Espessura = espessura
+
+        linha.Posicao.X =
+        LimitarPercentual(xInicial)
+
+        linha.Posicao.Y =
+        LimitarPercentual(yInicial)
+
+        linha.PosicaoFinal.X =
+        LimitarPercentual(xFinal)
+
+        linha.PosicaoFinal.Y =
+        LimitarPercentual(yFinal)
+
+        _objetos.Add(linha)
+
+        Invalidate()
+
+        Return linha
+
+    End Function
+
     Public Sub LimparObjetos()
 
         _objetos.Clear()
@@ -392,8 +432,6 @@ Public Class CampoTatico
 
             ElseIf TypeOf objeto Is Gol Then
 
-            ElseIf TypeOf objeto Is Gol Then
-
                 DesenharGol(
         g,
         DirectCast(objeto, Gol),
@@ -404,6 +442,13 @@ Public Class CampoTatico
                 DesenharManequim(
         g,
         DirectCast(objeto, Manequim),
+        campo)
+
+            ElseIf TypeOf objeto Is LinhaTatica Then
+
+                DesenharLinhaTatica(
+        g,
+        DirectCast(objeto, LinhaTatica),
         campo)
 
             End If
@@ -1296,6 +1341,166 @@ Public Class CampoTatico
 
     End Function
 
+    Private Sub DesenharLinhaTatica(
+    g As Graphics,
+    linha As LinhaTatica,
+    campo As RectangleF)
+
+        Dim inicio As PointF =
+        ConverterPercentualParaTela(
+            linha.Posicao,
+            campo)
+
+        Dim fim As PointF =
+        ConverterPercentualParaTela(
+            linha.PosicaoFinal,
+            campo)
+
+        Dim corLinha As Color =
+        ObterCorLinhaTatica(linha.Cor)
+
+        Using caneta As New Pen(
+        corLinha,
+        linha.Espessura)
+
+            caneta.StartCap =
+            LineCap.Round
+
+            caneta.EndCap =
+            LineCap.Round
+
+            If linha.Tipo =
+           TipoLinhaTatica.Tracejada Then
+
+                caneta.DashStyle =
+                DashStyle.Dash
+
+            End If
+
+            If linha.Tipo =
+           TipoLinhaTatica.Seta Then
+
+                Using pontaSeta As New AdjustableArrowCap(
+                5.0F,
+                7.0F,
+                True)
+
+                    caneta.CustomEndCap =
+                    pontaSeta
+
+                    g.DrawLine(
+                    caneta,
+                    inicio,
+                    fim)
+
+                End Using
+
+            Else
+
+                g.DrawLine(
+                caneta,
+                inicio,
+                fim)
+
+            End If
+
+        End Using
+
+        If linha Is _objetoSelecionado Then
+
+            DesenharSelecaoLinha(
+            g,
+            inicio,
+            fim)
+
+        End If
+
+    End Sub
+
+    Private Sub DesenharSelecaoLinha(
+    g As Graphics,
+    inicio As PointF,
+    fim As PointF)
+
+        Using canetaSelecao As New Pen(
+        Color.Gold,
+        2.0F)
+
+            canetaSelecao.DashStyle =
+            DashStyle.Dot
+
+            g.DrawLine(
+            canetaSelecao,
+            inicio,
+            fim)
+
+        End Using
+
+        Using pincelPonto As New SolidBrush(
+        Color.Gold)
+
+            g.FillEllipse(
+            pincelPonto,
+            inicio.X - 5.0F,
+            inicio.Y - 5.0F,
+            10.0F,
+            10.0F)
+
+            g.FillEllipse(
+            pincelPonto,
+            fim.X - 5.0F,
+            fim.Y - 5.0F,
+            10.0F,
+            10.0F)
+
+        End Using
+
+        Using bordaPonto As New Pen(
+        Color.FromArgb(80, 60, 10),
+        1.5F)
+
+            g.DrawEllipse(
+            bordaPonto,
+            inicio.X - 5.0F,
+            inicio.Y - 5.0F,
+            10.0F,
+            10.0F)
+
+            g.DrawEllipse(
+            bordaPonto,
+            fim.X - 5.0F,
+            fim.Y - 5.0F,
+            10.0F,
+            10.0F)
+
+        End Using
+
+    End Sub
+
+    Private Function ObterCorLinhaTatica(
+    cor As CorLinhaTatica) As Color
+
+        Select Case cor
+
+            Case CorLinhaTatica.Branca
+                Return Color.White
+
+            Case CorLinhaTatica.Amarela
+                Return Color.FromArgb(245, 210, 35)
+
+            Case CorLinhaTatica.Vermelha
+                Return Color.FromArgb(220, 45, 45)
+
+            Case CorLinhaTatica.Azul
+                Return Color.FromArgb(45, 125, 230)
+
+            Case Else
+                Return Color.White
+
+        End Select
+
+    End Function
+
     Private Sub DesenharSelecao(
         g As Graphics,
         centro As PointF,
@@ -1344,9 +1549,9 @@ Public Class CampoTatico
             _objetoSelecionado.Selecionado = True
 
             Dim centro As PointF =
-                ConverterPercentualParaTela(
-                    _objetoSelecionado.Posicao,
-                    campo)
+    ObterCentroObjetoTela(
+        _objetoSelecionado,
+        campo)
 
             _offsetMouse = New PointF(
                 e.X - centro.X,
@@ -1443,6 +1648,19 @@ Public Class CampoTatico
 
         End If
 
+        If TypeOf _objetoSelecionado Is LinhaTatica Then
+
+            MoverLinhaSelecionada(
+        DirectCast(
+            _objetoSelecionado,
+            LinhaTatica),
+        localMouse,
+        campo)
+
+            Exit Sub
+
+        End If
+
         Dim metadeTamanho As SizeF =
         ObterMetadeTamanhoVisual(
             _objetoSelecionado)
@@ -1476,6 +1694,89 @@ Public Class CampoTatico
 
         _objetoSelecionado.Posicao.Y =
         LimitarPercentual(yPercentual)
+
+    End Sub
+
+    Private Sub MoverLinhaSelecionada(
+    linha As LinhaTatica,
+    localMouse As Point,
+    campo As RectangleF)
+
+        Dim inicio As PointF =
+        ConverterPercentualParaTela(
+            linha.Posicao,
+            campo)
+
+        Dim fim As PointF =
+        ConverterPercentualParaTela(
+            linha.PosicaoFinal,
+            campo)
+
+        Dim centroAtual As New PointF(
+        (inicio.X + fim.X) / 2.0F,
+        (inicio.Y + fim.Y) / 2.0F)
+
+        Dim centroDesejado As New PointF(
+        localMouse.X - _offsetMouse.X,
+        localMouse.Y - _offsetMouse.Y)
+
+        Dim deltaX As Single =
+        centroDesejado.X - centroAtual.X
+
+        Dim deltaY As Single =
+        centroDesejado.Y - centroAtual.Y
+
+        Dim menorX As Single =
+        Math.Min(inicio.X, fim.X)
+
+        Dim maiorX As Single =
+        Math.Max(inicio.X, fim.X)
+
+        Dim menorY As Single =
+        Math.Min(inicio.Y, fim.Y)
+
+        Dim maiorY As Single =
+        Math.Max(inicio.Y, fim.Y)
+
+        deltaX = LimitarSingle(
+        deltaX,
+        campo.Left - menorX,
+        campo.Right - maiorX)
+
+        deltaY = LimitarSingle(
+        deltaY,
+        campo.Top - menorY,
+        campo.Bottom - maiorY)
+
+        Dim novoInicio As New PointF(
+        inicio.X + deltaX,
+        inicio.Y + deltaY)
+
+        Dim novoFim As New PointF(
+        fim.X + deltaX,
+        fim.Y + deltaY)
+
+        Dim percentualInicial As Posicao =
+        ConverterTelaParaPercentual(
+            novoInicio,
+            campo)
+
+        Dim percentualFinal As Posicao =
+        ConverterTelaParaPercentual(
+            novoFim,
+            campo)
+
+        linha.Posicao.X =
+        percentualInicial.X
+
+        linha.Posicao.Y =
+        percentualInicial.Y
+
+        linha.PosicaoFinal.X =
+        percentualFinal.X
+
+        linha.PosicaoFinal.Y =
+        percentualFinal.Y
 
     End Sub
 
@@ -1517,6 +1818,35 @@ Public Class CampoTatico
         ConverterPercentualParaTela(
             objeto.Posicao,
             campo)
+
+        If TypeOf objeto Is LinhaTatica Then
+
+            Dim linha As LinhaTatica =
+        DirectCast(objeto, LinhaTatica)
+
+            Dim inicio As PointF =
+        ConverterPercentualParaTela(
+            linha.Posicao,
+            campo)
+
+            Dim fim As PointF =
+        ConverterPercentualParaTela(
+            linha.PosicaoFinal,
+            campo)
+
+            Dim pontoMouse As New PointF(
+        localMouse.X,
+        localMouse.Y)
+
+            Dim tolerancia As Single =
+        linha.Espessura + 7.0F
+
+            Return DistanciaPontoSegmento(
+        pontoMouse,
+        inicio,
+        fim) <= tolerancia
+
+        End If
 
         If TypeOf objeto Is Gol Then
 
@@ -1733,6 +2063,67 @@ Public Class CampoTatico
 
     End Function
 
+    Private Function DistanciaPontoSegmento(
+    ponto As PointF,
+    inicio As PointF,
+    fim As PointF) As Single
+
+        Dim deltaX As Single =
+        fim.X - inicio.X
+
+        Dim deltaY As Single =
+        fim.Y - inicio.Y
+
+        Dim comprimentoQuadrado As Single =
+        deltaX * deltaX +
+        deltaY * deltaY
+
+        If comprimentoQuadrado <= 0.0001F Then
+
+            Dim distanciaX As Single =
+            ponto.X - inicio.X
+
+            Dim distanciaY As Single =
+            ponto.Y - inicio.Y
+
+            Return CSng(
+            Math.Sqrt(
+                distanciaX * distanciaX +
+                distanciaY * distanciaY))
+
+        End If
+
+        Dim percentual As Single =
+        ((ponto.X - inicio.X) * deltaX +
+        (ponto.Y - inicio.Y) * deltaY) /
+        comprimentoQuadrado
+
+        percentual = LimitarSingle(
+        percentual,
+        0.0F,
+        1.0F)
+
+        Dim projecaoX As Single =
+        inicio.X +
+        percentual * deltaX
+
+        Dim projecaoY As Single =
+        inicio.Y +
+        percentual * deltaY
+
+        Dim diferencaX As Single =
+        ponto.X - projecaoX
+
+        Dim diferencaY As Single =
+        ponto.Y - projecaoY
+
+        Return CSng(
+        Math.Sqrt(
+            diferencaX * diferencaX +
+            diferencaY * diferencaY))
+
+    End Function
+
     Private Function ConverterPercentualParaTela(
         posicao As Posicao,
         campo As RectangleF) As PointF
@@ -1780,6 +2171,55 @@ Public Class CampoTatico
         End If
 
         Return valor
+
+    End Function
+
+    Private Function ObterCentroObjetoTela(
+    objeto As ObjetoCampo,
+    campo As RectangleF) As PointF
+
+        If TypeOf objeto Is LinhaTatica Then
+
+            Dim linha As LinhaTatica =
+                DirectCast(objeto, LinhaTatica)
+
+            Dim inicio As PointF =
+                ConverterPercentualParaTela(
+                    linha.Posicao,
+                    campo)
+
+            Dim fim As PointF =
+                ConverterPercentualParaTela(
+                    linha.PosicaoFinal,
+                    campo)
+
+            Return New PointF(
+                (inicio.X + fim.X) / 2.0F,
+                (inicio.Y + fim.Y) / 2.0F)
+
+        End If
+
+        Return ConverterPercentualParaTela(
+            objeto.Posicao,
+            campo)
+
+    End Function
+
+    Private Function ConverterTelaParaPercentual(
+    ponto As PointF,
+    campo As RectangleF) As Posicao
+
+        Dim xPercentual As Double =
+            ((ponto.X - campo.Left) /
+            campo.Width) * 100.0
+
+        Dim yPercentual As Double =
+            ((ponto.Y - campo.Top) /
+            campo.Height) * 100.0
+
+        Return New Posicao(
+            LimitarPercentual(xPercentual),
+            LimitarPercentual(yPercentual))
 
     End Function
 

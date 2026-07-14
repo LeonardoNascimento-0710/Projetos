@@ -94,6 +94,32 @@ Public Class FrmPrincipal
             CorManequim.Azul,
             70,
             70)
+        CampoCanvas.AdicionarLinha(
+    TipoLinhaTatica.Continua,
+    CorLinhaTatica.Branca,
+    15,
+    15,
+    35,
+    25,
+    3.0F)
+
+        CampoCanvas.AdicionarLinha(
+            TipoLinhaTatica.Tracejada,
+            CorLinhaTatica.Amarela,
+            40,
+            75,
+            65,
+            65,
+            3.0F)
+
+        CampoCanvas.AdicionarLinha(
+            TipoLinhaTatica.Seta,
+            CorLinhaTatica.Vermelha,
+            55,
+            35,
+            78,
+            42,
+            4.0F)
     End Sub
 
 End Class
