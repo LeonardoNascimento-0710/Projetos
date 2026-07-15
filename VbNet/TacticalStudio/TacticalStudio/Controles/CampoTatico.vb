@@ -4,6 +4,7 @@ Imports System.Drawing.Drawing2D
 Imports System.Windows.Forms
 Imports TacticalStudio.Core.Classes
 Imports TacticalStudio.Core.Enums
+Imports System.Text.Json
 
 Public Class CampoTatico
     Inherits UserControl
@@ -13,7 +14,13 @@ Public Class CampoTatico
     Private _objetoSelecionado As ObjetoCampo
     Private _arrastando As Boolean
     Private _offsetMouse As PointF
+    Private ReadOnly _historico As New List(Of String)()
 
+    Private _indiceHistorico As Integer = -1
+
+    Private _restaurandoHistorico As Boolean
+
+    Private Const LimiteHistorico As Integer = 100
     Private Enum ModoManipulacaoCampo
 
         Nenhum
@@ -34,6 +41,10 @@ Public Class CampoTatico
     Private _inicioOriginalLinha As PointF
 
     Private _fimOriginalLinha As PointF
+
+    Private _estadoAntesManipulacao As String = String.Empty
+
+    Private _houveAlteracaoManipulacao As Boolean
 
     Private Const RaioManipulador As Single = 8.0F
     Private Const TamanhoMinimoArea As Single = 20.0F
@@ -75,6 +86,8 @@ Public Class CampoTatico
 
         UpdateStyles()
 
+        RegistrarEstadoHistorico()
+
     End Sub
 
     Public Event FerramentaAtualAlterada(
@@ -85,6 +98,34 @@ Public Class CampoTatico
 
     Public Event ObjetoSelecionadoAlterado(
     objeto As ObjetoCampo)
+
+    Public Event HistoricoAlterado(
+    podeDesfazer As Boolean,
+    podeRefazer As Boolean)
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public ReadOnly Property PodeDesfazer As Boolean
+
+        Get
+            Return _indiceHistorico > 0
+        End Get
+
+    End Property
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public ReadOnly Property PodeRefazer As Boolean
+
+        Get
+            Return _indiceHistorico >= 0 AndAlso
+               _indiceHistorico <
+               _historico.Count - 1
+        End Get
+
+    End Property
 
     <Browsable(False)>
     <DesignerSerializationVisibility(
@@ -612,6 +653,8 @@ Public Class CampoTatico
 
         RaiseEvent ObjetoSelecionadoAlterado(
         objeto)
+
+        RegistrarEstadoHistorico()
 
         Invalidate()
 
@@ -2652,6 +2695,507 @@ Public Class CampoTatico
 
 #End Region
 
+#Region "Histórico"
+
+    Public Sub RegistrarAlteracaoExterna()
+
+        Invalidate()
+
+        RegistrarEstadoHistorico()
+
+    End Sub
+
+    Public Sub Desfazer()
+
+        If Not PodeDesfazer Then
+            Exit Sub
+        End If
+
+        _indiceHistorico -= 1
+
+        RestaurarEstadoHistorico(
+        _historico(_indiceHistorico))
+
+        AtualizarDisponibilidadeHistorico()
+
+    End Sub
+
+    Public Sub Refazer()
+
+        If Not PodeRefazer Then
+            Exit Sub
+        End If
+
+        _indiceHistorico += 1
+
+        RestaurarEstadoHistorico(
+        _historico(_indiceHistorico))
+
+        AtualizarDisponibilidadeHistorico()
+
+    End Sub
+
+    Private Sub RegistrarEstadoHistorico()
+
+        If _restaurandoHistorico Then
+            Exit Sub
+        End If
+
+        AdicionarEstadoAoHistorico(
+        CapturarEstadoAtualJson())
+
+    End Sub
+
+    Private Sub AdicionarEstadoAoHistorico(
+    estadoJson As String)
+
+        If _restaurandoHistorico Then
+            Exit Sub
+        End If
+
+        If String.IsNullOrWhiteSpace(
+        estadoJson) Then
+
+            Exit Sub
+
+        End If
+
+        If _indiceHistorico >= 0 AndAlso
+       _indiceHistorico < _historico.Count Then
+
+            If _historico(_indiceHistorico) =
+           estadoJson Then
+
+                Exit Sub
+
+            End If
+
+        End If
+
+        'Uma nova alteração depois de desfazer
+        'elimina os estados disponíveis para refazer.
+        If _indiceHistorico <
+       _historico.Count - 1 Then
+
+            Dim indiceInicial As Integer =
+            _indiceHistorico + 1
+
+            Dim quantidade As Integer =
+            _historico.Count -
+            indiceInicial
+
+            If quantidade > 0 Then
+
+                _historico.RemoveRange(
+                indiceInicial,
+                quantidade)
+
+            End If
+
+        End If
+
+        _historico.Add(estadoJson)
+
+        If _historico.Count >
+       LimiteHistorico Then
+
+            _historico.RemoveAt(0)
+
+        End If
+
+        _indiceHistorico =
+        _historico.Count - 1
+
+        AtualizarDisponibilidadeHistorico()
+
+    End Sub
+
+    Private Sub AtualizarDisponibilidadeHistorico()
+
+        RaiseEvent HistoricoAlterado(
+        PodeDesfazer,
+        PodeRefazer)
+
+    End Sub
+
+    Private Function CapturarEstadoAtualJson() As String
+
+        Dim estadoCampo As New EstadoCampo()
+
+        For Each objeto As ObjetoCampo In _objetos
+
+            estadoCampo.Objetos.Add(
+            CapturarEstadoObjeto(objeto))
+
+        Next
+
+        Return JsonSerializer.Serialize(
+        estadoCampo)
+
+    End Function
+
+    Private Function CapturarEstadoObjeto(
+    objeto As ObjetoCampo) As EstadoObjetoCampo
+
+        Dim estado As New EstadoObjetoCampo With {
+    .TipoObjeto = objeto.GetType().Name,
+    .X = objeto.Posicao.X,
+    .Y = objeto.Posicao.Y,
+    .Visivel = objeto.Visivel
+    }
+
+        If TypeOf objeto Is Jogador Then
+
+            Dim jogador As Jogador =
+            DirectCast(objeto, Jogador)
+
+            estado.Numero =
+            jogador.Numero
+
+            estado.Nome =
+            jogador.Nome
+
+        ElseIf TypeOf objeto Is Cone Then
+
+            Dim cone As Cone =
+            DirectCast(objeto, Cone)
+
+            estado.CorConeValor =
+            CInt(cone.Cor)
+
+        ElseIf TypeOf objeto Is Gol Then
+
+            Dim gol As Gol =
+            DirectCast(objeto, Gol)
+
+            estado.OrientacaoGolValor =
+            CInt(gol.Orientacao)
+
+        ElseIf TypeOf objeto Is Manequim Then
+
+            Dim manequim As Manequim =
+            DirectCast(objeto, Manequim)
+
+            estado.CorManequimValor =
+            CInt(manequim.Cor)
+
+        ElseIf TypeOf objeto Is LinhaTatica Then
+
+            Dim linha As LinhaTatica =
+            DirectCast(objeto, LinhaTatica)
+
+            estado.XFinal =
+            linha.PosicaoFinal.X
+
+            estado.YFinal =
+            linha.PosicaoFinal.Y
+
+            estado.TipoLinhaValor =
+            CInt(linha.Tipo)
+
+            estado.CorLinhaValor =
+            CInt(linha.Cor)
+
+            estado.Espessura =
+            linha.Espessura
+
+        ElseIf TypeOf objeto Is AreaTatica Then
+
+            Dim area As AreaTatica =
+            DirectCast(objeto, AreaTatica)
+
+            estado.XFinal =
+            area.PosicaoFinal.X
+
+            estado.YFinal =
+            area.PosicaoFinal.Y
+
+            estado.CorAreaValor =
+            CInt(area.Cor)
+
+            estado.Espessura =
+            area.Espessura
+
+            estado.Opacidade =
+            area.Opacidade
+
+            estado.Tracejada =
+            area.Tracejada
+
+        ElseIf TypeOf objeto Is MarcadorTatico Then
+
+            Dim marcador As MarcadorTatico =
+            DirectCast(
+                objeto,
+                MarcadorTatico)
+
+            estado.Texto =
+            marcador.Texto
+
+            estado.CorMarcadorValor =
+            CInt(marcador.Cor)
+
+            estado.Diametro =
+            marcador.Diametro
+
+        ElseIf TypeOf objeto Is TextoTatico Then
+
+            Dim texto As TextoTatico =
+            DirectCast(
+                objeto,
+                TextoTatico)
+
+            estado.Texto =
+            texto.Texto
+
+            estado.CorTextoValor =
+            CInt(texto.Cor)
+
+            estado.TamanhoFonte =
+            texto.TamanhoFonte
+
+            estado.Negrito =
+            texto.Negrito
+
+            estado.FundoVisivel =
+            texto.FundoVisivel
+
+        Else
+
+            Throw New NotSupportedException(
+            "Objeto não suportado no histórico: " &
+            objeto.GetType().Name)
+
+        End If
+
+        Return estado
+
+    End Function
+
+    Private Sub RestaurarEstadoHistorico(
+    estadoJson As String)
+
+        _restaurandoHistorico = True
+
+        Try
+
+            Dim estadoCampo As EstadoCampo =
+            JsonSerializer.Deserialize(
+                Of EstadoCampo)(
+                estadoJson)
+
+            _objetos.Clear()
+
+            If estadoCampo IsNot Nothing AndAlso
+           estadoCampo.Objetos IsNot Nothing Then
+
+                For Each estadoObjeto As EstadoObjetoCampo
+                In estadoCampo.Objetos
+
+                    Dim objeto As ObjetoCampo =
+                    CriarObjetoDoEstado(
+                        estadoObjeto)
+
+                    If objeto IsNot Nothing Then
+
+                        _objetos.Add(objeto)
+
+                    End If
+
+                Next
+
+            End If
+
+            _objetoSelecionado = Nothing
+            _arrastando = False
+
+            _modoManipulacao =
+            ModoManipulacaoCampo.Nenhum
+
+            Capture = False
+
+            CancelarCriacao()
+
+        Finally
+
+            _restaurandoHistorico = False
+
+        End Try
+
+        RaiseEvent ObjetoSelecionadoAlterado(
+        Nothing)
+
+        Invalidate()
+
+    End Sub
+
+    Private Function CriarObjetoDoEstado(
+    estado As EstadoObjetoCampo) As ObjetoCampo
+
+        Dim objeto As ObjetoCampo = Nothing
+
+        Select Case estado.TipoObjeto
+
+            Case "Jogador"
+
+                objeto = New Jogador With {
+            .Numero = estado.Numero,
+            .Nome = estado.Nome
+        }
+
+            Case "Bola"
+
+                objeto = New Bola()
+
+            Case "Cone"
+
+                objeto = New Cone With {
+            .Cor = CType(
+                estado.CorConeValor,
+                CorCone)
+        }
+
+            Case "Gol"
+
+                objeto = New Gol With {
+            .Orientacao = CType(
+                estado.OrientacaoGolValor,
+                OrientacaoGol)
+        }
+
+            Case "Manequim"
+
+                objeto = New Manequim With {
+            .Cor = CType(
+                estado.CorManequimValor,
+                CorManequim)
+        }
+
+            Case "LinhaTatica"
+
+                Dim linha As New LinhaTatica With {
+            .Tipo = CType(
+                estado.TipoLinhaValor,
+                TipoLinhaTatica),
+            .Cor = CType(
+                estado.CorLinhaValor,
+                CorLinhaTatica),
+            .Espessura = estado.Espessura
+        }
+
+                linha.PosicaoFinal.X =
+            estado.XFinal
+
+                linha.PosicaoFinal.Y =
+            estado.YFinal
+
+                objeto = linha
+
+            Case "AreaTatica"
+
+                Dim area As New AreaTatica With {
+            .Cor = CType(
+                estado.CorAreaValor,
+                CorAreaTatica),
+            .Espessura = estado.Espessura,
+            .Opacidade = estado.Opacidade,
+            .Tracejada = estado.Tracejada
+        }
+
+                area.PosicaoFinal.X =
+            estado.XFinal
+
+                area.PosicaoFinal.Y =
+            estado.YFinal
+
+                objeto = area
+
+            Case "MarcadorTatico"
+
+                objeto = New MarcadorTatico With {
+            .Texto = estado.Texto,
+            .Cor = CType(
+                estado.CorMarcadorValor,
+                CorMarcadorTatico),
+            .Diametro = estado.Diametro
+        }
+
+            Case "TextoTatico"
+
+                objeto = New TextoTatico With {
+            .Texto = estado.Texto,
+            .Cor = CType(
+                estado.CorTextoValor,
+                CorTextoTatico),
+            .TamanhoFonte = estado.TamanhoFonte,
+            .Negrito = estado.Negrito,
+            .FundoVisivel = estado.FundoVisivel
+        }
+
+        End Select
+
+        If objeto Is Nothing Then
+            Return Nothing
+        End If
+
+        objeto.Posicao.X =
+        estado.X
+
+        objeto.Posicao.Y =
+        estado.Y
+
+        objeto.Visivel =
+        estado.Visivel
+
+        objeto.Selecionado =
+        False
+
+        Return objeto
+
+    End Function
+
+    Private Sub IniciarTransacaoManipulacao()
+
+        _estadoAntesManipulacao =
+        CapturarEstadoAtualJson()
+
+        _houveAlteracaoManipulacao =
+        False
+
+    End Sub
+
+    Private Sub FinalizarTransacaoManipulacao()
+
+        If Not _houveAlteracaoManipulacao Then
+
+            _estadoAntesManipulacao =
+            String.Empty
+
+            Exit Sub
+
+        End If
+
+        Dim estadoDepois As String =
+        CapturarEstadoAtualJson()
+
+        'Garante que o estado anterior à movimentação
+        'esteja imediatamente antes do novo estado.
+        AdicionarEstadoAoHistorico(
+        _estadoAntesManipulacao)
+
+        AdicionarEstadoAoHistorico(
+        estadoDepois)
+
+        _estadoAntesManipulacao =
+        String.Empty
+
+        _houveAlteracaoManipulacao =
+        False
+
+    End Sub
+
+#End Region
+
 #Region "Mouse"
 
     Protected Overrides Sub OnMouseDown(
@@ -2795,6 +3339,9 @@ Public Class CampoTatico
 
         End If
 
+        _houveAlteracaoManipulacao =
+    False
+
         _modoManipulacao =
     ModoManipulacaoCampo.MoverObjeto
 
@@ -2842,22 +3389,25 @@ Public Class CampoTatico
         End If
 
         If _arrastando AndAlso
-       _objetoSelecionado IsNot Nothing Then
+   _objetoSelecionado IsNot Nothing Then
 
             If _modoManipulacao =
-           ModoManipulacaoCampo.MoverObjeto Then
+       ModoManipulacaoCampo.MoverObjeto Then
 
                 MoverObjetoSelecionado(
-                e.Location,
-                campo)
+            e.Location,
+            campo)
 
             Else
 
                 RedimensionarObjetoSelecionado(
-                e.Location,
-                campo)
+            e.Location,
+            campo)
 
             End If
+
+            _houveAlteracaoManipulacao =
+        True
 
             Invalidate()
 
@@ -2907,6 +3457,10 @@ Public Class CampoTatico
             Exit Sub
         End If
 
+        Dim deveRegistrar As Boolean =
+        _arrastando AndAlso
+        _houveAlteracaoManipulacao
+
         _arrastando = False
 
         _modoManipulacao =
@@ -2924,6 +3478,18 @@ Public Class CampoTatico
             Cursor = Cursors.Cross
 
         End If
+
+        If deveRegistrar Then
+
+            RegistrarEstadoHistorico()
+
+        End If
+
+        _estadoAntesManipulacao =
+        String.Empty
+
+        _houveAlteracaoManipulacao =
+        False
 
     End Sub
 
@@ -3448,6 +4014,8 @@ Public Class CampoTatico
         RaiseEvent ObjetoSelecionadoAlterado(
         Nothing)
 
+        RegistrarEstadoHistorico()
+
         Invalidate()
 
     End Sub
@@ -3959,13 +4527,15 @@ Public Class CampoTatico
 
         End If
 
+        _houveAlteracaoManipulacao = False
+
         _modoManipulacao = modo
         _arrastando = True
 
         Capture = True
 
         Cursor =
-        ObterCursorManipulador(modo)
+    ObterCursorManipulador(modo)
 
     End Sub
 

@@ -12,6 +12,8 @@ Public Class FrmPrincipal
     sender As Object,
     e As EventArgs) Handles MyBase.Load
 
+        KeyPreview = True
+
         AplicarTema()
 
         CriarCampoTatico()
@@ -601,7 +603,7 @@ Public Class FrmPrincipal
                 jogador.Numero =
                     CInt(numero.Value)
 
-                CampoCanvas.Invalidate()
+                CampoCanvas.RegistrarAlteracaoExterna()
 
             End Sub
 
@@ -623,7 +625,7 @@ Public Class FrmPrincipal
                 jogador.Nome =
                     nome.Text
 
-                CampoCanvas.Invalidate()
+                CampoCanvas.RegistrarAlteracaoExterna()
 
             End Sub
 
@@ -655,7 +657,7 @@ Public Class FrmPrincipal
                         cor.SelectedItem,
                         CorCone)
 
-                CampoCanvas.Invalidate()
+                CampoCanvas.RegistrarAlteracaoExterna()
 
             End Sub
 
@@ -687,7 +689,7 @@ Public Class FrmPrincipal
                         orientacao.SelectedItem,
                         OrientacaoGol)
 
-                CampoCanvas.Invalidate()
+                CampoCanvas.RegistrarAlteracaoExterna()
 
             End Sub
 
@@ -719,7 +721,7 @@ Public Class FrmPrincipal
                         cor.SelectedItem,
                         CorManequim)
 
-                CampoCanvas.Invalidate()
+                CampoCanvas.RegistrarAlteracaoExterna()
 
             End Sub
 
@@ -751,7 +753,7 @@ Public Class FrmPrincipal
                         tipo.SelectedItem,
                         TipoLinhaTatica)
 
-                CampoCanvas.Invalidate()
+                CampoCanvas.RegistrarAlteracaoExterna()
 
             End Sub
 
@@ -777,7 +779,7 @@ Public Class FrmPrincipal
                         cor.SelectedItem,
                         CorLinhaTatica)
 
-                CampoCanvas.Invalidate()
+                CampoCanvas.RegistrarAlteracaoExterna()
 
             End Sub
 
@@ -800,7 +802,7 @@ Public Class FrmPrincipal
                 linha.Espessura =
                     CSng(espessura.Value)
 
-                CampoCanvas.Invalidate()
+                CampoCanvas.RegistrarAlteracaoExterna()
 
             End Sub
 
@@ -832,7 +834,7 @@ Public Class FrmPrincipal
                         cor.SelectedItem,
                         CorAreaTatica)
 
-                CampoCanvas.Invalidate()
+                CampoCanvas.RegistrarAlteracaoExterna()
 
             End Sub
 
@@ -854,7 +856,7 @@ Public Class FrmPrincipal
                 area.Tracejada =
                     tracejada.Checked
 
-                CampoCanvas.Invalidate()
+                CampoCanvas.RegistrarAlteracaoExterna()
 
             End Sub
 
@@ -875,7 +877,7 @@ Public Class FrmPrincipal
                 area.Opacidade =
                     CInt(opacidade.Value)
 
-                CampoCanvas.Invalidate()
+                CampoCanvas.RegistrarAlteracaoExterna()
 
             End Sub
 
@@ -898,7 +900,7 @@ Public Class FrmPrincipal
                 area.Espessura =
                     CSng(espessura.Value)
 
-                CampoCanvas.Invalidate()
+                CampoCanvas.RegistrarAlteracaoExterna()
 
             End Sub
 
@@ -927,7 +929,7 @@ Public Class FrmPrincipal
                 marcador.Texto =
                     texto.Text
 
-                CampoCanvas.Invalidate()
+                CampoCanvas.RegistrarAlteracaoExterna()
 
             End Sub
 
@@ -953,7 +955,7 @@ Public Class FrmPrincipal
                         cor.SelectedItem,
                         CorMarcadorTatico)
 
-                CampoCanvas.Invalidate()
+                CampoCanvas.RegistrarAlteracaoExterna()
 
             End Sub
 
@@ -976,7 +978,7 @@ Public Class FrmPrincipal
                 marcador.Diametro =
                     CSng(diametro.Value)
 
-                CampoCanvas.Invalidate()
+                CampoCanvas.RegistrarAlteracaoExterna()
 
             End Sub
 
@@ -1004,7 +1006,7 @@ Public Class FrmPrincipal
                 textoTatico.Texto =
                     texto.Text
 
-                CampoCanvas.Invalidate()
+                CampoCanvas.RegistrarAlteracaoExterna()
 
             End Sub
 
@@ -1030,7 +1032,7 @@ Public Class FrmPrincipal
                         cor.SelectedItem,
                         CorTextoTatico)
 
-                CampoCanvas.Invalidate()
+                CampoCanvas.RegistrarAlteracaoExterna()
 
             End Sub
 
@@ -1053,7 +1055,7 @@ Public Class FrmPrincipal
                 textoTatico.TamanhoFonte =
                     CSng(tamanho.Value)
 
-                CampoCanvas.Invalidate()
+                CampoCanvas.RegistrarAlteracaoExterna()
 
             End Sub
 
@@ -1075,7 +1077,7 @@ Public Class FrmPrincipal
                 textoTatico.Negrito =
                     negrito.Checked
 
-                CampoCanvas.Invalidate()
+                CampoCanvas.RegistrarAlteracaoExterna()
 
             End Sub
 
@@ -1097,7 +1099,7 @@ Public Class FrmPrincipal
                 textoTatico.FundoVisivel =
                     fundo.Checked
 
-                CampoCanvas.Invalidate()
+                CampoCanvas.RegistrarAlteracaoExterna()
 
             End Sub
 
@@ -1107,5 +1109,57 @@ Public Class FrmPrincipal
             fundo)
 
     End Sub
+
+    Protected Overrides Function ProcessCmdKey(
+    ByRef msg As Message,
+    keyData As Keys) As Boolean
+
+        If CampoCanvas Is Nothing Then
+
+            Return MyBase.ProcessCmdKey(
+            msg,
+            keyData)
+
+        End If
+
+        Dim tecla As Keys =
+        keyData And Keys.KeyCode
+
+        Dim modificadores As Keys =
+        keyData And Keys.Modifiers
+
+        If modificadores = Keys.Control AndAlso
+       tecla = Keys.Z Then
+
+            CampoCanvas.Desfazer()
+
+            Return True
+
+        End If
+
+        If modificadores = Keys.Control AndAlso
+       tecla = Keys.Y Then
+
+            CampoCanvas.Refazer()
+
+            Return True
+
+        End If
+
+        If modificadores =
+       (Keys.Control Or Keys.Shift) AndAlso
+       tecla = Keys.Z Then
+
+            CampoCanvas.Refazer()
+
+            Return True
+
+        End If
+
+        Return MyBase.ProcessCmdKey(
+        msg,
+        keyData)
+
+    End Function
 
 End Class
