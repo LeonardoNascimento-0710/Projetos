@@ -3577,6 +3577,12 @@ Public Class CampoTatico
 
     End Sub
 
+    Public Function ObterAssinaturaEstado() As String
+
+        Return CapturarEstadoAtualJson()
+
+    End Function
+
     Private Sub AplicarEstadoCampo(
     estadoCampo As EstadoCampo)
 

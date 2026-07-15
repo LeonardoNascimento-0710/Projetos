@@ -11,14 +11,15 @@ Public Class FrmPrincipal
     Private _caminhoArquivoAtual As String =
     String.Empty
 
-    Private _nomeExercicioAtual As String =
-    "Novo exercício"
+    Private _nomeExercicioAtual As String = "Novo exercício"
+
+    Private _assinaturaSalva As String = String.Empty
+
+    Private _alteracoesNaoSalvas As Boolean
 
     Private ReadOnly _botoesFerramentas As New Dictionary(Of FerramentaCampo, Button)()
 
-    Private Sub FrmPrincipal_Load(
-    sender As Object,
-    e As EventArgs) Handles MyBase.Load
+    Private Sub FrmPrincipal_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         KeyPreview = True
 
@@ -30,7 +31,7 @@ Public Class FrmPrincipal
 
         CriarBarraArquivo()
 
-        AtualizarTituloJanela()
+        MarcarComoSalvo()
 
     End Sub
 
@@ -59,6 +60,9 @@ Public Class FrmPrincipal
 
         AddHandler CampoCanvas.ObjetoSelecionadoAlterado,
     AddressOf CampoCanvas_ObjetoSelecionadoAlterado
+
+        AddHandler CampoCanvas.HistoricoAlterado,
+    AddressOf CampoCanvas_HistoricoAlterado
 
         PnlCentral.Controls.Clear()
         PnlCentral.Controls.Add(CampoCanvas)
@@ -1418,28 +1422,19 @@ Public Class FrmPrincipal
     sender As Object,
     e As EventArgs)
 
-        Dim resposta As DialogResult =
-            MessageBox.Show(
-                "Deseja iniciar um novo exercício?" &
-                Environment.NewLine &
-                "As alterações não salvas serão perdidas.",
-                "Novo exercício",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question)
-
-        If resposta <> DialogResult.Yes Then
+        If Not ConfirmarAlteracoesNaoSalvas() Then
             Exit Sub
         End If
 
         CampoCanvas.NovoExercicio()
 
         _caminhoArquivoAtual =
-            String.Empty
+        String.Empty
 
         _nomeExercicioAtual =
-            "Novo exercício"
+        "Novo exercício"
 
-        AtualizarTituloJanela()
+        MarcarComoSalvo()
 
         CampoCanvas.Focus()
 
@@ -1462,6 +1457,10 @@ Public Class FrmPrincipal
     End Sub
 
     Private Sub AbrirExercicio()
+
+        If Not ConfirmarAlteracoesNaoSalvas() Then
+            Exit Sub
+        End If
 
         Using dialogo As New OpenFileDialog()
 
@@ -1500,7 +1499,7 @@ Public Class FrmPrincipal
                     Path.GetFileNameWithoutExtension(
                         dialogo.FileName)
 
-                AtualizarTituloJanela()
+                MarcarComoSalvo()
 
                 CampoCanvas.Focus()
 
@@ -1521,44 +1520,44 @@ Public Class FrmPrincipal
 
     End Sub
 
-    Private Sub SalvarExercicio(
-    Optional salvarComo As Boolean = False)
+    Private Function SalvarExercicio(
+    Optional salvarComo As Boolean = False) As Boolean
 
         Dim caminhoDestino As String =
-            _caminhoArquivoAtual
+        _caminhoArquivoAtual
 
         If salvarComo OrElse
-           String.IsNullOrWhiteSpace(
-               caminhoDestino) Then
+       String.IsNullOrWhiteSpace(
+           caminhoDestino) Then
 
             Using dialogo As New SaveFileDialog()
 
                 dialogo.Title =
-                    "Salvar exercício tático"
+                "Salvar exercício tático"
 
                 dialogo.Filter =
-                    "Exercício TacticalStudio (*.tactical)|*.tactical|" &
-                    "Arquivo JSON (*.json)|*.json"
+                "Exercício TacticalStudio (*.tactical)|*.tactical|" &
+                "Arquivo JSON (*.json)|*.json"
 
                 dialogo.DefaultExt =
-                    "tactical"
+                "tactical"
 
                 dialogo.AddExtension =
-                    True
+                True
 
                 dialogo.FileName =
-                    _nomeExercicioAtual &
-                    ".tactical"
+                _nomeExercicioAtual &
+                ".tactical"
 
                 If dialogo.ShowDialog() <>
-                   DialogResult.OK Then
+               DialogResult.OK Then
 
-                    Exit Sub
+                    Return False
 
                 End If
 
                 caminhoDestino =
-                    dialogo.FileName
+                dialogo.FileName
 
             End Using
 
@@ -1567,47 +1566,156 @@ Public Class FrmPrincipal
         Try
 
             Dim nomeExercicio As String =
-                Path.GetFileNameWithoutExtension(
-                    caminhoDestino)
+            Path.GetFileNameWithoutExtension(
+                caminhoDestino)
 
             Dim conteudoJson As String =
-                CampoCanvas.ExportarExercicioJson(
-                    nomeExercicio)
+            CampoCanvas.ExportarExercicioJson(
+                nomeExercicio)
 
             File.WriteAllText(
-                caminhoDestino,
-                conteudoJson,
-                New UTF8Encoding(False))
+            caminhoDestino,
+            conteudoJson,
+            New UTF8Encoding(False))
 
             _caminhoArquivoAtual =
-                caminhoDestino
+            caminhoDestino
 
             _nomeExercicioAtual =
-                nomeExercicio
+            nomeExercicio
 
-            AtualizarTituloJanela()
+            MarcarComoSalvo()
+
+            Return True
 
         Catch ex As Exception
 
             MessageBox.Show(
-                "Não foi possível salvar o exercício." &
-                Environment.NewLine &
-                Environment.NewLine &
-                ex.Message,
-                "Erro ao salvar",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error)
+            "Não foi possível salvar o exercício." &
+            Environment.NewLine &
+            Environment.NewLine &
+            ex.Message,
+            "Erro ao salvar",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Error)
+
+            Return False
 
         End Try
 
-    End Sub
+    End Function
 
     Private Sub AtualizarTituloJanela()
 
+        Dim indicadorAlteracao As String =
+        String.Empty
+
+        If _alteracoesNaoSalvas Then
+
+            indicadorAlteracao =
+            " *"
+
+        End If
+
         Text =
-            "TacticalStudio - " &
-            _nomeExercicioAtual
+        "TacticalStudio - " &
+        _nomeExercicioAtual &
+        indicadorAlteracao
 
     End Sub
+
+    Private Sub CampoCanvas_HistoricoAlterado(
+    podeDesfazer As Boolean,
+    podeRefazer As Boolean)
+
+        AtualizarEstadoAlteracoes()
+
+    End Sub
+
+    Private Sub MarcarComoSalvo()
+
+        If CampoCanvas Is Nothing Then
+            Exit Sub
+        End If
+
+        _assinaturaSalva =
+            CampoCanvas.ObterAssinaturaEstado()
+
+        _alteracoesNaoSalvas =
+            False
+
+        AtualizarTituloJanela()
+
+    End Sub
+
+    Private Sub AtualizarEstadoAlteracoes()
+
+        If CampoCanvas Is Nothing Then
+            Exit Sub
+        End If
+
+        Dim assinaturaAtual As String =
+            CampoCanvas.ObterAssinaturaEstado()
+
+        _alteracoesNaoSalvas =
+            Not String.Equals(
+                assinaturaAtual,
+                _assinaturaSalva,
+                StringComparison.Ordinal)
+
+        AtualizarTituloJanela()
+
+    End Sub
+
+    Private Function ConfirmarAlteracoesNaoSalvas() As Boolean
+
+        If Not _alteracoesNaoSalvas Then
+
+            Return True
+
+        End If
+
+        Dim resposta As DialogResult =
+            MessageBox.Show(
+                "O exercício possui alterações não salvas." &
+                Environment.NewLine &
+                Environment.NewLine &
+                "Deseja salvar as alterações?",
+                "Alterações não salvas",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Warning)
+
+        Select Case resposta
+
+            Case DialogResult.Yes
+
+                Return SalvarExercicio()
+
+            Case DialogResult.No
+
+                Return True
+
+            Case Else
+
+                Return False
+
+        End Select
+
+    End Function
+
+    Protected Overrides Sub OnFormClosing(e As FormClosingEventArgs)
+
+        If Not ConfirmarAlteracoesNaoSalvas() Then
+
+            e.Cancel = True
+
+            Return
+
+        End If
+
+        MyBase.OnFormClosing(e)
+
+    End Sub
+
 
 End Class
