@@ -314,4 +314,391 @@ Próxima etapa:
 
 ======================================================================
 FIM DO DOCUMENTO
-====================================================================== 
+======================================================================
+
+======================================================================
+13. ETAPA 6 - LINHAS, TRAJETÓRIAS E SETAS TÁTICAS
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.6.0
+
+Arquivos criados:
+- TacticalStudio.Core\Enums\TipoLinhaTatica.vb
+- TacticalStudio.Core\Enums\CorLinhaTatica.vb
+- TacticalStudio.Core\Classes\LinhaTatica.vb
+
+Alterações realizadas:
+- Foram criados os tipos de linha contínua, tracejada e seta;
+- Foram adicionadas as cores branca, amarela, vermelha e azul;
+- A classe LinhaTatica passou a herdar ObjetoCampo;
+- Foi adicionada a posição final da linha;
+- Foi adicionada configuração de espessura;
+- Foi implementado o desenho das linhas e setas;
+- Foi implementada ponta de seta;
+- Foi implementada seleção pela distância até o segmento;
+- Foram adicionados pontos visuais nas extremidades;
+- Foi implementado o arraste da linha inteira;
+- As duas extremidades permanecem dentro do campo.
+
+Arquivo alterado:
+- Controles\CampoTatico.vb
+
+Resultado:
+- Linha contínua funcionando;
+- Linha tracejada funcionando;
+- Seta funcionando;
+- Seleção próxima ao traço funcionando;
+- Movimentação integral funcionando;
+- Objetos anteriores continuam funcionando.
+
+Próxima etapa:
+- Criar áreas táticas retangulares;
+- Adicionar preenchimento transparente;
+- Implementar seleção interna;
+- Implementar movimentação da área inteira;
+- Manter todos os limites dentro do campo.
+
+======================================================================
+14. ETAPA 7 - ÁREAS TÁTICAS RETANGULARES
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.7.0
+
+Arquivos criados:
+- TacticalStudio.Core\Enums\CorAreaTatica.vb
+- TacticalStudio.Core\Classes\AreaTatica.vb
+
+Alterações realizadas:
+- Foi criada a classe AreaTatica;
+- Foram adicionadas cores configuráveis;
+- Foi adicionada posição inicial e posição final;
+- Foi adicionada borda contínua ou tracejada;
+- Foi adicionada espessura configurável;
+- Foi adicionado preenchimento transparente;
+- As áreas passaram a ser desenhadas atrás dos demais objetos;
+- Foi implementada seleção pelo interior do retângulo;
+- Foi implementada movimentação da área inteira;
+- Os quatro limites permanecem dentro do campo;
+- Jogadores e outros objetos sobrepostos continuam selecionáveis;
+- Foram adicionados marcadores de seleção nos quatro cantos.
+
+Arquivo alterado:
+- Controles\CampoTatico.vb
+
+Arquivo alterado:
+- FrmPrincipal.vb
+
+Resultado:
+- Áreas amarelas, azuis e vermelhas funcionando;
+- Bordas contínuas e tracejadas funcionando;
+- Preenchimento transparente funcionando;
+- Seleção e movimentação funcionando;
+- Ordem visual atrás dos demais objetos funcionando.
+
+Próxima etapa:
+- Criar marcadores numerados;
+- Criar textos curtos para identificar etapas;
+- Permitir seleção e movimentação;
+- Manter os marcadores acima dos demais elementos.
+
+======================================================================
+15. ETAPA 8 - MARCADORES NUMERADOS E IDENTIFICAÇÃO DE ETAPAS
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.8.0
+
+Arquivos criados:
+- TacticalStudio.Core\Enums\CorMarcadorTatico.vb
+- TacticalStudio.Core\Classes\MarcadorTatico.vb
+
+Alterações realizadas:
+- Foi criado o marcador tático circular;
+- Foram adicionadas as cores branco, preto, amarelo, vermelho, azul e verde;
+- Foi adicionada a propriedade Texto;
+- Foi adicionado diâmetro configurável;
+- Foram adicionados limites mínimos e máximos para o tamanho;
+- Os marcadores passaram a ser desenhados acima dos demais objetos;
+- Foi implementada sombra;
+- Foi implementada borda;
+- Foi implementado texto centralizado;
+- Foi implementada seleção circular;
+- Foi implementada movimentação;
+- O marcador permanece totalmente dentro do campo;
+- Foi validado o uso de números e letras.
+
+Arquivo alterado:
+- Controles\CampoTatico.vb
+
+Arquivo alterado:
+- FrmPrincipal.vb
+
+Resultado:
+- Marcadores numéricos funcionando;
+- Marcadores com letras funcionando;
+- Cores configuráveis funcionando;
+- Seleção e movimentação funcionando;
+- Ordem visual acima dos demais objetos funcionando.
+
+Próxima etapa:
+- Criar textos táticos livres;
+- Permitir títulos, instruções e observações;
+- Adicionar tamanho, cor e negrito configuráveis;
+- Implementar seleção e movimentação;
+- Manter textos acima das áreas e abaixo dos marcadores.
+
+======================================================================
+16. ETAPA 9 - TEXTOS, TÍTULOS E INSTRUÇÕES TÁTICAS
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.9.0
+
+Arquivos criados:
+- TacticalStudio.Core\Enums\CorTextoTatico.vb
+- TacticalStudio.Core\Classes\TextoTatico.vb
+
+Alterações realizadas:
+- Foi criado o objeto TextoTatico;
+- Foram adicionadas cores configuráveis;
+- Foi adicionado tamanho de fonte configurável;
+- Foi adicionada opção de negrito;
+- Foi adicionada opção de fundo visível;
+- Foi implementado texto centralizado;
+- Foi implementada sombra no texto e no fundo;
+- Foi implementada seleção retangular;
+- Foi implementada detecção de clique pelo tamanho real do texto;
+- Foi implementada movimentação;
+- O texto permanece completamente dentro do campo;
+- Foi definida prioridade visual abaixo dos marcadores e acima dos objetos principais.
+
+Arquivo alterado:
+- Controles\CampoTatico.vb
+
+Arquivo alterado:
+- FrmPrincipal.vb
+
+Resultado:
+- Títulos e instruções táticas funcionando;
+- Textos com e sem fundo funcionando;
+- Cores, tamanhos e negrito funcionando;
+- Seleção e movimentação funcionando;
+- Ordem visual funcionando corretamente.
+
+Próxima etapa:
+- Criar barra lateral de ferramentas;
+- Permitir inserção de objetos por clique no campo;
+- Criar ferramentas de um clique e de dois cliques;
+- Adicionar pré-visualização de linhas e áreas;
+- Adicionar exclusão pelo teclado;
+- Remover os objetos de teste da inicialização.
+
+======================================================================
+17. ETAPA 10 - BARRA DE FERRAMENTAS E INSERÇÃO POR CLIQUE
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.10.0
+
+Arquivo criado:
+- TacticalStudio.Core\Enums\FerramentaCampo.vb
+
+Alterações realizadas:
+- Foi criada a enumeração das ferramentas disponíveis;
+- Foi implementada a ferramenta Selecionar;
+- Foram implementadas ferramentas de um clique;
+- Foram implementadas ferramentas de dois pontos;
+- Foi adicionada pré-visualização para linhas, setas e áreas;
+- Foi implementado cancelamento pelo botão direito;
+- Foi implementado retorno à seleção com a tecla Esc;
+- Foi implementada exclusão do objeto selecionado com Delete;
+- O campo passou a receber foco pelo teclado;
+- A propriedade FerramentaAtual foi ocultada da serialização do Designer.
+
+Arquivo alterado:
+- Controles\CampoTatico.vb
+
+Alterações realizadas:
+- Foi criado o controle da ferramenta atual;
+- Foi criado o evento FerramentaAtualAlterada;
+- Foi criado o evento ObjetoCriado;
+- Foi implementada inserção por clique no campo;
+- Foi implementada inserção por dois pontos;
+- Foi implementada pré-visualização;
+- Foi implementada seleção automática do objeto criado.
+
+Arquivo alterado:
+- FrmPrincipal.vb
+
+Alterações realizadas:
+- Foi criada a barra lateral de ferramentas;
+- Foram criados botões para todos os objetos;
+- O botão ativo passou a ser destacado;
+- Foram removidos os objetos de teste da inicialização;
+- O projeto passou a iniciar com o campo vazio;
+- Foi integrada a seleção de ferramentas ao CampoTatico.
+
+Resultado:
+- A barra lateral aparece corretamente;
+- Os objetos são inseridos por clique;
+- Linhas, setas e áreas usam dois cliques;
+- A pré-visualização funciona;
+- Esc retorna à seleção;
+- Delete remove o objeto selecionado;
+- O campo inicia vazio.
+
+Próxima etapa:
+- Criar painel de propriedades;
+- Exibir dados do objeto selecionado;
+- Permitir alterar número, nome, cor, texto e tamanho;
+- Atualizar o campo imediatamente;
+- Preparar edição de cada tipo de objeto.
+
+======================================================================
+18. ETAPA 11 - PAINEL DE PROPRIEDADES
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.11.0
+
+Arquivo alterado:
+- Controles\CampoTatico.vb
+
+Alterações realizadas:
+- Foi criado o evento ObjetoSelecionadoAlterado;
+- Foi exposta a propriedade ObjetoSelecionadoAtual;
+- O formulário passou a ser avisado ao selecionar, criar, desmarcar ou excluir objetos;
+- A seleção continua centralizada no CampoTatico;
+- A propriedade de seleção foi ocultada da serialização do Designer.
+
+Arquivo alterado:
+- FrmPrincipal.vb
+
+Alterações realizadas:
+- Foi criado o painel direito de propriedades;
+- O painel é montado dinamicamente conforme o tipo do objeto;
+- Foi adicionada edição de número e nome do jogador;
+- Foi adicionada edição de cor do cone;
+- Foi adicionada edição da orientação do gol;
+- Foi adicionada edição de cor do manequim;
+- Foi adicionada edição de tipo, cor e espessura das linhas;
+- Foi adicionada edição de cor, borda, opacidade e espessura das áreas;
+- Foi adicionada edição de texto, cor e diâmetro dos marcadores;
+- Foi adicionada edição de texto, cor, tamanho, negrito e fundo dos textos táticos;
+- Foi criado o botão Excluir objeto;
+- Todas as alterações são refletidas imediatamente no campo.
+
+Resultado:
+- O painel direito funciona conforme o objeto selecionado;
+- As propriedades podem ser alteradas em tempo real;
+- A exclusão pelo painel funciona;
+- A barra de ferramentas e os objetos existentes continuam funcionando.
+
+Próxima etapa:
+- Permitir redimensionar linhas e áreas diretamente no campo;
+- Arrastar as extremidades das linhas;
+- Arrastar os cantos das áreas;
+- Manter os pontos dentro dos limites do campo;
+- Atualizar a seleção em tempo real.
+
+======================================================================
+19. ETAPA 12 - REDIMENSIONAMENTO DIRETO DE LINHAS E ÁREAS
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.12.0
+
+Arquivo alterado:
+- Controles\CampoTatico.vb
+
+Alterações realizadas:
+- Foi criado o modo de manipulação de objetos;
+- Foram adicionados manipuladores nas extremidades das linhas;
+- Foram adicionados manipuladores nos quatro cantos das áreas;
+- Foi implementado redimensionamento direto das linhas;
+- Foi implementado redimensionamento direto das áreas;
+- Foi adicionada limitação mínima para o tamanho das áreas;
+- Foi adicionada limitação mínima para o comprimento das linhas;
+- Foi implementada normalização das posições das áreas;
+- Foram adicionados cursores específicos para cada manipulador;
+- Foi corrigido o salto da linha ao iniciar a movimentação;
+- A movimentação passou a usar as posições originais da linha;
+- O clique nas pontas passou a manipular somente a extremidade selecionada;
+- A movimentação pelo meio continua deslocando a linha inteira;
+- As extremidades e cantos permanecem dentro do campo.
+
+Correções:
+- Corrigido erro que deslocava a linha para a esquerda ao selecioná-la;
+- Corrigido erro que exigia arrastar fora do traço para manipular a linha;
+- Corrigida a identificação das alças de uma linha ainda não selecionada;
+- Corrigida sobreposição das duas extremidades da linha.
+
+Resultado:
+- As áreas podem ser redimensionadas pelos quatro cantos;
+- As linhas podem ser redimensionadas pelas duas extremidades;
+- As linhas não saltam mais ao iniciar a movimentação;
+- A linha inteira pode ser movida pelo meio;
+- Os limites do campo são respeitados;
+- O painel de propriedades e os demais objetos continuam funcionando.
+
+Próxima etapa:
+- Implementar desfazer e refazer;
+- Registrar criação, exclusão e movimentação;
+- Registrar alterações de propriedades;
+- Adicionar atalhos Ctrl+Z e Ctrl+Y;
+- Preparar histórico de ações do exercício.
+
+======================================================================
+20. MODELO PARA AS PRÓXIMAS ATUALIZAÇÕES
+
+======================================================================
+21. ETAPA 13 - HISTÓRICO DE DESFAZER E REFAZER
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.13.0
+
+Arquivos alterados:
+- Controles\CampoTatico.vb
+- FrmPrincipal.vb
+- TacticalStudio.Core\Classes\EstadoCampo.vb
+- TacticalStudio.Core\Classes\EstadoObjetoCampo.vb
+
+Alterações realizadas:
+- Implementado histórico de estados do campo tático;
+- Adicionado suporte ao atalho Ctrl+Z para desfazer;
+- Adicionado suporte ao atalho Ctrl+Y para refazer;
+- Adicionado suporte alternativo ao atalho Ctrl+Shift+Z;
+- Criação de objetos passou a ser registrada no histórico;
+- Exclusão de objetos passou a ser registrada no histórico;
+- Movimentação de objetos passou a ser registrada no histórico;
+- Redimensionamento de linhas e áreas passou a ser registrado;
+- Alterações realizadas pelo painel de propriedades passaram a ser registradas;
+- O histórico passou a limitar a quantidade máxima de estados;
+- Novas alterações após desfazer removem corretamente os estados de refazer;
+- O estado do campo é capturado e restaurado por serialização JSON.
+
+Correções:
+- Corrigido problema em que Ctrl+Z removia diretamente o jogador após movimentá-lo;
+- Corrigido registro incompleto do estado depois do arraste;
+- Corrigida restauração dos tipos de objetos;
+- Removido o uso inadequado de NameOf com variáveis locais;
+- O tipo do objeto passou a ser salvo por objeto.GetType().Name;
+- A restauração passou a usar nomes de tipos fixos e consistentes;
+- Corrigido funcionamento do Ctrl+Y.
+
+Resultado:
+- Ctrl+Z desfaz criação, exclusão, movimentação, redimensionamento e propriedades;
+- Ctrl+Y refaz as ações desfeitas;
+- Jogadores e demais objetos são restaurados corretamente;
+- Linhas e áreas mantêm seus pontos e propriedades;
+- O histórico permanece consistente após várias operações.
+
+Próxima etapa sugerida:
+- Implementar duplicação de objetos;
+- Adicionar controle de camadas;
+- Implementar trazer para frente e enviar para trás;
+- Adicionar atalho Ctrl+D para duplicar;
+- Preparar a base para salvar e carregar exercícios.
