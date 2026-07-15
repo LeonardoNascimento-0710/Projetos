@@ -1,10 +1,18 @@
 ﻿Imports System.Collections.Generic
+Imports System.IO
+Imports System.Text
 Imports TacticalStudio.Core.Enums
 Imports TacticalStudio.Core.Classes
 
 Public Class FrmPrincipal
 
     Private CampoCanvas As CampoTatico
+
+    Private _caminhoArquivoAtual As String =
+    String.Empty
+
+    Private _nomeExercicioAtual As String =
+    "Novo exercício"
 
     Private ReadOnly _botoesFerramentas As New Dictionary(Of FerramentaCampo, Button)()
 
@@ -19,6 +27,10 @@ Public Class FrmPrincipal
         CriarCampoTatico()
 
         CriarBarraFerramentas()
+
+        CriarBarraArquivo()
+
+        AtualizarTituloJanela()
 
     End Sub
 
@@ -406,6 +418,114 @@ Public Class FrmPrincipal
                 DirectCast(objeto, TextoTatico))
 
         End If
+
+        Dim tituloAcoes As New Label With {
+    .Text = "AÇÕES",
+    .ForeColor = Tema.Texto,
+    .Font = New Font(
+        "Segoe UI",
+        9.0F,
+        FontStyle.Bold),
+    .Width = largura,
+    .Height = 28,
+    .Margin = New Padding(
+        0,
+        12,
+        0,
+        2),
+    .TextAlign =
+        ContentAlignment.MiddleLeft
+}
+
+        painel.Controls.Add(
+    tituloAcoes)
+
+        Dim botaoDuplicar As New Button With {
+    .Text = "Duplicar objeto  (Ctrl+D)",
+    .Width = largura,
+    .Height = 36,
+    .Margin = New Padding(
+        0,
+        3,
+        0,
+        3),
+    .FlatStyle = FlatStyle.Flat,
+    .BackColor = Tema.Painel,
+    .ForeColor = Tema.Texto,
+    .Cursor = Cursors.Hand
+}
+
+        botaoDuplicar.FlatAppearance.BorderColor =
+    Tema.Borda
+
+        AddHandler botaoDuplicar.Click,
+    Sub(sender, e)
+
+        CampoCanvas.DuplicarSelecionado()
+        CampoCanvas.Focus()
+
+    End Sub
+
+        painel.Controls.Add(
+    botaoDuplicar)
+
+        Dim botaoFrente As New Button With {
+    .Text = "Trazer para frente",
+    .Width = largura,
+    .Height = 36,
+    .Margin = New Padding(
+        0,
+        3,
+        0,
+        3),
+    .FlatStyle = FlatStyle.Flat,
+    .BackColor = Tema.Painel,
+    .ForeColor = Tema.Texto,
+    .Cursor = Cursors.Hand
+}
+
+        botaoFrente.FlatAppearance.BorderColor =
+    Tema.Borda
+
+        AddHandler botaoFrente.Click,
+    Sub(sender, e)
+
+        CampoCanvas.TrazerParaFrente()
+        CampoCanvas.Focus()
+
+    End Sub
+
+        painel.Controls.Add(
+    botaoFrente)
+
+        Dim botaoTras As New Button With {
+    .Text = "Enviar para trás",
+    .Width = largura,
+    .Height = 36,
+    .Margin = New Padding(
+        0,
+        3,
+        0,
+        3),
+    .FlatStyle = FlatStyle.Flat,
+    .BackColor = Tema.Painel,
+    .ForeColor = Tema.Texto,
+    .Cursor = Cursors.Hand
+}
+
+        botaoTras.FlatAppearance.BorderColor =
+    Tema.Borda
+
+        AddHandler botaoTras.Click,
+    Sub(sender, e)
+
+        CampoCanvas.EnviarParaTras()
+        CampoCanvas.Focus()
+
+    End Sub
+
+        painel.Controls.Add(
+    botaoTras)
 
         Dim botaoExcluir As New Button With {
             .Text = "Excluir objeto",
@@ -1122,11 +1242,76 @@ Public Class FrmPrincipal
 
         End If
 
-        Dim tecla As Keys =
-        keyData And Keys.KeyCode
+        Dim tecla As Keys = keyData And Keys.KeyCode
 
-        Dim modificadores As Keys =
-        keyData And Keys.Modifiers
+        Dim modificadores As Keys = keyData And Keys.Modifiers
+
+        If modificadores = (Keys.Control Or Keys.Shift) AndAlso tecla = Keys.S Then
+
+            SalvarExercicio(
+        True)
+
+            Return True
+
+        End If
+
+        If modificadores = Keys.Control AndAlso
+   tecla = Keys.S Then
+
+            SalvarExercicio()
+
+            Return True
+
+        End If
+
+        If modificadores = Keys.Control AndAlso
+   tecla = Keys.O Then
+
+            AbrirExercicio()
+
+            Return True
+
+        End If
+
+        If modificadores = Keys.Control AndAlso
+   tecla = Keys.N Then
+
+            NovoExercicio_Click(
+        Me,
+        EventArgs.Empty)
+
+            Return True
+
+        End If
+
+        If modificadores = Keys.Control AndAlso
+   tecla = Keys.D Then
+
+            CampoCanvas.DuplicarSelecionado()
+
+            Return True
+
+        End If
+
+        If modificadores =
+   (Keys.Control Or Keys.Shift) AndAlso
+   tecla = Keys.Up Then
+
+            CampoCanvas.TrazerParaFrente()
+
+            Return True
+
+        End If
+
+        If modificadores =
+   (Keys.Control Or Keys.Shift) AndAlso
+   tecla = Keys.Down Then
+
+            CampoCanvas.EnviarParaTras()
+
+            Return True
+
+        End If
 
         If modificadores = Keys.Control AndAlso
        tecla = Keys.Z Then
@@ -1161,5 +1346,268 @@ Public Class FrmPrincipal
         keyData)
 
     End Function
+
+    Private Sub CriarBarraArquivo()
+
+        If PnlSuperior.Controls.ContainsKey(
+            "PnlArquivoDinamico") Then
+
+            PnlSuperior.Controls.RemoveByKey(
+                "PnlArquivoDinamico")
+
+        End If
+
+        Dim painelArquivo As New FlowLayoutPanel With {
+            .Name = "PnlArquivoDinamico",
+            .Dock = DockStyle.Right,
+            .Width = 300,
+            .FlowDirection = FlowDirection.LeftToRight,
+            .WrapContents = False,
+            .Padding = New Padding(5),
+            .BackColor = Tema.CorPrimaria
+        }
+
+        painelArquivo.Controls.Add(
+            CriarBotaoArquivo(
+                "Novo",
+                AddressOf NovoExercicio_Click))
+
+        painelArquivo.Controls.Add(
+            CriarBotaoArquivo(
+                "Abrir",
+                AddressOf AbrirExercicio_Click))
+
+        painelArquivo.Controls.Add(
+            CriarBotaoArquivo(
+                "Salvar",
+                AddressOf SalvarExercicio_Click))
+
+        PnlSuperior.Controls.Add(
+            painelArquivo)
+
+        painelArquivo.BringToFront()
+
+    End Sub
+
+    Private Function CriarBotaoArquivo(
+        texto As String,
+        acao As EventHandler) As Button
+
+        Dim botao As New Button With {
+            .Text = texto,
+            .Width = 88,
+            .Height = 34,
+            .Margin = New Padding(3),
+            .FlatStyle = FlatStyle.Flat,
+            .BackColor = Tema.Painel,
+            .ForeColor = Color.White,
+            .Cursor = Cursors.Hand
+        }
+
+        botao.FlatAppearance.BorderColor =
+            Color.White
+
+        AddHandler botao.Click,
+            acao
+
+        Return botao
+
+    End Function
+
+    Private Sub NovoExercicio_Click(
+    sender As Object,
+    e As EventArgs)
+
+        Dim resposta As DialogResult =
+            MessageBox.Show(
+                "Deseja iniciar um novo exercício?" &
+                Environment.NewLine &
+                "As alterações não salvas serão perdidas.",
+                "Novo exercício",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question)
+
+        If resposta <> DialogResult.Yes Then
+            Exit Sub
+        End If
+
+        CampoCanvas.NovoExercicio()
+
+        _caminhoArquivoAtual =
+            String.Empty
+
+        _nomeExercicioAtual =
+            "Novo exercício"
+
+        AtualizarTituloJanela()
+
+        CampoCanvas.Focus()
+
+    End Sub
+
+    Private Sub AbrirExercicio_Click(
+        sender As Object,
+        e As EventArgs)
+
+        AbrirExercicio()
+
+    End Sub
+
+    Private Sub SalvarExercicio_Click(
+        sender As Object,
+        e As EventArgs)
+
+        SalvarExercicio()
+
+    End Sub
+
+    Private Sub AbrirExercicio()
+
+        Using dialogo As New OpenFileDialog()
+
+            dialogo.Title =
+                "Abrir exercício tático"
+
+            dialogo.Filter =
+                "Exercício TacticalStudio (*.tactical)|*.tactical|" &
+                "Arquivo JSON (*.json)|*.json|" &
+                "Todos os arquivos (*.*)|*.*"
+
+            dialogo.Multiselect =
+                False
+
+            If dialogo.ShowDialog() <>
+               DialogResult.OK Then
+
+                Exit Sub
+
+            End If
+
+            Try
+
+                Dim conteudoJson As String =
+                    File.ReadAllText(
+                        dialogo.FileName,
+                        Encoding.UTF8)
+
+                CampoCanvas.ImportarExercicioJson(
+                    conteudoJson)
+
+                _caminhoArquivoAtual =
+                    dialogo.FileName
+
+                _nomeExercicioAtual =
+                    Path.GetFileNameWithoutExtension(
+                        dialogo.FileName)
+
+                AtualizarTituloJanela()
+
+                CampoCanvas.Focus()
+
+            Catch ex As Exception
+
+                MessageBox.Show(
+                    "Não foi possível abrir o exercício." &
+                    Environment.NewLine &
+                    Environment.NewLine &
+                    ex.Message,
+                    "Erro ao abrir",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error)
+
+            End Try
+
+        End Using
+
+    End Sub
+
+    Private Sub SalvarExercicio(
+    Optional salvarComo As Boolean = False)
+
+        Dim caminhoDestino As String =
+            _caminhoArquivoAtual
+
+        If salvarComo OrElse
+           String.IsNullOrWhiteSpace(
+               caminhoDestino) Then
+
+            Using dialogo As New SaveFileDialog()
+
+                dialogo.Title =
+                    "Salvar exercício tático"
+
+                dialogo.Filter =
+                    "Exercício TacticalStudio (*.tactical)|*.tactical|" &
+                    "Arquivo JSON (*.json)|*.json"
+
+                dialogo.DefaultExt =
+                    "tactical"
+
+                dialogo.AddExtension =
+                    True
+
+                dialogo.FileName =
+                    _nomeExercicioAtual &
+                    ".tactical"
+
+                If dialogo.ShowDialog() <>
+                   DialogResult.OK Then
+
+                    Exit Sub
+
+                End If
+
+                caminhoDestino =
+                    dialogo.FileName
+
+            End Using
+
+        End If
+
+        Try
+
+            Dim nomeExercicio As String =
+                Path.GetFileNameWithoutExtension(
+                    caminhoDestino)
+
+            Dim conteudoJson As String =
+                CampoCanvas.ExportarExercicioJson(
+                    nomeExercicio)
+
+            File.WriteAllText(
+                caminhoDestino,
+                conteudoJson,
+                New UTF8Encoding(False))
+
+            _caminhoArquivoAtual =
+                caminhoDestino
+
+            _nomeExercicioAtual =
+                nomeExercicio
+
+            AtualizarTituloJanela()
+
+        Catch ex As Exception
+
+            MessageBox.Show(
+                "Não foi possível salvar o exercício." &
+                Environment.NewLine &
+                Environment.NewLine &
+                ex.Message,
+                "Erro ao salvar",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error)
+
+        End Try
+
+    End Sub
+
+    Private Sub AtualizarTituloJanela()
+
+        Text =
+            "TacticalStudio - " &
+            _nomeExercicioAtual
+
+    End Sub
 
 End Class

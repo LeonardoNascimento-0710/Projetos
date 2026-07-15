@@ -31,7 +31,7 @@ Partial Class FrmPrincipal
         ' 
         ' PnlSuperior
         ' 
-        PnlSuperior.BackColor = Color.Red
+        PnlSuperior.BackColor = Color.FromArgb(CByte(28), CByte(28), CByte(28))
         PnlSuperior.Dock = DockStyle.Top
         PnlSuperior.Location = New Point(0, 0)
         PnlSuperior.Name = "PnlSuperior"
@@ -40,7 +40,6 @@ Partial Class FrmPrincipal
         ' 
         ' PnlInferior
         ' 
-        PnlInferior.BackColor = Color.Yellow
         PnlInferior.Dock = DockStyle.Bottom
         PnlInferior.Location = New Point(0, 631)
         PnlInferior.Name = "PnlInferior"
@@ -49,7 +48,6 @@ Partial Class FrmPrincipal
         ' 
         ' PnlEsquerdo
         ' 
-        PnlEsquerdo.BackColor = Color.Blue
         PnlEsquerdo.Dock = DockStyle.Left
         PnlEsquerdo.Location = New Point(0, 70)
         PnlEsquerdo.Name = "PnlEsquerdo"
@@ -58,7 +56,6 @@ Partial Class FrmPrincipal
         ' 
         ' PnlDireito
         ' 
-        PnlDireito.BackColor = Color.Green
         PnlDireito.Dock = DockStyle.Right
         PnlDireito.Location = New Point(864, 70)
         PnlDireito.Name = "PnlDireito"
