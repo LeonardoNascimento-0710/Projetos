@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class InformacoesAplicacao
+Partial Class FrmFormacoes
     Inherits System.Windows.Forms.Form
 
     'Descartar substituições de formulário para limpar a lista de componentes.
@@ -25,6 +25,6 @@ Partial Class InformacoesAplicacao
         components = New System.ComponentModel.Container
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(800, 450)
-        Me.Text = "InformacoesAplicacao"
+        Me.Text = "FrmFormacoes"
     End Sub
 End Class

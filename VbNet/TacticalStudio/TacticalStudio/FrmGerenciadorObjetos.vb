@@ -35,6 +35,8 @@ Public Class FrmGerenciadorObjetos
 
     Public Sub New(campo As CampoTatico)
 
+        InitializeComponent()
+
         If campo Is Nothing Then
 
             Throw New ArgumentNullException(

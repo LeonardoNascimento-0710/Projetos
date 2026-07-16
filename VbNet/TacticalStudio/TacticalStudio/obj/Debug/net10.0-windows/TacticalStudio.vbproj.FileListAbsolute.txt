@@ -58,3 +58,20 @@ C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\T
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio\obj\Debug\net10.0-windows\TacticalStudio.pdb
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio\obj\Debug\net10.0-windows\TacticalStudio.genruntimeconfig.cache
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio\obj\Debug\net10.0-windows\ref\TacticalStudio.dll
+C:\Users\Leo_f\OneDrive\Área de Trabalho\GitHub\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Leo_f\OneDrive\Área de Trabalho\GitHub\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\Leo_f\OneDrive\Área de Trabalho\GitHub\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\PdfSharp-gdi.dll
+C:\Users\Leo_f\OneDrive\Área de Trabalho\GitHub\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\PdfSharp.BarCodes-gdi.dll
+C:\Users\Leo_f\OneDrive\Área de Trabalho\GitHub\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\PdfSharp.Charting-gdi.dll
+C:\Users\Leo_f\OneDrive\Área de Trabalho\GitHub\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\PdfSharp.Cryptography.dll
+C:\Users\Leo_f\OneDrive\Área de Trabalho\GitHub\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\PdfSharp.Quality-gdi.dll
+C:\Users\Leo_f\OneDrive\Área de Trabalho\GitHub\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\PdfSharp.Shared.dll
+C:\Users\Leo_f\OneDrive\Área de Trabalho\GitHub\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\PdfSharp.Snippets-gdi.dll
+C:\Users\Leo_f\OneDrive\Área de Trabalho\GitHub\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\PdfSharp.System.dll
+C:\Users\Leo_f\OneDrive\Área de Trabalho\GitHub\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\PdfSharp.WPFonts.dll
+C:\Users\Leo_f\OneDrive\Área de Trabalho\GitHub\Projetos\VbNet\TacticalStudio\TacticalStudio\obj\Debug\net10.0-windows\TacticalStudio.FrmConfiguracoesExercicio.resources
+C:\Users\Leo_f\OneDrive\Área de Trabalho\GitHub\Projetos\VbNet\TacticalStudio\TacticalStudio\obj\Debug\net10.0-windows\TacticalStudio.FrmFormacoes.resources
+C:\Users\Leo_f\OneDrive\Área de Trabalho\GitHub\Projetos\VbNet\TacticalStudio\TacticalStudio\obj\Debug\net10.0-windows\TacticalStudio.FrmGerenciadorObjetos.resources
+C:\Users\Leo_f\OneDrive\Área de Trabalho\GitHub\Projetos\VbNet\TacticalStudio\TacticalStudio\obj\Debug\net10.0-windows\TacticalStudio.FrmPreferencias.resources
+C:\Users\Leo_f\OneDrive\Área de Trabalho\GitHub\Projetos\VbNet\TacticalStudio\TacticalStudio\obj\Debug\net10.0-windows\TacticalStudio.FrmSobre.resources
+C:\Users\Leo_f\OneDrive\Área de Trabalho\GitHub\Projetos\VbNet\TacticalStudio\TacticalStudio\obj\Debug\net10.0-windows\TacticalStudio.InformacoesAplicacao.resources

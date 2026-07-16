@@ -1584,3 +1584,87 @@ Próxima etapa sugerida:
 - Criar importação e exportação de modelos;
 - Adicionar favoritos;
 - Permitir aplicar formações prontas ao campo.
+
+======================================================================
+40. ETAPA 32 - FORMAÇÕES PRONTAS E MODELOS PERSONALIZADOS
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.32.0
+
+Arquivos criados:
+- TacticalStudio.Core\Classes\PosicaoFormacao.vb
+- TacticalStudio.Core\Classes\ModeloFormacao.vb
+- TacticalStudio.Core\Classes\Formacoes.vb
+- FrmFormacoes.vb
+- RepositorioFormacoesPersonalizadas.vb
+
+Arquivos alterados:
+- Controles\CampoTatico.vb
+- FrmPrincipal.vb
+- InformacoesAplicacao.vb
+
+Alterações realizadas:
+- Criada a estrutura de posições e modelos de formação;
+- Criado catálogo de formações padrão;
+- Adicionadas as formações 4-3-3, 4-4-2, 3-5-2 e 4-2-3-1;
+- Criada janela para seleção e visualização das formações;
+- Adicionada descrição e lista detalhada de posições;
+- Criado botão Formações na barra principal;
+- Adicionado atalho Ctrl+Shift+F;
+- Implementada aplicação automática de formações no campo;
+- Adicionada opção para substituir ou manter jogadores existentes;
+- Formação aplicada como uma única ação no histórico;
+- Ctrl+Z remove ou restaura a formação inteira;
+- Implementada seleção automática dos jogadores criados;
+- Criado repositório JSON para formações personalizadas;
+- Arquivo salvo em %LocalAppData%\TacticalStudio\formacoes-personalizadas.json;
+- Implementado salvamento de todos os jogadores do campo;
+- Implementado salvamento somente dos jogadores selecionados;
+- Preservados número, nome e posição dos jogadores;
+- Implementada exclusão de formações personalizadas;
+- Formações padrão protegidas contra exclusão;
+- Implementada persistência entre execuções do sistema;
+- Corrigida a orientação das formações para o campo horizontal;
+- Implementada conversão entre coordenadas verticais do modelo e horizontais do campo;
+- Corrigido o salvamento de formações personalizadas na orientação correta;
+- Atualizada a versão para 0.32.0.
+
+Formações padrão disponíveis:
+- 4-3-3;
+- 4-4-2;
+- 3-5-2;
+- 4-2-3-1.
+
+Comportamento:
+- O goleiro é posicionado próximo ao gol esquerdo;
+- A defesa é distribuída no setor defensivo;
+- O meio-campo é organizado na região central;
+- O ataque é posicionado em direção ao gol direito;
+- Objetos diferentes de jogadores são preservados ao substituir a formação;
+- É possível adicionar uma formação sem remover os jogadores existentes;
+- Formações personalizadas podem ter qualquer quantidade de jogadores;
+- Nomes e descrições personalizados são validados antes do salvamento.
+
+Correções:
+- Resolvido conflito de classe duplicada no catálogo de formações;
+- Classe do catálogo consolidada como Formacoes;
+- Corrigido aviso de serialização da propriedade FormacaoSelecionada;
+- Propriedade removida da serialização do Designer;
+- Corrigida a orientação vertical das formações;
+- Corrigida a conversão inversa ao salvar modelos personalizados;
+- Mantida compatibilidade com histórico, seleção e arquivos do exercício.
+
+Resultado:
+- O usuário pode aplicar formações prontas em poucos cliques;
+- É possível criar uma formação diretamente a partir do campo;
+- Modelos personalizados permanecem disponíveis após reiniciar o sistema;
+- A organização dos jogadores pode ser reutilizada em novos exercícios;
+- As formações respeitam corretamente a orientação horizontal do campo.
+
+Próxima etapa sugerida:
+- Criar biblioteca de exercícios;
+- Implementar categorias e favoritos;
+- Adicionar miniaturas de pré-visualização;
+- Permitir importar e exportar modelos;
+- Criar pesquisa e filtros na biblioteca.

@@ -1,14 +1,15 @@
 ﻿Imports System.Collections.Generic
-Imports System.IO
-Imports System.Text.Json
-Imports System.Text
 Imports System.Drawing.Imaging
 Imports System.Drawing.Printing
+Imports System.IO
+Imports System.Text
+Imports System.Text.Json
 Imports PdfSharp
 Imports PdfSharp.Drawing
 Imports PdfSharp.Pdf
-Imports TacticalStudio.Core.Enums
+Imports TacticalStudio.Core
 Imports TacticalStudio.Core.Classes
+Imports TacticalStudio.Core.Enums
 
 Public Class FrmPrincipal
 
@@ -3168,6 +3169,14 @@ Public Class FrmPrincipal
 
         Dim modificadores As Keys = keyData And Keys.Modifiers
 
+        If modificadores = (Keys.Control Or Keys.Shift) AndAlso tecla = Keys.F Then
+
+            AbrirFormacoes()
+
+            Return True
+
+        End If
+
         If modificadores = Keys.Control AndAlso tecla = Keys.E Then
 
             ExportarImagemCampo()
@@ -3477,6 +3486,8 @@ Public Class FrmPrincipal
 
         painelArquivo.Controls.Add(CriarBotaoArquivo("Dados", AddressOf ConfiguracoesExercicio_Click))
 
+        painelArquivo.Controls.Add(CriarBotaoArquivo("Formações", AddressOf Formacoes_Click))
+
         painelArquivo.Controls.Add(CriarBotaoArquivo("PDF", AddressOf ExportarPdf_Click))
 
         painelArquivo.Controls.Add(CriarBotaoArquivo("Imprimir", AddressOf ImprimirExercicio_Click))
@@ -3559,6 +3570,146 @@ Public Class FrmPrincipal
         CampoCanvas.Focus()
 
     End Sub
+
+#End Region
+
+#Region "Formações táticas"
+
+    Private Sub Formacoes_Click(
+    sender As Object,
+    e As EventArgs)
+
+        AbrirFormacoes()
+
+    End Sub
+
+    Private Sub AbrirFormacoes()
+
+        If CampoCanvas Is Nothing Then
+            Exit Sub
+        End If
+
+        Using formulario As New FrmFormacoes(CampoCanvas)
+
+            Dim resultado As DialogResult =
+            formulario.ShowDialog(Me)
+
+            If resultado <> DialogResult.OK Then
+
+                CampoCanvas.Focus()
+
+                Exit Sub
+
+            End If
+
+            Dim formacao As ModeloFormacao =
+            formulario.FormacaoSelecionada
+
+            If formacao Is Nothing Then
+
+                MessageBox.Show(
+                "Nenhuma formação foi selecionada.",
+                "Formações táticas",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information)
+
+                CampoCanvas.Focus()
+
+                Exit Sub
+
+            End If
+
+            Dim possuiJogadores As Boolean =
+            CampoPossuiJogadores()
+
+            Dim substituirJogadores As Boolean =
+            True
+
+            If possuiJogadores Then
+
+                Dim resposta As DialogResult =
+                MessageBox.Show(
+                    "O campo já possui jogadores." &
+                    Environment.NewLine &
+                    Environment.NewLine &
+                    "Sim: substituir os jogadores existentes." &
+                    Environment.NewLine &
+                    "Não: manter os jogadores e adicionar a formação." &
+                    Environment.NewLine &
+                    "Cancelar: não aplicar a formação.",
+                    "Aplicar formação " & formacao.Nome,
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question)
+
+                If resposta = DialogResult.Cancel Then
+
+                    CampoCanvas.Focus()
+
+                    Exit Sub
+
+                End If
+
+                substituirJogadores =
+                resposta = DialogResult.Yes
+
+            End If
+
+            Dim jogadoresCriados As IReadOnlyList(Of Jogador) =
+            CampoCanvas.AplicarFormacao(
+                formacao,
+                substituirJogadores)
+
+            If jogadoresCriados Is Nothing OrElse
+           jogadoresCriados.Count = 0 Then
+
+                MessageBox.Show(
+                "Não foi possível adicionar os jogadores da formação.",
+                "Formações táticas",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning)
+
+                CampoCanvas.Focus()
+
+                Exit Sub
+
+            End If
+
+            MessageBox.Show(
+            "Formação " &
+            formacao.Nome &
+            " aplicada com sucesso." &
+            Environment.NewLine &
+            Environment.NewLine &
+            jogadoresCriados.Count.ToString() &
+            " jogadores foram posicionados.",
+            "Formações táticas",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information)
+
+            CampoCanvas.Focus()
+
+        End Using
+
+    End Sub
+
+    Private Function CampoPossuiJogadores() As Boolean
+
+        If CampoCanvas Is Nothing Then
+            Return False
+        End If
+
+        For Each objeto As ObjetoCampo
+        In CampoCanvas.ObjetosAtuais
+
+            If TypeOf objeto Is Jogador Then
+                Return True
+            End If
+
+        Next
+
+        Return False
+
+    End Function
 
 #End Region
 

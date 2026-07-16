@@ -1,10 +1,11 @@
 ﻿Imports System.ComponentModel
 Imports System.Drawing
 Imports System.Drawing.Drawing2D
+Imports System.Text.Json
 Imports System.Windows.Forms
+Imports TacticalStudio.Core
 Imports TacticalStudio.Core.Classes
 Imports TacticalStudio.Core.Enums
-Imports System.Text.Json
 
 Public Class CampoTatico
     Inherits UserControl
@@ -496,9 +497,214 @@ Public Class CampoTatico
 
     End Function
 
-    Public Function AdicionarBola(
-        xPercentual As Double,
-        yPercentual As Double) As Bola
+    Public Function AplicarFormacao(formacao As ModeloFormacao, Optional substituirJogadoresExistentes As Boolean = True) As IReadOnlyList(Of Jogador)
+
+        Dim jogadoresCriados As New List(Of Jogador)()
+
+        If formacao Is Nothing OrElse
+       formacao.Posicoes Is Nothing OrElse
+       formacao.Posicoes.Count = 0 Then
+
+            Return jogadoresCriados.AsReadOnly()
+
+        End If
+
+        FerramentaAtual =
+        FerramentaCampo.Selecionar
+
+        DeselecionarTodos()
+
+        If substituirJogadoresExistentes Then
+
+            For indice As Integer =
+            _objetos.Count - 1 To 0 Step -1
+
+                If TypeOf _objetos(indice) Is Jogador Then
+
+                    _objetos.RemoveAt(
+                    indice)
+
+                End If
+
+            Next
+
+        End If
+
+        Dim objetosSelecionar As New List(Of ObjetoCampo)()
+
+        For Each posicao As PosicaoFormacao
+        In formacao.Posicoes
+
+            If posicao Is Nothing Then
+                Continue For
+            End If
+
+            Dim nomeJogador As String =
+            If(
+                String.IsNullOrWhiteSpace(
+                    posicao.Nome),
+                "Jogador",
+                posicao.Nome.Trim())
+
+            Dim xCampo As Single = 100.0F - posicao.YPercentual
+
+            Dim yCampo As Single = posicao.XPercentual
+
+            Dim jogador As Jogador = AdicionarJogador(posicao.Numero, nomeJogador, xCampo, yCampo)
+
+            jogadoresCriados.Add(
+            jogador)
+
+            objetosSelecionar.Add(
+            jogador)
+
+        Next
+
+        If jogadoresCriados.Count = 0 Then
+
+            Return jogadoresCriados.AsReadOnly()
+
+        End If
+
+        SelecionarObjetosPelaLista(
+        objetosSelecionar)
+
+        RegistrarEstadoHistorico()
+
+        RaiseEvent ObjetosAlterados()
+
+        Invalidate()
+
+        Return jogadoresCriados.AsReadOnly()
+
+    End Function
+
+    Public Function CriarModeloFormacaoAtual(nome As String, descricao As String, Optional usarSomenteSelecionados As Boolean = False) As ModeloFormacao
+
+        Dim nomeNormalizado As String =
+        If(
+            nome,
+            String.Empty).
+        Trim()
+
+        If String.IsNullOrWhiteSpace(
+        nomeNormalizado) Then
+
+            nomeNormalizado =
+            "Formação personalizada"
+
+        End If
+
+        If nomeNormalizado.Length > 80 Then
+
+            nomeNormalizado =
+            nomeNormalizado.Substring(
+                0,
+                80)
+
+        End If
+
+        Dim descricaoNormalizada As String =
+        If(
+            descricao,
+            String.Empty).
+        Trim()
+
+        If descricaoNormalizada.Length > 250 Then
+
+            descricaoNormalizada =
+            descricaoNormalizada.Substring(
+                0,
+                250)
+
+        End If
+
+        Dim modelo As New ModeloFormacao With {
+        .Id =
+            "personalizada-" &
+            System.Guid.NewGuid().
+                ToString("N"),
+        .Nome =
+            nomeNormalizado,
+        .Descricao =
+            descricaoNormalizada
+    }
+
+        Dim objetosFonte As IEnumerable(Of ObjetoCampo)
+
+        If usarSomenteSelecionados Then
+
+            objetosFonte =
+            _objetosSelecionados
+
+        Else
+
+            objetosFonte =
+            _objetos
+
+        End If
+
+        For Each objeto As ObjetoCampo
+        In objetosFonte
+
+            If Not TypeOf objeto Is Jogador Then
+                Continue For
+            End If
+
+            Dim jogador As Jogador =
+            DirectCast(
+                objeto,
+                Jogador)
+
+            Dim nomePosicao As String =
+            If(
+                jogador.Nome,
+                String.Empty).
+            Trim()
+
+            If String.IsNullOrWhiteSpace(
+            nomePosicao) Then
+
+                nomePosicao =
+                "Jogador " &
+                jogador.Numero.ToString()
+
+            End If
+
+            If nomePosicao.Length > 80 Then
+
+                nomePosicao =
+                nomePosicao.Substring(
+                    0,
+                    80)
+
+            End If
+
+            modelo.Posicoes.Add(
+    New PosicaoFormacao With {
+        .Numero =
+            jogador.Numero,
+        .Nome =
+            nomePosicao,
+        .XPercentual =
+            CSng(
+                jogador.Posicao.Y),
+        .YPercentual =
+            100.0F -
+            CSng(
+                jogador.Posicao.X)
+    })
+
+        Next
+
+        If modelo.Posicoes.Count = 0 Then
+            Return Nothing
+        End If
+
+        Return modelo
+
+    End Function
+    Public Function AdicionarBola(xPercentual As Double, yPercentual As Double) As Bola
 
         Dim bola As New Bola()
 

@@ -2,10 +2,8 @@
 
     Private Sub New()
 
-        InitializeComponent()
-
     End Sub
 
-    Public Const Versao As String = "0.31.0"
+    Public Const Versao As String = "0.32.0"
 
 End Class
