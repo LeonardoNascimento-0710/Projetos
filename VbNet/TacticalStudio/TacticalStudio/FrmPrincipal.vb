@@ -1477,6 +1477,31 @@ Public Class FrmPrincipal
             Exit Sub
         End If
 
+        Dim respostaCabecalho As DialogResult =
+        MessageBox.Show(
+            "Deseja incluir os dados do exercício na imagem?" &
+            Environment.NewLine &
+            Environment.NewLine &
+            "Sim: exporta com cabeçalho." &
+            Environment.NewLine &
+            "Não: exporta somente o campo.",
+            "Exportar imagem",
+            MessageBoxButtons.YesNoCancel,
+            MessageBoxIcon.Question)
+
+        If respostaCabecalho =
+       DialogResult.Cancel Then
+
+            CampoCanvas.Focus()
+
+            Exit Sub
+
+        End If
+
+        Dim incluirCabecalho As Boolean =
+        respostaCabecalho =
+        DialogResult.Yes
+
         Using dialogo As New SaveFileDialog()
 
             dialogo.Title =
@@ -1501,6 +1526,8 @@ Public Class FrmPrincipal
             If dialogo.ShowDialog() <>
            DialogResult.OK Then
 
+                CampoCanvas.Focus()
+
                 Exit Sub
 
             End If
@@ -1509,7 +1536,13 @@ Public Class FrmPrincipal
 
                 Using imagem As Bitmap =
                 CampoCanvas.GerarImagemCampo(
-                    2560)
+                    2560,
+                    incluirCabecalho,
+                    _nomeExercicioAtual,
+                    _categoriaExercicioAtual,
+                    _duracaoExercicioAtual,
+                    _descricaoExercicioAtual,
+                    _observacoesExercicioAtual)
 
                     imagem.Save(
                     dialogo.FileName,
@@ -1526,8 +1559,6 @@ Public Class FrmPrincipal
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information)
 
-                CampoCanvas.Focus()
-
             Catch ex As Exception
 
                 MessageBox.Show(
@@ -1538,6 +1569,10 @@ Public Class FrmPrincipal
                 "Erro na exportação",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error)
+
+            Finally
+
+                CampoCanvas.Focus()
 
             End Try
 

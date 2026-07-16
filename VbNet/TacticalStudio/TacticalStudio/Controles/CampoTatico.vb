@@ -689,6 +689,26 @@ Public Class CampoTatico
     Public Function GerarImagemCampo(
     Optional larguraImagem As Integer = 2560) As Bitmap
 
+        Return GerarImagemCampo(
+        larguraImagem,
+        False,
+        String.Empty,
+        String.Empty,
+        0,
+        String.Empty,
+        String.Empty)
+
+    End Function
+
+    Public Function GerarImagemCampo(
+    larguraImagem As Integer,
+    incluirCabecalho As Boolean,
+    nomeExercicio As String,
+    categoria As String,
+    duracaoMinutos As Integer,
+    descricao As String,
+    observacoes As String) As Bitmap
+
         If larguraImagem < 800 Then
             larguraImagem = 800
         End If
@@ -708,24 +728,45 @@ Public Class CampoTatico
 
         End If
 
-        Const margemImagem As Integer = 24
+        Dim margemImagem As Integer =
+        CInt(
+            Math.Max(
+                24.0,
+                larguraImagem * 0.0125))
 
         Dim larguraUtil As Integer =
         larguraImagem -
         margemImagem * 2
 
-        Dim escala As Single =
-        larguraUtil /
-        campoAtual.Width
+        Dim escalaCampo As Single =
+        CSng(
+            larguraUtil /
+            campoAtual.Width)
 
-        Dim alturaUtil As Integer =
+        Dim alturaCampo As Integer =
         CInt(
             Math.Ceiling(
                 campoAtual.Height *
-                escala))
+                escalaCampo))
+
+        Dim alturaCabecalho As Integer = 0
+
+        If incluirCabecalho Then
+
+            alturaCabecalho =
+            CalcularAlturaCabecalho(
+                larguraImagem,
+                nomeExercicio,
+                categoria,
+                duracaoMinutos,
+                descricao,
+                observacoes)
+
+        End If
 
         Dim alturaImagem As Integer =
-        alturaUtil +
+        alturaCabecalho +
+        alturaCampo +
         margemImagem * 2
 
         Dim imagem As New Bitmap(
@@ -738,8 +779,6 @@ Public Class CampoTatico
 
         Try
 
-            'Impede que alças e bordas de seleção
-            'apareçam na imagem exportada.
             _objetoSelecionado =
             Nothing
 
@@ -748,9 +787,9 @@ Public Class CampoTatico
 
                 g.Clear(
                 Color.FromArgb(
-                    63,
-                    130,
-                    58))
+                    28,
+                    28,
+                    28))
 
                 g.SmoothingMode =
                 SmoothingMode.AntiAlias
@@ -767,21 +806,36 @@ Public Class CampoTatico
                 g.TextRenderingHint =
                 System.Drawing.Text.TextRenderingHint.AntiAliasGridFit
 
+                If incluirCabecalho Then
+
+                    DesenharCabecalhoExportacao(
+                    g,
+                    larguraImagem,
+                    alturaCabecalho,
+                    nomeExercicio,
+                    categoria,
+                    duracaoMinutos,
+                    descricao,
+                    observacoes)
+
+                End If
+
                 Dim deslocamentoX As Single =
                 margemImagem -
                 campoAtual.Left *
-                escala
+                escalaCampo
 
                 Dim deslocamentoY As Single =
+                alturaCabecalho +
                 margemImagem -
                 campoAtual.Top *
-                escala
+                escalaCampo
 
                 Using matriz As New Matrix(
-                escala,
+                escalaCampo,
                 0.0F,
                 0.0F,
-                escala,
+                escalaCampo,
                 deslocamentoX,
                 deslocamentoY)
 
@@ -820,6 +874,448 @@ Public Class CampoTatico
         Return imagem
 
     End Function
+
+    Private Function CalcularAlturaCabecalho(
+    larguraImagem As Integer,
+    nomeExercicio As String,
+    categoria As String,
+    duracaoMinutos As Integer,
+    descricao As String,
+    observacoes As String) As Integer
+
+        Dim fatorEscala As Single =
+        CSng(
+            larguraImagem /
+            2560.0)
+
+        Dim margem As Single =
+        Math.Max(
+            20.0F,
+            48.0F * fatorEscala)
+
+        Dim espacamento As Single =
+        Math.Max(
+            8.0F,
+            18.0F * fatorEscala)
+
+        Dim larguraTexto As Single =
+        larguraImagem -
+        margem * 2.0F
+
+        Dim tamanhoTitulo As Single =
+        Math.Max(
+            18.0F,
+            46.0F * fatorEscala)
+
+        Dim tamanhoInformacao As Single =
+        Math.Max(
+            11.0F,
+            27.0F * fatorEscala)
+
+        Dim tamanhoCorpo As Single =
+        Math.Max(
+            10.0F,
+            23.0F * fatorEscala)
+
+        Dim nomeSeguro As String =
+        If(
+            String.IsNullOrWhiteSpace(
+                nomeExercicio),
+            "Novo exercício",
+            nomeExercicio.Trim())
+
+        Dim linhaInformacoes As String =
+        MontarLinhaInformacoesExportacao(
+            categoria,
+            duracaoMinutos)
+
+        Dim textoDescricao As String =
+        String.Empty
+
+        If Not String.IsNullOrWhiteSpace(
+        descricao) Then
+
+            textoDescricao =
+            "Descrição: " &
+            descricao.Trim()
+
+        End If
+
+        Dim textoObservacoes As String =
+        String.Empty
+
+        If Not String.IsNullOrWhiteSpace(
+        observacoes) Then
+
+            textoObservacoes =
+            "Observações: " &
+            observacoes.Trim()
+
+        End If
+
+        Dim alturaTotal As Single =
+        margem
+
+        Using imagemMedicao As New Bitmap(
+        1,
+        1)
+
+            Using g As Graphics =
+            Graphics.FromImage(
+                imagemMedicao)
+
+                Using fonteTitulo As New Font(
+                "Segoe UI",
+                tamanhoTitulo,
+                FontStyle.Bold,
+                GraphicsUnit.Pixel)
+
+                    alturaTotal +=
+                    g.MeasureString(
+                        nomeSeguro,
+                        fonteTitulo,
+                        CInt(larguraTexto)).Height
+
+                End Using
+
+                If Not String.IsNullOrWhiteSpace(
+                linhaInformacoes) Then
+
+                    alturaTotal +=
+                    espacamento
+
+                    Using fonteInformacao As New Font(
+                    "Segoe UI",
+                    tamanhoInformacao,
+                    FontStyle.Bold,
+                    GraphicsUnit.Pixel)
+
+                        alturaTotal +=
+                        g.MeasureString(
+                            linhaInformacoes,
+                            fonteInformacao,
+                            CInt(larguraTexto)).Height
+
+                    End Using
+
+                End If
+
+                Using fonteCorpo As New Font(
+                "Segoe UI",
+                tamanhoCorpo,
+                FontStyle.Regular,
+                GraphicsUnit.Pixel)
+
+                    If Not String.IsNullOrWhiteSpace(
+                    textoDescricao) Then
+
+                        alturaTotal +=
+                        espacamento
+
+                        alturaTotal +=
+                        g.MeasureString(
+                            textoDescricao,
+                            fonteCorpo,
+                            CInt(larguraTexto)).Height
+
+                    End If
+
+                    If Not String.IsNullOrWhiteSpace(
+                    textoObservacoes) Then
+
+                        alturaTotal +=
+                        espacamento
+
+                        alturaTotal +=
+                        g.MeasureString(
+                            textoObservacoes,
+                            fonteCorpo,
+                            CInt(larguraTexto)).Height
+
+                    End If
+
+                End Using
+
+            End Using
+
+        End Using
+
+        alturaTotal +=
+        margem
+
+        Return CInt(
+        Math.Ceiling(
+            alturaTotal))
+
+    End Function
+
+    Private Function MontarLinhaInformacoesExportacao(
+    categoria As String,
+    duracaoMinutos As Integer) As String
+
+        Dim categoriaSegura As String =
+        If(
+            String.IsNullOrWhiteSpace(
+                categoria),
+            "Sem categoria",
+            categoria.Trim())
+
+        If duracaoMinutos > 0 Then
+
+            Return categoriaSegura &
+            "  •  " &
+            duracaoMinutos.ToString() &
+            " minutos"
+
+        End If
+
+        Return categoriaSegura
+
+    End Function
+
+    Private Sub DesenharCabecalhoExportacao(
+    g As Graphics,
+    larguraImagem As Integer,
+    alturaCabecalho As Integer,
+    nomeExercicio As String,
+    categoria As String,
+    duracaoMinutos As Integer,
+    descricao As String,
+    observacoes As String)
+
+        Dim fatorEscala As Single =
+        CSng(
+            larguraImagem /
+            2560.0)
+
+        Dim margem As Single =
+        Math.Max(
+            20.0F,
+            48.0F * fatorEscala)
+
+        Dim espacamento As Single =
+        Math.Max(
+            8.0F,
+            18.0F * fatorEscala)
+
+        Dim larguraTexto As Single =
+        larguraImagem -
+        margem * 2.0F
+
+        Dim tamanhoTitulo As Single =
+        Math.Max(
+            18.0F,
+            46.0F * fatorEscala)
+
+        Dim tamanhoInformacao As Single =
+        Math.Max(
+            11.0F,
+            27.0F * fatorEscala)
+
+        Dim tamanhoCorpo As Single =
+        Math.Max(
+            10.0F,
+            23.0F * fatorEscala)
+
+        Using fundo As New SolidBrush(
+        Color.FromArgb(
+            28,
+            28,
+            28))
+
+            g.FillRectangle(
+            fundo,
+            0,
+            0,
+            larguraImagem,
+            alturaCabecalho)
+
+        End Using
+
+        Dim nomeSeguro As String =
+        If(
+            String.IsNullOrWhiteSpace(
+                nomeExercicio),
+            "Novo exercício",
+            nomeExercicio.Trim())
+
+        Dim linhaInformacoes As String =
+        MontarLinhaInformacoesExportacao(
+            categoria,
+            duracaoMinutos)
+
+        Dim posicaoY As Single =
+        margem
+
+        Using pincelTitulo As New SolidBrush(
+        Color.White)
+
+            Using fonteTitulo As New Font(
+            "Segoe UI",
+            tamanhoTitulo,
+            FontStyle.Bold,
+            GraphicsUnit.Pixel)
+
+                Dim alturaTitulo As Single =
+                g.MeasureString(
+                    nomeSeguro,
+                    fonteTitulo,
+                    CInt(larguraTexto)).Height
+
+                g.DrawString(
+                nomeSeguro,
+                fonteTitulo,
+                pincelTitulo,
+                New RectangleF(
+                    margem,
+                    posicaoY,
+                    larguraTexto,
+                    alturaTitulo + 5.0F))
+
+                posicaoY +=
+                alturaTitulo
+
+            End Using
+
+        End Using
+
+        If Not String.IsNullOrWhiteSpace(
+        linhaInformacoes) Then
+
+            posicaoY +=
+            espacamento
+
+            Using pincelInformacoes As New SolidBrush(
+            Color.FromArgb(
+                220,
+                220,
+                220))
+
+                Using fonteInformacoes As New Font(
+                "Segoe UI",
+                tamanhoInformacao,
+                FontStyle.Bold,
+                GraphicsUnit.Pixel)
+
+                    Dim alturaInformacoes As Single =
+                    g.MeasureString(
+                        linhaInformacoes,
+                        fonteInformacoes,
+                        CInt(larguraTexto)).Height
+
+                    g.DrawString(
+                    linhaInformacoes,
+                    fonteInformacoes,
+                    pincelInformacoes,
+                    New RectangleF(
+                        margem,
+                        posicaoY,
+                        larguraTexto,
+                        alturaInformacoes + 5.0F))
+
+                    posicaoY +=
+                    alturaInformacoes
+
+                End Using
+
+            End Using
+
+        End If
+
+        Using pincelCorpo As New SolidBrush(
+        Color.FromArgb(
+            205,
+            205,
+            205))
+
+            Using fonteCorpo As New Font(
+            "Segoe UI",
+            tamanhoCorpo,
+            FontStyle.Regular,
+            GraphicsUnit.Pixel)
+
+                If Not String.IsNullOrWhiteSpace(
+                descricao) Then
+
+                    posicaoY +=
+                    espacamento
+
+                    Dim textoDescricao As String =
+                    "Descrição: " &
+                    descricao.Trim()
+
+                    Dim alturaDescricao As Single =
+                    g.MeasureString(
+                        textoDescricao,
+                        fonteCorpo,
+                        CInt(larguraTexto)).Height
+
+                    g.DrawString(
+                    textoDescricao,
+                    fonteCorpo,
+                    pincelCorpo,
+                    New RectangleF(
+                        margem,
+                        posicaoY,
+                        larguraTexto,
+                        alturaDescricao + 5.0F))
+
+                    posicaoY +=
+                    alturaDescricao
+
+                End If
+
+                If Not String.IsNullOrWhiteSpace(
+                observacoes) Then
+
+                    posicaoY +=
+                    espacamento
+
+                    Dim textoObservacoes As String =
+                    "Observações: " &
+                    observacoes.Trim()
+
+                    Dim alturaObservacoes As Single =
+                    g.MeasureString(
+                        textoObservacoes,
+                        fonteCorpo,
+                        CInt(larguraTexto)).Height
+
+                    g.DrawString(
+                    textoObservacoes,
+                    fonteCorpo,
+                    pincelCorpo,
+                    New RectangleF(
+                        margem,
+                        posicaoY,
+                        larguraTexto,
+                        alturaObservacoes + 5.0F))
+
+                End If
+
+            End Using
+
+        End Using
+
+        Dim alturaFaixa As Single =
+        Math.Max(
+            5.0F,
+            9.0F * fatorEscala)
+
+        Using pincelFaixa As New SolidBrush(
+        Tema.CorPrimaria)
+
+            g.FillRectangle(
+            pincelFaixa,
+            0.0F,
+            alturaCabecalho -
+            alturaFaixa,
+            larguraImagem,
+            alturaFaixa)
+
+        End Using
+
+    End Sub
 
     Protected Overrides Sub OnPaint(e As PaintEventArgs)
 
