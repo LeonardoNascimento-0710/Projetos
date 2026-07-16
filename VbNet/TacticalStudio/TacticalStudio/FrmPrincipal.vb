@@ -906,128 +906,10 @@ Public Class FrmPrincipal
 
     End Sub
 
-    Private Sub CampoCanvas_ObjetoSelecionadoAlterado(objeto As ObjetoCampo)
+    Private Sub CampoCanvas_ObjetoSelecionadoAlterado(
+    objeto As ObjetoCampo)
 
-        If CampoCanvas IsNot Nothing AndAlso
-       CampoCanvas.QuantidadeObjetosSelecionados > 1 Then
-
-            MontarPainelSelecaoMultipla(CampoCanvas.QuantidadeObjetosSelecionados)
-
-            Exit Sub
-
-        End If
-
-        MontarPainelPropriedades(
-        objeto)
-
-    End Sub
-
-    Private Sub MontarPainelSelecaoMultipla(quantidade As Integer)
-
-        PnlDireito.Controls.Clear()
-
-        Dim painel As New FlowLayoutPanel With {
-        .Dock = DockStyle.Fill,
-        .FlowDirection = FlowDirection.TopDown,
-        .WrapContents = False,
-        .AutoScroll = True,
-        .BackColor = Tema.Painel,
-        .Padding = New Padding(10)
-    }
-
-        PnlDireito.Controls.Add(
-        painel)
-
-        Dim largura As Integer =
-        Math.Max(
-            180,
-            PnlDireito.ClientSize.Width - 32)
-
-        Dim titulo As New Label With {
-        .Text = "SELEÇÃO MÚLTIPLA",
-        .ForeColor = Tema.CorPrimaria,
-        .Font = New Font(
-            "Segoe UI",
-            11.0F,
-            FontStyle.Bold),
-        .Width = largura,
-        .Height = 38,
-        .TextAlign =
-            ContentAlignment.MiddleLeft
-    }
-
-        painel.Controls.Add(
-        titulo)
-
-        Dim mensagem As New Label With {
-        .Text =
-            quantidade.ToString() &
-            " objetos selecionados." &
-            Environment.NewLine &
-            Environment.NewLine &
-            "Arraste qualquer objeto selecionado " &
-            "para mover o grupo inteiro.",
-        .ForeColor = Tema.TextoSecundario,
-        .Width = largura,
-        .Height = 90,
-        .TextAlign =
-            ContentAlignment.MiddleLeft
-    }
-
-        painel.Controls.Add(
-        mensagem)
-
-        Dim botaoDuplicar As New Button With {
-        .Text = "Duplicar seleção  (Ctrl+D)",
-        .Width = largura,
-        .Height = 38,
-        .Margin = New Padding(0, 8, 0, 4),
-        .FlatStyle = FlatStyle.Flat,
-        .BackColor = Tema.Painel,
-        .ForeColor = Tema.Texto,
-        .Cursor = Cursors.Hand,
-        .UseVisualStyleBackColor = False
-    }
-
-        botaoDuplicar.FlatAppearance.BorderColor =
-        Tema.Borda
-
-        AddHandler botaoDuplicar.Click,
-        Sub(sender, e)
-
-            CampoCanvas.DuplicarSelecionado()
-            CampoCanvas.Focus()
-
-        End Sub
-
-        painel.Controls.Add(
-        botaoDuplicar)
-
-        Dim botaoExcluir As New Button With {
-        .Text = "Excluir seleção",
-        .Width = largura,
-        .Height = 38,
-        .Margin = New Padding(0, 4, 0, 4),
-        .FlatStyle = FlatStyle.Flat,
-        .BackColor = Tema.CorPrimaria,
-        .ForeColor = Color.White,
-        .Cursor = Cursors.Hand,
-        .UseVisualStyleBackColor = False
-    }
-
-        botaoExcluir.FlatAppearance.BorderColor =
-        Color.White
-
-        AddHandler botaoExcluir.Click,
-        Sub(sender, e)
-
-            CampoCanvas.ExcluirSelecionado()
-            CampoCanvas.Focus()
-
-        End Sub
-
-        painel.Controls.Add(
-        botaoExcluir)
+        MontarPainelPropriedades(objeto)
 
     End Sub
 
@@ -2364,14 +2246,6 @@ Public Class FrmPrincipal
             AlternarGrade()
 
             CriarBarraZoom()
-
-            Return True
-
-        End If
-
-        If modificadores = Keys.Control AndAlso tecla = Keys.A Then
-
-            CampoCanvas.SelecionarTodos()
 
             Return True
 
