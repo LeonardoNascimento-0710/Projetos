@@ -10,6 +10,10 @@
 
         Public Property Selecionado As Boolean
 
+        Public Property GrupoId As String = String.Empty
+
+        Public Property Bloqueado As Boolean = False
+
         Public Sub New()
 
             Posicao = New Posicao()

@@ -1397,6 +1397,8 @@ Public Class FrmPrincipal
 
             End Sub
 
+        AdicionarAcoesBloqueioIndividual(painel, largura)
+
         painel.Controls.Add(botaoExcluir)
 
     End Sub
@@ -2103,6 +2105,36 @@ Public Class FrmPrincipal
         If modificadores = (Keys.Control Or Keys.Shift) AndAlso tecla = Keys.S Then
 
             SalvarExercicio(True)
+
+            Return True
+
+        End If
+
+        If modificadores = Keys.Control AndAlso tecla = Keys.J Then
+
+            CampoCanvas.AgruparSelecionados()
+
+            CampoCanvas.Focus()
+
+            Return True
+
+        End If
+
+        If modificadores = (Keys.Control Or Keys.Shift) AndAlso tecla = Keys.J Then
+
+            CampoCanvas.DesagruparSelecionados()
+
+            CampoCanvas.Focus()
+
+            Return True
+
+        End If
+
+        If modificadores = Keys.Control AndAlso tecla = Keys.L Then
+
+            CampoCanvas.AlternarBloqueioSelecionados()
+
+            CampoCanvas.Focus()
 
             Return True
 
@@ -3742,6 +3774,74 @@ Public Class FrmPrincipal
                     CampoCanvas.CentralizarSelecaoNoCampo()
                 End Sub))
 
+        Dim tituloOrganizacao As New Label With {
+    .Text = "AGRUPAMENTO E PROTEÇÃO",
+    .ForeColor = Tema.Texto,
+    .Font = New Font(
+        "Segoe UI",
+        9.0F,
+        FontStyle.Bold),
+    .Width = largura,
+    .Height = 28,
+    .Margin = New Padding(
+        0,
+        12,
+        0,
+        2),
+    .TextAlign =
+        ContentAlignment.MiddleLeft
+}
+
+        painel.Controls.Add(
+    tituloOrganizacao)
+
+        Dim linhaAgrupamento As FlowLayoutPanel =
+    CriarLinhaBotoesSelecao(
+        largura)
+
+        linhaAgrupamento.Controls.Add(
+    CriarBotaoSelecaoMultipla(
+        "Agrupar",
+        larguraBotaoDuplo,
+        Sub()
+            CampoCanvas.AgruparSelecionados()
+        End Sub,
+        quantidade >= 2))
+
+        linhaAgrupamento.Controls.Add(
+    CriarBotaoSelecaoMultipla(
+        "Desagrupar",
+        larguraBotaoDuplo,
+        Sub()
+            CampoCanvas.DesagruparSelecionados()
+        End Sub,
+        CampoCanvas.SelecaoPossuiGrupo))
+
+        painel.Controls.Add(
+    linhaAgrupamento)
+
+        Dim textoBloqueio As String
+
+        If CampoCanvas.SelecaoPossuiObjetoBloqueado Then
+
+            textoBloqueio =
+        "Desbloquear seleção  (Ctrl+L)"
+
+        Else
+
+            textoBloqueio =
+        "Bloquear seleção  (Ctrl+L)"
+
+        End If
+
+        painel.Controls.Add(
+    CriarBotaoSelecaoMultipla(
+        textoBloqueio,
+        largura,
+        Sub()
+            CampoCanvas.AlternarBloqueioSelecionados()
+        End Sub))
+
         Dim tituloAcoes As New Label With {
             .Text = "AÇÕES",
             .ForeColor = Tema.Texto,
@@ -3782,6 +3882,58 @@ Public Class FrmPrincipal
                 True))
 
     End Sub
+
+    Private Sub AdicionarAcoesBloqueioIndividual(painel As FlowLayoutPanel, largura As Integer)
+
+        Dim titulo As New Label With {
+            .Text = "PROTEÇÃO",
+            .ForeColor = Tema.Texto,
+            .Font = New Font(
+                "Segoe UI",
+                9.0F,
+                FontStyle.Bold),
+            .Width = largura,
+            .Height = 28,
+            .Margin = New Padding(
+                0,
+                12,
+                0,
+                2),
+            .TextAlign =
+                ContentAlignment.MiddleLeft
+        }
+
+        painel.Controls.Add(
+            titulo)
+
+        Dim textoBotao As String
+
+        If CampoCanvas.SelecaoPossuiObjetoBloqueado Then
+
+            textoBotao =
+                "Desbloquear objeto  (Ctrl+L)"
+
+        Else
+
+            textoBotao =
+                "Bloquear objeto  (Ctrl+L)"
+
+        End If
+
+        Dim botao As Button =
+            CriarBotaoSelecaoMultipla(
+                textoBotao,
+                largura,
+                Sub()
+                    CampoCanvas.AlternarBloqueioSelecionados()
+                End Sub)
+
+        painel.Controls.Add(
+            botao)
+
+    End Sub
+
+
 
 End Class
 

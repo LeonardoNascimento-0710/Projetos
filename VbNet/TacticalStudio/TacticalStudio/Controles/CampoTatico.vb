@@ -129,7 +129,6 @@ Public Class CampoTatico
 
     End Class
 
-
     Public Sub New()
 
         DoubleBuffered = True
@@ -210,6 +209,42 @@ Public Class CampoTatico
 
         Get
             Return _objetosSelecionados.Count
+        End Get
+
+    End Property
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public ReadOnly Property SelecaoPossuiGrupo As Boolean
+
+        Get
+
+            For Each objeto As ObjetoCampo
+            In _objetosSelecionados
+
+                If Not String.IsNullOrWhiteSpace(
+                objeto.GrupoId) Then
+
+                    Return True
+
+                End If
+
+            Next
+
+            Return False
+
+        End Get
+
+    End Property
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public ReadOnly Property SelecaoPossuiObjetoBloqueado As Boolean
+
+        Get
+            Return ExisteObjetoBloqueadoNaSelecao()
         End Get
 
     End Property
@@ -1537,6 +1572,8 @@ Public Class CampoTatico
 
         DesenharObjetos(g, campo)
 
+        DesenharIndicadoresBloqueio(g, campo)
+
         DesenharPreVisualizacao(g, campo)
 
     End Sub
@@ -1701,9 +1738,7 @@ Public Class CampoTatico
 
     End Sub
 
-    Private Sub DesenharPreVisualizacao(
-    g As Graphics,
-    campo As RectangleF)
+    Private Sub DesenharPreVisualizacao(g As Graphics, campo As RectangleF)
 
         If Not _criacaoEmAndamento Then
             Exit Sub
@@ -1840,6 +1875,95 @@ Public Class CampoTatico
 
     End Sub
 
+    Private Sub DesenharIndicadoresBloqueio(
+    g As Graphics,
+    campo As RectangleF)
+
+        Using fonte As New Font(
+        "Segoe UI",
+        8.0F,
+        FontStyle.Bold)
+
+            For Each objeto As ObjetoCampo In _objetos
+
+                If Not objeto.Visivel OrElse
+               Not objeto.Bloqueado Then
+
+                    Continue For
+
+                End If
+
+                Dim centroPercentual As PointF =
+                ObterCentroPercentualObjeto(
+                    objeto)
+
+                Dim posicaoCentro As New Posicao(
+                centroPercentual.X,
+                centroPercentual.Y)
+
+                Dim centroTela As PointF =
+                ConverterPercentualParaTela(
+                    posicaoCentro,
+                    campo)
+
+                Dim retangulo As New RectangleF(
+                centroTela.X + 10.0F,
+                centroTela.Y - 25.0F,
+                18.0F,
+                18.0F)
+
+                Using pincel As New SolidBrush(
+                Color.FromArgb(
+                    235,
+                    135,
+                    35))
+
+                    g.FillEllipse(
+                    pincel,
+                    retangulo)
+
+                End Using
+
+                Using borda As New Pen(
+                Color.White,
+                1.5F)
+
+                    g.DrawEllipse(
+                    borda,
+                    retangulo)
+
+                End Using
+
+                TextRenderer.DrawText(
+                g,
+                "L",
+                fonte,
+                Rectangle.Round(
+                    retangulo),
+                Color.White,
+                TextFormatFlags.HorizontalCenter Or
+                TextFormatFlags.VerticalCenter Or
+                TextFormatFlags.NoPadding)
+
+            Next
+
+        End Using
+
+    End Sub
+
+    Private Sub AvisarSelecaoBloqueada()
+
+        MessageBox.Show(
+        "A seleção contém um ou mais objetos bloqueados." &
+        Environment.NewLine &
+        Environment.NewLine &
+        "Desbloqueie usando Ctrl+L antes de mover, excluir, " &
+        "redimensionar, alinhar ou distribuir os objetos.",
+        "Objetos bloqueados",
+        MessageBoxButtons.OK,
+        MessageBoxIcon.Information)
+
+    End Sub
 
 #End Region
 
@@ -3674,12 +3798,15 @@ Public Class CampoTatico
 
     Public Sub DuplicarSelecionado()
 
+
+
         If _objetosSelecionados.Count = 0 Then
             Exit Sub
         End If
 
         Dim objetosOriginais As New List(Of ObjetoCampo)(_objetosSelecionados)
         Dim objetosDuplicados As New List(Of ObjetoCampo)()
+        Dim mapaGrupos As New Dictionary(Of String, String)(StringComparer.Ordinal)
 
         For Each objetoOriginal As ObjetoCampo In objetosOriginais
 
@@ -3689,9 +3816,48 @@ Public Class CampoTatico
             Dim objetoDuplicado As ObjetoCampo =
                 CriarObjetoDoEstado(estadoObjeto)
 
+            Dim grupoOriginal As String =
+    If(
+        objetoOriginal.GrupoId,
+        String.Empty)
+
+            If Not String.IsNullOrWhiteSpace(
+    grupoOriginal) Then
+
+                Dim novoGrupo As String =
+        String.Empty
+
+                If Not mapaGrupos.TryGetValue(
+        grupoOriginal,
+        novoGrupo) Then
+
+                    novoGrupo =
+            Guid.NewGuid().
+            ToString("N")
+
+                    mapaGrupos.Add(
+            grupoOriginal,
+            novoGrupo)
+
+                End If
+
+                objetoDuplicado.GrupoId =
+        novoGrupo
+
+            Else
+
+                objetoDuplicado.GrupoId =
+        String.Empty
+
+            End If
+
+            objetoDuplicado.Bloqueado =
+    False
+
             If objetoDuplicado Is Nothing Then
                 Continue For
             End If
+
 
             DeslocarObjetoDuplicado(
                 objetoDuplicado,
@@ -4159,23 +4325,30 @@ Public Class CampoTatico
     End Function
 
     Private Function CapturarEstadoObjeto(
-    objeto As ObjetoCampo) As EstadoObjetoCampo
+        objeto As ObjetoCampo) As EstadoObjetoCampo
 
         If objeto Is Nothing Then
 
             Throw New ArgumentNullException(
-            NameOf(objeto))
+                NameOf(objeto))
 
         End If
 
-        Dim estado As New EstadoObjetoCampo With {
-        .TipoObjeto = objeto.GetType().Name,
-        .X = objeto.Posicao.X,
-        .Y = objeto.Posicao.Y,
-        .Visivel = objeto.Visivel
-    }
+        Dim tipoObjeto As String =
+            objeto.GetType().Name
 
-        Select Case estado.TipoObjeto
+        Dim estado As New EstadoObjetoCampo With {
+            .TipoObjeto = tipoObjeto,
+            .X = objeto.Posicao.X,
+            .Y = objeto.Posicao.Y,
+            .Visivel = objeto.Visivel,
+            .GrupoId = If(
+                objeto.GrupoId,
+                String.Empty),
+            .Bloqueado = objeto.Bloqueado
+        }
+
+        Select Case tipoObjeto
 
             Case "Jogador"
 
@@ -4191,9 +4364,6 @@ Public Class CampoTatico
                 objetoJogador.Nome
 
             Case "Bola"
-
-            'A bola não possui propriedades adicionais.
-            'Posição e visibilidade já foram registradas acima.
 
             Case "Cone"
 
@@ -4339,8 +4509,7 @@ Public Class CampoTatico
 
     End Sub
 
-    Private Function CriarObjetoDoEstado(
-    estado As EstadoObjetoCampo) As ObjetoCampo
+    Private Function CriarObjetoDoEstado(estado As EstadoObjetoCampo) As ObjetoCampo
 
         Dim objeto As ObjetoCampo = Nothing
 
@@ -4449,16 +4618,23 @@ Public Class CampoTatico
         End If
 
         objeto.Posicao.X =
-        estado.X
+    estado.X
 
         objeto.Posicao.Y =
-        estado.Y
+    estado.Y
 
         objeto.Visivel =
-        estado.Visivel
+    estado.Visivel
 
-        objeto.Selecionado =
-        False
+        objeto.GrupoId =
+    If(
+        estado.GrupoId,
+        String.Empty)
+
+        objeto.Bloqueado =
+    estado.Bloqueado
+
+        Return objeto
 
         Return objeto
 
@@ -4822,6 +4998,26 @@ Public Class CampoTatico
 
         End If
 
+        If Not PodeManipularSelecao() Then
+
+            _arrastando =
+        False
+
+            _movendoGrupo =
+        False
+
+            Capture =
+        False
+
+            Cursor =
+        Cursors.No
+
+            Invalidate()
+
+            Exit Sub
+
+        End If
+
         If _objetosSelecionados.Count > 1 Then
 
             PrepararMovimentoGrupo(e.Location)
@@ -5032,6 +5228,13 @@ Public Class CampoTatico
 
         If _objetoSelecionado Is Nothing Then
             Exit Sub
+        End If
+
+        If _objetoSelecionado Is Nothing OrElse
+   _objetoSelecionado.Bloqueado Then
+
+            Exit Sub
+
         End If
 
         If campo.Width <= 0 OrElse
@@ -5530,9 +5733,14 @@ Public Class CampoTatico
 
     Public Sub ExcluirSelecionado()
 
+        If Not PodeManipularSelecao() Then
+            Exit Sub
+        End If
+
         If _objetosSelecionados.Count = 0 Then
             Exit Sub
         End If
+
 
         Dim objetosRemover As New List(Of ObjetoCampo)(_objetosSelecionados)
 
@@ -5725,6 +5933,12 @@ Public Class CampoTatico
     Private Sub RedimensionarObjetoSelecionado(
     localMouse As Point,
     campo As RectangleF)
+
+        If _objetoSelecionado Is Nothing OrElse _objetoSelecionado.Bloqueado Then
+
+            Exit Sub
+
+        End If
 
         If _objetoSelecionado Is Nothing Then
             Exit Sub
@@ -5982,6 +6196,13 @@ Public Class CampoTatico
             Return ModoManipulacaoCampo.Nenhum
         End If
 
+        If _objetoSelecionado IsNot Nothing AndAlso
+   _objetoSelecionado.Bloqueado Then
+
+            Return ModoManipulacaoCampo.Nenhum
+
+        End If
+
         If _objetoSelecionado Is Nothing Then
             Return ModoManipulacaoCampo.Nenhum
         End If
@@ -6234,7 +6455,6 @@ Public Class CampoTatico
 
 #End Region
 
-
 #Region "Seleção múltipla"
 
     Private Function ObjetoEstaSelecionado(
@@ -6249,7 +6469,7 @@ Public Class CampoTatico
     End Function
 
     Private Sub SelecionarSomente(
-        objeto As ObjetoCampo)
+    objeto As ObjetoCampo)
 
         DeselecionarTodos()
 
@@ -6257,40 +6477,101 @@ Public Class CampoTatico
             Exit Sub
         End If
 
-        objeto.Selecionado = True
-        _objetosSelecionados.Add(objeto)
-        _objetoSelecionado = objeto
+        Dim objetosRelacionados As List(Of ObjetoCampo) =
+        ObterObjetosRelacionadosSelecao(
+            objeto)
+
+        For Each item As ObjetoCampo
+        In objetosRelacionados
+
+            item.Selecionado =
+            True
+
+            _objetosSelecionados.Add(
+            item)
+
+        Next
+
+        _objetoSelecionado =
+        objeto
 
     End Sub
 
     Private Sub AlternarSelecaoObjeto(
-        objeto As ObjetoCampo)
+    objeto As ObjetoCampo)
 
         If objeto Is Nothing Then
             Exit Sub
         End If
 
-        If _objetosSelecionados.Contains(objeto) Then
+        Dim objetosRelacionados As List(Of ObjetoCampo) =
+        ObterObjetosRelacionadosSelecao(
+            objeto)
 
-            objeto.Selecionado = False
-            _objetosSelecionados.Remove(objeto)
+        Dim todosSelecionados As Boolean =
+        True
 
-            If _objetoSelecionado Is objeto Then
+        For Each item As ObjetoCampo
+        In objetosRelacionados
 
-                If _objetosSelecionados.Count > 0 Then
-                    _objetoSelecionado =
-                        _objetosSelecionados(_objetosSelecionados.Count - 1)
-                Else
-                    _objetoSelecionado = Nothing
-                End If
+            If Not _objetosSelecionados.Contains(
+            item) Then
+
+                todosSelecionados =
+                False
+
+                Exit For
+
+            End If
+
+        Next
+
+        If todosSelecionados Then
+
+            For Each item As ObjetoCampo
+            In objetosRelacionados
+
+                item.Selecionado =
+                False
+
+                _objetosSelecionados.Remove(
+                item)
+
+            Next
+
+            If _objetosSelecionados.Count > 0 Then
+
+                _objetoSelecionado =
+                _objetosSelecionados(
+                    _objetosSelecionados.Count - 1)
+
+            Else
+
+                _objetoSelecionado =
+                Nothing
 
             End If
 
         Else
 
-            objeto.Selecionado = True
-            _objetosSelecionados.Add(objeto)
-            _objetoSelecionado = objeto
+            For Each item As ObjetoCampo
+            In objetosRelacionados
+
+                If Not _objetosSelecionados.Contains(
+                item) Then
+
+                    item.Selecionado =
+                    True
+
+                    _objetosSelecionados.Add(
+                    item)
+
+                End If
+
+            Next
+
+            _objetoSelecionado =
+            objeto
 
         End If
 
@@ -6374,6 +6655,10 @@ Public Class CampoTatico
     Private Sub MoverGrupoSelecionado(
         localMouse As Point,
         campo As RectangleF)
+
+        If ExisteObjetoBloqueadoNaSelecao() Then
+            Exit Sub
+        End If
 
         If _estadosMovimentoGrupo.Count = 0 Then
             Exit Sub
@@ -6479,7 +6764,6 @@ Public Class CampoTatico
     End Sub
 
 #End Region
-
 
 #Region "Alinhamento e distribuição"
 
@@ -6716,6 +7000,10 @@ Public Class CampoTatico
 
     Public Sub AlinharSelecaoNaMesmaLinha()
 
+        If Not PodeManipularSelecao() Then
+            Exit Sub
+        End If
+
         If _objetosSelecionados.Count < 2 OrElse
            _objetoSelecionado Is Nothing Then
 
@@ -6751,6 +7039,10 @@ Public Class CampoTatico
     End Sub
 
     Public Sub AlinharSelecaoNaMesmaColuna()
+
+        If Not PodeManipularSelecao() Then
+            Exit Sub
+        End If
 
         If _objetosSelecionados.Count < 2 OrElse
            _objetoSelecionado Is Nothing Then
@@ -6788,6 +7080,10 @@ Public Class CampoTatico
 
     Public Sub CentralizarSelecaoNoCampo()
 
+        If Not PodeManipularSelecao() Then
+            Exit Sub
+        End If
+
         If _objetosSelecionados.Count = 0 Then
             Exit Sub
         End If
@@ -6811,6 +7107,10 @@ Public Class CampoTatico
     End Sub
 
     Public Sub DistribuirSelecaoHorizontalmente()
+
+        If Not PodeManipularSelecao() Then
+            Exit Sub
+        End If
 
         If _objetosSelecionados.Count < 3 Then
             Exit Sub
@@ -6876,6 +7176,10 @@ Public Class CampoTatico
     End Sub
 
     Public Sub DistribuirSelecaoVerticalmente()
+
+        If Not PodeManipularSelecao() Then
+            Exit Sub
+        End If
 
         If _objetosSelecionados.Count < 3 Then
             Exit Sub
@@ -7712,6 +8016,203 @@ Public Class CampoTatico
             deltaY
 
     End Sub
+
+#End Region
+
+#Region "Agrupamento e bloqueio"
+
+    Private Function ObterObjetosRelacionadosSelecao(
+    objeto As ObjetoCampo) As List(Of ObjetoCampo)
+
+        Dim resultado As New List(Of ObjetoCampo)()
+
+        If objeto Is Nothing Then
+            Return resultado
+        End If
+
+        If String.IsNullOrWhiteSpace(
+            objeto.GrupoId) Then
+
+            resultado.Add(
+                objeto)
+
+            Return resultado
+
+        End If
+
+        For Each item As ObjetoCampo In _objetos
+
+            If Not item.Visivel Then
+                Continue For
+            End If
+
+            If String.Equals(
+                item.GrupoId,
+                objeto.GrupoId,
+                StringComparison.Ordinal) Then
+
+                resultado.Add(
+                    item)
+
+            End If
+
+        Next
+
+        Return resultado
+
+    End Function
+
+    Private Function PodeManipularSelecao() As Boolean
+
+        If _objetosSelecionados.Count = 0 Then
+            Return False
+        End If
+
+        If ExisteObjetoBloqueadoNaSelecao() Then
+
+            AvisarSelecaoBloqueada()
+
+            Return False
+
+        End If
+
+        Return True
+
+    End Function
+
+    Public Sub AgruparSelecionados()
+
+        If _objetosSelecionados.Count < 2 Then
+            Exit Sub
+        End If
+
+        Dim novoGrupoId As String =
+            Guid.NewGuid().
+            ToString("N")
+
+        Dim houveAlteracao As Boolean =
+            False
+
+        For Each objeto As ObjetoCampo
+            In _objetosSelecionados
+
+            If objeto.GrupoId <> novoGrupoId Then
+
+                objeto.GrupoId =
+                    novoGrupoId
+
+                houveAlteracao =
+                    True
+
+            End If
+
+        Next
+
+        If Not houveAlteracao Then
+            Exit Sub
+        End If
+
+        RegistrarEstadoHistorico()
+
+        NotificarSelecaoAlterada()
+
+        Invalidate()
+
+    End Sub
+
+    Public Sub DesagruparSelecionados()
+
+        If _objetosSelecionados.Count = 0 Then
+            Exit Sub
+        End If
+
+        Dim houveAlteracao As Boolean =
+            False
+
+        For Each objeto As ObjetoCampo
+            In _objetosSelecionados
+
+            If Not String.IsNullOrWhiteSpace(
+                objeto.GrupoId) Then
+
+                objeto.GrupoId =
+                    String.Empty
+
+                houveAlteracao =
+                    True
+
+            End If
+
+        Next
+
+        If Not houveAlteracao Then
+            Exit Sub
+        End If
+
+        RegistrarEstadoHistorico()
+
+        NotificarSelecaoAlterada()
+
+        Invalidate()
+
+    End Sub
+
+    Public Sub AlternarBloqueioSelecionados()
+
+        If _objetosSelecionados.Count = 0 Then
+            Exit Sub
+        End If
+
+        Dim todosBloqueados As Boolean =
+            True
+
+        For Each objeto As ObjetoCampo
+            In _objetosSelecionados
+
+            If Not objeto.Bloqueado Then
+
+                todosBloqueados =
+                    False
+
+                Exit For
+
+            End If
+
+        Next
+
+        Dim novoEstado As Boolean =
+            Not todosBloqueados
+
+        For Each objeto As ObjetoCampo
+            In _objetosSelecionados
+
+            objeto.Bloqueado =
+                novoEstado
+
+        Next
+
+        RegistrarEstadoHistorico()
+
+        NotificarSelecaoAlterada()
+
+        Invalidate()
+
+    End Sub
+
+    Private Function ExisteObjetoBloqueadoNaSelecao() As Boolean
+
+        For Each objeto As ObjetoCampo
+            In _objetosSelecionados
+
+            If objeto.Bloqueado Then
+                Return True
+            End If
+
+        Next
+
+        Return False
+
+    End Function
 
 #End Region
 

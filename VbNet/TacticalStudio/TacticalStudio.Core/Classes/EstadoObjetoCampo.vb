@@ -36,6 +36,8 @@
         Public Property Tracejada As Boolean
         Public Property Negrito As Boolean
         Public Property FundoVisivel As Boolean
+        Public Property GrupoId As String = String.Empty
+        Public Property Bloqueado As Boolean = False
 
     End Class
 
