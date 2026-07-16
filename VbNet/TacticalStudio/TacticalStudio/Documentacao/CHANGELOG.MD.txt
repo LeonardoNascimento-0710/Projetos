@@ -948,3 +948,53 @@ Próxima etapa sugerida:
 - Permitir escolher resolução da imagem;
 - Criar uma tela de pré-visualização da exportação;
 - Preparar identidade visual e logotipo no cabeçalho.
+
+======================================================================
+28. ETAPA 20 - EXPORTAÇÃO EM PDF E IMPRESSÃO
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.20.0
+
+Pacote utilizado:
+- PDFsharp-GDI
+
+Arquivos alterados:
+- FrmPrincipal.vb
+
+Alterações realizadas:
+- Implementada exportação do exercício em PDF;
+- Adicionada página A4 automática;
+- Adicionada orientação horizontal ou vertical conforme a imagem;
+- O PDF preserva a proporção do campo;
+- A imagem é centralizada com margens;
+- Adicionada opção de incluir ou não o cabeçalho;
+- Implementada visualização de impressão;
+- Adicionado suporte à impressão por PrintDocument;
+- Adicionado botão PDF;
+- Adicionado botão Imprimir;
+- Adicionado atalho Ctrl+Shift+E para exportar PDF;
+- Adicionado atalho Ctrl+P para visualizar e imprimir;
+- PDF e impressão não alteram o estado salvo do exercício.
+
+Correções:
+- Corrigida ambiguidade do tipo XGraphics;
+- Removidos pacotes PDFsharp duplicados;
+- Mantido somente o pacote PDFsharp-GDI;
+- Removidas referências manuais conflitantes;
+- Realizada limpeza das pastas bin e obj;
+- Recompilação concluída sem conflito de namespace.
+
+Resultado:
+- Exercícios podem ser exportados em PDF;
+- O usuário pode imprimir diretamente pelo sistema;
+- Cabeçalho e campo são preservados com boa qualidade;
+- A orientação da página é escolhida automaticamente;
+- O fluxo de exportação e impressão ficou integrado ao TacticalStudio.
+
+Próxima etapa sugerida:
+- Criar tela de pré-visualização própria;
+- Permitir escolher resolução e orientação;
+- Adicionar logotipo no cabeçalho;
+- Implementar modelos de exportação;
+- Preparar autosave e recuperação de sessão.
