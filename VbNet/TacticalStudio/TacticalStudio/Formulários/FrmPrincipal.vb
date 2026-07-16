@@ -3450,6 +3450,14 @@ Public Class FrmPrincipal
 
         End If
 
+        If modificadores = (Keys.Control Or Keys.Shift) AndAlso tecla = Keys.B Then
+
+            AbrirBibliotecaExercicios()
+
+            Return True
+
+        End If
+
         Return MyBase.ProcessCmdKey(msg, keyData)
 
     End Function
@@ -3488,6 +3496,12 @@ Public Class FrmPrincipal
 
         painelArquivo.Controls.Add(CriarBotaoArquivo("Formações", AddressOf Formacoes_Click))
 
+        Dim botaoBiblioteca As Button = CriarBotaoArquivo("Biblioteca", AddressOf Biblioteca_Click)
+
+        botaoBiblioteca.Width = 105
+
+        painelArquivo.Controls.Add(botaoBiblioteca)
+
         painelArquivo.Controls.Add(CriarBotaoArquivo("PDF", AddressOf ExportarPdf_Click))
 
         painelArquivo.Controls.Add(CriarBotaoArquivo("Imprimir", AddressOf ImprimirExercicio_Click))
@@ -3508,6 +3522,8 @@ Public Class FrmPrincipal
             botaoCampoInteiro)
 
         painelArquivo.Controls.Add(CriarBotaoArquivo("Sobre", AddressOf Sobre_Click))
+
+        painelArquivo.Width = painelArquivo.Width + 114
 
         PnlSuperior.Controls.Add(painelArquivo)
 
@@ -3757,6 +3773,514 @@ Public Class FrmPrincipal
 
 #End Region
 
+#Region "Biblioteca de exercícios"
+
+    Private Sub Biblioteca_Click(
+    sender As Object,
+    e As EventArgs)
+
+        AbrirBibliotecaExercicios()
+
+    End Sub
+
+    Private Sub AbrirBibliotecaExercicios()
+
+        If CampoCanvas Is Nothing Then
+            Exit Sub
+        End If
+
+        Using formulario As New FrmBibliotecaExercicios()
+
+            AddHandler formulario.AdicionarAtualSolicitado,
+            Sub()
+
+                Dim itemAdicionado As ItemBibliotecaExercicio =
+                    AdicionarExercicioAtualBiblioteca(
+                        formulario)
+
+                If itemAdicionado IsNot Nothing Then
+
+                    formulario.CarregarBiblioteca(
+                        itemAdicionado.Id)
+
+                End If
+
+            End Sub
+
+            Dim resultado As DialogResult =
+            formulario.ShowDialog(
+                Me)
+
+            If resultado <> DialogResult.OK Then
+
+                CampoCanvas.Focus()
+
+                Exit Sub
+
+            End If
+
+            Dim itemSelecionado As ItemBibliotecaExercicio =
+            formulario.ItemSelecionado
+
+            If itemSelecionado Is Nothing Then
+
+                CampoCanvas.Focus()
+
+                Exit Sub
+
+            End If
+
+            Dim caminhoExercicio As String =
+            RepositorioBibliotecaExercicios.
+                ObterCaminhoExercicio(
+                    itemSelecionado)
+
+            If String.IsNullOrWhiteSpace(
+            caminhoExercicio) OrElse
+           Not File.Exists(
+               caminhoExercicio) Then
+
+                MessageBox.Show(
+                "O arquivo do exercício selecionado não foi encontrado.",
+                "Biblioteca de exercícios",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning)
+
+                CampoCanvas.Focus()
+
+                Exit Sub
+
+            End If
+
+            If Not ConfirmarAlteracoesNaoSalvas() Then
+
+                CampoCanvas.Focus()
+
+                Exit Sub
+
+            End If
+
+            CarregarExercicioDoCaminho(
+            caminhoExercicio,
+            False)
+
+        End Using
+
+    End Sub
+
+    Private Function SolicitarDadosBiblioteca(
+    ByRef nome As String,
+    ByRef descricao As String,
+    ByRef categoria As String,
+    ByRef favorito As Boolean,
+    Optional proprietario As IWin32Window = Nothing
+) As Boolean
+
+        Using formulario As New Form()
+
+            formulario.Text =
+            "Adicionar à biblioteca"
+
+            formulario.StartPosition =
+            FormStartPosition.CenterParent
+
+            formulario.FormBorderStyle =
+            FormBorderStyle.FixedDialog
+
+            formulario.MaximizeBox =
+            False
+
+            formulario.MinimizeBox =
+            False
+
+            formulario.ShowInTaskbar =
+            False
+
+            formulario.ClientSize =
+            New Size(
+                520,
+                350)
+
+            formulario.BackColor =
+            Tema.Fundo
+
+            formulario.ForeColor =
+            Tema.Texto
+
+            Dim painel As New TableLayoutPanel With {
+            .Dock = DockStyle.Fill,
+            .ColumnCount = 1,
+            .RowCount = 8,
+            .Padding = New Padding(14),
+            .Margin = New Padding(0)
+        }
+
+            painel.RowStyles.Add(
+            New RowStyle(
+                SizeType.Absolute,
+                26.0F))
+
+            painel.RowStyles.Add(
+            New RowStyle(
+                SizeType.Absolute,
+                38.0F))
+
+            painel.RowStyles.Add(
+            New RowStyle(
+                SizeType.Absolute,
+                26.0F))
+
+            painel.RowStyles.Add(
+            New RowStyle(
+                SizeType.Absolute,
+                38.0F))
+
+            painel.RowStyles.Add(
+            New RowStyle(
+                SizeType.Absolute,
+                26.0F))
+
+            painel.RowStyles.Add(
+            New RowStyle(
+                SizeType.Percent,
+                100.0F))
+
+            painel.RowStyles.Add(
+            New RowStyle(
+                SizeType.Absolute,
+                38.0F))
+
+            painel.RowStyles.Add(
+            New RowStyle(
+                SizeType.Absolute,
+                48.0F))
+
+            formulario.Controls.Add(
+            painel)
+
+            Dim labelNome As New Label With {
+            .Text = "Nome do exercício:",
+            .Dock = DockStyle.Fill,
+            .TextAlign = ContentAlignment.MiddleLeft
+        }
+
+            painel.Controls.Add(
+            labelNome,
+            0,
+            0)
+
+            Dim txtNome As New TextBox With {
+            .Dock = DockStyle.Fill,
+            .MaxLength = 100,
+            .Text = nome,
+            .BackColor = Tema.CampoEntrada,
+            .ForeColor = Tema.TextoCampo
+        }
+
+            painel.Controls.Add(
+            txtNome,
+            0,
+            1)
+
+            Dim labelCategoria As New Label With {
+            .Text = "Categoria:",
+            .Dock = DockStyle.Fill,
+            .TextAlign = ContentAlignment.MiddleLeft
+        }
+
+            painel.Controls.Add(
+            labelCategoria,
+            0,
+            2)
+
+            Dim txtCategoria As New TextBox With {
+            .Dock = DockStyle.Fill,
+            .MaxLength = 80,
+            .Text = categoria,
+            .BackColor = Tema.CampoEntrada,
+            .ForeColor = Tema.TextoCampo
+        }
+
+            painel.Controls.Add(
+            txtCategoria,
+            0,
+            3)
+
+            Dim labelDescricao As New Label With {
+            .Text = "Descrição:",
+            .Dock = DockStyle.Fill,
+            .TextAlign = ContentAlignment.MiddleLeft
+        }
+
+            painel.Controls.Add(
+            labelDescricao,
+            0,
+            4)
+
+            Dim txtDescricao As New TextBox With {
+            .Dock = DockStyle.Fill,
+            .Multiline = True,
+            .ScrollBars = ScrollBars.Vertical,
+            .MaxLength = 500,
+            .Text = descricao,
+            .BackColor = Tema.CampoEntrada,
+            .ForeColor = Tema.TextoCampo
+        }
+
+            painel.Controls.Add(
+            txtDescricao,
+            0,
+            5)
+
+            Dim chkFavorito As New CheckBox With {
+            .Text = "Adicionar como favorito",
+            .Dock = DockStyle.Fill,
+            .Checked = favorito,
+            .ForeColor = Tema.Texto,
+            .BackColor = Tema.Fundo
+        }
+
+            painel.Controls.Add(
+            chkFavorito,
+            0,
+            6)
+
+            Dim painelBotoes As New FlowLayoutPanel With {
+            .Dock = DockStyle.Fill,
+            .FlowDirection = FlowDirection.RightToLeft,
+            .WrapContents = False,
+            .Padding = New Padding(
+                0,
+                8,
+                0,
+                0),
+            .Margin = New Padding(0)
+        }
+
+            Dim btnAdicionar As New Button With {
+            .Text = "Adicionar",
+            .Width = 115,
+            .Height = 32,
+            .DialogResult = DialogResult.OK,
+            .FlatStyle = FlatStyle.Flat,
+            .BackColor = Tema.Painel,
+            .ForeColor = Tema.Texto,
+            .Cursor = Cursors.Hand
+        }
+
+            btnAdicionar.FlatAppearance.BorderColor =
+            Tema.Borda
+
+            btnAdicionar.FlatAppearance.MouseOverBackColor =
+            Tema.PainelHover
+
+            Dim btnCancelar As New Button With {
+            .Text = "Cancelar",
+            .Width = 110,
+            .Height = 32,
+            .DialogResult = DialogResult.Cancel,
+            .FlatStyle = FlatStyle.Flat,
+            .BackColor = Tema.Painel,
+            .ForeColor = Tema.Texto,
+            .Cursor = Cursors.Hand
+        }
+
+            btnCancelar.FlatAppearance.BorderColor =
+            Tema.Borda
+
+            btnCancelar.FlatAppearance.MouseOverBackColor =
+            Tema.PainelHover
+
+            painelBotoes.Controls.Add(
+            btnAdicionar)
+
+            painelBotoes.Controls.Add(
+            btnCancelar)
+
+            painel.Controls.Add(
+            painelBotoes,
+            0,
+            7)
+
+            formulario.AcceptButton =
+            btnAdicionar
+
+            formulario.CancelButton =
+            btnCancelar
+
+            txtNome.SelectAll()
+
+            Dim resultado As DialogResult
+
+            If proprietario Is Nothing Then
+
+                resultado =
+                formulario.ShowDialog(
+                    Me)
+
+            Else
+
+                resultado =
+                formulario.ShowDialog(
+                    proprietario)
+
+            End If
+
+            If resultado <> DialogResult.OK Then
+                Return False
+            End If
+
+            nome =
+            txtNome.Text.Trim()
+
+            descricao =
+            txtDescricao.Text.Trim()
+
+            categoria =
+            txtCategoria.Text.Trim()
+
+            favorito =
+            chkFavorito.Checked
+
+            Return True
+
+        End Using
+
+    End Function
+
+    Private Function AdicionarExercicioAtualBiblioteca(
+    Optional proprietario As IWin32Window = Nothing
+) As ItemBibliotecaExercicio
+
+        If CampoCanvas Is Nothing Then
+            Return Nothing
+        End If
+
+        If CampoCanvas.ObjetosAtuais.Count = 0 Then
+
+            MessageBox.Show(
+            proprietario,
+            "O campo não possui objetos para adicionar à biblioteca.",
+            "Biblioteca de exercícios",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information)
+
+            Return Nothing
+
+        End If
+
+        Dim nome As String =
+        _nomeExercicioAtual
+
+        Dim descricao As String =
+        _descricaoExercicioAtual
+
+        Dim categoria As String =
+        _categoriaExercicioAtual
+
+        Dim favorito As Boolean =
+        False
+
+        If Not SolicitarDadosBiblioteca(
+        nome,
+        descricao,
+        categoria,
+        favorito,
+        proprietario) Then
+
+            Return Nothing
+
+        End If
+
+        Dim caminhoTemporario As String =
+        Path.Combine(
+            Path.GetTempPath(),
+            "TacticalStudio-" &
+            Guid.NewGuid().
+                ToString("N") &
+            ".tactical")
+
+        Try
+
+            Dim conteudoJson As String =
+            CampoCanvas.ExportarExercicioJson(
+                nome,
+                categoria,
+                _duracaoExercicioAtual,
+                descricao,
+                _observacoesExercicioAtual)
+
+            File.WriteAllText(
+            caminhoTemporario,
+            conteudoJson,
+            New UTF8Encoding(False))
+
+            Dim itemAdicionado As ItemBibliotecaExercicio =
+            RepositorioBibliotecaExercicios.AdicionarArquivo(
+                caminhoTemporario,
+                nome,
+                descricao,
+                categoria,
+                favorito)
+
+            If itemAdicionado Is Nothing Then
+
+                MessageBox.Show(
+                proprietario,
+                "Não foi possível adicionar o exercício à biblioteca.",
+                "Biblioteca de exercícios",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error)
+
+                Return Nothing
+
+            End If
+
+            MessageBox.Show(
+            proprietario,
+            "O exercício foi adicionado à biblioteca com sucesso.",
+            "Biblioteca de exercícios",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information)
+
+            Return itemAdicionado
+
+        Catch ex As Exception
+
+            MessageBox.Show(
+            proprietario,
+            "Não foi possível adicionar o exercício à biblioteca." &
+            Environment.NewLine &
+            Environment.NewLine &
+            ex.Message,
+            "Biblioteca de exercícios",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Error)
+
+            Return Nothing
+
+        Finally
+
+            Try
+
+                If File.Exists(
+                caminhoTemporario) Then
+
+                    File.Delete(
+                    caminhoTemporario)
+
+                End If
+
+            Catch
+
+            End Try
+
+        End Try
+
+    End Function
+
+#End Region
+
 #Region "Arquivos do exercício"
 
     Private Sub NovoExercicio_Click(
@@ -3815,65 +4339,26 @@ Public Class FrmPrincipal
         Using dialogo As New OpenFileDialog()
 
             dialogo.Title =
-                "Abrir exercício tático"
+            "Abrir exercício tático"
 
             dialogo.Filter =
-                "Exercício TacticalStudio (*.tactical)|*.tactical|" &
-                "Arquivo JSON (*.json)|*.json|" &
-                "Todos os arquivos (*.*)|*.*"
+            "Exercício TacticalStudio (*.tactical)|*.tactical|" &
+            "Arquivo JSON (*.json)|*.json|" &
+            "Todos os arquivos (*.*)|*.*"
 
-            dialogo.Multiselect = False
+            dialogo.Multiselect =
+            False
 
-            If dialogo.ShowDialog() <> DialogResult.OK Then
+            If dialogo.ShowDialog(Me) <>
+           DialogResult.OK Then
 
                 Exit Sub
 
             End If
 
-            Try
-
-                Dim conteudoJson As String = File.ReadAllText(dialogo.FileName, Encoding.UTF8)
-
-                Dim arquivo As ArquivoExercicio = CampoCanvas.ImportarExercicioJson(conteudoJson)
-
-                _caminhoArquivoAtual = dialogo.FileName
-
-                If String.IsNullOrWhiteSpace(arquivo.Nome) Then
-
-                    _nomeExercicioAtual = Path.GetFileNameWithoutExtension(dialogo.FileName)
-
-                Else
-
-                    _nomeExercicioAtual = arquivo.Nome
-
-                End If
-
-                _categoriaExercicioAtual = If(String.IsNullOrWhiteSpace(arquivo.Categoria), "Tático", arquivo.Categoria)
-
-                _duracaoExercicioAtual = Math.Max(1, arquivo.DuracaoMinutos)
-
-                _descricaoExercicioAtual = If(arquivo.Descricao, String.Empty)
-
-                _observacoesExercicioAtual = If(arquivo.Observacoes, String.Empty)
-
-                MarcarComoSalvo()
-
-                ExcluirArquivoRecuperacao()
-
-                CampoCanvas.Focus()
-
-            Catch ex As Exception
-
-                MessageBox.Show(
-                    "Não foi possível abrir o exercício." &
-                    Environment.NewLine &
-                    Environment.NewLine &
-                    ex.Message,
-                    "Erro ao abrir",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error)
-
-            End Try
+            CarregarExercicioDoCaminho(
+            dialogo.FileName,
+            True)
 
         End Using
 
@@ -3941,6 +4426,105 @@ Public Class FrmPrincipal
             Environment.NewLine &
             ex.Message,
             "Erro ao salvar",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Error)
+
+            Return False
+
+        End Try
+
+    End Function
+
+    Private Function CarregarExercicioDoCaminho(
+    caminhoArquivo As String,
+    Optional usarComoArquivoAtual As Boolean = True
+) As Boolean
+
+        If CampoCanvas Is Nothing OrElse
+       String.IsNullOrWhiteSpace(
+           caminhoArquivo) OrElse
+       Not File.Exists(
+           caminhoArquivo) Then
+
+            Return False
+
+        End If
+
+        Try
+
+            Dim conteudoJson As String =
+            File.ReadAllText(
+                caminhoArquivo,
+                Encoding.UTF8)
+
+            Dim arquivo As ArquivoExercicio =
+            CampoCanvas.ImportarExercicioJson(
+                conteudoJson)
+
+            If usarComoArquivoAtual Then
+
+                _caminhoArquivoAtual =
+                caminhoArquivo
+
+            Else
+
+                _caminhoArquivoAtual =
+                String.Empty
+
+            End If
+
+            If String.IsNullOrWhiteSpace(
+            arquivo.Nome) Then
+
+                _nomeExercicioAtual =
+                Path.GetFileNameWithoutExtension(
+                    caminhoArquivo)
+
+            Else
+
+                _nomeExercicioAtual =
+                arquivo.Nome
+
+            End If
+
+            _categoriaExercicioAtual =
+            If(
+                String.IsNullOrWhiteSpace(
+                    arquivo.Categoria),
+                "Tático",
+                arquivo.Categoria)
+
+            _duracaoExercicioAtual =
+            Math.Max(
+                1,
+                arquivo.DuracaoMinutos)
+
+            _descricaoExercicioAtual =
+            If(
+                arquivo.Descricao,
+                String.Empty)
+
+            _observacoesExercicioAtual =
+            If(
+                arquivo.Observacoes,
+                String.Empty)
+
+            MarcarComoSalvo()
+
+            ExcluirArquivoRecuperacao()
+
+            CampoCanvas.Focus()
+
+            Return True
+
+        Catch ex As Exception
+
+            MessageBox.Show(
+            "Não foi possível abrir o exercício." &
+            Environment.NewLine &
+            Environment.NewLine &
+            ex.Message,
+            "Erro ao abrir",
             MessageBoxButtons.OK,
             MessageBoxIcon.Error)
 

@@ -7,22 +7,25 @@
     <Compile Update="Controles\CampoTatico.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="FrmConfiguracoesExercicio.vb">
+    <Compile Update="Formulários\FrmBibliotecaExercicios.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="FrmFormacoes.vb">
+    <Compile Update="Formulários\FrmConfiguracoesExercicio.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="FrmGerenciadorObjetos.vb">
+    <Compile Update="Formulários\FrmFormacoes.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="FrmPreferencias.vb">
+    <Compile Update="Formulários\FrmGerenciadorObjetos.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="FrmPrincipal.vb">
+    <Compile Update="Formulários\FrmPreferencias.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="FrmSobre.vb">
+    <Compile Update="Formulários\FrmPrincipal.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formulários\FrmSobre.vb">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
