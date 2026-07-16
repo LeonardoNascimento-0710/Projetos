@@ -98,8 +98,9 @@ Public Class FrmConfiguracoesExercicio
         End Set
 
     End Property
-
     Public Sub New()
+
+        InitializeComponent()
 
         Text =
             "Configurações do exercício"

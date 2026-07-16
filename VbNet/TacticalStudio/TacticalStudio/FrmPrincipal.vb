@@ -906,8 +906,15 @@ Public Class FrmPrincipal
 
     End Sub
 
-    Private Sub CampoCanvas_ObjetoSelecionadoAlterado(
-    objeto As ObjetoCampo)
+    Private Sub CampoCanvas_ObjetoSelecionadoAlterado(objeto As ObjetoCampo)
+
+        If CampoCanvas IsNot Nothing AndAlso CampoCanvas.QuantidadeObjetosSelecionados > 1 Then
+
+            MontarPainelSelecaoMultipla(CampoCanvas.QuantidadeObjetosSelecionados)
+
+            Exit Sub
+
+        End If
 
         MontarPainelPropriedades(objeto)
 
@@ -2199,6 +2206,16 @@ Public Class FrmPrincipal
 
         End If
 
+        If modificadores = Keys.Control AndAlso tecla = Keys.A Then
+
+            CampoCanvas.SelecionarTodos()
+
+            CampoCanvas.Focus()
+
+            Return True
+
+        End If
+
         If modificadores = (Keys.Control Or Keys.Alt) AndAlso tecla = Keys.P Then
 
             AbrirPreferencias()
@@ -2246,6 +2263,46 @@ Public Class FrmPrincipal
             AlternarGrade()
 
             CriarBarraZoom()
+
+            Return True
+
+        End If
+
+        If modificadores = (Keys.Control Or Keys.Alt) AndAlso tecla = Keys.H Then
+
+            CampoCanvas.AlinharSelecaoNaMesmaLinha()
+
+            Return True
+
+        End If
+
+        If modificadores = (Keys.Control Or Keys.Alt) AndAlso tecla = Keys.V Then
+
+            CampoCanvas.AlinharSelecaoNaMesmaColuna()
+
+            Return True
+
+        End If
+
+        If modificadores = (Keys.Control Or Keys.Shift) AndAlso tecla = Keys.H Then
+
+            CampoCanvas.DistribuirSelecaoHorizontalmente()
+
+            Return True
+
+        End If
+
+        If modificadores = (Keys.Control Or Keys.Shift) AndAlso tecla = Keys.V Then
+
+            CampoCanvas.DistribuirSelecaoVerticalmente()
+
+            Return True
+
+        End If
+
+        If modificadores = (Keys.Control Or Keys.Alt) AndAlso tecla = Keys.C Then
+
+            CampoCanvas.CentralizarSelecaoNoCampo()
 
             Return True
 
@@ -3456,6 +3513,273 @@ Public Class FrmPrincipal
 
         evento.HasMorePages =
             False
+
+    End Sub
+
+    Private Function CriarBotaoSelecaoMultipla(texto As String, largura As Integer, acao As Action, Optional habilitado As Boolean = True, Optional destaque As Boolean = False) As Button
+
+        Dim botao As New Button With {
+            .Text = texto,
+            .Width = largura,
+            .Height = 38,
+            .Margin = New Padding(3),
+            .FlatStyle = FlatStyle.Flat,
+            .Cursor = Cursors.Hand,
+            .UseVisualStyleBackColor = False,
+            .Enabled = habilitado
+        }
+
+        If destaque Then
+
+            botao.BackColor =
+                Tema.CorPrimaria
+
+            botao.ForeColor =
+                Color.White
+
+            botao.FlatAppearance.BorderColor =
+                Color.White
+
+        Else
+
+            botao.BackColor =
+                Tema.Painel
+
+            botao.ForeColor =
+                Tema.Texto
+
+            botao.FlatAppearance.BorderColor =
+                Tema.Borda
+
+        End If
+
+        botao.FlatAppearance.MouseOverBackColor =
+            Tema.PainelHover
+
+        AddHandler botao.Click,
+            Sub(sender, e)
+
+                acao.Invoke()
+
+                CampoCanvas.Focus()
+
+            End Sub
+
+        Return botao
+
+    End Function
+
+    Private Function CriarLinhaBotoesSelecao(largura As Integer) As FlowLayoutPanel
+
+        Return New FlowLayoutPanel With {
+            .Width = largura,
+            .Height = 46,
+            .FlowDirection =
+                FlowDirection.LeftToRight,
+            .WrapContents = False,
+            .Margin = New Padding(0),
+            .Padding = New Padding(0),
+            .BackColor = Tema.Painel
+        }
+
+    End Function
+
+    Private Sub MontarPainelSelecaoMultipla(
+    quantidade As Integer)
+
+        PnlDireito.Controls.Clear()
+
+        Dim painel As New FlowLayoutPanel With {
+            .Dock = DockStyle.Fill,
+            .FlowDirection = FlowDirection.TopDown,
+            .WrapContents = False,
+            .AutoScroll = True,
+            .BackColor = Tema.Painel,
+            .Padding = New Padding(10)
+        }
+
+        PnlDireito.Controls.Add(
+            painel)
+
+        Dim largura As Integer =
+            Math.Max(
+                190,
+                PnlDireito.ClientSize.Width - 32)
+
+        Dim larguraBotaoDuplo As Integer =
+            Math.Max(
+                85,
+                (largura - 12) \ 2)
+
+        Dim titulo As New Label With {
+            .Text = "SELEÇÃO MÚLTIPLA",
+            .ForeColor = Tema.CorPrimaria,
+            .Font = New Font(
+                "Segoe UI",
+                11.0F,
+                FontStyle.Bold),
+            .Width = largura,
+            .Height = 36,
+            .TextAlign =
+                ContentAlignment.MiddleLeft
+        }
+
+        painel.Controls.Add(
+            titulo)
+
+        Dim mensagem As New Label With {
+            .Text =
+                quantidade.ToString() &
+                " objetos selecionados." &
+                Environment.NewLine &
+                "O último objeto selecionado é usado " &
+                "como referência para o alinhamento.",
+            .ForeColor = Tema.TextoSecundario,
+            .Width = largura,
+            .Height = 68,
+            .TextAlign =
+                ContentAlignment.MiddleLeft
+        }
+
+        painel.Controls.Add(
+            mensagem)
+
+        Dim tituloAlinhamento As New Label With {
+            .Text = "ALINHAMENTO",
+            .ForeColor = Tema.Texto,
+            .Font = New Font(
+                "Segoe UI",
+                9.0F,
+                FontStyle.Bold),
+            .Width = largura,
+            .Height = 28,
+            .Margin = New Padding(
+                0,
+                8,
+                0,
+                2),
+            .TextAlign =
+                ContentAlignment.MiddleLeft
+        }
+
+        painel.Controls.Add(
+            tituloAlinhamento)
+
+        Dim linhaAlinhamento As FlowLayoutPanel =
+            CriarLinhaBotoesSelecao(
+                largura)
+
+        linhaAlinhamento.Controls.Add(
+            CriarBotaoSelecaoMultipla(
+                "Mesma linha",
+                larguraBotaoDuplo,
+                Sub()
+                    CampoCanvas.AlinharSelecaoNaMesmaLinha()
+                End Sub))
+
+        linhaAlinhamento.Controls.Add(
+            CriarBotaoSelecaoMultipla(
+                "Mesma coluna",
+                larguraBotaoDuplo,
+                Sub()
+                    CampoCanvas.AlinharSelecaoNaMesmaColuna()
+                End Sub))
+
+        painel.Controls.Add(
+            linhaAlinhamento)
+
+        Dim tituloDistribuicao As New Label With {
+            .Text = "DISTRIBUIÇÃO",
+            .ForeColor = Tema.Texto,
+            .Font = New Font(
+                "Segoe UI",
+                9.0F,
+                FontStyle.Bold),
+            .Width = largura,
+            .Height = 28,
+            .Margin = New Padding(
+                0,
+                8,
+                0,
+                2),
+            .TextAlign =
+                ContentAlignment.MiddleLeft
+        }
+
+        painel.Controls.Add(
+            tituloDistribuicao)
+
+        Dim linhaDistribuicao As FlowLayoutPanel =
+            CriarLinhaBotoesSelecao(
+                largura)
+
+        linhaDistribuicao.Controls.Add(
+            CriarBotaoSelecaoMultipla(
+                "Horizontal",
+                larguraBotaoDuplo,
+                Sub()
+                    CampoCanvas.DistribuirSelecaoHorizontalmente()
+                End Sub,
+                quantidade >= 3))
+
+        linhaDistribuicao.Controls.Add(
+            CriarBotaoSelecaoMultipla(
+                "Vertical",
+                larguraBotaoDuplo,
+                Sub()
+                    CampoCanvas.DistribuirSelecaoVerticalmente()
+                End Sub,
+                quantidade >= 3))
+
+        painel.Controls.Add(
+            linhaDistribuicao)
+
+        painel.Controls.Add(
+            CriarBotaoSelecaoMultipla(
+                "Centralizar seleção no campo",
+                largura,
+                Sub()
+                    CampoCanvas.CentralizarSelecaoNoCampo()
+                End Sub))
+
+        Dim tituloAcoes As New Label With {
+            .Text = "AÇÕES",
+            .ForeColor = Tema.Texto,
+            .Font = New Font(
+                "Segoe UI",
+                9.0F,
+                FontStyle.Bold),
+            .Width = largura,
+            .Height = 28,
+            .Margin = New Padding(
+                0,
+                12,
+                0,
+                2),
+            .TextAlign =
+                ContentAlignment.MiddleLeft
+        }
+
+        painel.Controls.Add(
+            tituloAcoes)
+
+        painel.Controls.Add(
+            CriarBotaoSelecaoMultipla(
+                "Duplicar seleção  (Ctrl+D)",
+                largura,
+                Sub()
+                    CampoCanvas.DuplicarSelecionado()
+                End Sub))
+
+        painel.Controls.Add(
+            CriarBotaoSelecaoMultipla(
+                "Excluir seleção",
+                largura,
+                Sub()
+                    CampoCanvas.ExcluirSelecionado()
+                End Sub,
+                True,
+                True))
 
     End Sub
 

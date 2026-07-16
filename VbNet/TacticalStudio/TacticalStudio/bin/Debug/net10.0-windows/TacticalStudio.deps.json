@@ -78,9 +78,6 @@
         }
       },
       "TacticalStudio.Core/1.0.0": {
-        "dependencies": {
-          "PDFsharp-GDI": "6.2.4"
-        },
         "runtime": {
           "TacticalStudio.Core.dll": {
             "assemblyVersion": "1.0.0.0",

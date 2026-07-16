@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="PDFsharp-GDI" Version="6.2.4" />
-  </ItemGroup>
+      </ItemGroup>
 
 </Project>

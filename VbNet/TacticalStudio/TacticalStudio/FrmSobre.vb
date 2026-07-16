@@ -3,6 +3,8 @@
 
     Public Sub New()
 
+        InitializeComponent()
+
         Text =
             "Sobre o TacticalStudio"
 

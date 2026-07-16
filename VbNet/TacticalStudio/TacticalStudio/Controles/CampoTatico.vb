@@ -93,6 +93,15 @@ Public Class CampoTatico
 
     Private _espacamentoGradePercentual As Integer = 5
 
+
+    Private ReadOnly _objetosSelecionados As New List(Of ObjetoCampo)()
+
+    Private ReadOnly _estadosMovimentoGrupo As New Dictionary(Of ObjetoCampo, EstadoMovimentoGrupo)()
+
+    Private _pontoInicialMovimentoGrupo As PointF
+
+    Private _movendoGrupo As Boolean
+
 #End Region
 
     Private Enum ModoManipulacaoCampo
@@ -107,6 +116,18 @@ Public Class CampoTatico
         AreaInferiorDireita
 
     End Enum
+
+    Private Class EstadoMovimentoGrupo
+
+        Public Property X As Double
+        Public Property Y As Double
+
+        Public Property XFinal As Double
+        Public Property YFinal As Double
+
+        Public Property PossuiPontoFinal As Boolean
+
+    End Class
 
 
     Public Sub New()
@@ -178,6 +199,17 @@ Public Class CampoTatico
 
         Get
             Return _objetoSelecionado
+        End Get
+
+    End Property
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public ReadOnly Property QuantidadeObjetosSelecionados As Integer
+
+        Get
+            Return _objetosSelecionados.Count
         End Get
 
     End Property
@@ -785,17 +817,13 @@ Public Class CampoTatico
     End Sub
 
     Private Sub SelecionarObjetoCriado(
-    objeto As ObjetoCampo)
+        objeto As ObjetoCampo)
 
-        DeselecionarTodos()
-
-        _objetoSelecionado = objeto
-        objeto.Selecionado = True
+        SelecionarSomente(objeto)
 
         RaiseEvent ObjetoCriado(objeto)
 
-        RaiseEvent ObjetoSelecionadoAlterado(
-        objeto)
+        NotificarSelecaoAlterada()
 
         RegistrarEstadoHistorico()
 
@@ -815,9 +843,12 @@ Public Class CampoTatico
     Public Sub LimparObjetos()
 
         _objetos.Clear()
+        _objetosSelecionados.Clear()
+        _estadosMovimentoGrupo.Clear()
 
         _objetoSelecionado = Nothing
         _arrastando = False
+        _movendoGrupo = False
 
         Capture = False
 
@@ -1978,7 +2009,7 @@ Public Class CampoTatico
 
         End Using
 
-        If jogador Is _objetoSelecionado Then
+        If jogador.Selecionado Then
 
             DesenharSelecao(
                 g,
@@ -2078,7 +2109,7 @@ Public Class CampoTatico
             g,
             centro)
 
-        If bola Is _objetoSelecionado Then
+        If bola.Selecionado Then
 
             DesenharSelecao(
                 g,
@@ -2238,7 +2269,7 @@ Public Class CampoTatico
 
         End Using
 
-        If cone Is _objetoSelecionado Then
+        If cone.Selecionado Then
 
             DesenharSelecao(
             g,
@@ -2383,7 +2414,7 @@ Public Class CampoTatico
 
         End Using
 
-        If gol Is _objetoSelecionado Then
+        If gol.Selecionado Then
 
             Dim areaGol As RectangleF =
             ObterRetanguloGol(
@@ -2777,7 +2808,7 @@ Public Class CampoTatico
 
         End Using
 
-        If manequim Is _objetoSelecionado Then
+        If manequim.Selecionado Then
 
             Dim area As RectangleF =
             ObterRetanguloManequim(centro)
@@ -2879,12 +2910,23 @@ Public Class CampoTatico
 
         End Using
 
-        If linha Is _objetoSelecionado Then
+        If linha.Selecionado Then
 
-            DesenharSelecaoLinha(
-            g,
-            inicio,
-            fim)
+            If _objetosSelecionados.Count = 1 Then
+
+                DesenharSelecaoLinha(
+                    g,
+                    inicio,
+                    fim)
+
+            Else
+
+                DesenharSelecaoLinhaMultipla(
+                    g,
+                    inicio,
+                    fim)
+
+            End If
 
         End If
 
@@ -2945,6 +2987,23 @@ Public Class CampoTatico
             fim.Y - 5.0F,
             10.0F,
             10.0F)
+
+        End Using
+
+    End Sub
+
+    Private Sub DesenharSelecaoLinhaMultipla(
+        g As Graphics,
+        inicio As PointF,
+        fim As PointF)
+
+        Using caneta As New Pen(Color.Gold, 2.0F)
+
+            caneta.DashStyle = DashStyle.Dot
+            caneta.StartCap = LineCap.Round
+            caneta.EndCap = LineCap.Round
+
+            g.DrawLine(caneta, inicio, fim)
 
         End Using
 
@@ -3029,11 +3088,21 @@ Public Class CampoTatico
 
         End Using
 
-        If area Is _objetoSelecionado Then
+        If area.Selecionado Then
 
-            DesenharSelecaoArea(
-            g,
-            retangulo)
+            If _objetosSelecionados.Count = 1 Then
+
+                DesenharSelecaoArea(
+                    g,
+                    retangulo)
+
+            Else
+
+                DesenharSelecaoRetangular(
+                    g,
+                    retangulo)
+
+            End If
 
         End If
 
@@ -3222,7 +3291,7 @@ Public Class CampoTatico
 
         End Using
 
-        If marcador Is _objetoSelecionado Then
+        If marcador.Selecionado Then
 
             DesenharSelecao(
             g,
@@ -3482,7 +3551,7 @@ Public Class CampoTatico
 
         End Using
 
-        If texto Is _objetoSelecionado Then
+        If texto.Selecionado Then
 
             DesenharSelecaoRetangular(
             g,
@@ -3605,32 +3674,58 @@ Public Class CampoTatico
 
     Public Sub DuplicarSelecionado()
 
-        If _objetoSelecionado Is Nothing Then
+        If _objetosSelecionados.Count = 0 Then
             Exit Sub
         End If
 
-        Dim estadoObjeto As EstadoObjetoCampo =
-        CapturarEstadoObjeto(
-            _objetoSelecionado)
+        Dim objetosOriginais As New List(Of ObjetoCampo)(_objetosSelecionados)
+        Dim objetosDuplicados As New List(Of ObjetoCampo)()
 
-        Dim objetoDuplicado As ObjetoCampo =
-        CriarObjetoDoEstado(
-            estadoObjeto)
+        For Each objetoOriginal As ObjetoCampo In objetosOriginais
 
-        If objetoDuplicado Is Nothing Then
+            Dim estadoObjeto As EstadoObjetoCampo =
+                CapturarEstadoObjeto(objetoOriginal)
+
+            Dim objetoDuplicado As ObjetoCampo =
+                CriarObjetoDoEstado(estadoObjeto)
+
+            If objetoDuplicado Is Nothing Then
+                Continue For
+            End If
+
+            DeslocarObjetoDuplicado(
+                objetoDuplicado,
+                4.0,
+                4.0)
+
+            _objetos.Add(objetoDuplicado)
+            objetosDuplicados.Add(objetoDuplicado)
+
+            RaiseEvent ObjetoCriado(objetoDuplicado)
+
+        Next
+
+        If objetosDuplicados.Count = 0 Then
             Exit Sub
         End If
 
-        DeslocarObjetoDuplicado(
-        objetoDuplicado,
-        4.0,
-        4.0)
+        DeselecionarTodos()
 
-        _objetos.Add(
-        objetoDuplicado)
+        For Each objeto As ObjetoCampo In objetosDuplicados
 
-        SelecionarObjetoCriado(
-        objetoDuplicado)
+            objeto.Selecionado = True
+            _objetosSelecionados.Add(objeto)
+
+        Next
+
+        _objetoSelecionado =
+            objetosDuplicados(objetosDuplicados.Count - 1)
+
+        NotificarSelecaoAlterada()
+
+        RegistrarEstadoHistorico()
+
+        Invalidate()
 
     End Sub
 
@@ -4527,6 +4622,10 @@ Public Class CampoTatico
 
             _objetos.Clear()
 
+            _objetosSelecionados.Clear()
+            _estadosMovimentoGrupo.Clear()
+            _movendoGrupo = False
+
             If estadoCampo IsNot Nothing AndAlso
            estadoCampo.Objetos IsNot Nothing Then
 
@@ -4594,43 +4693,33 @@ Public Class CampoTatico
 #Region "Mouse"
 
     Protected Overrides Sub OnMouseDown(
-    e As MouseEventArgs)
+        e As MouseEventArgs)
 
         MyBase.OnMouseDown(e)
 
         Focus()
 
-        If e.Button = MouseButtons.Middle OrElse (_espacoPressionado AndAlso e.Button = MouseButtons.Left) Then
+        If e.Button = MouseButtons.Middle OrElse
+           (_espacoPressionado AndAlso e.Button = MouseButtons.Left) Then
 
-            _panEmAndamento =
-        True
+            _panEmAndamento = True
+            _pontoInicialPan = e.Location
+            _deslocamentoInicialPan = _deslocamentoVisual
 
-            _pontoInicialPan =
-        e.Location
-
-            _deslocamentoInicialPan =
-        _deslocamentoVisual
-
-            Capture =
-        True
-
-            Cursor =
-        Cursors.SizeAll
+            Capture = True
+            Cursor = Cursors.SizeAll
 
             Exit Sub
 
         End If
 
-        e =
-    CriarEventoMouseMundo(e)
+        e = CriarEventoMouseMundo(e)
 
-        Dim campo As RectangleF =
-        ObterRetanguloCampo()
+        Dim campo As RectangleF = ObterRetanguloCampo()
 
         If e.Button = MouseButtons.Right Then
 
             CancelarCriacao()
-
             Exit Sub
 
         End If
@@ -4639,131 +4728,130 @@ Public Class CampoTatico
             Exit Sub
         End If
 
-        If Not campo.Contains(
-        CSng(e.X),
-        CSng(e.Y)) Then
+        If Not campo.Contains(CSng(e.X), CSng(e.Y)) Then
+            Exit Sub
+        End If
 
+        If FerramentaAtual <> FerramentaCampo.Selecionar Then
+
+            ExecutarFerramentaAtual(e.Location, campo)
             Exit Sub
 
         End If
 
-        If FerramentaAtual <>
-       FerramentaCampo.Selecionar Then
+        Dim selecaoAdicional As Boolean =
+            (ModifierKeys And Keys.Control) = Keys.Control OrElse
+            (ModifierKeys And Keys.Shift) = Keys.Shift
 
-            ExecutarFerramentaAtual(
-            e.Location,
-            campo)
+        If Not selecaoAdicional AndAlso
+           _objetosSelecionados.Count = 1 Then
 
-            Exit Sub
+            Dim manipuladorAtual As ModoManipulacaoCampo =
+                LocalizarManipuladorSelecionado(e.Location, campo)
 
-        End If
+            If manipuladorAtual <> ModoManipulacaoCampo.Nenhum Then
 
-        'Primeiro verifica as alças do objeto
-        'que já está selecionado.
-        Dim manipuladorAtual As ModoManipulacaoCampo =
-        LocalizarManipuladorSelecionado(
-            e.Location,
-            campo)
+                IniciarManipulacaoPorAlca(
+                    manipuladorAtual,
+                    e.Location,
+                    campo)
 
-        If manipuladorAtual <>
-       ModoManipulacaoCampo.Nenhum Then
+                Exit Sub
 
-            IniciarManipulacaoPorAlca(manipuladorAtual, e.Location, campo)
-
-            Exit Sub
+            End If
 
         End If
 
         Dim objetoClicado As ObjetoCampo =
-        LocalizarObjetoNaPosicao(
-            e.Location,
-            campo)
+            LocalizarObjetoNaPosicao(e.Location, campo)
+
+        If selecaoAdicional Then
+
+            If objetoClicado IsNot Nothing Then
+
+                AlternarSelecaoObjeto(objetoClicado)
+                NotificarSelecaoAlterada()
+
+            End If
+
+            Exit Sub
+
+        End If
 
         If objetoClicado Is Nothing Then
 
             DeselecionarTodos()
 
             _arrastando = False
+            _modoManipulacao = ModoManipulacaoCampo.Nenhum
 
-            _modoManipulacao =
-            ModoManipulacaoCampo.Nenhum
-
-            RaiseEvent ObjetoSelecionadoAlterado(
-            Nothing)
+            NotificarSelecaoAlterada()
 
             Cursor = Cursors.Default
 
-            Invalidate()
-
             Exit Sub
 
         End If
 
-        'Seleciona o objeto antes de verificar novamente
-        'se o clique ocorreu em uma ponta ou canto.
-        If _objetoSelecionado IsNot objetoClicado Then
+        If Not ObjetoEstaSelecionado(objetoClicado) Then
 
-            DeselecionarTodos()
-
-            _objetoSelecionado =
-            objetoClicado
-
-            _objetoSelecionado.Selecionado =
-            True
-
-            RaiseEvent ObjetoSelecionadoAlterado(
-            _objetoSelecionado)
-
-            Invalidate()
-
-        End If
-
-        'Depois de selecionar, verifica novamente as alças.
-        'Isso permite clicar diretamente na ponta de uma linha
-        'que ainda não estava selecionada.
-        Dim manipuladorNovo As ModoManipulacaoCampo =
-        LocalizarManipuladorSelecionado(
-            e.Location,
-            campo)
-
-        If manipuladorNovo <>
-       ModoManipulacaoCampo.Nenhum Then
-
-            IniciarManipulacaoPorAlca(manipuladorNovo, e.Location, campo)
-
-            Exit Sub
-
-        End If
-
-        'Se não clicou em uma alça, move o objeto inteiro.
-        If TypeOf _objetoSelecionado Is LinhaTatica Then
-
-            PrepararManipulacaoLinha(
-        DirectCast(
-            _objetoSelecionado,
-            LinhaTatica),
-        e.Location,
-        campo)
+            SelecionarSomente(objetoClicado)
+            NotificarSelecaoAlterada()
 
         Else
 
-            Dim centro As PointF =
-        ObterCentroObjetoTela(
-            _objetoSelecionado,
-            campo)
-
-            _offsetMouse = New PointF(
-        e.X - centro.X,
-        e.Y - centro.Y)
+            _objetoSelecionado = objetoClicado
 
         End If
 
-        _houveAlteracaoManipulacao =
-    False
+        If _objetosSelecionados.Count = 1 Then
 
-        _modoManipulacao =
-    ModoManipulacaoCampo.MoverObjeto
+            Dim manipuladorNovo As ModoManipulacaoCampo =
+                LocalizarManipuladorSelecionado(e.Location, campo)
 
+            If manipuladorNovo <> ModoManipulacaoCampo.Nenhum Then
+
+                IniciarManipulacaoPorAlca(
+                    manipuladorNovo,
+                    e.Location,
+                    campo)
+
+                Exit Sub
+
+            End If
+
+        End If
+
+        If _objetosSelecionados.Count > 1 Then
+
+            PrepararMovimentoGrupo(e.Location)
+
+        Else
+
+            _movendoGrupo = False
+
+            If TypeOf _objetoSelecionado Is LinhaTatica Then
+
+                PrepararManipulacaoLinha(
+                    DirectCast(_objetoSelecionado, LinhaTatica),
+                    e.Location,
+                    campo)
+
+            Else
+
+                Dim centro As PointF =
+                    ObterCentroObjetoTela(_objetoSelecionado, campo)
+
+                _offsetMouse = New PointF(
+                    e.X - centro.X,
+                    e.Y - centro.Y)
+
+            End If
+
+        End If
+
+        _houveAlteracaoManipulacao = False
+        _modoManipulacao = ModoManipulacaoCampo.MoverObjeto
         _arrastando = True
 
         Capture = True
@@ -4774,30 +4862,30 @@ Public Class CampoTatico
     End Sub
 
     Protected Overrides Sub OnMouseMove(
-    e As MouseEventArgs)
+        e As MouseEventArgs)
 
         MyBase.OnMouseMove(e)
 
         If _panEmAndamento Then
 
             Dim deltaX As Single = e.X - _pontoInicialPan.X
-
             Dim deltaY As Single = e.Y - _pontoInicialPan.Y
 
-            _deslocamentoVisual = New PointF(_deslocamentoInicialPan.X + deltaX, _deslocamentoInicialPan.Y + deltaY)
+            _deslocamentoVisual =
+                New PointF(
+                    _deslocamentoInicialPan.X + deltaX,
+                    _deslocamentoInicialPan.Y + deltaY)
 
             LimitarDeslocamentoVisual()
 
             Cursor = Cursors.SizeAll
 
             Invalidate()
-
             Exit Sub
 
         End If
 
-        e =
-    CriarEventoMouseMundo(e)
+        e = CriarEventoMouseMundo(e)
 
         Dim campo As RectangleF = ObterRetanguloCampo()
 
@@ -4807,14 +4895,16 @@ Public Class CampoTatico
 
             If _criacaoEmAndamento Then
 
-                _pontoPreviewTela = New PointF(LimitarSingle(
-                        e.X,
-                        campo.Left,
-                        campo.Right),
-                    LimitarSingle(
-                        e.Y,
-                        campo.Top,
-                        campo.Bottom))
+                _pontoPreviewTela =
+                    New PointF(
+                        LimitarSingle(
+                            e.X,
+                            campo.Left,
+                            campo.Right),
+                        LimitarSingle(
+                            e.Y,
+                            campo.Top,
+                            campo.Bottom))
 
                 Invalidate()
 
@@ -4825,96 +4915,70 @@ Public Class CampoTatico
         End If
 
         If _arrastando AndAlso
-   _objetoSelecionado IsNot Nothing Then
+           _objetoSelecionado IsNot Nothing Then
 
-            If _modoManipulacao =
-       ModoManipulacaoCampo.MoverObjeto Then
+            If _movendoGrupo Then
 
-                MoverObjetoSelecionado(
-            e.Location,
-            campo)
+                MoverGrupoSelecionado(e.Location, campo)
+
+            ElseIf _modoManipulacao =
+                   ModoManipulacaoCampo.MoverObjeto Then
+
+                MoverObjetoSelecionado(e.Location, campo)
 
             Else
 
-                RedimensionarObjetoSelecionado(
-            e.Location,
-            campo)
+                RedimensionarObjetoSelecionado(e.Location, campo)
 
             End If
 
-            _houveAlteracaoManipulacao =
-        True
+            _houveAlteracaoManipulacao = True
 
             Invalidate()
-
             Exit Sub
 
         End If
 
         Dim manipulador As ModoManipulacaoCampo =
-        LocalizarManipuladorSelecionado(
-            e.Location,
-            campo)
+            LocalizarManipuladorSelecionado(e.Location, campo)
 
-        If manipulador <>
-       ModoManipulacaoCampo.Nenhum Then
+        If manipulador <> ModoManipulacaoCampo.Nenhum Then
 
-            Cursor =
-            ObterCursorManipulador(
-                manipulador)
-
+            Cursor = ObterCursorManipulador(manipulador)
             Exit Sub
 
         End If
 
         Dim objetoSobMouse As ObjetoCampo =
-        LocalizarObjetoNaPosicao(
-            e.Location,
-            campo)
+            LocalizarObjetoNaPosicao(e.Location, campo)
 
         If objetoSobMouse IsNot Nothing Then
-
             Cursor = Cursors.Hand
-
         Else
-
             Cursor = Cursors.Default
-
         End If
 
     End Sub
 
     Protected Overrides Sub OnMouseUp(
-    e As MouseEventArgs)
+        e As MouseEventArgs)
 
         MyBase.OnMouseUp(e)
 
         If _panEmAndamento Then
 
-            If e.Button = MouseButtons.Middle OrElse e.Button = MouseButtons.Left Then
+            If e.Button = MouseButtons.Middle OrElse
+               e.Button = MouseButtons.Left Then
 
-                _panEmAndamento =
-            False
-
-                Capture =
-            False
+                _panEmAndamento = False
+                Capture = False
 
                 If _espacoPressionado Then
-
-                    Cursor =
-                Cursors.Hand
-
-                ElseIf FerramentaAtual =
-               FerramentaCampo.Selecionar Then
-
-                    Cursor =
-                Cursors.Default
-
+                    Cursor = Cursors.Hand
+                ElseIf FerramentaAtual = FerramentaCampo.Selecionar Then
+                    Cursor = Cursors.Default
                 Else
-
-                    Cursor =
-                Cursors.Cross
-
+                    Cursor = Cursors.Cross
                 End If
 
                 Exit Sub
@@ -4928,38 +4992,28 @@ Public Class CampoTatico
         End If
 
         Dim deveRegistrar As Boolean =
-        _arrastando AndAlso
-        _houveAlteracaoManipulacao
+            _arrastando AndAlso _houveAlteracaoManipulacao
 
         _arrastando = False
-
-        _modoManipulacao =
-        ModoManipulacaoCampo.Nenhum
+        _modoManipulacao = ModoManipulacaoCampo.Nenhum
 
         Capture = False
 
-        If FerramentaAtual =
-       FerramentaCampo.Selecionar Then
-
+        If FerramentaAtual = FerramentaCampo.Selecionar Then
             Cursor = Cursors.Default
-
         Else
-
             Cursor = Cursors.Cross
-
         End If
 
         If deveRegistrar Then
-
             RegistrarEstadoHistorico()
-
         End If
 
-        _estadoAntesManipulacao =
-        String.Empty
+        _movendoGrupo = False
+        _estadosMovimentoGrupo.Clear()
 
-        _houveAlteracaoManipulacao =
-        False
+        _estadoAntesManipulacao = String.Empty
+        _houveAlteracaoManipulacao = False
 
     End Sub
 
@@ -5476,22 +5530,25 @@ Public Class CampoTatico
 
     Public Sub ExcluirSelecionado()
 
-        If _objetoSelecionado Is Nothing Then
+        If _objetosSelecionados.Count = 0 Then
             Exit Sub
         End If
 
-        _objetos.Remove(
-        _objetoSelecionado)
+        Dim objetosRemover As New List(Of ObjetoCampo)(_objetosSelecionados)
 
-        _objetoSelecionado = Nothing
+        For Each objeto As ObjetoCampo In objetosRemover
+            _objetos.Remove(objeto)
+        Next
+
+        DeselecionarTodos()
+
         _arrastando = False
-
         _modoManipulacao = ModoManipulacaoCampo.Nenhum
+        _movendoGrupo = False
 
         Capture = False
 
-        RaiseEvent ObjetoSelecionadoAlterado(
-        Nothing)
+        NotificarSelecaoAlterada()
 
         RegistrarEstadoHistorico()
 
@@ -5921,6 +5978,10 @@ Public Class CampoTatico
     localMouse As Point,
     campo As RectangleF) As ModoManipulacaoCampo
 
+        If _objetosSelecionados.Count <> 1 Then
+            Return ModoManipulacaoCampo.Nenhum
+        End If
+
         If _objetoSelecionado Is Nothing Then
             Return ModoManipulacaoCampo.Nenhum
         End If
@@ -6160,12 +6221,722 @@ Public Class CampoTatico
     Private Sub DeselecionarTodos()
 
         For Each objeto As ObjetoCampo In _objetos
+            objeto.Selecionado = False
+        Next
+
+        _objetosSelecionados.Clear()
+        _objetoSelecionado = Nothing
+
+        _movendoGrupo = False
+        _estadosMovimentoGrupo.Clear()
+
+    End Sub
+
+#End Region
+
+
+#Region "Seleção múltipla"
+
+    Private Function ObjetoEstaSelecionado(
+        objeto As ObjetoCampo) As Boolean
+
+        If objeto Is Nothing Then
+            Return False
+        End If
+
+        Return _objetosSelecionados.Contains(objeto)
+
+    End Function
+
+    Private Sub SelecionarSomente(
+        objeto As ObjetoCampo)
+
+        DeselecionarTodos()
+
+        If objeto Is Nothing Then
+            Exit Sub
+        End If
+
+        objeto.Selecionado = True
+        _objetosSelecionados.Add(objeto)
+        _objetoSelecionado = objeto
+
+    End Sub
+
+    Private Sub AlternarSelecaoObjeto(
+        objeto As ObjetoCampo)
+
+        If objeto Is Nothing Then
+            Exit Sub
+        End If
+
+        If _objetosSelecionados.Contains(objeto) Then
 
             objeto.Selecionado = False
+            _objetosSelecionados.Remove(objeto)
+
+            If _objetoSelecionado Is objeto Then
+
+                If _objetosSelecionados.Count > 0 Then
+                    _objetoSelecionado =
+                        _objetosSelecionados(_objetosSelecionados.Count - 1)
+                Else
+                    _objetoSelecionado = Nothing
+                End If
+
+            End If
+
+        Else
+
+            objeto.Selecionado = True
+            _objetosSelecionados.Add(objeto)
+            _objetoSelecionado = objeto
+
+        End If
+
+    End Sub
+
+    Private Sub NotificarSelecaoAlterada()
+
+        RaiseEvent ObjetoSelecionadoAlterado(_objetoSelecionado)
+
+        Invalidate()
+
+    End Sub
+
+    Public Sub SelecionarTodos()
+
+        DeselecionarTodos()
+
+        For Each objeto As ObjetoCampo In _objetos
+
+            If Not objeto.Visivel Then
+                Continue For
+            End If
+
+            objeto.Selecionado = True
+            _objetosSelecionados.Add(objeto)
 
         Next
 
-        _objetoSelecionado = Nothing
+        If _objetosSelecionados.Count > 0 Then
+            _objetoSelecionado =
+                _objetosSelecionados(_objetosSelecionados.Count - 1)
+        End If
+
+        NotificarSelecaoAlterada()
+
+    End Sub
+
+    Private Sub PrepararMovimentoGrupo(
+        localMouse As Point)
+
+        _estadosMovimentoGrupo.Clear()
+
+        _pontoInicialMovimentoGrupo =
+            New PointF(localMouse.X, localMouse.Y)
+
+        For Each objeto As ObjetoCampo In _objetosSelecionados
+
+            Dim estado As New EstadoMovimentoGrupo With {
+                .X = objeto.Posicao.X,
+                .Y = objeto.Posicao.Y
+            }
+
+            If TypeOf objeto Is LinhaTatica Then
+
+                Dim linha As LinhaTatica =
+                    DirectCast(objeto, LinhaTatica)
+
+                estado.XFinal = linha.PosicaoFinal.X
+                estado.YFinal = linha.PosicaoFinal.Y
+                estado.PossuiPontoFinal = True
+
+            ElseIf TypeOf objeto Is AreaTatica Then
+
+                Dim area As AreaTatica =
+                    DirectCast(objeto, AreaTatica)
+
+                estado.XFinal = area.PosicaoFinal.X
+                estado.YFinal = area.PosicaoFinal.Y
+                estado.PossuiPontoFinal = True
+
+            End If
+
+            _estadosMovimentoGrupo.Add(objeto, estado)
+
+        Next
+
+        _movendoGrupo = _estadosMovimentoGrupo.Count > 1
+
+    End Sub
+
+    Private Sub MoverGrupoSelecionado(
+        localMouse As Point,
+        campo As RectangleF)
+
+        If _estadosMovimentoGrupo.Count = 0 Then
+            Exit Sub
+        End If
+
+        If campo.Width <= 0 OrElse campo.Height <= 0 Then
+            Exit Sub
+        End If
+
+        Dim deltaX As Double =
+            (localMouse.X - _pontoInicialMovimentoGrupo.X) /
+            campo.Width * 100.0
+
+        Dim deltaY As Double =
+            (localMouse.Y - _pontoInicialMovimentoGrupo.Y) /
+            campo.Height * 100.0
+
+        Dim menorX As Double = Double.MaxValue
+        Dim maiorX As Double = Double.MinValue
+        Dim menorY As Double = Double.MaxValue
+        Dim maiorY As Double = Double.MinValue
+
+        For Each item As KeyValuePair(Of ObjetoCampo, EstadoMovimentoGrupo) In _estadosMovimentoGrupo
+
+            Dim estado As EstadoMovimentoGrupo = item.Value
+
+            menorX = Math.Min(menorX, estado.X)
+            maiorX = Math.Max(maiorX, estado.X)
+            menorY = Math.Min(menorY, estado.Y)
+            maiorY = Math.Max(maiorY, estado.Y)
+
+            If estado.PossuiPontoFinal Then
+
+                menorX = Math.Min(menorX, estado.XFinal)
+                maiorX = Math.Max(maiorX, estado.XFinal)
+                menorY = Math.Min(menorY, estado.YFinal)
+                maiorY = Math.Max(maiorY, estado.YFinal)
+
+            End If
+
+        Next
+
+        If _encaixeGradeAtivo AndAlso
+           _objetoSelecionado IsNot Nothing Then
+
+            Dim estadoPrincipal As EstadoMovimentoGrupo = Nothing
+
+            If _estadosMovimentoGrupo.TryGetValue(
+                _objetoSelecionado,
+                estadoPrincipal) Then
+
+                Dim destinoX As Double =
+                    AjustarValorNaGrade(estadoPrincipal.X + deltaX)
+
+                Dim destinoY As Double =
+                    AjustarValorNaGrade(estadoPrincipal.Y + deltaY)
+
+                deltaX = destinoX - estadoPrincipal.X
+                deltaY = destinoY - estadoPrincipal.Y
+
+            End If
+
+        End If
+
+        deltaX =
+            Math.Max(
+                -menorX,
+                Math.Min(100.0 - maiorX, deltaX))
+
+        deltaY =
+            Math.Max(
+                -menorY,
+                Math.Min(100.0 - maiorY, deltaY))
+
+        For Each item As KeyValuePair(Of ObjetoCampo, EstadoMovimentoGrupo) In _estadosMovimentoGrupo
+
+            Dim objeto As ObjetoCampo = item.Key
+            Dim estado As EstadoMovimentoGrupo = item.Value
+
+            objeto.Posicao.X = estado.X + deltaX
+            objeto.Posicao.Y = estado.Y + deltaY
+
+            If TypeOf objeto Is LinhaTatica Then
+
+                Dim linha As LinhaTatica =
+                    DirectCast(objeto, LinhaTatica)
+
+                linha.PosicaoFinal.X = estado.XFinal + deltaX
+                linha.PosicaoFinal.Y = estado.YFinal + deltaY
+
+            ElseIf TypeOf objeto Is AreaTatica Then
+
+                Dim area As AreaTatica =
+                    DirectCast(objeto, AreaTatica)
+
+                area.PosicaoFinal.X = estado.XFinal + deltaX
+                area.PosicaoFinal.Y = estado.YFinal + deltaY
+
+            End If
+
+        Next
+
+    End Sub
+
+#End Region
+
+
+#Region "Alinhamento e distribuição"
+
+    Private Function ObterCentroPercentualObjeto(
+        objeto As ObjetoCampo) As PointF
+
+        If objeto Is Nothing Then
+            Return PointF.Empty
+        End If
+
+        If TypeOf objeto Is LinhaTatica Then
+
+            Dim linha As LinhaTatica =
+                DirectCast(objeto, LinhaTatica)
+
+            Return New PointF(
+                CSng((linha.Posicao.X + linha.PosicaoFinal.X) / 2.0),
+                CSng((linha.Posicao.Y + linha.PosicaoFinal.Y) / 2.0))
+
+        End If
+
+        If TypeOf objeto Is AreaTatica Then
+
+            Dim area As AreaTatica =
+                DirectCast(objeto, AreaTatica)
+
+            Return New PointF(
+                CSng((area.Posicao.X + area.PosicaoFinal.X) / 2.0),
+                CSng((area.Posicao.Y + area.PosicaoFinal.Y) / 2.0))
+
+        End If
+
+        Return New PointF(
+            CSng(objeto.Posicao.X),
+            CSng(objeto.Posicao.Y))
+
+    End Function
+
+    Private Function ObterLimitesPercentuaisObjeto(
+        objeto As ObjetoCampo) As RectangleF
+
+        Dim menorX As Double = objeto.Posicao.X
+        Dim maiorX As Double = objeto.Posicao.X
+        Dim menorY As Double = objeto.Posicao.Y
+        Dim maiorY As Double = objeto.Posicao.Y
+
+        If TypeOf objeto Is LinhaTatica Then
+
+            Dim linha As LinhaTatica =
+                DirectCast(objeto, LinhaTatica)
+
+            menorX = Math.Min(menorX, linha.PosicaoFinal.X)
+            maiorX = Math.Max(maiorX, linha.PosicaoFinal.X)
+            menorY = Math.Min(menorY, linha.PosicaoFinal.Y)
+            maiorY = Math.Max(maiorY, linha.PosicaoFinal.Y)
+
+        ElseIf TypeOf objeto Is AreaTatica Then
+
+            Dim area As AreaTatica =
+                DirectCast(objeto, AreaTatica)
+
+            menorX = Math.Min(menorX, area.PosicaoFinal.X)
+            maiorX = Math.Max(maiorX, area.PosicaoFinal.X)
+            menorY = Math.Min(menorY, area.PosicaoFinal.Y)
+            maiorY = Math.Max(maiorY, area.PosicaoFinal.Y)
+
+        End If
+
+        Return RectangleF.FromLTRB(
+            CSng(menorX),
+            CSng(menorY),
+            CSng(maiorX),
+            CSng(maiorY))
+
+    End Function
+
+    Private Sub AplicarDeltaPercentualObjeto(
+        objeto As ObjetoCampo,
+        deltaX As Double,
+        deltaY As Double)
+
+        objeto.Posicao.X += deltaX
+        objeto.Posicao.Y += deltaY
+
+        If TypeOf objeto Is LinhaTatica Then
+
+            Dim linha As LinhaTatica =
+                DirectCast(objeto, LinhaTatica)
+
+            linha.PosicaoFinal.X += deltaX
+            linha.PosicaoFinal.Y += deltaY
+
+        ElseIf TypeOf objeto Is AreaTatica Then
+
+            Dim area As AreaTatica =
+                DirectCast(objeto, AreaTatica)
+
+            area.PosicaoFinal.X += deltaX
+            area.PosicaoFinal.Y += deltaY
+
+        End If
+
+    End Sub
+
+    Private Function LimitarDeltaPercentualObjeto(
+        objeto As ObjetoCampo,
+        deltaX As Double,
+        deltaY As Double) As PointF
+
+        Dim limites As RectangleF =
+            ObterLimitesPercentuaisObjeto(objeto)
+
+        deltaX =
+            Math.Max(
+                -limites.Left,
+                Math.Min(100.0 - limites.Right, deltaX))
+
+        deltaY =
+            Math.Max(
+                -limites.Top,
+                Math.Min(100.0 - limites.Bottom, deltaY))
+
+        Return New PointF(CSng(deltaX), CSng(deltaY))
+
+    End Function
+
+    Private Function MoverObjetoPercentualmente(
+        objeto As ObjetoCampo,
+        deltaX As Double,
+        deltaY As Double) As Boolean
+
+        If objeto Is Nothing Then
+            Return False
+        End If
+
+        Dim deltaLimitado As PointF =
+            LimitarDeltaPercentualObjeto(objeto, deltaX, deltaY)
+
+        If Math.Abs(deltaLimitado.X) < 0.0001F AndAlso
+           Math.Abs(deltaLimitado.Y) < 0.0001F Then
+
+            Return False
+
+        End If
+
+        AplicarDeltaPercentualObjeto(
+            objeto,
+            deltaLimitado.X,
+            deltaLimitado.Y)
+
+        Return True
+
+    End Function
+
+    Private Function ObterLimitesPercentuaisSelecao() As RectangleF
+
+        If _objetosSelecionados.Count = 0 Then
+            Return RectangleF.Empty
+        End If
+
+        Dim menorX As Double = Double.MaxValue
+        Dim maiorX As Double = Double.MinValue
+        Dim menorY As Double = Double.MaxValue
+        Dim maiorY As Double = Double.MinValue
+
+        For Each objeto As ObjetoCampo In _objetosSelecionados
+
+            Dim limites As RectangleF =
+                ObterLimitesPercentuaisObjeto(objeto)
+
+            menorX = Math.Min(menorX, limites.Left)
+            maiorX = Math.Max(maiorX, limites.Right)
+            menorY = Math.Min(menorY, limites.Top)
+            maiorY = Math.Max(maiorY, limites.Bottom)
+
+        Next
+
+        Return RectangleF.FromLTRB(
+            CSng(menorX),
+            CSng(menorY),
+            CSng(maiorX),
+            CSng(maiorY))
+
+    End Function
+
+    Private Function MoverSelecaoPercentualmente(
+        deltaX As Double,
+        deltaY As Double) As Boolean
+
+        If _objetosSelecionados.Count = 0 Then
+            Return False
+        End If
+
+        Dim limites As RectangleF =
+            ObterLimitesPercentuaisSelecao()
+
+        deltaX =
+            Math.Max(
+                -limites.Left,
+                Math.Min(100.0 - limites.Right, deltaX))
+
+        deltaY =
+            Math.Max(
+                -limites.Top,
+                Math.Min(100.0 - limites.Bottom, deltaY))
+
+        If Math.Abs(deltaX) < 0.0001 AndAlso
+           Math.Abs(deltaY) < 0.0001 Then
+
+            Return False
+
+        End If
+
+        For Each objeto As ObjetoCampo In _objetosSelecionados
+            AplicarDeltaPercentualObjeto(objeto, deltaX, deltaY)
+        Next
+
+        Return True
+
+    End Function
+
+    Private Sub FinalizarAlinhamentoSelecao(
+        houveAlteracao As Boolean)
+
+        If Not houveAlteracao Then
+            Exit Sub
+        End If
+
+        RegistrarEstadoHistorico()
+        NotificarSelecaoAlterada()
+        Invalidate()
+
+    End Sub
+
+    Public Sub AlinharSelecaoNaMesmaLinha()
+
+        If _objetosSelecionados.Count < 2 OrElse
+           _objetoSelecionado Is Nothing Then
+
+            Exit Sub
+
+        End If
+
+        Dim centroReferencia As PointF =
+            ObterCentroPercentualObjeto(_objetoSelecionado)
+
+        Dim houveAlteracao As Boolean = False
+
+        For Each objeto As ObjetoCampo In _objetosSelecionados
+
+            If objeto Is _objetoSelecionado Then
+                Continue For
+            End If
+
+            Dim centroObjeto As PointF =
+                ObterCentroPercentualObjeto(objeto)
+
+            Dim deltaY As Double =
+                centroReferencia.Y - centroObjeto.Y
+
+            If MoverObjetoPercentualmente(objeto, 0.0, deltaY) Then
+                houveAlteracao = True
+            End If
+
+        Next
+
+        FinalizarAlinhamentoSelecao(houveAlteracao)
+
+    End Sub
+
+    Public Sub AlinharSelecaoNaMesmaColuna()
+
+        If _objetosSelecionados.Count < 2 OrElse
+           _objetoSelecionado Is Nothing Then
+
+            Exit Sub
+
+        End If
+
+        Dim centroReferencia As PointF =
+            ObterCentroPercentualObjeto(_objetoSelecionado)
+
+        Dim houveAlteracao As Boolean = False
+
+        For Each objeto As ObjetoCampo In _objetosSelecionados
+
+            If objeto Is _objetoSelecionado Then
+                Continue For
+            End If
+
+            Dim centroObjeto As PointF =
+                ObterCentroPercentualObjeto(objeto)
+
+            Dim deltaX As Double =
+                centroReferencia.X - centroObjeto.X
+
+            If MoverObjetoPercentualmente(objeto, deltaX, 0.0) Then
+                houveAlteracao = True
+            End If
+
+        Next
+
+        FinalizarAlinhamentoSelecao(houveAlteracao)
+
+    End Sub
+
+    Public Sub CentralizarSelecaoNoCampo()
+
+        If _objetosSelecionados.Count = 0 Then
+            Exit Sub
+        End If
+
+        Dim limites As RectangleF =
+            ObterLimitesPercentuaisSelecao()
+
+        Dim centroX As Double =
+            limites.Left + limites.Width / 2.0
+
+        Dim centroY As Double =
+            limites.Top + limites.Height / 2.0
+
+        Dim houveAlteracao As Boolean =
+            MoverSelecaoPercentualmente(
+                50.0 - centroX,
+                50.0 - centroY)
+
+        FinalizarAlinhamentoSelecao(houveAlteracao)
+
+    End Sub
+
+    Public Sub DistribuirSelecaoHorizontalmente()
+
+        If _objetosSelecionados.Count < 3 Then
+            Exit Sub
+        End If
+
+        Dim objetosOrdenados As New List(Of ObjetoCampo)(_objetosSelecionados)
+
+        objetosOrdenados.Sort(
+            Function(objetoA, objetoB)
+
+                Dim centroA As PointF =
+                    ObterCentroPercentualObjeto(objetoA)
+
+                Dim centroB As PointF =
+                    ObterCentroPercentualObjeto(objetoB)
+
+                Return centroA.X.CompareTo(centroB.X)
+
+            End Function)
+
+        Dim primeiroCentro As PointF =
+            ObterCentroPercentualObjeto(objetosOrdenados(0))
+
+        Dim ultimoCentro As PointF =
+            ObterCentroPercentualObjeto(
+                objetosOrdenados(objetosOrdenados.Count - 1))
+
+        Dim distanciaTotal As Double =
+            ultimoCentro.X - primeiroCentro.X
+
+        If Math.Abs(distanciaTotal) < 0.0001 Then
+            Exit Sub
+        End If
+
+        Dim intervalo As Double =
+            distanciaTotal / (objetosOrdenados.Count - 1)
+
+        Dim houveAlteracao As Boolean = False
+
+        For indice As Integer = 1 To objetosOrdenados.Count - 2
+
+            Dim objeto As ObjetoCampo = objetosOrdenados(indice)
+
+            Dim centroAtual As PointF =
+                ObterCentroPercentualObjeto(objeto)
+
+            Dim destinoX As Double =
+                primeiroCentro.X + intervalo * indice
+
+            If MoverObjetoPercentualmente(
+                objeto,
+                destinoX - centroAtual.X,
+                0.0) Then
+
+                houveAlteracao = True
+
+            End If
+
+        Next
+
+        FinalizarAlinhamentoSelecao(houveAlteracao)
+
+    End Sub
+
+    Public Sub DistribuirSelecaoVerticalmente()
+
+        If _objetosSelecionados.Count < 3 Then
+            Exit Sub
+        End If
+
+        Dim objetosOrdenados As New List(Of ObjetoCampo)(_objetosSelecionados)
+
+        objetosOrdenados.Sort(
+            Function(objetoA, objetoB)
+
+                Dim centroA As PointF =
+                    ObterCentroPercentualObjeto(objetoA)
+
+                Dim centroB As PointF =
+                    ObterCentroPercentualObjeto(objetoB)
+
+                Return centroA.Y.CompareTo(centroB.Y)
+
+            End Function)
+
+        Dim primeiroCentro As PointF =
+            ObterCentroPercentualObjeto(objetosOrdenados(0))
+
+        Dim ultimoCentro As PointF =
+            ObterCentroPercentualObjeto(
+                objetosOrdenados(objetosOrdenados.Count - 1))
+
+        Dim distanciaTotal As Double =
+            ultimoCentro.Y - primeiroCentro.Y
+
+        If Math.Abs(distanciaTotal) < 0.0001 Then
+            Exit Sub
+        End If
+
+        Dim intervalo As Double =
+            distanciaTotal / (objetosOrdenados.Count - 1)
+
+        Dim houveAlteracao As Boolean = False
+
+        For indice As Integer = 1 To objetosOrdenados.Count - 2
+
+            Dim objeto As ObjetoCampo = objetosOrdenados(indice)
+
+            Dim centroAtual As PointF =
+                ObterCentroPercentualObjeto(objeto)
+
+            Dim destinoY As Double =
+                primeiroCentro.Y + intervalo * indice
+
+            If MoverObjetoPercentualmente(
+                objeto,
+                0.0,
+                destinoY - centroAtual.Y) Then
+
+                houveAlteracao = True
+
+            End If
+
+        Next
+
+        FinalizarAlinhamentoSelecao(houveAlteracao)
 
     End Sub
 

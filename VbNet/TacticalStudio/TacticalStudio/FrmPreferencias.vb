@@ -267,6 +267,8 @@ Public Class FrmPreferencias
 #End Region
     Public Sub New()
 
+        InitializeComponent()
+
         Text =
             "Preferências do TacticalStudio"
 
