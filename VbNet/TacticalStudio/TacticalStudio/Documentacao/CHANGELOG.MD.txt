@@ -909,3 +909,42 @@ Próxima etapa sugerida:
 - Adicionar cabeçalho com nome, categoria e duração;
 - Permitir exportar imagem com ou sem cabeçalho;
 - Preparar impressão e exportação em PDF.
+
+======================================================================
+27. ETAPA 19 - CABEÇALHO NA EXPORTAÇÃO PNG
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.19.0
+
+Arquivos alterados:
+- Controles\CampoTatico.vb
+- FrmPrincipal.vb
+
+Alterações realizadas:
+- Adicionada exportação opcional com cabeçalho;
+- O cabeçalho exibe o nome do exercício;
+- O cabeçalho exibe categoria e duração;
+- A descrição pode ser incluída na imagem;
+- As observações podem ser incluídas na imagem;
+- A altura do cabeçalho é calculada automaticamente;
+- O texto se adapta à largura e à resolução da exportação;
+- Adicionada faixa visual com a cor principal do TacticalStudio;
+- Mantida a opção de exportar somente o campo;
+- A exportação pergunta se o cabeçalho deve ser incluído;
+- A proporção e a qualidade do campo continuam preservadas;
+- A exportação não altera o estado salvo do exercício.
+
+Resultado:
+- O exercício pode ser exportado como uma ficha completa;
+- Os dados do treino aparecem junto da prancheta;
+- O usuário pode escolher entre imagem completa ou somente o campo;
+- Textos longos são distribuídos automaticamente;
+- O visual mantém a identidade do TacticalStudio.
+
+Próxima etapa sugerida:
+- Implementar exportação em PDF;
+- Adicionar impressão do exercício;
+- Permitir escolher resolução da imagem;
+- Criar uma tela de pré-visualização da exportação;
+- Preparar identidade visual e logotipo no cabeçalho.
