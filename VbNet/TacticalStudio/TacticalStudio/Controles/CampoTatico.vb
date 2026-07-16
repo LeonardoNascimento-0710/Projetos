@@ -163,6 +163,8 @@ Public Class CampoTatico
 
     Public Event VisualizacaoAlterada(zoomPercentual As Integer)
 
+    Public Event ObjetosAlterados()
+
 #End Region
 
 #Region "Propriedades"
@@ -245,6 +247,28 @@ Public Class CampoTatico
 
         Get
             Return ExisteObjetoBloqueadoNaSelecao()
+        End Get
+
+    End Property
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public ReadOnly Property ObjetosAtuais As IReadOnlyList(Of ObjetoCampo)
+
+        Get
+            Return New List(Of ObjetoCampo)(_objetos).AsReadOnly()
+        End Get
+
+    End Property
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public ReadOnly Property ObjetosSelecionadosAtuais As IReadOnlyList(Of ObjetoCampo)
+
+        Get
+            Return New List(Of ObjetoCampo)(_objetosSelecionados).AsReadOnly()
         End Get
 
     End Property
@@ -886,6 +910,9 @@ Public Class CampoTatico
         _movendoGrupo = False
 
         Capture = False
+
+        RaiseEvent ObjetoSelecionadoAlterado(Nothing)
+        RaiseEvent ObjetosAlterados()
 
         Invalidate()
 
@@ -4065,116 +4092,13 @@ Public Class CampoTatico
 
     Public Sub TrazerParaFrente()
 
-        If _objetoSelecionado Is Nothing Then
-            Exit Sub
-        End If
-
-        Dim indiceAtual As Integer =
-        _objetos.IndexOf(
-            _objetoSelecionado)
-
-        If indiceAtual < 0 Then
-            Exit Sub
-        End If
-
-        Dim camadaAtual As Integer =
-        ObterCamadaVisual(
-            _objetoSelecionado)
-
-        Dim ultimoIndiceCamada As Integer =
-        indiceAtual
-
-        For indice As Integer =
-        indiceAtual + 1 To _objetos.Count - 1
-
-            If ObterCamadaVisual(
-                _objetos(indice)) =
-               camadaAtual Then
-
-                ultimoIndiceCamada =
-                indice
-
-            End If
-
-        Next
-
-        If ultimoIndiceCamada =
-       indiceAtual Then
-
-            Exit Sub
-
-        End If
-
-        Dim objeto As ObjetoCampo =
-        _objetoSelecionado
-
-        _objetos.RemoveAt(
-        indiceAtual)
-
-        _objetos.Add(
-        objeto)
-
-        RegistrarEstadoHistorico()
-
-        Invalidate()
+        TrazerSelecionadosParaFrente()
 
     End Sub
 
     Public Sub EnviarParaTras()
 
-        If _objetoSelecionado Is Nothing Then
-            Exit Sub
-        End If
-
-        Dim indiceAtual As Integer =
-        _objetos.IndexOf(
-            _objetoSelecionado)
-
-        If indiceAtual < 0 Then
-            Exit Sub
-        End If
-
-        Dim camadaAtual As Integer =
-        ObterCamadaVisual(
-            _objetoSelecionado)
-
-        Dim primeiroIndiceCamada As Integer =
-        indiceAtual
-
-        For indice As Integer =
-        indiceAtual - 1 To 0 Step -1
-
-            If ObterCamadaVisual(
-            _objetos(indice)) =
-           camadaAtual Then
-
-                primeiroIndiceCamada =
-                indice
-
-            End If
-
-        Next
-
-        If primeiroIndiceCamada =
-       indiceAtual Then
-
-            Exit Sub
-
-        End If
-
-        Dim objeto As ObjetoCampo =
-        _objetoSelecionado
-
-        _objetos.RemoveAt(
-        indiceAtual)
-
-        _objetos.Insert(
-        0,
-        objeto)
-
-        RegistrarEstadoHistorico()
-
-        Invalidate()
+        EnviarSelecionadosParaTras()
 
     End Sub
 
@@ -4291,6 +4215,8 @@ Public Class CampoTatico
         _historico.Count - 1
 
         AtualizarDisponibilidadeHistorico()
+
+        RaiseEvent ObjetosAlterados()
 
     End Sub
 
@@ -4847,6 +4773,8 @@ Public Class CampoTatico
 
         RaiseEvent ObjetoSelecionadoAlterado(
         Nothing)
+
+        RaiseEvent ObjetosAlterados()
 
         Invalidate()
 
@@ -8042,10 +7970,6 @@ Public Class CampoTatico
 
         For Each item As ObjetoCampo In _objetos
 
-            If Not item.Visivel Then
-                Continue For
-            End If
-
             If String.Equals(
                 item.GrupoId,
                 objeto.GrupoId,
@@ -8213,6 +8137,459 @@ Public Class CampoTatico
         Return False
 
     End Function
+
+#End Region
+
+#Region "Lista de objetos e camadas"
+
+    Public Sub SelecionarObjetosPelaLista(
+    objetos As IEnumerable(Of ObjetoCampo))
+
+        DeselecionarTodos()
+
+        If objetos Is Nothing Then
+
+            NotificarSelecaoAlterada()
+
+            Exit Sub
+
+        End If
+
+        Dim objetosAdicionar As New List(Of ObjetoCampo)()
+
+        For Each objeto As ObjetoCampo In objetos
+
+            If objeto Is Nothing OrElse
+               Not _objetos.Contains(objeto) Then
+
+                Continue For
+
+            End If
+
+            Dim relacionados As List(Of ObjetoCampo) =
+                ObterObjetosRelacionadosSelecao(objeto)
+
+            For Each relacionado As ObjetoCampo In relacionados
+
+                If Not objetosAdicionar.Contains(relacionado) Then
+
+                    objetosAdicionar.Add(relacionado)
+
+                End If
+
+            Next
+
+            _objetoSelecionado =
+                objeto
+
+        Next
+
+        For Each objeto As ObjetoCampo In objetosAdicionar
+
+            objeto.Selecionado =
+                True
+
+            _objetosSelecionados.Add(
+                objeto)
+
+        Next
+
+        If _objetoSelecionado Is Nothing AndAlso
+           _objetosSelecionados.Count > 0 Then
+
+            _objetoSelecionado =
+                _objetosSelecionados(
+                    _objetosSelecionados.Count - 1)
+
+        End If
+
+        NotificarSelecaoAlterada()
+
+    End Sub
+
+    Public Sub DefinirVisibilidadeObjetos(
+    objetos As IEnumerable(Of ObjetoCampo),
+    visivel As Boolean)
+
+        If objetos Is Nothing Then
+            Exit Sub
+        End If
+
+        Dim houveAlteracao As Boolean =
+            False
+
+        Dim processados As New List(Of ObjetoCampo)()
+
+        For Each objeto As ObjetoCampo In objetos
+
+            If objeto Is Nothing OrElse
+               Not _objetos.Contains(objeto) OrElse
+               processados.Contains(objeto) Then
+
+                Continue For
+
+            End If
+
+            processados.Add(
+                objeto)
+
+            If objeto.Visivel <> visivel Then
+
+                objeto.Visivel =
+                    visivel
+
+                houveAlteracao =
+                    True
+
+            End If
+
+        Next
+
+        If Not houveAlteracao Then
+            Exit Sub
+        End If
+
+        RegistrarEstadoHistorico()
+        NotificarSelecaoAlterada()
+        Invalidate()
+
+    End Sub
+
+    Public Sub DefinirBloqueioObjetos(
+    objetos As IEnumerable(Of ObjetoCampo),
+    bloqueado As Boolean)
+
+        If objetos Is Nothing Then
+            Exit Sub
+        End If
+
+        Dim houveAlteracao As Boolean =
+            False
+
+        Dim processados As New List(Of ObjetoCampo)()
+
+        For Each objeto As ObjetoCampo In objetos
+
+            If objeto Is Nothing OrElse
+               Not _objetos.Contains(objeto) OrElse
+               processados.Contains(objeto) Then
+
+                Continue For
+
+            End If
+
+            processados.Add(
+                objeto)
+
+            If objeto.Bloqueado <> bloqueado Then
+
+                objeto.Bloqueado =
+                    bloqueado
+
+                houveAlteracao =
+                    True
+
+            End If
+
+        Next
+
+        If Not houveAlteracao Then
+            Exit Sub
+        End If
+
+        RegistrarEstadoHistorico()
+        NotificarSelecaoAlterada()
+        Invalidate()
+
+    End Sub
+
+    Private Function ObterIndicesCamadaVisual(
+    camada As Integer) As List(Of Integer)
+
+        Dim indices As New List(Of Integer)()
+
+        For indice As Integer =
+            0 To _objetos.Count - 1
+
+            If ObterCamadaVisual(
+                _objetos(indice)) = camada Then
+
+                indices.Add(
+                    indice)
+
+            End If
+
+        Next
+
+        Return indices
+
+    End Function
+
+    Private Sub TrocarObjetosDePosicao(
+    indiceA As Integer,
+    indiceB As Integer)
+
+        If indiceA = indiceB Then
+            Exit Sub
+        End If
+
+        Dim temporario As ObjetoCampo =
+            _objetos(indiceA)
+
+        _objetos(indiceA) =
+            _objetos(indiceB)
+
+        _objetos(indiceB) =
+            temporario
+
+    End Sub
+
+    Private Sub FinalizarAlteracaoCamada(
+    houveAlteracao As Boolean)
+
+        If Not houveAlteracao Then
+            Exit Sub
+        End If
+
+        RegistrarEstadoHistorico()
+        NotificarSelecaoAlterada()
+        Invalidate()
+
+    End Sub
+
+    Public Sub SubirCamadaSelecionados()
+
+        If Not PodeManipularSelecao() Then
+            Exit Sub
+        End If
+
+        Dim houveAlteracao As Boolean =
+            False
+
+        For camada As Integer =
+            0 To 3
+
+            Dim indices As List(Of Integer) =
+                ObterIndicesCamadaVisual(camada)
+
+            For posicao As Integer =
+                indices.Count - 2 To 0 Step -1
+
+                Dim indiceAtual As Integer =
+                    indices(posicao)
+
+                Dim indiceFrente As Integer =
+                    indices(posicao + 1)
+
+                Dim objetoAtual As ObjetoCampo =
+                    _objetos(indiceAtual)
+
+                Dim objetoFrente As ObjetoCampo =
+                    _objetos(indiceFrente)
+
+                If _objetosSelecionados.Contains(objetoAtual) AndAlso
+                   Not _objetosSelecionados.Contains(objetoFrente) Then
+
+                    TrocarObjetosDePosicao(
+                        indiceAtual,
+                        indiceFrente)
+
+                    houveAlteracao =
+                        True
+
+                End If
+
+            Next
+
+        Next
+
+        FinalizarAlteracaoCamada(
+            houveAlteracao)
+
+    End Sub
+
+    Public Sub DescerCamadaSelecionados()
+
+        If Not PodeManipularSelecao() Then
+            Exit Sub
+        End If
+
+        Dim houveAlteracao As Boolean =
+            False
+
+        For camada As Integer =
+            0 To 3
+
+            Dim indices As List(Of Integer) =
+                ObterIndicesCamadaVisual(camada)
+
+            For posicao As Integer =
+                1 To indices.Count - 1
+
+                Dim indiceAtual As Integer =
+                    indices(posicao)
+
+                Dim indiceTras As Integer =
+                    indices(posicao - 1)
+
+                Dim objetoAtual As ObjetoCampo =
+                    _objetos(indiceAtual)
+
+                Dim objetoTras As ObjetoCampo =
+                    _objetos(indiceTras)
+
+                If _objetosSelecionados.Contains(objetoAtual) AndAlso
+                   Not _objetosSelecionados.Contains(objetoTras) Then
+
+                    TrocarObjetosDePosicao(
+                        indiceAtual,
+                        indiceTras)
+
+                    houveAlteracao =
+                        True
+
+                End If
+
+            Next
+
+        Next
+
+        FinalizarAlteracaoCamada(
+            houveAlteracao)
+
+    End Sub
+
+    Public Sub TrazerSelecionadosParaFrente()
+
+        If Not PodeManipularSelecao() Then
+            Exit Sub
+        End If
+
+        Dim houveAlteracao As Boolean =
+            False
+
+        For camada As Integer =
+            0 To 3
+
+            Dim indices As List(Of Integer) =
+                ObterIndicesCamadaVisual(camada)
+
+            If indices.Count < 2 Then
+                Continue For
+            End If
+
+            Dim ordemAtual As New List(Of ObjetoCampo)()
+            Dim novaOrdem As New List(Of ObjetoCampo)()
+
+            For Each indice As Integer In indices
+                ordemAtual.Add(_objetos(indice))
+            Next
+
+            For Each objeto As ObjetoCampo In ordemAtual
+
+                If Not _objetosSelecionados.Contains(objeto) Then
+                    novaOrdem.Add(objeto)
+                End If
+
+            Next
+
+            For Each objeto As ObjetoCampo In ordemAtual
+
+                If _objetosSelecionados.Contains(objeto) Then
+                    novaOrdem.Add(objeto)
+                End If
+
+            Next
+
+            For posicao As Integer =
+                0 To indices.Count - 1
+
+                If Not ReferenceEquals(
+                    _objetos(indices(posicao)),
+                    novaOrdem(posicao)) Then
+
+                    houveAlteracao =
+                        True
+
+                End If
+
+                _objetos(indices(posicao)) =
+                    novaOrdem(posicao)
+
+            Next
+
+        Next
+
+        FinalizarAlteracaoCamada(
+            houveAlteracao)
+
+    End Sub
+
+    Public Sub EnviarSelecionadosParaTras()
+
+        If Not PodeManipularSelecao() Then
+            Exit Sub
+        End If
+
+        Dim houveAlteracao As Boolean =
+            False
+
+        For camada As Integer =
+            0 To 3
+
+            Dim indices As List(Of Integer) =
+                ObterIndicesCamadaVisual(camada)
+
+            If indices.Count < 2 Then
+                Continue For
+            End If
+
+            Dim ordemAtual As New List(Of ObjetoCampo)()
+            Dim novaOrdem As New List(Of ObjetoCampo)()
+
+            For Each indice As Integer In indices
+                ordemAtual.Add(_objetos(indice))
+            Next
+
+            For Each objeto As ObjetoCampo In ordemAtual
+
+                If _objetosSelecionados.Contains(objeto) Then
+                    novaOrdem.Add(objeto)
+                End If
+
+            Next
+
+            For Each objeto As ObjetoCampo In ordemAtual
+
+                If Not _objetosSelecionados.Contains(objeto) Then
+                    novaOrdem.Add(objeto)
+                End If
+
+            Next
+
+            For posicao As Integer =
+                0 To indices.Count - 1
+
+                If Not ReferenceEquals(
+                    _objetos(indices(posicao)),
+                    novaOrdem(posicao)) Then
+
+                    houveAlteracao =
+                        True
+
+                End If
+
+                _objetos(indices(posicao)) =
+                    novaOrdem(posicao)
+
+            Next
+
+        Next
+
+        FinalizarAlteracaoCamada(
+            houveAlteracao)
+
+    End Sub
 
 #End Region
 

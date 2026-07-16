@@ -48,6 +48,8 @@ Public Class FrmPrincipal
 
     Private LblZoom As Label
 
+    Private _frmGerenciadorObjetos As FrmGerenciadorObjetos
+
 #End Region
 
     Private Sub FrmPrincipal_Load(
@@ -2156,6 +2158,33 @@ Public Class FrmPrincipal
 
         End If
 
+        If modificadores = (Keys.Control Or Keys.Shift) AndAlso
+           tecla = Keys.O Then
+
+            AbrirGerenciadorObjetos()
+
+            Return True
+
+        End If
+
+        If modificadores = (Keys.Control Or Keys.Alt) AndAlso
+           tecla = Keys.Up Then
+
+            CampoCanvas.SubirCamadaSelecionados()
+
+            Return True
+
+        End If
+
+        If modificadores = (Keys.Control Or Keys.Alt) AndAlso
+           tecla = Keys.Down Then
+
+            CampoCanvas.DescerCamadaSelecionados()
+
+            Return True
+
+        End If
+
         If modificadores = Keys.Control AndAlso tecla = Keys.N Then
 
             NovoExercicio_Click(
@@ -2355,7 +2384,7 @@ Public Class FrmPrincipal
         Dim painelArquivo As New FlowLayoutPanel With {
             .Name = "PnlArquivoDinamico",
             .Dock = DockStyle.Right,
-            .Width = 890,
+            .Width = 980,
             .FlowDirection = FlowDirection.LeftToRight,
             .WrapContents = False,
             .Padding = New Padding(5),
@@ -2377,6 +2406,8 @@ Public Class FrmPrincipal
         painelArquivo.Controls.Add(CriarBotaoArquivo("Imprimir", AddressOf ImprimirExercicio_Click))
 
         painelArquivo.Controls.Add(CriarBotaoArquivo("Opções", AddressOf Preferencias_Click))
+
+        painelArquivo.Controls.Add(CriarBotaoArquivo("Objetos", AddressOf Objetos_Click))
 
         painelArquivo.Controls.Add(CriarBotaoArquivo("Sobre", AddressOf Sobre_Click))
 
@@ -2542,6 +2573,14 @@ Public Class FrmPrincipal
 
             CriarBarraZoom()
 
+            If _frmGerenciadorObjetos IsNot Nothing AndAlso
+               Not _frmGerenciadorObjetos.IsDisposed Then
+
+                _frmGerenciadorObjetos.AplicarTemaAtual()
+                _frmGerenciadorObjetos.AtualizarConteudo()
+
+            End If
+
             If CampoCanvas IsNot Nothing Then
 
                 MontarPainelPropriedades(
@@ -2576,6 +2615,46 @@ Public Class FrmPrincipal
 
         CampoCanvas.EspacamentoGradePercentual =
         _preferencias.EspacamentoGradePercentual
+
+    End Sub
+
+    Private Sub Objetos_Click(
+    sender As Object,
+    e As EventArgs)
+
+        AbrirGerenciadorObjetos()
+
+    End Sub
+
+    Private Sub AbrirGerenciadorObjetos()
+
+        If CampoCanvas Is Nothing Then
+            Exit Sub
+        End If
+
+        If _frmGerenciadorObjetos Is Nothing OrElse
+           _frmGerenciadorObjetos.IsDisposed Then
+
+            _frmGerenciadorObjetos =
+                New FrmGerenciadorObjetos(
+                    CampoCanvas)
+
+            AddHandler _frmGerenciadorObjetos.FormClosed,
+                Sub(sender, e)
+                    _frmGerenciadorObjetos = Nothing
+                End Sub
+
+            _frmGerenciadorObjetos.Show(
+                Me)
+
+        Else
+
+            _frmGerenciadorObjetos.AplicarTemaAtual()
+            _frmGerenciadorObjetos.AtualizarConteudo()
+            _frmGerenciadorObjetos.BringToFront()
+            _frmGerenciadorObjetos.Activate()
+
+        End If
 
     End Sub
 
@@ -3040,6 +3119,13 @@ Public Class FrmPrincipal
         _temporizadorAutosave.Stop()
 
         ExcluirArquivoRecuperacao()
+
+        If _frmGerenciadorObjetos IsNot Nothing AndAlso
+           Not _frmGerenciadorObjetos.IsDisposed Then
+
+            _frmGerenciadorObjetos.Close()
+
+        End If
 
         MyBase.OnFormClosing(e)
 

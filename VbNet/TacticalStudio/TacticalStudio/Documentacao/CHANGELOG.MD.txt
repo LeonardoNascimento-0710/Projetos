@@ -1391,3 +1391,66 @@ Próxima etapa sugerida:
 - Permitir ocultar e exibir elementos;
 - Criar bloqueio e visibilidade pela lista;
 - Adicionar seleção por tipo de objeto.
+
+======================================================================
+37. ETAPA 29 - LISTA DE OBJETOS E GERENCIAMENTO DE CAMADAS
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.29.0
+
+Arquivos criados:
+- FrmGerenciadorObjetos.vb
+
+Arquivos alterados:
+- Controles\CampoTatico.vb
+- FrmPrincipal.vb
+- InformacoesAplicacao.vb
+
+Alterações realizadas:
+- Criado gerenciador de objetos em janela própria;
+- Implementada listagem de todos os objetos do exercício;
+- Adicionada pesquisa por nome;
+- Adicionado filtro por tipo;
+- Implementada seleção simples e múltipla pela lista;
+- Sincronizada a seleção entre a lista e o campo;
+- Adicionada identificação visual de grupos;
+- Adicionado estado visível ou oculto;
+- Adicionado estado bloqueado ou desbloqueado;
+- Implementados comandos para mostrar e ocultar objetos;
+- Implementados comandos para bloquear e desbloquear;
+- Implementado subir uma camada;
+- Implementado descer uma camada;
+- Implementado trazer para frente;
+- Implementado enviar para trás;
+- Implementada exclusão pela lista;
+- Integrado com grupos;
+- Integrado com histórico;
+- Integrado com desfazer e refazer;
+- Integrado com salvar e abrir;
+- Adicionado botão Objetos na barra superior;
+- Adicionado atalho Ctrl+Shift+O;
+- Adicionados atalhos para gerenciamento de camadas;
+- Atualizada a versão exibida para 0.29.0.
+
+Correções:
+- Corrigida a seleção que exigia clicar e arrastar para fora da lista;
+- Removida a reconstrução completa da ListView durante o clique;
+- A seleção agora é atualizada sem recriar os itens;
+- Corrigida a sincronização entre o gerenciador e o campo;
+- Ctrl+clique passou a funcionar corretamente na lista;
+- A seleção de grupos permanece sincronizada.
+
+Resultado:
+- O exercício pode ser gerenciado por uma lista completa de objetos;
+- Camadas podem ser reorganizadas com precisão;
+- Objetos podem ser ocultados e protegidos diretamente pela lista;
+- A seleção ficou estável e responsiva;
+- O gerenciamento de exercícios complexos ficou mais rápido.
+
+Próxima etapa sugerida:
+- Implementar seleção por tipo;
+- Adicionar renomeação de objetos;
+- Criar filtros avançados;
+- Adicionar ordenação por tipo, nome e camada;
+- Criar atalhos de visibilidade e bloqueio em lote.

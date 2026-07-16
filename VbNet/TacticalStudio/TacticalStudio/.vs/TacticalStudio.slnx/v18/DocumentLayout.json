@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{41BF03F2-A3DF-9DBD-C8CA-C337C7716C7E}|TacticalStudio.vbproj|c:\\users\\administrador\\onedrive\\desktop\\projetos\\projetos\\vbnet\\tacticalstudio\\tacticalstudio\\frmgerenciadorobjetos.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{41BF03F2-A3DF-9DBD-C8CA-C337C7716C7E}|TacticalStudio.vbproj|solutionrelative:frmgerenciadorobjetos.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{41BF03F2-A3DF-9DBD-C8CA-C337C7716C7E}|TacticalStudio.vbproj|c:\\users\\administrador\\onedrive\\desktop\\projetos\\projetos\\vbnet\\tacticalstudio\\tacticalstudio\\frmprincipal.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
       "RelativeMoniker": "D:0:0:{41BF03F2-A3DF-9DBD-C8CA-C337C7716C7E}|TacticalStudio.vbproj|solutionrelative:frmprincipal.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
     },
@@ -18,17 +22,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "CampoTatico.vb",
               "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\Controles\\CampoTatico.vb",
               "RelativeDocumentMoniker": "Controles\\CampoTatico.vb",
               "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\Controles\\CampoTatico.vb",
               "RelativeToolTip": "Controles\\CampoTatico.vb",
-              "ViewState": "AgIAAEcUAAAAAAAAAAAAwI4UAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAHghAAAAAAAAAAAYwJQhAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
               "WhenOpened": "2026-07-16T17:04:41.707Z",
               "IsPinned": true,
@@ -36,13 +40,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "FrmPrincipal.vb",
               "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\FrmPrincipal.vb",
               "RelativeDocumentMoniker": "FrmPrincipal.vb",
               "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\FrmPrincipal.vb",
               "RelativeToolTip": "FrmPrincipal.vb",
-              "ViewState": "AgIAAFAIAAAAAAAAAAAYwF0IAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAJ0PAAAAAAAAAAAYwLkPAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
               "WhenOpened": "2026-07-16T17:04:53.363Z",
               "IsPinned": true,
@@ -51,6 +55,19 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FrmGerenciadorObjetos.vb",
+              "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\FrmGerenciadorObjetos.vb",
+              "RelativeDocumentMoniker": "FrmGerenciadorObjetos.vb",
+              "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\FrmGerenciadorObjetos.vb",
+              "RelativeToolTip": "FrmGerenciadorObjetos.vb",
+              "ViewState": "AgIAAAwEAAAAAAAAAAAYwBgEAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2026-07-16T18:19:28.988Z",
+              "EditorCaption": ""
             }
           ]
         }
