@@ -6,6 +6,6 @@
 
     End Sub
 
-    Public Const Versao As String = "0.27.0"
+    Public Const Versao As String = "0.29.0"
 
 End Class

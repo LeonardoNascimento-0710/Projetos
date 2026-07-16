@@ -52,6 +52,8 @@ Public Class FrmPrincipal
 
 #End Region
 
+#Region "Inicialização do formulário"
+
     Private Sub FrmPrincipal_Load(
     sender As Object,
     e As EventArgs) Handles MyBase.Load
@@ -84,6 +86,10 @@ Public Class FrmPrincipal
             AddressOf VerificarRecuperacaoSessao))
 
     End Sub
+
+#End Region
+
+#Region "Preferências e tema"
 
     Private Sub CarregarPreferencias()
 
@@ -283,6 +289,152 @@ Public Class FrmPrincipal
         End Try
 
     End Sub
+
+    Private Sub AplicarTema()
+
+        BackColor = Tema.Fundo
+
+        ForeColor = Tema.Texto
+
+        Font = Tema.FontePadrao
+
+        PnlSuperior.BackColor = Tema.CorPrimaria
+
+        PnlEsquerdo.BackColor = Tema.Painel
+
+        PnlDireito.BackColor = Tema.Painel
+
+        PnlInferior.BackColor = Tema.Painel
+
+        PnlCentral.BackColor = Tema.Fundo
+
+    End Sub
+
+    Private Sub Preferencias_Click(
+    sender As Object,
+    e As EventArgs)
+
+        AbrirPreferencias()
+
+    End Sub
+
+    Private Sub AbrirPreferencias()
+
+        Using formulario As New FrmPreferencias()
+
+            formulario.ModoTema = _preferencias.ModoTema
+
+            formulario.CorPrincipalArgb = _preferencias.CorPrincipalArgb
+
+            formulario.AutosaveAtivo = _preferencias.AutosaveAtivo
+
+            formulario.IntervaloAutosaveSegundos = _preferencias.IntervaloAutosaveSegundos
+
+            formulario.ResolucaoExportacao = _preferencias.ResolucaoExportacao
+
+            formulario.GradeVisivel = _preferencias.GradeVisivel
+
+            formulario.EncaixeGradeAtivo = _preferencias.EncaixeGradeAtivo
+
+            formulario.EspacamentoGradePercentual = _preferencias.EspacamentoGradePercentual
+
+            If formulario.ShowDialog(Me) <>
+           DialogResult.OK Then
+
+                CampoCanvas.Focus()
+
+                Exit Sub
+
+            End If
+
+            _preferencias.ModoTema = formulario.ModoTema
+
+            _preferencias.CorPrincipalArgb = formulario.CorPrincipalArgb
+
+            _preferencias.AutosaveAtivo = formulario.AutosaveAtivo
+
+            _preferencias.IntervaloAutosaveSegundos = formulario.IntervaloAutosaveSegundos
+
+            _preferencias.ResolucaoExportacao = formulario.ResolucaoExportacao
+
+            NormalizarPreferencias()
+
+            SalvarPreferencias()
+
+            Tema.AplicarPreferencias(_preferencias)
+
+            AplicarPreferenciasGrade()
+
+            ReaplicarTemaAplicacao()
+
+            ConfigurarSalvamentoAutomatico()
+
+            If Not _preferencias.AutosaveAtivo Then
+
+                ExcluirArquivoRecuperacao()
+
+            End If
+
+            CampoCanvas.Focus()
+
+        End Using
+
+    End Sub
+
+    Private Sub ReaplicarTemaAplicacao()
+
+        SuspendLayout()
+
+        Try
+
+            AplicarTema()
+
+            If CampoCanvas IsNot Nothing Then
+
+                CampoCanvas.BackColor =
+                Tema.Fundo
+
+                CampoCanvas.Invalidate()
+
+            End If
+
+            CriarBarraFerramentas()
+
+            CriarBarraArquivo()
+
+            CriarBarraZoom()
+
+            If _frmGerenciadorObjetos IsNot Nothing AndAlso
+               Not _frmGerenciadorObjetos.IsDisposed Then
+
+                _frmGerenciadorObjetos.AplicarTemaAtual()
+                _frmGerenciadorObjetos.AtualizarConteudo()
+
+            End If
+
+            If CampoCanvas IsNot Nothing Then
+
+                MontarPainelPropriedades(
+                CampoCanvas.ObjetoSelecionadoAtual)
+
+            End If
+
+        Finally
+
+            ResumeLayout(True)
+
+        End Try
+
+        Invalidate(
+        True)
+
+        Refresh()
+
+    End Sub
+
+#End Region
+
+#Region "Salvamento automático e recuperação"
 
     Private Sub ConfigurarSalvamentoAutomatico()
 
@@ -596,25 +748,9 @@ Public Class FrmPrincipal
 
     End Sub
 
-    Private Sub AplicarTema()
+#End Region
 
-        BackColor = Tema.Fundo
-
-        ForeColor = Tema.Texto
-
-        Font = Tema.FontePadrao
-
-        PnlSuperior.BackColor = Tema.CorPrimaria
-
-        PnlEsquerdo.BackColor = Tema.Painel
-
-        PnlDireito.BackColor = Tema.Painel
-
-        PnlInferior.BackColor = Tema.Painel
-
-        PnlCentral.BackColor = Tema.Fundo
-
-    End Sub
+#Region "Campo tático e eventos"
 
     Private Sub CriarCampoTatico()
 
@@ -648,6 +784,24 @@ Public Class FrmPrincipal
         zoomPercentual)
 
     End Sub
+
+    Private Sub CampoCanvas_ObjetoSelecionadoAlterado(objeto As ObjetoCampo)
+
+        If CampoCanvas IsNot Nothing AndAlso CampoCanvas.QuantidadeObjetosSelecionados > 1 Then
+
+            MontarPainelSelecaoMultipla(CampoCanvas.QuantidadeObjetosSelecionados)
+
+            Exit Sub
+
+        End If
+
+        MontarPainelPropriedades(objeto)
+
+    End Sub
+
+#End Region
+
+#Region "Zoom, grade e encaixe"
 
     Private Sub CriarBarraZoom()
 
@@ -908,19 +1062,76 @@ Public Class FrmPrincipal
 
     End Sub
 
-    Private Sub CampoCanvas_ObjetoSelecionadoAlterado(objeto As ObjetoCampo)
+    Private Sub AtualizarBotaoAlternancia(botao As Button, ativo As Boolean)
 
-        If CampoCanvas IsNot Nothing AndAlso CampoCanvas.QuantidadeObjetosSelecionados > 1 Then
+        If ativo Then
 
-            MontarPainelSelecaoMultipla(CampoCanvas.QuantidadeObjetosSelecionados)
+            botao.BackColor = Tema.CorPrimaria
 
-            Exit Sub
+            botao.ForeColor = Color.White
+
+            botao.FlatAppearance.BorderColor = Color.White
+
+        Else
+
+            botao.BackColor = Tema.Painel
+
+            botao.ForeColor = Tema.Texto
+
+            botao.FlatAppearance.BorderColor = Tema.Borda
 
         End If
 
-        MontarPainelPropriedades(objeto)
+    End Sub
+
+    Private Sub AlternarGrade()
+
+        CampoCanvas.GradeVisivel =
+        Not CampoCanvas.GradeVisivel
+
+        _preferencias.GradeVisivel =
+        CampoCanvas.GradeVisivel
+
+        SalvarPreferencias()
+
+        CampoCanvas.Focus()
 
     End Sub
+
+    Private Sub AlternarEncaixeGrade()
+
+        CampoCanvas.EncaixeGradeAtivo =
+        Not CampoCanvas.EncaixeGradeAtivo
+
+        _preferencias.EncaixeGradeAtivo =
+        CampoCanvas.EncaixeGradeAtivo
+
+        SalvarPreferencias()
+
+        CampoCanvas.Focus()
+
+    End Sub
+
+    Private Sub AplicarPreferenciasGrade()
+
+        If CampoCanvas Is Nothing Then
+            Exit Sub
+        End If
+
+        CampoCanvas.GradeVisivel =
+        _preferencias.GradeVisivel
+
+        CampoCanvas.EncaixeGradeAtivo =
+        _preferencias.EncaixeGradeAtivo
+
+        CampoCanvas.EspacamentoGradePercentual =
+        _preferencias.EspacamentoGradePercentual
+
+    End Sub
+
+#End Region
+
+#Region "Barra de ferramentas"
 
     Private Sub CriarBarraFerramentas()
 
@@ -1146,6 +1357,10 @@ Public Class FrmPrincipal
         Next
 
     End Sub
+
+#End Region
+
+#Region "Painel de propriedades"
 
     Private Sub MontarPainelPropriedades(
     objeto As ObjetoCampo)
@@ -1558,6 +1773,10 @@ Public Class FrmPrincipal
         Return objeto.GetType().Name
 
     End Function
+
+#End Region
+
+#Region "Propriedades dos objetos"
 
     Private Sub MontarPropriedadesJogador(
     painel As FlowLayoutPanel,
@@ -2082,6 +2301,399 @@ Public Class FrmPrincipal
 
     End Sub
 
+#End Region
+
+#Region "Seleção múltipla e bloqueio"
+
+    Private Function CriarBotaoSelecaoMultipla(texto As String, largura As Integer, acao As Action, Optional habilitado As Boolean = True, Optional destaque As Boolean = False) As Button
+
+        Dim botao As New Button With {
+            .Text = texto,
+            .Width = largura,
+            .Height = 38,
+            .Margin = New Padding(3),
+            .FlatStyle = FlatStyle.Flat,
+            .Cursor = Cursors.Hand,
+            .UseVisualStyleBackColor = False,
+            .Enabled = habilitado
+        }
+
+        If destaque Then
+
+            botao.BackColor =
+                Tema.CorPrimaria
+
+            botao.ForeColor =
+                Color.White
+
+            botao.FlatAppearance.BorderColor =
+                Color.White
+
+        Else
+
+            botao.BackColor =
+                Tema.Painel
+
+            botao.ForeColor =
+                Tema.Texto
+
+            botao.FlatAppearance.BorderColor =
+                Tema.Borda
+
+        End If
+
+        botao.FlatAppearance.MouseOverBackColor =
+            Tema.PainelHover
+
+        AddHandler botao.Click,
+            Sub(sender, e)
+
+                acao.Invoke()
+
+                CampoCanvas.Focus()
+
+            End Sub
+
+        Return botao
+
+    End Function
+
+    Private Function CriarLinhaBotoesSelecao(largura As Integer) As FlowLayoutPanel
+
+        Return New FlowLayoutPanel With {
+            .Width = largura,
+            .Height = 46,
+            .FlowDirection =
+                FlowDirection.LeftToRight,
+            .WrapContents = False,
+            .Margin = New Padding(0),
+            .Padding = New Padding(0),
+            .BackColor = Tema.Painel
+        }
+
+    End Function
+
+    Private Sub MontarPainelSelecaoMultipla(
+    quantidade As Integer)
+
+        PnlDireito.Controls.Clear()
+
+        Dim painel As New FlowLayoutPanel With {
+            .Dock = DockStyle.Fill,
+            .FlowDirection = FlowDirection.TopDown,
+            .WrapContents = False,
+            .AutoScroll = True,
+            .BackColor = Tema.Painel,
+            .Padding = New Padding(10)
+        }
+
+        PnlDireito.Controls.Add(
+            painel)
+
+        Dim largura As Integer =
+            Math.Max(
+                190,
+                PnlDireito.ClientSize.Width - 32)
+
+        Dim larguraBotaoDuplo As Integer =
+            Math.Max(
+                85,
+                (largura - 12) \ 2)
+
+        Dim titulo As New Label With {
+            .Text = "SELEÇÃO MÚLTIPLA",
+            .ForeColor = Tema.CorPrimaria,
+            .Font = New Font(
+                "Segoe UI",
+                11.0F,
+                FontStyle.Bold),
+            .Width = largura,
+            .Height = 36,
+            .TextAlign =
+                ContentAlignment.MiddleLeft
+        }
+
+        painel.Controls.Add(
+            titulo)
+
+        Dim mensagem As New Label With {
+            .Text =
+                quantidade.ToString() &
+                " objetos selecionados." &
+                Environment.NewLine &
+                "O último objeto selecionado é usado " &
+                "como referência para o alinhamento.",
+            .ForeColor = Tema.TextoSecundario,
+            .Width = largura,
+            .Height = 68,
+            .TextAlign =
+                ContentAlignment.MiddleLeft
+        }
+
+        painel.Controls.Add(
+            mensagem)
+
+        Dim tituloAlinhamento As New Label With {
+            .Text = "ALINHAMENTO",
+            .ForeColor = Tema.Texto,
+            .Font = New Font(
+                "Segoe UI",
+                9.0F,
+                FontStyle.Bold),
+            .Width = largura,
+            .Height = 28,
+            .Margin = New Padding(
+                0,
+                8,
+                0,
+                2),
+            .TextAlign =
+                ContentAlignment.MiddleLeft
+        }
+
+        painel.Controls.Add(
+            tituloAlinhamento)
+
+        Dim linhaAlinhamento As FlowLayoutPanel =
+            CriarLinhaBotoesSelecao(
+                largura)
+
+        linhaAlinhamento.Controls.Add(
+            CriarBotaoSelecaoMultipla(
+                "Mesma linha",
+                larguraBotaoDuplo,
+                Sub()
+                    CampoCanvas.AlinharSelecaoNaMesmaLinha()
+                End Sub))
+
+        linhaAlinhamento.Controls.Add(
+            CriarBotaoSelecaoMultipla(
+                "Mesma coluna",
+                larguraBotaoDuplo,
+                Sub()
+                    CampoCanvas.AlinharSelecaoNaMesmaColuna()
+                End Sub))
+
+        painel.Controls.Add(
+            linhaAlinhamento)
+
+        Dim tituloDistribuicao As New Label With {
+            .Text = "DISTRIBUIÇÃO",
+            .ForeColor = Tema.Texto,
+            .Font = New Font(
+                "Segoe UI",
+                9.0F,
+                FontStyle.Bold),
+            .Width = largura,
+            .Height = 28,
+            .Margin = New Padding(
+                0,
+                8,
+                0,
+                2),
+            .TextAlign =
+                ContentAlignment.MiddleLeft
+        }
+
+        painel.Controls.Add(
+            tituloDistribuicao)
+
+        Dim linhaDistribuicao As FlowLayoutPanel =
+            CriarLinhaBotoesSelecao(
+                largura)
+
+        linhaDistribuicao.Controls.Add(
+            CriarBotaoSelecaoMultipla(
+                "Horizontal",
+                larguraBotaoDuplo,
+                Sub()
+                    CampoCanvas.DistribuirSelecaoHorizontalmente()
+                End Sub,
+                quantidade >= 3))
+
+        linhaDistribuicao.Controls.Add(
+            CriarBotaoSelecaoMultipla(
+                "Vertical",
+                larguraBotaoDuplo,
+                Sub()
+                    CampoCanvas.DistribuirSelecaoVerticalmente()
+                End Sub,
+                quantidade >= 3))
+
+        painel.Controls.Add(
+            linhaDistribuicao)
+
+        painel.Controls.Add(
+            CriarBotaoSelecaoMultipla(
+                "Centralizar seleção no campo",
+                largura,
+                Sub()
+                    CampoCanvas.CentralizarSelecaoNoCampo()
+                End Sub))
+
+        Dim tituloOrganizacao As New Label With {
+    .Text = "AGRUPAMENTO E PROTEÇÃO",
+    .ForeColor = Tema.Texto,
+    .Font = New Font(
+        "Segoe UI",
+        9.0F,
+        FontStyle.Bold),
+    .Width = largura,
+    .Height = 28,
+    .Margin = New Padding(
+        0,
+        12,
+        0,
+        2),
+    .TextAlign =
+        ContentAlignment.MiddleLeft
+}
+
+        painel.Controls.Add(
+    tituloOrganizacao)
+
+        Dim linhaAgrupamento As FlowLayoutPanel =
+    CriarLinhaBotoesSelecao(
+        largura)
+
+        linhaAgrupamento.Controls.Add(
+    CriarBotaoSelecaoMultipla(
+        "Agrupar",
+        larguraBotaoDuplo,
+        Sub()
+            CampoCanvas.AgruparSelecionados()
+        End Sub,
+        quantidade >= 2))
+
+        linhaAgrupamento.Controls.Add(
+    CriarBotaoSelecaoMultipla(
+        "Desagrupar",
+        larguraBotaoDuplo,
+        Sub()
+            CampoCanvas.DesagruparSelecionados()
+        End Sub,
+        CampoCanvas.SelecaoPossuiGrupo))
+
+        painel.Controls.Add(
+    linhaAgrupamento)
+
+        Dim textoBloqueio As String
+
+        If CampoCanvas.SelecaoPossuiObjetoBloqueado Then
+
+            textoBloqueio =
+        "Desbloquear seleção  (Ctrl+L)"
+
+        Else
+
+            textoBloqueio =
+        "Bloquear seleção  (Ctrl+L)"
+
+        End If
+
+        painel.Controls.Add(
+    CriarBotaoSelecaoMultipla(
+        textoBloqueio,
+        largura,
+        Sub()
+            CampoCanvas.AlternarBloqueioSelecionados()
+        End Sub))
+
+        Dim tituloAcoes As New Label With {
+            .Text = "AÇÕES",
+            .ForeColor = Tema.Texto,
+            .Font = New Font(
+                "Segoe UI",
+                9.0F,
+                FontStyle.Bold),
+            .Width = largura,
+            .Height = 28,
+            .Margin = New Padding(
+                0,
+                12,
+                0,
+                2),
+            .TextAlign =
+                ContentAlignment.MiddleLeft
+        }
+
+        painel.Controls.Add(
+            tituloAcoes)
+
+        painel.Controls.Add(
+            CriarBotaoSelecaoMultipla(
+                "Duplicar seleção  (Ctrl+D)",
+                largura,
+                Sub()
+                    CampoCanvas.DuplicarSelecionado()
+                End Sub))
+
+        painel.Controls.Add(
+            CriarBotaoSelecaoMultipla(
+                "Excluir seleção",
+                largura,
+                Sub()
+                    CampoCanvas.ExcluirSelecionado()
+                End Sub,
+                True,
+                True))
+
+    End Sub
+
+    Private Sub AdicionarAcoesBloqueioIndividual(painel As FlowLayoutPanel, largura As Integer)
+
+        Dim titulo As New Label With {
+            .Text = "PROTEÇÃO",
+            .ForeColor = Tema.Texto,
+            .Font = New Font(
+                "Segoe UI",
+                9.0F,
+                FontStyle.Bold),
+            .Width = largura,
+            .Height = 28,
+            .Margin = New Padding(
+                0,
+                12,
+                0,
+                2),
+            .TextAlign =
+                ContentAlignment.MiddleLeft
+        }
+
+        painel.Controls.Add(
+            titulo)
+
+        Dim textoBotao As String
+
+        If CampoCanvas.SelecaoPossuiObjetoBloqueado Then
+
+            textoBotao =
+                "Desbloquear objeto  (Ctrl+L)"
+
+        Else
+
+            textoBotao =
+                "Bloquear objeto  (Ctrl+L)"
+
+        End If
+
+        Dim botao As Button =
+            CriarBotaoSelecaoMultipla(
+                textoBotao,
+                largura,
+                Sub()
+                    CampoCanvas.AlternarBloqueioSelecionados()
+                End Sub)
+
+        painel.Controls.Add(
+            botao)
+
+    End Sub
+
+#End Region
+
+#Region "Atalhos de teclado"
+
     Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
 
         If CampoCanvas Is Nothing Then
@@ -2373,6 +2985,10 @@ Public Class FrmPrincipal
 
     End Function
 
+#End Region
+
+#Region "Barra de arquivos"
+
     Private Sub CriarBarraArquivo()
 
         If PnlSuperior.Controls.ContainsKey("PnlArquivoDinamico") Then
@@ -2417,6 +3033,36 @@ Public Class FrmPrincipal
 
     End Sub
 
+    Private Function CriarBotaoArquivo(texto As String, acao As EventHandler) As Button
+
+        Dim botao As New Button With {
+        .Text = texto,
+        .Width = 88,
+        .Height = 34,
+        .Margin = New Padding(3),
+        .FlatStyle = FlatStyle.Flat,
+        .BackColor = Tema.Painel,
+        .ForeColor = Tema.Texto,
+        .Cursor = Cursors.Hand,
+        .UseVisualStyleBackColor = False
+    }
+
+        botao.FlatAppearance.BorderColor =
+        Tema.Borda
+
+        botao.FlatAppearance.MouseOverBackColor =
+        Tema.PainelHover
+
+        botao.FlatAppearance.MouseDownBackColor =
+        Tema.PainelHover
+
+        AddHandler botao.Click,
+        acao
+
+        Return botao
+
+    End Function
+
     Private Sub Sobre_Click(sender As Object, e As EventArgs)
 
         Using formulario As New FrmSobre()
@@ -2429,194 +3075,9 @@ Public Class FrmPrincipal
 
     End Sub
 
-    Private Sub Preferencias_Click(
-    sender As Object,
-    e As EventArgs)
+#End Region
 
-        AbrirPreferencias()
-
-    End Sub
-
-    Private Sub AbrirPreferencias()
-
-        Using formulario As New FrmPreferencias()
-
-            formulario.ModoTema = _preferencias.ModoTema
-
-            formulario.CorPrincipalArgb = _preferencias.CorPrincipalArgb
-
-            formulario.AutosaveAtivo = _preferencias.AutosaveAtivo
-
-            formulario.IntervaloAutosaveSegundos = _preferencias.IntervaloAutosaveSegundos
-
-            formulario.ResolucaoExportacao = _preferencias.ResolucaoExportacao
-
-            formulario.GradeVisivel = _preferencias.GradeVisivel
-
-            formulario.EncaixeGradeAtivo = _preferencias.EncaixeGradeAtivo
-
-            formulario.EspacamentoGradePercentual = _preferencias.EspacamentoGradePercentual
-
-            If formulario.ShowDialog(Me) <>
-           DialogResult.OK Then
-
-                CampoCanvas.Focus()
-
-                Exit Sub
-
-            End If
-
-            _preferencias.ModoTema = formulario.ModoTema
-
-            _preferencias.CorPrincipalArgb = formulario.CorPrincipalArgb
-
-            _preferencias.AutosaveAtivo = formulario.AutosaveAtivo
-
-            _preferencias.IntervaloAutosaveSegundos = formulario.IntervaloAutosaveSegundos
-
-            _preferencias.ResolucaoExportacao = formulario.ResolucaoExportacao
-
-            NormalizarPreferencias()
-
-            SalvarPreferencias()
-
-            Tema.AplicarPreferencias(_preferencias)
-
-            AplicarPreferenciasGrade()
-
-            ReaplicarTemaAplicacao()
-
-            ConfigurarSalvamentoAutomatico()
-
-            If Not _preferencias.AutosaveAtivo Then
-
-                ExcluirArquivoRecuperacao()
-
-            End If
-
-            CampoCanvas.Focus()
-
-        End Using
-
-    End Sub
-
-    Private Sub AtualizarBotaoAlternancia(botao As Button, ativo As Boolean)
-
-        If ativo Then
-
-            botao.BackColor = Tema.CorPrimaria
-
-            botao.ForeColor = Color.White
-
-            botao.FlatAppearance.BorderColor = Color.White
-
-        Else
-
-            botao.BackColor = Tema.Painel
-
-            botao.ForeColor = Tema.Texto
-
-            botao.FlatAppearance.BorderColor = Tema.Borda
-
-        End If
-
-    End Sub
-
-    Private Sub AlternarGrade()
-
-        CampoCanvas.GradeVisivel =
-        Not CampoCanvas.GradeVisivel
-
-        _preferencias.GradeVisivel =
-        CampoCanvas.GradeVisivel
-
-        SalvarPreferencias()
-
-        CampoCanvas.Focus()
-
-    End Sub
-
-    Private Sub AlternarEncaixeGrade()
-
-        CampoCanvas.EncaixeGradeAtivo =
-        Not CampoCanvas.EncaixeGradeAtivo
-
-        _preferencias.EncaixeGradeAtivo =
-        CampoCanvas.EncaixeGradeAtivo
-
-        SalvarPreferencias()
-
-        CampoCanvas.Focus()
-
-    End Sub
-
-    Private Sub ReaplicarTemaAplicacao()
-
-        SuspendLayout()
-
-        Try
-
-            AplicarTema()
-
-            If CampoCanvas IsNot Nothing Then
-
-                CampoCanvas.BackColor =
-                Tema.Fundo
-
-                CampoCanvas.Invalidate()
-
-            End If
-
-            CriarBarraFerramentas()
-
-            CriarBarraArquivo()
-
-            CriarBarraZoom()
-
-            If _frmGerenciadorObjetos IsNot Nothing AndAlso
-               Not _frmGerenciadorObjetos.IsDisposed Then
-
-                _frmGerenciadorObjetos.AplicarTemaAtual()
-                _frmGerenciadorObjetos.AtualizarConteudo()
-
-            End If
-
-            If CampoCanvas IsNot Nothing Then
-
-                MontarPainelPropriedades(
-                CampoCanvas.ObjetoSelecionadoAtual)
-
-            End If
-
-        Finally
-
-            ResumeLayout(True)
-
-        End Try
-
-        Invalidate(
-        True)
-
-        Refresh()
-
-    End Sub
-
-    Private Sub AplicarPreferenciasGrade()
-
-        If CampoCanvas Is Nothing Then
-            Exit Sub
-        End If
-
-        CampoCanvas.GradeVisivel =
-        _preferencias.GradeVisivel
-
-        CampoCanvas.EncaixeGradeAtivo =
-        _preferencias.EncaixeGradeAtivo
-
-        CampoCanvas.EspacamentoGradePercentual =
-        _preferencias.EspacamentoGradePercentual
-
-    End Sub
+#Region "Gerenciador de objetos"
 
     Private Sub Objetos_Click(
     sender As Object,
@@ -2658,35 +3119,9 @@ Public Class FrmPrincipal
 
     End Sub
 
-    Private Function CriarBotaoArquivo(texto As String, acao As EventHandler) As Button
+#End Region
 
-        Dim botao As New Button With {
-        .Text = texto,
-        .Width = 88,
-        .Height = 34,
-        .Margin = New Padding(3),
-        .FlatStyle = FlatStyle.Flat,
-        .BackColor = Tema.Painel,
-        .ForeColor = Tema.Texto,
-        .Cursor = Cursors.Hand,
-        .UseVisualStyleBackColor = False
-    }
-
-        botao.FlatAppearance.BorderColor =
-        Tema.Borda
-
-        botao.FlatAppearance.MouseOverBackColor =
-        Tema.PainelHover
-
-        botao.FlatAppearance.MouseDownBackColor =
-        Tema.PainelHover
-
-        AddHandler botao.Click,
-        acao
-
-        Return botao
-
-    End Function
+#Region "Arquivos do exercício"
 
     Private Sub NovoExercicio_Click(
     sender As Object,
@@ -2724,123 +3159,6 @@ Public Class FrmPrincipal
         e As EventArgs)
 
         AbrirExercicio()
-
-    End Sub
-
-    Private Sub ExportarImagem_Click(
-    sender As Object,
-    e As EventArgs)
-
-        ExportarImagemCampo()
-
-    End Sub
-
-    Private Sub ExportarImagemCampo()
-
-        If CampoCanvas Is Nothing Then
-            Exit Sub
-        End If
-
-        Dim respostaCabecalho As DialogResult =
-        MessageBox.Show(
-            "Deseja incluir os dados do exercício na imagem?" &
-            Environment.NewLine &
-            Environment.NewLine &
-            "Sim: exporta com cabeçalho." &
-            Environment.NewLine &
-            "Não: exporta somente o campo.",
-            "Exportar imagem",
-            MessageBoxButtons.YesNoCancel,
-            MessageBoxIcon.Question)
-
-        If respostaCabecalho =
-       DialogResult.Cancel Then
-
-            CampoCanvas.Focus()
-
-            Exit Sub
-
-        End If
-
-        Dim incluirCabecalho As Boolean =
-        respostaCabecalho =
-        DialogResult.Yes
-
-        Using dialogo As New SaveFileDialog()
-
-            dialogo.Title =
-            "Exportar campo como imagem"
-
-            dialogo.Filter =
-            "Imagem PNG (*.png)|*.png"
-
-            dialogo.DefaultExt =
-            "png"
-
-            dialogo.AddExtension =
-            True
-
-            dialogo.OverwritePrompt =
-            True
-
-            dialogo.FileName =
-            _nomeExercicioAtual &
-            ".png"
-
-            If dialogo.ShowDialog() <>
-           DialogResult.OK Then
-
-                CampoCanvas.Focus()
-
-                Exit Sub
-
-            End If
-
-            Try
-
-                Using imagem As Bitmap =
-                CampoCanvas.GerarImagemCampo(
-                    _preferencias.ResolucaoExportacao,
-                    incluirCabecalho,
-                    _nomeExercicioAtual,
-                    _categoriaExercicioAtual,
-                    _duracaoExercicioAtual,
-                    _descricaoExercicioAtual,
-                    _observacoesExercicioAtual)
-
-                    imagem.Save(
-                    dialogo.FileName,
-                    ImageFormat.Png)
-
-                End Using
-
-                MessageBox.Show(
-                "Imagem exportada com sucesso." &
-                Environment.NewLine &
-                Environment.NewLine &
-                dialogo.FileName,
-                "Exportação concluída",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information)
-
-            Catch ex As Exception
-
-                MessageBox.Show(
-                "Não foi possível exportar a imagem." &
-                Environment.NewLine &
-                Environment.NewLine &
-                ex.Message,
-                "Erro na exportação",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error)
-
-            Finally
-
-                CampoCanvas.Focus()
-
-            End Try
-
-        End Using
 
     End Sub
 
@@ -2996,6 +3314,131 @@ Public Class FrmPrincipal
 
     End Function
 
+#End Region
+
+#Region "Exportação de imagem"
+
+    Private Sub ExportarImagem_Click(
+    sender As Object,
+    e As EventArgs)
+
+        ExportarImagemCampo()
+
+    End Sub
+
+    Private Sub ExportarImagemCampo()
+
+        If CampoCanvas Is Nothing Then
+            Exit Sub
+        End If
+
+        Dim respostaCabecalho As DialogResult =
+        MessageBox.Show(
+            "Deseja incluir os dados do exercício na imagem?" &
+            Environment.NewLine &
+            Environment.NewLine &
+            "Sim: exporta com cabeçalho." &
+            Environment.NewLine &
+            "Não: exporta somente o campo.",
+            "Exportar imagem",
+            MessageBoxButtons.YesNoCancel,
+            MessageBoxIcon.Question)
+
+        If respostaCabecalho =
+       DialogResult.Cancel Then
+
+            CampoCanvas.Focus()
+
+            Exit Sub
+
+        End If
+
+        Dim incluirCabecalho As Boolean =
+        respostaCabecalho =
+        DialogResult.Yes
+
+        Using dialogo As New SaveFileDialog()
+
+            dialogo.Title =
+            "Exportar campo como imagem"
+
+            dialogo.Filter =
+            "Imagem PNG (*.png)|*.png"
+
+            dialogo.DefaultExt =
+            "png"
+
+            dialogo.AddExtension =
+            True
+
+            dialogo.OverwritePrompt =
+            True
+
+            dialogo.FileName =
+            _nomeExercicioAtual &
+            ".png"
+
+            If dialogo.ShowDialog() <>
+           DialogResult.OK Then
+
+                CampoCanvas.Focus()
+
+                Exit Sub
+
+            End If
+
+            Try
+
+                Using imagem As Bitmap =
+                CampoCanvas.GerarImagemCampo(
+                    _preferencias.ResolucaoExportacao,
+                    incluirCabecalho,
+                    _nomeExercicioAtual,
+                    _categoriaExercicioAtual,
+                    _duracaoExercicioAtual,
+                    _descricaoExercicioAtual,
+                    _observacoesExercicioAtual)
+
+                    imagem.Save(
+                    dialogo.FileName,
+                    ImageFormat.Png)
+
+                End Using
+
+                MessageBox.Show(
+                "Imagem exportada com sucesso." &
+                Environment.NewLine &
+                Environment.NewLine &
+                dialogo.FileName,
+                "Exportação concluída",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information)
+
+            Catch ex As Exception
+
+                MessageBox.Show(
+                "Não foi possível exportar a imagem." &
+                Environment.NewLine &
+                Environment.NewLine &
+                ex.Message,
+                "Erro na exportação",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error)
+
+            Finally
+
+                CampoCanvas.Focus()
+
+            End Try
+
+        End Using
+
+    End Sub
+
+#End Region
+
+#Region "Controle de alterações"
+
     Private Sub AtualizarTituloJanela()
 
         Dim indicadorAlteracao As String =
@@ -3131,6 +3574,27 @@ Public Class FrmPrincipal
 
     End Sub
 
+    Private Function ObterAssinaturaCompleta() As String
+
+        If CampoCanvas Is Nothing Then
+            Return String.Empty
+        End If
+
+        Return String.Join(
+            ChrW(30),
+            CampoCanvas.ObterAssinaturaEstado(),
+            _nomeExercicioAtual,
+            _categoriaExercicioAtual,
+            _duracaoExercicioAtual.ToString(),
+            _descricaoExercicioAtual,
+            _observacoesExercicioAtual)
+
+    End Function
+
+#End Region
+
+#Region "Configurações do exercício"
+
     Private Sub ConfiguracoesExercicio_Click(
     sender As Object,
     e As EventArgs)
@@ -3190,22 +3654,9 @@ Public Class FrmPrincipal
 
     End Sub
 
-    Private Function ObterAssinaturaCompleta() As String
+#End Region
 
-        If CampoCanvas Is Nothing Then
-            Return String.Empty
-        End If
-
-        Return String.Join(
-            ChrW(30),
-            CampoCanvas.ObterAssinaturaEstado(),
-            _nomeExercicioAtual,
-            _categoriaExercicioAtual,
-            _duracaoExercicioAtual.ToString(),
-            _descricaoExercicioAtual,
-            _observacoesExercicioAtual)
-
-    End Function
+#Region "PDF e impressão"
 
     Private Sub ExportarPdf_Click(sender As Object, e As EventArgs)
 
@@ -3634,392 +4085,6 @@ Public Class FrmPrincipal
 
     End Sub
 
-    Private Function CriarBotaoSelecaoMultipla(texto As String, largura As Integer, acao As Action, Optional habilitado As Boolean = True, Optional destaque As Boolean = False) As Button
-
-        Dim botao As New Button With {
-            .Text = texto,
-            .Width = largura,
-            .Height = 38,
-            .Margin = New Padding(3),
-            .FlatStyle = FlatStyle.Flat,
-            .Cursor = Cursors.Hand,
-            .UseVisualStyleBackColor = False,
-            .Enabled = habilitado
-        }
-
-        If destaque Then
-
-            botao.BackColor =
-                Tema.CorPrimaria
-
-            botao.ForeColor =
-                Color.White
-
-            botao.FlatAppearance.BorderColor =
-                Color.White
-
-        Else
-
-            botao.BackColor =
-                Tema.Painel
-
-            botao.ForeColor =
-                Tema.Texto
-
-            botao.FlatAppearance.BorderColor =
-                Tema.Borda
-
-        End If
-
-        botao.FlatAppearance.MouseOverBackColor =
-            Tema.PainelHover
-
-        AddHandler botao.Click,
-            Sub(sender, e)
-
-                acao.Invoke()
-
-                CampoCanvas.Focus()
-
-            End Sub
-
-        Return botao
-
-    End Function
-
-    Private Function CriarLinhaBotoesSelecao(largura As Integer) As FlowLayoutPanel
-
-        Return New FlowLayoutPanel With {
-            .Width = largura,
-            .Height = 46,
-            .FlowDirection =
-                FlowDirection.LeftToRight,
-            .WrapContents = False,
-            .Margin = New Padding(0),
-            .Padding = New Padding(0),
-            .BackColor = Tema.Painel
-        }
-
-    End Function
-
-    Private Sub MontarPainelSelecaoMultipla(
-    quantidade As Integer)
-
-        PnlDireito.Controls.Clear()
-
-        Dim painel As New FlowLayoutPanel With {
-            .Dock = DockStyle.Fill,
-            .FlowDirection = FlowDirection.TopDown,
-            .WrapContents = False,
-            .AutoScroll = True,
-            .BackColor = Tema.Painel,
-            .Padding = New Padding(10)
-        }
-
-        PnlDireito.Controls.Add(
-            painel)
-
-        Dim largura As Integer =
-            Math.Max(
-                190,
-                PnlDireito.ClientSize.Width - 32)
-
-        Dim larguraBotaoDuplo As Integer =
-            Math.Max(
-                85,
-                (largura - 12) \ 2)
-
-        Dim titulo As New Label With {
-            .Text = "SELEÇÃO MÚLTIPLA",
-            .ForeColor = Tema.CorPrimaria,
-            .Font = New Font(
-                "Segoe UI",
-                11.0F,
-                FontStyle.Bold),
-            .Width = largura,
-            .Height = 36,
-            .TextAlign =
-                ContentAlignment.MiddleLeft
-        }
-
-        painel.Controls.Add(
-            titulo)
-
-        Dim mensagem As New Label With {
-            .Text =
-                quantidade.ToString() &
-                " objetos selecionados." &
-                Environment.NewLine &
-                "O último objeto selecionado é usado " &
-                "como referência para o alinhamento.",
-            .ForeColor = Tema.TextoSecundario,
-            .Width = largura,
-            .Height = 68,
-            .TextAlign =
-                ContentAlignment.MiddleLeft
-        }
-
-        painel.Controls.Add(
-            mensagem)
-
-        Dim tituloAlinhamento As New Label With {
-            .Text = "ALINHAMENTO",
-            .ForeColor = Tema.Texto,
-            .Font = New Font(
-                "Segoe UI",
-                9.0F,
-                FontStyle.Bold),
-            .Width = largura,
-            .Height = 28,
-            .Margin = New Padding(
-                0,
-                8,
-                0,
-                2),
-            .TextAlign =
-                ContentAlignment.MiddleLeft
-        }
-
-        painel.Controls.Add(
-            tituloAlinhamento)
-
-        Dim linhaAlinhamento As FlowLayoutPanel =
-            CriarLinhaBotoesSelecao(
-                largura)
-
-        linhaAlinhamento.Controls.Add(
-            CriarBotaoSelecaoMultipla(
-                "Mesma linha",
-                larguraBotaoDuplo,
-                Sub()
-                    CampoCanvas.AlinharSelecaoNaMesmaLinha()
-                End Sub))
-
-        linhaAlinhamento.Controls.Add(
-            CriarBotaoSelecaoMultipla(
-                "Mesma coluna",
-                larguraBotaoDuplo,
-                Sub()
-                    CampoCanvas.AlinharSelecaoNaMesmaColuna()
-                End Sub))
-
-        painel.Controls.Add(
-            linhaAlinhamento)
-
-        Dim tituloDistribuicao As New Label With {
-            .Text = "DISTRIBUIÇÃO",
-            .ForeColor = Tema.Texto,
-            .Font = New Font(
-                "Segoe UI",
-                9.0F,
-                FontStyle.Bold),
-            .Width = largura,
-            .Height = 28,
-            .Margin = New Padding(
-                0,
-                8,
-                0,
-                2),
-            .TextAlign =
-                ContentAlignment.MiddleLeft
-        }
-
-        painel.Controls.Add(
-            tituloDistribuicao)
-
-        Dim linhaDistribuicao As FlowLayoutPanel =
-            CriarLinhaBotoesSelecao(
-                largura)
-
-        linhaDistribuicao.Controls.Add(
-            CriarBotaoSelecaoMultipla(
-                "Horizontal",
-                larguraBotaoDuplo,
-                Sub()
-                    CampoCanvas.DistribuirSelecaoHorizontalmente()
-                End Sub,
-                quantidade >= 3))
-
-        linhaDistribuicao.Controls.Add(
-            CriarBotaoSelecaoMultipla(
-                "Vertical",
-                larguraBotaoDuplo,
-                Sub()
-                    CampoCanvas.DistribuirSelecaoVerticalmente()
-                End Sub,
-                quantidade >= 3))
-
-        painel.Controls.Add(
-            linhaDistribuicao)
-
-        painel.Controls.Add(
-            CriarBotaoSelecaoMultipla(
-                "Centralizar seleção no campo",
-                largura,
-                Sub()
-                    CampoCanvas.CentralizarSelecaoNoCampo()
-                End Sub))
-
-        Dim tituloOrganizacao As New Label With {
-    .Text = "AGRUPAMENTO E PROTEÇÃO",
-    .ForeColor = Tema.Texto,
-    .Font = New Font(
-        "Segoe UI",
-        9.0F,
-        FontStyle.Bold),
-    .Width = largura,
-    .Height = 28,
-    .Margin = New Padding(
-        0,
-        12,
-        0,
-        2),
-    .TextAlign =
-        ContentAlignment.MiddleLeft
-}
-
-        painel.Controls.Add(
-    tituloOrganizacao)
-
-        Dim linhaAgrupamento As FlowLayoutPanel =
-    CriarLinhaBotoesSelecao(
-        largura)
-
-        linhaAgrupamento.Controls.Add(
-    CriarBotaoSelecaoMultipla(
-        "Agrupar",
-        larguraBotaoDuplo,
-        Sub()
-            CampoCanvas.AgruparSelecionados()
-        End Sub,
-        quantidade >= 2))
-
-        linhaAgrupamento.Controls.Add(
-    CriarBotaoSelecaoMultipla(
-        "Desagrupar",
-        larguraBotaoDuplo,
-        Sub()
-            CampoCanvas.DesagruparSelecionados()
-        End Sub,
-        CampoCanvas.SelecaoPossuiGrupo))
-
-        painel.Controls.Add(
-    linhaAgrupamento)
-
-        Dim textoBloqueio As String
-
-        If CampoCanvas.SelecaoPossuiObjetoBloqueado Then
-
-            textoBloqueio =
-        "Desbloquear seleção  (Ctrl+L)"
-
-        Else
-
-            textoBloqueio =
-        "Bloquear seleção  (Ctrl+L)"
-
-        End If
-
-        painel.Controls.Add(
-    CriarBotaoSelecaoMultipla(
-        textoBloqueio,
-        largura,
-        Sub()
-            CampoCanvas.AlternarBloqueioSelecionados()
-        End Sub))
-
-        Dim tituloAcoes As New Label With {
-            .Text = "AÇÕES",
-            .ForeColor = Tema.Texto,
-            .Font = New Font(
-                "Segoe UI",
-                9.0F,
-                FontStyle.Bold),
-            .Width = largura,
-            .Height = 28,
-            .Margin = New Padding(
-                0,
-                12,
-                0,
-                2),
-            .TextAlign =
-                ContentAlignment.MiddleLeft
-        }
-
-        painel.Controls.Add(
-            tituloAcoes)
-
-        painel.Controls.Add(
-            CriarBotaoSelecaoMultipla(
-                "Duplicar seleção  (Ctrl+D)",
-                largura,
-                Sub()
-                    CampoCanvas.DuplicarSelecionado()
-                End Sub))
-
-        painel.Controls.Add(
-            CriarBotaoSelecaoMultipla(
-                "Excluir seleção",
-                largura,
-                Sub()
-                    CampoCanvas.ExcluirSelecionado()
-                End Sub,
-                True,
-                True))
-
-    End Sub
-
-    Private Sub AdicionarAcoesBloqueioIndividual(painel As FlowLayoutPanel, largura As Integer)
-
-        Dim titulo As New Label With {
-            .Text = "PROTEÇÃO",
-            .ForeColor = Tema.Texto,
-            .Font = New Font(
-                "Segoe UI",
-                9.0F,
-                FontStyle.Bold),
-            .Width = largura,
-            .Height = 28,
-            .Margin = New Padding(
-                0,
-                12,
-                0,
-                2),
-            .TextAlign =
-                ContentAlignment.MiddleLeft
-        }
-
-        painel.Controls.Add(
-            titulo)
-
-        Dim textoBotao As String
-
-        If CampoCanvas.SelecaoPossuiObjetoBloqueado Then
-
-            textoBotao =
-                "Desbloquear objeto  (Ctrl+L)"
-
-        Else
-
-            textoBotao =
-                "Bloquear objeto  (Ctrl+L)"
-
-        End If
-
-        Dim botao As Button =
-            CriarBotaoSelecaoMultipla(
-                textoBotao,
-                largura,
-                Sub()
-                    CampoCanvas.AlternarBloqueioSelecionados()
-                End Sub)
-
-        painel.Controls.Add(
-            botao)
-
-    End Sub
-
-
+#End Region
 
 End Class
-
