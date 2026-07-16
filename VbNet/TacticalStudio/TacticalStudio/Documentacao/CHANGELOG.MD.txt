@@ -998,3 +998,44 @@ Próxima etapa sugerida:
 - Adicionar logotipo no cabeçalho;
 - Implementar modelos de exportação;
 - Preparar autosave e recuperação de sessão.
+
+======================================================================
+29. ETAPA 21 - SALVAMENTO AUTOMÁTICO E RECUPERAÇÃO DE SESSÃO
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.21.0
+
+Arquivos alterados:
+- FrmPrincipal.vb
+
+Alterações realizadas:
+- Implementado salvamento automático periódico;
+- Criado arquivo de recuperação em AppData Local;
+- O autosave é executado somente com alterações não salvas;
+- O salvamento automático evita gravações duplicadas;
+- Implementada gravação temporária antes da substituição do arquivo;
+- Adicionada recuperação de sessão na inicialização;
+- O usuário pode recuperar ou descartar a sessão encontrada;
+- Sessões recuperadas permanecem marcadas como não salvas;
+- Ctrl+S após recuperação utiliza Salvar como;
+- O autosave também é executado quando a janela perde o foco;
+- O arquivo de recuperação é apagado após salvamento manual;
+- O arquivo de recuperação é apagado ao abrir ou criar outro exercício;
+- O arquivo de recuperação é removido em encerramentos normais;
+- Sessões continuam disponíveis após travamentos ou encerramentos inesperados;
+- O autosave não substitui diretamente o arquivo .tactical original.
+
+Resultado:
+- O risco de perda de trabalho foi reduzido;
+- Exercícios podem ser recuperados após falhas inesperadas;
+- O fluxo de salvamento manual continua preservado;
+- Arquivos antigos de recuperação não permanecem após encerramentos normais;
+- O sistema diferencia salvamento manual de recuperação automática.
+
+Próxima etapa sugerida:
+- Criar preferências do usuário;
+- Permitir configurar o intervalo do autosave;
+- Adicionar opção para desativar o salvamento automático;
+- Salvar resolução padrão de exportação;
+- Preparar configurações gerais do TacticalStudio.
