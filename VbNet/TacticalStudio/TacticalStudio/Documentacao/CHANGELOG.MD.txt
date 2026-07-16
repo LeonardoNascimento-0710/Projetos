@@ -1240,3 +1240,46 @@ Próxima etapa sugerida:
 - Adicionar alinhamento horizontal e vertical;
 - Adicionar distribuição uniforme;
 - Criar agrupamento e desagrupamento de elementos.
+
+======================================================================
+34. ETAPA 26 - SELEÇÃO MÚLTIPLA E MOVIMENTAÇÃO EM GRUPO
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.26.0
+
+Arquivos alterados:
+- Controles\CampoTatico.vb
+- FrmPrincipal.vb
+
+Alterações realizadas:
+- Implementada seleção múltipla de objetos;
+- Adicionado Ctrl+clique para adicionar ou remover objetos da seleção;
+- Adicionado Shift+clique como alternativa de seleção;
+- Implementado Ctrl+A para selecionar todos os objetos;
+- Implementada movimentação conjunta dos objetos selecionados;
+- Linhas e áreas preservam seus formatos durante o movimento em grupo;
+- Movimento em grupo integrado à grade e ao encaixe;
+- Redimensionamento permanece disponível somente para seleção individual;
+- Implementada exclusão de toda a seleção;
+- Implementada duplicação de toda a seleção;
+- Adicionado suporte ao histórico para movimentação em grupo;
+- Cada movimento do grupo gera apenas uma entrada no histórico;
+- Painel lateral passa a informar a quantidade de objetos selecionados;
+- Adicionados botões para duplicar e excluir a seleção;
+- Seleção múltipla integrada ao zoom e à navegação;
+- Seleções são corretamente restauradas e limpas ao aplicar estados do histórico.
+
+Resultado:
+- Vários elementos podem ser organizados simultaneamente;
+- Grupos completos podem ser movidos sem perder proporções;
+- Duplicação e exclusão ficaram mais rápidas;
+- O histórico permanece consistente;
+- A edição de exercícios complexos ficou mais ágil.
+
+Próxima etapa sugerida:
+- Implementar alinhamento horizontal e vertical;
+- Adicionar distribuição uniforme;
+- Criar comandos de centralização;
+- Adicionar agrupamento permanente;
+- Permitir bloquear objetos individualmente.
