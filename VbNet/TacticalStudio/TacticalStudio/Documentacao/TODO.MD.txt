@@ -1,8 +1,0 @@
-FASE 0
-
-[ ] Estrutura concluída
-[ ] Interface criada
-[ ] CampoCanvas
-[ ] Primeiro jogador
-[ ] Primeiro cone
-[ ] Primeira bola

@@ -4323,8 +4323,6 @@ Public Class CampoTatico
 
         End If
 
-        'Uma nova alteração depois de desfazer
-        'elimina os estados disponíveis para refazer.
         If _indiceHistorico <
        _historico.Count - 1 Then
 
@@ -4407,15 +4405,18 @@ Public Class CampoTatico
             objeto.GetType().Name
 
         Dim estado As New EstadoObjetoCampo With {
-            .TipoObjeto = tipoObjeto,
-            .X = objeto.Posicao.X,
-            .Y = objeto.Posicao.Y,
-            .Visivel = objeto.Visivel,
-            .GrupoId = If(
-                objeto.GrupoId,
-                String.Empty),
-            .Bloqueado = objeto.Bloqueado
-        }
+    .TipoObjeto = tipoObjeto,
+    .X = objeto.Posicao.X,
+    .Y = objeto.Posicao.Y,
+    .Visivel = objeto.Visivel,
+    .NomePersonalizado = If(
+        objeto.NomePersonalizado,
+        String.Empty),
+    .GrupoId = If(
+        objeto.GrupoId,
+        String.Empty),
+    .Bloqueado = objeto.Bloqueado
+}
 
         Select Case tipoObjeto
 
@@ -4695,6 +4696,11 @@ Public Class CampoTatico
         objeto.Visivel =
     estado.Visivel
 
+        objeto.NomePersonalizado =
+    If(
+        estado.NomePersonalizado,
+        String.Empty)
+
         objeto.GrupoId =
     If(
         estado.GrupoId,
@@ -4702,8 +4708,6 @@ Public Class CampoTatico
 
         objeto.Bloqueado =
     estado.Bloqueado
-
-        Return objeto
 
         Return objeto
 
@@ -9043,6 +9047,75 @@ Public Class CampoTatico
             houveAlteracao)
 
     End Sub
+
+    Public Function RenomearObjeto(
+    objeto As ObjetoCampo,
+    novoNome As String) As Boolean
+
+        If objeto Is Nothing OrElse
+       Not _objetos.Contains(
+           objeto) Then
+
+            Return False
+
+        End If
+
+        If objeto.Bloqueado Then
+
+            MessageBox.Show(
+            "O objeto está bloqueado." &
+            Environment.NewLine &
+            Environment.NewLine &
+            "Desbloqueie o objeto antes de renomeá-lo.",
+            "Objeto bloqueado",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information)
+
+            Return False
+
+        End If
+
+        Dim nomeNormalizado As String =
+        If(
+            novoNome,
+            String.Empty).
+        Trim()
+
+        If nomeNormalizado.Length > 80 Then
+
+            nomeNormalizado =
+            nomeNormalizado.Substring(
+                0,
+                80)
+
+        End If
+
+        Dim nomeAtual As String =
+        If(
+            objeto.NomePersonalizado,
+            String.Empty)
+
+        If String.Equals(
+        nomeAtual,
+        nomeNormalizado,
+        StringComparison.CurrentCulture) Then
+
+            Return False
+
+        End If
+
+        objeto.NomePersonalizado =
+        nomeNormalizado
+
+        RegistrarEstadoHistorico()
+
+        NotificarSelecaoAlterada()
+
+        Invalidate()
+
+        Return True
+
+    End Function
 
 #End Region
 

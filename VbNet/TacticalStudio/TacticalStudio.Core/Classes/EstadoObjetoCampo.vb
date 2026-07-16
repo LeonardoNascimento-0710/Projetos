@@ -6,16 +6,13 @@
 
         Public Property X As Double
         Public Property Y As Double
-
         Public Property XFinal As Double
         Public Property YFinal As Double
-
         Public Property Visivel As Boolean = True
-
+        Public Property NomePersonalizado As String = String.Empty
         Public Property Numero As Integer
         Public Property Nome As String = ""
         Public Property Texto As String = ""
-
         Public Property CorConeValor As Integer
         Public Property OrientacaoGolValor As Integer
         Public Property CorManequimValor As Integer

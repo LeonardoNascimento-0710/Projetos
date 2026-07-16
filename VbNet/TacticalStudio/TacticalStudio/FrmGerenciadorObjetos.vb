@@ -10,11 +10,27 @@ Public Class FrmGerenciadorObjetos
     Private ReadOnly _campo As CampoTatico
 
     Private ReadOnly TxtFiltro As New TextBox()
+
     Private ReadOnly CmbTipo As New ComboBox()
+
+    Private ReadOnly CmbEstado As New ComboBox()
+
+    Private ReadOnly CmbOrdenacao As New ComboBox()
+
     Private ReadOnly LvObjetos As New ListView()
+
     Private ReadOnly LblResumo As New Label()
+
+    Private ReadOnly BtnSelecionarTipo As New Button()
+
+    Private ReadOnly BtnRenomear As New Button()
+
+    Private ReadOnly BtnSelecionarExibidos As New Button()
+
     Private _selecionandoPelaLista As Boolean
+
     Private _atualizandoLista As Boolean
+
     Private _sincronizacaoPendente As Boolean
 
     Public Sub New(campo As CampoTatico)
@@ -60,6 +76,7 @@ Public Class FrmGerenciadorObjetos
             AddressOf Campo_ObjetoSelecionadoAlterado
 
         AplicarTemaAtual()
+
         AtualizarConteudo()
 
     End Sub
@@ -67,249 +84,791 @@ Public Class FrmGerenciadorObjetos
     Private Sub CriarInterface()
 
         Dim painelPrincipal As New TableLayoutPanel With {
-            .Dock = DockStyle.Fill,
-            .ColumnCount = 1,
-            .RowCount = 4,
-            .Padding = New Padding(10)
-        }
+        .Dock = DockStyle.Fill,
+        .ColumnCount = 1,
+        .RowCount = 4,
+        .Padding = New Padding(10),
+        .BackColor = Tema.Fundo
+    }
 
         painelPrincipal.RowStyles.Add(
-            New RowStyle(
-                SizeType.Absolute,
-                42.0F))
+        New RowStyle(
+            SizeType.Absolute,
+            54.0F))
 
         painelPrincipal.RowStyles.Add(
-            New RowStyle(
-                SizeType.Absolute,
-                32.0F))
+        New RowStyle(
+            SizeType.Absolute,
+            32.0F))
 
         painelPrincipal.RowStyles.Add(
-            New RowStyle(
-                SizeType.Percent,
-                100.0F))
+        New RowStyle(
+            SizeType.Percent,
+            100.0F))
 
         painelPrincipal.RowStyles.Add(
-            New RowStyle(
-                SizeType.Absolute,
-                104.0F))
+        New RowStyle(
+            SizeType.Absolute,
+            116.0F))
 
         Controls.Add(
-            painelPrincipal)
+        painelPrincipal)
 
-        Dim painelFiltro As New FlowLayoutPanel With {
-            .Dock = DockStyle.Fill,
-            .FlowDirection = FlowDirection.LeftToRight,
-            .WrapContents = False,
-            .Padding = New Padding(0, 4, 0, 0)
-        }
+        Dim painelFiltro As New TableLayoutPanel With {
+        .Dock = DockStyle.Fill,
+        .ColumnCount = 6,
+        .RowCount = 1,
+        .Padding = New Padding(0, 7, 0, 7),
+        .Margin = New Padding(0),
+        .BackColor = Tema.Painel,
+        .GrowStyle = TableLayoutPanelGrowStyle.FixedSize
+    }
+
+        painelFiltro.ColumnStyles.Add(
+        New ColumnStyle(
+            SizeType.Absolute,
+            72.0F))
+
+        painelFiltro.ColumnStyles.Add(
+        New ColumnStyle(
+            SizeType.Percent,
+            40.0F))
+
+        painelFiltro.ColumnStyles.Add(
+        New ColumnStyle(
+            SizeType.Absolute,
+            48.0F))
+
+        painelFiltro.ColumnStyles.Add(
+        New ColumnStyle(
+            SizeType.Percent,
+            30.0F))
+
+        painelFiltro.ColumnStyles.Add(
+        New ColumnStyle(
+            SizeType.Absolute,
+            65.0F))
+
+        painelFiltro.ColumnStyles.Add(
+        New ColumnStyle(
+            SizeType.Percent,
+            30.0F))
+
+        painelFiltro.RowStyles.Add(
+        New RowStyle(
+            SizeType.Percent,
+            100.0F))
 
         Dim labelFiltro As New Label With {
-            .Text = "Localizar:",
-            .Width = 70,
-            .Height = 28,
-            .TextAlign = ContentAlignment.MiddleLeft
-        }
+        .Text = "Localizar:",
+        .Dock = DockStyle.Fill,
+        .Margin = New Padding(0),
+        .ForeColor = Tema.Texto,
+        .BackColor = Tema.Painel,
+        .TextAlign = ContentAlignment.MiddleLeft
+    }
 
         painelFiltro.Controls.Add(
-            labelFiltro)
+        labelFiltro,
+        0,
+        0)
 
-        TxtFiltro.Width =
-            270
-
-        TxtFiltro.Height =
-            28
+        TxtFiltro.Dock =
+        DockStyle.Fill
 
         TxtFiltro.Margin =
-            New Padding(
-                0,
-                0,
-                14,
-                0)
+        New Padding(
+            4,
+            3,
+            14,
+            3)
+
+        TxtFiltro.BackColor =
+        Tema.CampoEntrada
+
+        TxtFiltro.ForeColor =
+        Tema.TextoCampo
+
+        TxtFiltro.BorderStyle =
+        BorderStyle.FixedSingle
 
         AddHandler TxtFiltro.TextChanged,
-            Sub(sender, e)
-                AtualizarConteudo()
-            End Sub
+        Sub(sender, e)
+
+            AtualizarConteudo()
+
+        End Sub
 
         painelFiltro.Controls.Add(
-            TxtFiltro)
+        TxtFiltro,
+        1,
+        0)
 
         Dim labelTipo As New Label With {
-            .Text = "Tipo:",
-            .Width = 44,
-            .Height = 28,
-            .TextAlign = ContentAlignment.MiddleLeft
-        }
+        .Text = "Tipo:",
+        .Dock = DockStyle.Fill,
+        .Margin = New Padding(0),
+        .ForeColor = Tema.Texto,
+        .BackColor = Tema.Painel,
+        .TextAlign = ContentAlignment.MiddleLeft
+    }
 
         painelFiltro.Controls.Add(
-            labelTipo)
+        labelTipo,
+        2,
+        0)
 
-        CmbTipo.Width =
-            160
+        CmbTipo.Dock =
+        DockStyle.Fill
 
-        CmbTipo.Height =
-            28
+        CmbTipo.Margin =
+        New Padding(
+            4,
+            3,
+            14,
+            3)
 
         CmbTipo.DropDownStyle =
-            ComboBoxStyle.DropDownList
+        ComboBoxStyle.DropDownList
+
+        CmbTipo.FlatStyle =
+        FlatStyle.Flat
+
+        CmbTipo.BackColor =
+        Tema.CampoEntrada
+
+        CmbTipo.ForeColor =
+        Tema.TextoCampo
+
+        CmbTipo.Items.Clear()
 
         CmbTipo.Items.AddRange(
-            New Object() {
-                "Todos",
-                "Jogador",
-                "Bola",
-                "Cone",
-                "Gol",
-                "Manequim",
-                "Linha tática",
-                "Área tática",
-                "Marcador",
-                "Texto tático"
-            })
+        New Object() {
+            "Todos",
+            "Jogador",
+            "Bola",
+            "Cone",
+            "Gol",
+            "Manequim",
+            "Linha tática",
+            "Área tática",
+            "Marcador",
+            "Texto tático"
+        })
 
         CmbTipo.SelectedIndex =
-            0
+        0
 
         AddHandler CmbTipo.SelectedIndexChanged,
-            Sub(sender, e)
-                AtualizarConteudo()
-            End Sub
+        Sub(sender, e)
+
+            AtualizarConteudo()
+
+        End Sub
 
         painelFiltro.Controls.Add(
-            CmbTipo)
+        CmbTipo,
+        3,
+        0)
 
-        painelPrincipal.Controls.Add(
-            painelFiltro,
-            0,
-            0)
+        Dim labelEstado As New Label With {
+        .Text = "Estado:",
+        .Dock = DockStyle.Fill,
+        .Margin = New Padding(0),
+        .ForeColor = Tema.Texto,
+        .BackColor = Tema.Painel,
+        .TextAlign = ContentAlignment.MiddleLeft
+    }
 
-        LblResumo.Dock =
-            DockStyle.Fill
+        painelFiltro.Controls.Add(
+        labelEstado,
+        4,
+        0)
 
-        LblResumo.TextAlign =
-            ContentAlignment.MiddleLeft
+        CmbEstado.Dock =
+        DockStyle.Fill
 
-        painelPrincipal.Controls.Add(
-            LblResumo,
-            0,
-            1)
-
-        LvObjetos.Dock =
-            DockStyle.Fill
-
-        LvObjetos.View =
-            View.Details
-
-        LvObjetos.FullRowSelect =
-            True
-
-        LvObjetos.MultiSelect =
-            True
-
-        LvObjetos.HideSelection =
-            False
-
-        LvObjetos.GridLines =
-            True
-
-        LvObjetos.Columns.Add(
-            "Objeto",
-            260)
-
-        LvObjetos.Columns.Add(
-            "Tipo",
-            110)
-
-        LvObjetos.Columns.Add(
-            "Grupo",
-            90)
-
-        LvObjetos.Columns.Add(
-            "Visível",
-            70)
-
-        LvObjetos.Columns.Add(
-            "Bloqueado",
-            85)
-
-        LvObjetos.Columns.Add(
-            "Ordem",
-            60)
-
-        AddHandler LvObjetos.SelectedIndexChanged,
-            AddressOf LvObjetos_SelectedIndexChanged
-
-        painelPrincipal.Controls.Add(
-            LvObjetos,
-            0,
-            2)
-
-        Dim painelAcoes As New FlowLayoutPanel With {
-            .Dock = DockStyle.Fill,
-            .FlowDirection = FlowDirection.LeftToRight,
-            .WrapContents = True,
-            .Padding = New Padding(0, 8, 0, 0)
-        }
-
-        painelAcoes.Controls.Add(
-            CriarBotaoAcao(
-                "Mostrar",
-                82,
-                AddressOf MostrarSelecionados))
-
-        painelAcoes.Controls.Add(
-            CriarBotaoAcao(
-                "Ocultar",
-                82,
-                AddressOf OcultarSelecionados))
-
-        painelAcoes.Controls.Add(
-            CriarBotaoAcao(
-                "Bloquear",
-                88,
-                AddressOf BloquearSelecionados))
-
-        painelAcoes.Controls.Add(
-            CriarBotaoAcao(
-                "Desbloquear",
-                96,
-                AddressOf DesbloquearSelecionados))
-
-        painelAcoes.Controls.Add(
-            CriarBotaoAcao(
-                "Subir",
-                76,
-                AddressOf SubirCamada))
-
-        painelAcoes.Controls.Add(
-            CriarBotaoAcao(
-                "Descer",
-                76,
-                AddressOf DescerCamada))
-
-        painelAcoes.Controls.Add(
-            CriarBotaoAcao(
-                "Frente",
-                78,
-                AddressOf TrazerParaFrente))
-
-        painelAcoes.Controls.Add(
-            CriarBotaoAcao(
-                "Trás",
-                72,
-                AddressOf EnviarParaTras))
-
-        painelAcoes.Controls.Add(
-            CriarBotaoAcao(
-                "Excluir",
-                82,
-                AddressOf ExcluirSelecionados,
-                True))
-
-        painelPrincipal.Controls.Add(
-            painelAcoes,
+        CmbEstado.Margin =
+        New Padding(
+            4,
+            3,
             0,
             3)
+
+        CmbEstado.DropDownStyle =
+        ComboBoxStyle.DropDownList
+
+        CmbEstado.FlatStyle =
+        FlatStyle.Flat
+
+        CmbEstado.BackColor =
+        Tema.CampoEntrada
+
+        CmbEstado.ForeColor =
+        Tema.TextoCampo
+
+        CmbEstado.Items.Clear()
+
+        CmbEstado.Items.AddRange(
+        New Object() {
+            "Todos",
+            "Visíveis",
+            "Ocultos",
+            "Bloqueados",
+            "Desbloqueados",
+            "Agrupados",
+            "Sem grupo"
+        })
+
+        CmbEstado.SelectedIndex =
+        0
+
+        AddHandler CmbEstado.SelectedIndexChanged,
+        Sub(sender, e)
+
+            AtualizarConteudo()
+
+        End Sub
+
+        painelFiltro.Controls.Add(
+        CmbEstado,
+        5,
+        0)
+
+        painelPrincipal.Controls.Add(
+        painelFiltro,
+        0,
+        0)
+
+        Dim painelResumo As New TableLayoutPanel With {
+    .Dock = DockStyle.Fill,
+    .ColumnCount = 3,
+    .RowCount = 1,
+    .Margin = New Padding(0),
+    .Padding = New Padding(0),
+    .BackColor = Tema.Fundo
+}
+
+        painelResumo.ColumnStyles.Add(
+    New ColumnStyle(
+        SizeType.Percent,
+        100.0F))
+
+        painelResumo.ColumnStyles.Add(
+    New ColumnStyle(
+        SizeType.Absolute,
+        72.0F))
+
+        painelResumo.ColumnStyles.Add(
+    New ColumnStyle(
+        SizeType.Absolute,
+        230.0F))
+
+        painelResumo.RowStyles.Add(
+    New RowStyle(
+        SizeType.Percent,
+        100.0F))
+
+        LblResumo.Dock =
+    DockStyle.Fill
+
+        LblResumo.Margin =
+    New Padding(0)
+
+        LblResumo.ForeColor =
+    Tema.TextoSecundario
+
+        LblResumo.BackColor =
+    Tema.Fundo
+
+        LblResumo.TextAlign =
+    ContentAlignment.MiddleLeft
+
+        painelResumo.Controls.Add(
+    LblResumo,
+    0,
+    0)
+
+        Dim labelOrdenacao As New Label With {
+    .Text = "Ordenar:",
+    .Dock = DockStyle.Fill,
+    .Margin = New Padding(0),
+    .ForeColor = Tema.Texto,
+    .BackColor = Tema.Fundo,
+    .TextAlign = ContentAlignment.MiddleLeft
+}
+
+        painelResumo.Controls.Add(
+    labelOrdenacao,
+    1,
+    0)
+
+        CmbOrdenacao.Dock =
+    DockStyle.Fill
+
+        CmbOrdenacao.Margin =
+    New Padding(
+        4,
+        2,
+        0,
+        2)
+
+        CmbOrdenacao.DropDownStyle =
+    ComboBoxStyle.DropDownList
+
+        CmbOrdenacao.FlatStyle =
+    FlatStyle.Flat
+
+        CmbOrdenacao.BackColor =
+    Tema.CampoEntrada
+
+        CmbOrdenacao.ForeColor =
+    Tema.TextoCampo
+
+        CmbOrdenacao.Items.Clear()
+
+        CmbOrdenacao.Items.AddRange(
+    New Object() {
+        "Camada: frente para trás",
+        "Camada: trás para frente",
+        "Nome: A até Z",
+        "Nome: Z até A",
+        "Tipo: A até Z"
+    })
+
+        CmbOrdenacao.SelectedIndex =
+    0
+
+        AddHandler CmbOrdenacao.SelectedIndexChanged,
+    Sub(sender, e)
+
+        AtualizarConteudo()
+
+    End Sub
+
+        painelResumo.Controls.Add(
+    CmbOrdenacao,
+    2,
+    0)
+
+        painelPrincipal.Controls.Add(
+    painelResumo,
+    0,
+    1)
+
+        LvObjetos.Dock =
+        DockStyle.Fill
+
+        LvObjetos.Margin =
+        New Padding(0)
+
+        LvObjetos.View =
+        View.Details
+
+        LvObjetos.FullRowSelect =
+        True
+
+        LvObjetos.MultiSelect =
+        True
+
+        LvObjetos.HideSelection =
+        False
+
+        LvObjetos.GridLines =
+        True
+
+        LvObjetos.BackColor =
+        Tema.CampoEntrada
+
+        LvObjetos.ForeColor =
+        Tema.TextoCampo
+
+        LvObjetos.Columns.Clear()
+
+        LvObjetos.Columns.Add(
+        "Objeto",
+        260)
+
+        LvObjetos.Columns.Add(
+        "Tipo",
+        110)
+
+        LvObjetos.Columns.Add(
+        "Grupo",
+        90)
+
+        LvObjetos.Columns.Add(
+        "Visível",
+        70)
+
+        LvObjetos.Columns.Add(
+        "Bloqueado",
+        85)
+
+        LvObjetos.Columns.Add(
+        "Ordem",
+        60)
+
+        AddHandler LvObjetos.SelectedIndexChanged,
+        AddressOf LvObjetos_SelectedIndexChanged
+
+        AddHandler LvObjetos.DoubleClick,
+        AddressOf LvObjetos_DoubleClick
+
+        painelPrincipal.Controls.Add(
+        LvObjetos,
+        0,
+        2)
+
+        Dim painelAcoes As New FlowLayoutPanel With {
+        .Dock = DockStyle.Fill,
+        .FlowDirection = FlowDirection.LeftToRight,
+        .WrapContents = True,
+        .AutoScroll = True,
+        .Padding = New Padding(0, 8, 0, 0),
+        .Margin = New Padding(0),
+        .BackColor = Tema.Painel
+    }
+
+        painelAcoes.Controls.Add(
+        CriarBotaoAcao(
+            "Mostrar",
+            82,
+            AddressOf MostrarSelecionados))
+
+        painelAcoes.Controls.Add(
+        CriarBotaoAcao(
+            "Ocultar",
+            82,
+            AddressOf OcultarSelecionados))
+
+        painelAcoes.Controls.Add(
+        CriarBotaoAcao(
+            "Bloquear",
+            88,
+            AddressOf BloquearSelecionados))
+
+        painelAcoes.Controls.Add(
+        CriarBotaoAcao(
+            "Desbloquear",
+            96,
+            AddressOf DesbloquearSelecionados))
+
+        painelAcoes.Controls.Add(
+        CriarBotaoAcao(
+            "Subir",
+            76,
+            AddressOf SubirCamada))
+
+        painelAcoes.Controls.Add(
+        CriarBotaoAcao(
+            "Descer",
+            76,
+            AddressOf DescerCamada))
+
+        painelAcoes.Controls.Add(
+        CriarBotaoAcao(
+            "Frente",
+            78,
+            AddressOf TrazerParaFrente))
+
+        painelAcoes.Controls.Add(
+        CriarBotaoAcao(
+            "Trás",
+            72,
+            AddressOf EnviarParaTras))
+
+        painelAcoes.Controls.Add(
+        CriarBotaoAcao(
+            "Excluir",
+            82,
+            AddressOf ExcluirSelecionados,
+            True))
+
+        BtnRenomear.Text =
+        "Renomear"
+
+        BtnRenomear.Width =
+        110
+
+        BtnRenomear.Height =
+        34
+
+        BtnRenomear.Margin =
+        New Padding(3)
+
+        BtnRenomear.FlatStyle =
+        FlatStyle.Flat
+
+        BtnRenomear.BackColor =
+        Tema.Painel
+
+        BtnRenomear.ForeColor =
+        Tema.Texto
+
+        BtnRenomear.Cursor =
+        Cursors.Hand
+
+        BtnRenomear.UseVisualStyleBackColor =
+        False
+
+        BtnRenomear.FlatAppearance.BorderColor =
+        Tema.Borda
+
+        BtnRenomear.FlatAppearance.MouseOverBackColor =
+        Tema.PainelHover
+
+        AddHandler BtnRenomear.Click,
+        AddressOf BtnRenomear_Click
+
+        painelAcoes.Controls.Add(
+        BtnRenomear)
+
+        BtnSelecionarTipo.Text =
+        "Selecionar tipo"
+
+        BtnSelecionarTipo.Width =
+        125
+
+        BtnSelecionarTipo.Height =
+        34
+
+        BtnSelecionarTipo.Margin =
+        New Padding(3)
+
+        BtnSelecionarTipo.FlatStyle =
+        FlatStyle.Flat
+
+        BtnSelecionarTipo.BackColor =
+        Tema.Painel
+
+        BtnSelecionarTipo.ForeColor =
+        Tema.Texto
+
+        BtnSelecionarTipo.Cursor =
+        Cursors.Hand
+
+        BtnSelecionarTipo.UseVisualStyleBackColor =
+        False
+
+        BtnSelecionarTipo.FlatAppearance.BorderColor =
+        Tema.Borda
+
+        BtnSelecionarTipo.FlatAppearance.MouseOverBackColor =
+        Tema.PainelHover
+
+        AddHandler BtnSelecionarTipo.Click,
+        AddressOf BtnSelecionarTipo_Click
+
+        painelAcoes.Controls.Add(
+        BtnSelecionarTipo)
+
+        BtnSelecionarExibidos.Text =
+        "Selecionar exibidos"
+
+        BtnSelecionarExibidos.Width =
+        145
+
+        BtnSelecionarExibidos.Height =
+        34
+
+        BtnSelecionarExibidos.Margin =
+        New Padding(3)
+
+        BtnSelecionarExibidos.FlatStyle =
+        FlatStyle.Flat
+
+        BtnSelecionarExibidos.BackColor =
+        Tema.Painel
+
+        BtnSelecionarExibidos.ForeColor =
+        Tema.Texto
+
+        BtnSelecionarExibidos.Cursor =
+        Cursors.Hand
+
+        BtnSelecionarExibidos.UseVisualStyleBackColor =
+        False
+
+        BtnSelecionarExibidos.FlatAppearance.BorderColor =
+        Tema.Borda
+
+        BtnSelecionarExibidos.FlatAppearance.MouseOverBackColor =
+        Tema.PainelHover
+
+        AddHandler BtnSelecionarExibidos.Click,
+        AddressOf BtnSelecionarExibidos_Click
+
+        painelAcoes.Controls.Add(
+        BtnSelecionarExibidos)
+
+        painelPrincipal.Controls.Add(
+        painelAcoes,
+        0,
+        3)
+
+    End Sub
+
+    Private Sub BtnSelecionarExibidos_Click(
+    sender As Object,
+    e As EventArgs)
+
+        SelecionarObjetosExibidos()
+
+    End Sub
+
+    Private Sub SelecionarObjetosExibidos()
+
+        If LvObjetos.Items.Count = 0 Then
+
+            MessageBox.Show(
+            "Nenhum objeto está sendo exibido pelos filtros atuais.",
+            "Selecionar objetos",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information)
+
+            Exit Sub
+
+        End If
+
+        Dim objetosSelecionar As New List(Of ObjetoCampo)()
+
+        For Each item As ListViewItem
+        In LvObjetos.Items
+
+            Dim objeto As ObjetoCampo =
+            TryCast(
+                item.Tag,
+                ObjetoCampo)
+
+            If objeto Is Nothing Then
+                Continue For
+            End If
+
+            If Not objetosSelecionar.Contains(
+            objeto) Then
+
+                objetosSelecionar.Add(
+                objeto)
+
+            End If
+
+        Next
+
+        If objetosSelecionar.Count = 0 Then
+            Exit Sub
+        End If
+
+        _campo.SelecionarObjetosPelaLista(
+        objetosSelecionar)
+
+        AtualizarSelecaoListaSemRecriar()
+
+        LvObjetos.Focus()
+
+    End Sub
+
+    Private Sub BtnSelecionarTipo_Click(
+    sender As Object,
+    e As EventArgs)
+
+        SelecionarObjetosDoMesmoTipo()
+
+    End Sub
+
+    Private Sub SelecionarObjetosDoMesmoTipo()
+
+        Dim objetoReferencia As ObjetoCampo =
+        ObterObjetoFocadoLista()
+
+        If objetoReferencia Is Nothing Then
+
+            MessageBox.Show(
+            "Selecione um objeto na lista para usar como referência.",
+            "Selecionar por tipo",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information)
+
+            Exit Sub
+
+        End If
+
+        Dim tipoReferencia As Type =
+        objetoReferencia.GetType()
+
+        Dim objetosSelecionar As New List(Of ObjetoCampo)()
+
+        For Each item As ListViewItem
+        In LvObjetos.Items
+
+            Dim objetoItem As ObjetoCampo =
+            TryCast(
+                item.Tag,
+                ObjetoCampo)
+
+            If objetoItem Is Nothing Then
+                Continue For
+            End If
+
+            If objetoItem.GetType() =
+           tipoReferencia Then
+
+                objetosSelecionar.Add(
+                objetoItem)
+
+            End If
+
+        Next
+
+        If objetosSelecionar.Count = 0 Then
+            Exit Sub
+        End If
+
+        _campo.SelecionarObjetosPelaLista(
+        objetosSelecionar)
+
+        AtualizarSelecaoListaSemRecriar()
+
+        LvObjetos.Focus()
+
+    End Sub
+
+    Private Function ObterObjetoFocadoLista() As ObjetoCampo
+
+        If LvObjetos.FocusedItem IsNot Nothing Then
+
+            Dim objetoFocado As ObjetoCampo =
+            TryCast(
+                LvObjetos.FocusedItem.Tag,
+                ObjetoCampo)
+
+            If objetoFocado IsNot Nothing Then
+
+                Return objetoFocado
+
+            End If
+
+        End If
+
+        If LvObjetos.SelectedItems.Count > 0 Then
+
+            Return TryCast(
+            LvObjetos.SelectedItems(0).Tag,
+            ObjetoCampo)
+
+        End If
+
+        Return Nothing
+
+    End Function
+
+    Private Sub LvObjetos_DoubleClick(sender As Object, e As EventArgs)
+
+        If LvObjetos.SelectedItems.Count <> 1 Then
+            Exit Sub
+        End If
+
+        RenomearObjetoFocado()
 
     End Sub
 
@@ -370,43 +929,193 @@ Public Class FrmGerenciadorObjetos
 
     Public Sub AplicarTemaAtual()
 
-        BackColor =
-            Tema.Fundo
+        BackColor = Tema.Fundo
 
-        ForeColor =
-            Tema.Texto
+        ForeColor = Tema.Texto
 
-        Font =
-            Tema.FontePadrao
+        Font = Tema.FontePadrao
 
-        AplicarTemaRecursivo(
-            Controls)
+        AplicarTemaRecursivo(Controls)
 
-        LvObjetos.BackColor =
-            Tema.CampoEntrada
+        LvObjetos.BackColor = Tema.CampoEntrada
 
-        LvObjetos.ForeColor =
-            Tema.TextoCampo
+        LvObjetos.ForeColor = Tema.TextoCampo
 
-        TxtFiltro.BackColor =
-            Tema.CampoEntrada
+        TxtFiltro.BackColor = Tema.CampoEntrada
 
-        TxtFiltro.ForeColor =
-            Tema.TextoCampo
+        TxtFiltro.ForeColor = Tema.TextoCampo
 
-        CmbTipo.BackColor =
-            Tema.CampoEntrada
+        CmbTipo.BackColor = Tema.CampoEntrada
 
-        CmbTipo.ForeColor =
-            Tema.TextoCampo
+        CmbTipo.ForeColor = Tema.TextoCampo
 
-        Invalidate(
-            True)
+        CmbEstado.BackColor = Tema.CampoEntrada
+
+        CmbEstado.ForeColor = Tema.TextoCampo
+
+        CmbOrdenacao.BackColor = Tema.CampoEntrada
+
+        CmbOrdenacao.ForeColor = Tema.TextoCampo
+
+        Invalidate(True)
 
         Refresh()
 
     End Sub
 
+    Private Function ObterOrdemFrenteObjeto(
+    objeto As ObjetoCampo) As Integer
+
+        If objeto Is Nothing Then
+            Return 0
+        End If
+
+        Dim objetosAtuais As IReadOnlyList(Of ObjetoCampo) =
+        _campo.ObjetosAtuais
+
+        For indice As Integer =
+        0 To objetosAtuais.Count - 1
+
+            If objetosAtuais(indice) Is objeto Then
+
+                Return objetosAtuais.Count - indice
+
+            End If
+
+        Next
+
+        Return 0
+
+    End Function
+    Private Sub OrdenarObjetosParaExibicao(
+    objetos As List(Of ObjetoCampo))
+
+        If objetos Is Nothing OrElse
+       objetos.Count <= 1 Then
+
+            Exit Sub
+
+        End If
+
+        Dim ordenacaoSelecionada As String =
+        "Camada: frente para trás"
+
+        If CmbOrdenacao.SelectedItem IsNot Nothing Then
+
+            ordenacaoSelecionada =
+            CStr(
+                CmbOrdenacao.SelectedItem)
+
+        End If
+
+        Select Case ordenacaoSelecionada
+
+            Case "Camada: frente para trás"
+
+                'O último objeto da coleção é desenhado na frente.
+                objetos.Reverse()
+
+            Case "Camada: trás para frente"
+
+            'A ordem original já representa trás para frente.
+
+            Case "Nome: A até Z"
+
+                objetos.Sort(
+                New Comparison(Of ObjetoCampo)(
+                    Function(objetoA, objetoB) As Integer
+
+                        Return StringComparer.
+                            CurrentCultureIgnoreCase.
+                            Compare(
+                                ObterDescricaoObjeto(
+                                    objetoA),
+                                ObterDescricaoObjeto(
+                                    objetoB))
+
+                    End Function))
+
+            Case "Nome: Z até A"
+
+                objetos.Sort(
+                New Comparison(Of ObjetoCampo)(
+                    Function(objetoA, objetoB) As Integer
+
+                        Return StringComparer.
+                            CurrentCultureIgnoreCase.
+                            Compare(
+                                ObterDescricaoObjeto(
+                                    objetoB),
+                                ObterDescricaoObjeto(
+                                    objetoA))
+
+                    End Function))
+
+            Case "Tipo: A até Z"
+
+                objetos.Sort(
+                New Comparison(Of ObjetoCampo)(
+                    Function(objetoA, objetoB) As Integer
+
+                        Dim tipoA As String =
+                            ObterTipoObjeto(
+                                objetoA)
+
+                        Dim tipoB As String =
+                            ObterTipoObjeto(
+                                objetoB)
+
+                        Dim comparacaoTipo As Integer =
+                            StringComparer.
+                                CurrentCultureIgnoreCase.
+                                Compare(
+                                    tipoA,
+                                    tipoB)
+
+                        If comparacaoTipo <> 0 Then
+
+                            Return comparacaoTipo
+
+                        End If
+
+                        Return StringComparer.
+                            CurrentCultureIgnoreCase.
+                            Compare(
+                                ObterDescricaoObjeto(
+                                    objetoA),
+                                ObterDescricaoObjeto(
+                                    objetoB))
+
+                    End Function))
+
+        End Select
+
+    End Sub
+
+    Private Function ObterOrdemRealObjeto(
+    objeto As ObjetoCampo) As Integer
+
+        If objeto Is Nothing Then
+            Return 0
+        End If
+
+        Dim objetosAtuais As IReadOnlyList(Of ObjetoCampo) =
+        _campo.ObjetosAtuais
+
+        For indice As Integer =
+        0 To objetosAtuais.Count - 1
+
+            If objetosAtuais(indice) Is objeto Then
+
+                Return indice + 1
+
+            End If
+
+        Next
+
+        Return 0
+
+    End Function
     Private Sub AplicarTemaRecursivo(
     controles As Control.ControlCollection)
 
@@ -492,148 +1201,217 @@ Public Class FrmGerenciadorObjetos
         End If
 
         _atualizandoLista =
-            True
+        True
+
+        LvObjetos.BeginUpdate()
 
         Try
 
             Dim selecionados As New HashSet(Of ObjetoCampo)(
-                _campo.ObjetosSelecionadosAtuais)
+            _campo.ObjetosSelecionadosAtuais)
 
             Dim filtro As String =
-                TxtFiltro.Text.Trim()
+            TxtFiltro.Text.Trim()
 
             Dim tipoSelecionado As String =
-                "Todos"
+            "Todos"
 
             If CmbTipo.SelectedItem IsNot Nothing Then
 
                 tipoSelecionado =
-                    CStr(
-                        CmbTipo.SelectedItem)
+                CStr(
+                    CmbTipo.SelectedItem)
 
             End If
 
-            Dim objetos As IReadOnlyList(Of ObjetoCampo) =
-                _campo.ObjetosAtuais
+            Dim estadoSelecionado As String =
+            "Todos"
 
-            LvObjetos.BeginUpdate()
+            If CmbEstado.SelectedItem IsNot Nothing Then
+
+                estadoSelecionado =
+                CStr(
+                    CmbEstado.SelectedItem)
+
+            End If
+
+            Dim objetosAtuais As IReadOnlyList(Of ObjetoCampo) =
+            _campo.ObjetosAtuais
+
+            Dim objetosExibicao As New List(Of ObjetoCampo)()
+
+            For Each objeto As ObjetoCampo
+            In objetosAtuais
+
+                objetosExibicao.Add(
+                objeto)
+
+            Next
+
+            OrdenarObjetosParaExibicao(
+            objetosExibicao)
+
             LvObjetos.Items.Clear()
 
             Dim quantidadeExibida As Integer =
-                0
+            0
 
-            Dim ordemFrente As Integer =
-                1
-
-            For indice As Integer =
-                objetos.Count - 1 To 0 Step -1
-
-                Dim objeto As ObjetoCampo =
-                    objetos(indice)
+            For Each objeto As ObjetoCampo
+            In objetosExibicao
 
                 Dim tipoObjeto As String =
-                    ObterTipoObjeto(
-                        objeto)
+                ObterTipoObjeto(
+                    objeto)
 
                 Dim descricao As String =
-                    ObterDescricaoObjeto(
-                        objeto)
+                ObterDescricaoObjeto(
+                    objeto)
 
                 If tipoSelecionado <> "Todos" AndAlso
-                   tipoSelecionado <> tipoObjeto Then
+               tipoSelecionado <> tipoObjeto Then
+
+                    Continue For
+
+                End If
+
+                If Not ObjetoCorrespondeAoEstado(
+                objeto,
+                estadoSelecionado) Then
 
                     Continue For
 
                 End If
 
                 If filtro.Length > 0 AndAlso
-                   descricao.IndexOf(
-                       filtro,
-                       StringComparison.CurrentCultureIgnoreCase) < 0 AndAlso
-                   tipoObjeto.IndexOf(
-                       filtro,
-                       StringComparison.CurrentCultureIgnoreCase) < 0 Then
+               descricao.IndexOf(
+                   filtro,
+                   StringComparison.CurrentCultureIgnoreCase) < 0 AndAlso
+               tipoObjeto.IndexOf(
+                   filtro,
+                   StringComparison.CurrentCultureIgnoreCase) < 0 Then
 
                     Continue For
 
                 End If
 
                 Dim grupo As String =
-                    "-"
+                "-"
 
                 If Not String.IsNullOrWhiteSpace(
-                    objeto.GrupoId) Then
+                objeto.GrupoId) Then
 
                     grupo =
-                        "#" &
-                        objeto.GrupoId.Substring(
-                            0,
-                            Math.Min(
-                                6,
-                                objeto.GrupoId.Length)).
-                        ToUpperInvariant()
+                    "#" &
+                    objeto.GrupoId.Substring(
+                        0,
+                        Math.Min(
+                            6,
+                            objeto.GrupoId.Length)).
+                    ToUpperInvariant()
 
                 End If
 
                 Dim item As New ListViewItem(
-                    descricao)
+                descricao)
 
                 item.Tag =
-                    objeto
+                objeto
 
                 item.SubItems.Add(
-                    tipoObjeto)
+                tipoObjeto)
 
                 item.SubItems.Add(
-                    grupo)
+                grupo)
 
                 item.SubItems.Add(
-                    If(
-                        objeto.Visivel,
-                        "Sim",
-                        "Não"))
+                If(
+                    objeto.Visivel,
+                    "Sim",
+                    "Não"))
 
                 item.SubItems.Add(
-                    If(
-                        objeto.Bloqueado,
-                        "Sim",
-                        "Não"))
+                If(
+                    objeto.Bloqueado,
+                    "Sim",
+                    "Não"))
 
                 item.SubItems.Add(
-                    ordemFrente.ToString())
+                ObterOrdemFrenteObjeto(
+                    objeto).
+                ToString())
 
                 item.Selected =
-                    selecionados.Contains(
-                        objeto)
+                selecionados.Contains(
+                    objeto)
 
                 LvObjetos.Items.Add(
-                    item)
+                item)
 
                 quantidadeExibida +=
-                    1
-
-                ordemFrente +=
-                    1
+                1
 
             Next
 
-            LvObjetos.EndUpdate()
-
             LblResumo.Text =
-                quantidadeExibida.ToString() &
-                " de " &
-                objetos.Count.ToString() &
-                " objetos exibidos — ordem 1 é a frente."
+            quantidadeExibida.ToString() &
+            " de " &
+            objetosAtuais.Count.ToString() &
+            " objetos exibidos — ordem 1 é a frente."
 
         Finally
 
+            LvObjetos.EndUpdate()
+
             _atualizandoLista =
-                False
+            False
 
         End Try
 
     End Sub
 
+    Private Function ObjetoCorrespondeAoEstado(
+    objeto As ObjetoCampo,
+    estadoSelecionado As String) As Boolean
+
+        If objeto Is Nothing Then
+            Return False
+        End If
+
+        Select Case estadoSelecionado
+
+            Case "Visíveis"
+
+                Return objeto.Visivel
+
+            Case "Ocultos"
+
+                Return Not objeto.Visivel
+
+            Case "Bloqueados"
+
+                Return objeto.Bloqueado
+
+            Case "Desbloqueados"
+
+                Return Not objeto.Bloqueado
+
+            Case "Agrupados"
+
+                Return Not String.IsNullOrWhiteSpace(
+                objeto.GrupoId)
+
+            Case "Sem grupo"
+
+                Return String.IsNullOrWhiteSpace(
+                objeto.GrupoId)
+
+            Case Else
+
+                Return True
+
+        End Select
+
+    End Function
     Private Function ObterTipoObjeto(
     objeto As ObjetoCampo) As String
 
@@ -1072,5 +1850,307 @@ Public Class FrmGerenciadorObjetos
             e)
 
     End Sub
+
+    Private Sub BtnRenomear_Click(
+    sender As Object,
+    e As EventArgs)
+
+        RenomearObjetoFocado()
+
+    End Sub
+
+    Private Function SolicitarNomeObjeto(
+    nomeAtual As String,
+    ByRef novoNome As String) As Boolean
+
+        Using formulario As New Form()
+
+            formulario.Text =
+                "Renomear objeto"
+
+            formulario.StartPosition =
+                FormStartPosition.CenterParent
+
+            formulario.FormBorderStyle =
+                FormBorderStyle.FixedDialog
+
+            formulario.ClientSize =
+                New Size(
+                    430,
+                    165)
+
+            formulario.MaximizeBox =
+                False
+
+            formulario.MinimizeBox =
+                False
+
+            formulario.ShowInTaskbar =
+                False
+
+            formulario.BackColor =
+                Tema.Fundo
+
+            formulario.ForeColor =
+                Tema.Texto
+
+            formulario.Font =
+                Tema.FontePadrao
+
+            Dim label As New Label With {
+                .Text =
+                    "Digite um nome para o objeto:" &
+                    Environment.NewLine &
+                    "Deixe vazio para restaurar o nome automático.",
+                .Left = 16,
+                .Top = 14,
+                .Width = 395,
+                .Height = 44,
+                .ForeColor = Tema.Texto
+            }
+
+            formulario.Controls.Add(
+                label)
+
+            Dim campoNome As New TextBox With {
+                .Left = 16,
+                .Top = 62,
+                .Width = 395,
+                .Height = 30,
+                .MaxLength = 80,
+                .Text = If(
+                    nomeAtual,
+                    String.Empty),
+                .BackColor = Tema.CampoEntrada,
+                .ForeColor = Tema.TextoCampo,
+                .BorderStyle = BorderStyle.FixedSingle
+            }
+
+            formulario.Controls.Add(
+                campoNome)
+
+            Dim botaoCancelar As New Button With {
+                .Text = "Cancelar",
+                .Left = 221,
+                .Top = 112,
+                .Width = 90,
+                .Height = 34,
+                .DialogResult = DialogResult.Cancel,
+                .FlatStyle = FlatStyle.Flat,
+                .BackColor = Tema.Painel,
+                .ForeColor = Tema.Texto,
+                .UseVisualStyleBackColor = False
+            }
+
+            botaoCancelar.FlatAppearance.BorderColor =
+                Tema.Borda
+
+            formulario.Controls.Add(
+                botaoCancelar)
+
+            Dim botaoConfirmar As New Button With {
+                .Text = "Confirmar",
+                .Left = 321,
+                .Top = 112,
+                .Width = 90,
+                .Height = 34,
+                .DialogResult = DialogResult.OK,
+                .FlatStyle = FlatStyle.Flat,
+                .BackColor = Tema.CorPrimaria,
+                .ForeColor = Color.White,
+                .UseVisualStyleBackColor = False
+            }
+
+            botaoConfirmar.FlatAppearance.BorderColor =
+                Color.White
+
+            formulario.Controls.Add(
+                botaoConfirmar)
+
+            formulario.AcceptButton =
+                botaoConfirmar
+
+            formulario.CancelButton =
+                botaoCancelar
+
+            AddHandler formulario.Shown,
+                Sub(sender, e)
+
+                    campoNome.Focus()
+
+                    campoNome.SelectAll()
+
+                End Sub
+
+            If formulario.ShowDialog(Me) <>
+               DialogResult.OK Then
+
+                Return False
+
+            End If
+
+            novoNome =
+                campoNome.Text.Trim()
+
+            Return True
+
+        End Using
+
+    End Function
+
+    Private Sub RenomearObjetoFocado()
+
+        If LvObjetos.SelectedItems.Count = 0 Then
+
+            MessageBox.Show(
+                "Selecione um objeto na lista para renomeá-lo.",
+                "Renomear objeto",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information)
+
+            Exit Sub
+
+        End If
+
+        If LvObjetos.SelectedItems.Count > 1 Then
+
+            MessageBox.Show(
+                "Selecione somente um objeto para renomear.",
+                "Renomear objeto",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information)
+
+            Exit Sub
+
+        End If
+
+        Dim itemSelecionado As ListViewItem =
+            LvObjetos.SelectedItems(0)
+
+        Dim objeto As ObjetoCampo =
+            TryCast(
+                itemSelecionado.Tag,
+                ObjetoCampo)
+
+        If objeto Is Nothing Then
+            Exit Sub
+        End If
+
+        Dim nomeAtual As String =
+            If(
+                objeto.NomePersonalizado,
+                String.Empty)
+
+        Dim novoNome As String =
+            nomeAtual
+
+        If Not SolicitarNomeObjeto(
+            nomeAtual,
+            novoNome) Then
+
+            Exit Sub
+
+        End If
+
+        If Not _campo.RenomearObjeto(
+            objeto,
+            novoNome) Then
+
+            Exit Sub
+
+        End If
+
+        AtualizarConteudo()
+
+        SelecionarObjetoNaLista(
+            objeto)
+
+        LvObjetos.Focus()
+
+    End Sub
+
+    Private Sub SelecionarObjetoNaLista(
+    objeto As ObjetoCampo)
+
+        If objeto Is Nothing Then
+            Exit Sub
+        End If
+
+        _atualizandoLista =
+            True
+
+        Try
+
+            For Each item As ListViewItem
+                In LvObjetos.Items
+
+                Dim objetoItem As ObjetoCampo =
+                    TryCast(
+                        item.Tag,
+                        ObjetoCampo)
+
+                Dim selecionar As Boolean =
+                    objetoItem Is objeto
+
+                item.Selected =
+                    selecionar
+
+                If selecionar Then
+
+                    item.Focused =
+                        True
+
+                    item.EnsureVisible()
+
+                End If
+
+            Next
+
+        Finally
+
+            _atualizandoLista =
+                False
+
+        End Try
+
+    End Sub
+
+    Protected Overrides Function ProcessCmdKey(
+    ByRef msg As Message,
+    keyData As Keys) As Boolean
+
+        Dim tecla As Keys = keyData And Keys.KeyCode
+
+        Dim modificadores As Keys = keyData And Keys.Modifiers
+
+        If tecla = Keys.F2 AndAlso modificadores = Keys.None Then
+
+            RenomearObjetoFocado()
+
+            Return True
+
+        End If
+
+        If tecla = Keys.T AndAlso modificadores = Keys.Control Then
+
+            SelecionarObjetosDoMesmoTipo()
+
+            Return True
+
+        End If
+
+        If tecla = Keys.A AndAlso modificadores = Keys.Control Then
+
+            SelecionarObjetosExibidos()
+
+            Return True
+
+        End If
+
+        Return MyBase.ProcessCmdKey(
+        msg,
+        keyData)
+
+    End Function
 
 End Class

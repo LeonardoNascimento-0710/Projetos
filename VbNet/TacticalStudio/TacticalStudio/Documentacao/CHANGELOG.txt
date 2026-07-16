@@ -1517,3 +1517,70 @@ Próxima etapa sugerida:
 - Criar filtros avançados;
 - Adicionar ordenação por nome, tipo e camada;
 - Melhorar ações em lote no gerenciador de objetos.
+
+======================================================================
+39. ETAPA 31 - RENOMEAÇÃO, SELEÇÃO POR TIPO E FILTROS AVANÇADOS
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.31.0
+
+Arquivos alterados:
+- TacticalStudio.Core\Classes\ObjetoCampo.vb
+- TacticalStudio.Core\Classes\EstadoObjetoCampo.vb
+- Controles\CampoTatico.vb
+- FrmGerenciadorObjetos.vb
+- InformacoesAplicacao.vb
+
+Alterações realizadas:
+- Adicionada propriedade NomePersonalizado em ObjetoCampo;
+- Adicionado suporte ao nome personalizado no histórico;
+- Adicionada restauração do nome personalizado ao abrir exercícios;
+- Implementada renomeação de objetos;
+- Adicionado limite de 80 caracteres para nomes;
+- Renomeação integrada ao histórico;
+- Renomeação integrada ao salvar e abrir;
+- Objetos bloqueados não podem ser renomeados;
+- Adicionado botão Renomear;
+- Adicionado atalho F2;
+- Adicionado duplo clique para renomear;
+- Nome vazio restaura o nome automático;
+- Implementada seleção de todos os objetos do mesmo tipo;
+- Adicionado botão Selecionar tipo;
+- Adicionado atalho Ctrl+T;
+- Implementado filtro avançado por estado;
+- Adicionados filtros: visíveis, ocultos, bloqueados, desbloqueados, agrupados e sem grupo;
+- Implementado botão Selecionar exibidos;
+- Adicionado Ctrl+A dentro do gerenciador para selecionar os objetos filtrados;
+- Implementada ordenação visual da lista;
+- Adicionadas opções por camada, nome e tipo;
+- A ordenação da lista não altera as camadas reais;
+- A coluna Ordem continua mostrando a camada verdadeira;
+- Atualizado o layout dos filtros com TableLayoutPanel;
+- Corrigido o alinhamento dos containers;
+- Atualizada a versão exibida para 0.31.0.
+
+Correções:
+- Corrigido o container de filtros duplicado;
+- Removidos labels e ComboBoxes repetidos;
+- Corrigido o layout do campo Localizar;
+- Corrigida a sobrecarga do List.Sort;
+- Corrigido o uso de ObterDescricaoObjeto;
+- Adicionado Comparison(Of ObjetoCampo) explícito;
+- Corrigida a exibição da ordem real das camadas;
+- Mantida a seleção após atualizar a lista;
+- Mantida a compatibilidade com nomes automáticos.
+
+Resultado:
+- Objetos podem receber nomes personalizados;
+- O gerenciador permite localizar e selecionar objetos com mais precisão;
+- Filtros podem ser combinados;
+- A lista pode ser ordenada sem alterar o campo;
+- A edição de exercícios complexos ficou mais rápida e organizada.
+
+Próxima etapa sugerida:
+- Implementar presets de formações;
+- Adicionar biblioteca de exercícios;
+- Criar importação e exportação de modelos;
+- Adicionar favoritos;
+- Permitir aplicar formações prontas ao campo.

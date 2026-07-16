@@ -2180,8 +2180,19 @@ Public Class FrmPrincipal
 
     End Function
 
-    Private Function ObterNomeObjeto(
-    objeto As ObjetoCampo) As String
+    Private Function ObterNomeObjeto(objeto As ObjetoCampo) As String
+
+        If objeto Is Nothing Then
+            Return String.Empty
+        End If
+
+        Dim nomePersonalizado As String = If(objeto.NomePersonalizado, String.Empty).Trim()
+
+        If Not String.IsNullOrWhiteSpace(nomePersonalizado) Then
+
+            Return nomePersonalizado
+
+        End If
 
         If TypeOf objeto Is Jogador Then
             Return "Jogador"
