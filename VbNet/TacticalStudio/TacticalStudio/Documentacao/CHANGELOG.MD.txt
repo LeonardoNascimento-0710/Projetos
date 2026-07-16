@@ -1283,3 +1283,54 @@ Próxima etapa sugerida:
 - Criar comandos de centralização;
 - Adicionar agrupamento permanente;
 - Permitir bloquear objetos individualmente.
+
+======================================================================
+35. ETAPA 27 - ALINHAMENTO E DISTRIBUIÇÃO DA SELEÇÃO
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.27.0
+
+Arquivos alterados:
+- Controles\CampoTatico.vb
+- FrmPrincipal.vb
+- InformacoesAplicacao.vb
+- FrmConfiguracoesExercicio.vb
+- TacticalStudio.vbproj
+
+Alterações realizadas:
+- Implementado alinhamento dos objetos na mesma linha;
+- Implementado alinhamento dos objetos na mesma coluna;
+- Implementada distribuição horizontal;
+- Implementada distribuição vertical;
+- Implementada centralização da seleção no campo;
+- O último objeto selecionado é usado como referência no alinhamento;
+- Linhas e áreas preservam seus formatos;
+- Nenhum objeto ultrapassa os limites do campo;
+- Cada comando gera apenas uma entrada no histórico;
+- Adicionados botões no painel de seleção múltipla;
+- Adicionados atalhos de alinhamento, distribuição e centralização;
+- Atualizada a versão exibida para 0.27.0.
+
+Correções:
+- Restaurado o funcionamento do atalho Ctrl+A;
+- Corrigido o evento de seleção para exibir o painel de seleção múltipla;
+- Corrigida a exibição dos botões Mesma linha e Mesma coluna;
+- Corrigida a integração entre seleção múltipla, alinhamento e histórico;
+- Corrigido o construtor de FrmConfiguracoesExercicio com InitializeComponent;
+- Corrigido o aviso de restauração do pacote PDFsharp-GDI;
+- Revisada a estrutura dos arquivos CampoTatico.vb e FrmPrincipal.vb.
+
+Resultado:
+- Objetos podem ser alinhados e distribuídos rapidamente;
+- Seleções complexas podem ser centralizadas no campo;
+- O painel lateral apresenta corretamente as ações disponíveis;
+- Ctrl+A volta a selecionar todos os objetos;
+- Histórico, grade, zoom e seleção múltipla permanecem integrados.
+
+Próxima etapa sugerida:
+- Implementar agrupamento e desagrupamento;
+- Adicionar bloqueio individual de objetos;
+- Permitir ocultar elementos;
+- Criar comandos de seleção por tipo;
+- Melhorar o gerenciamento de camadas.
