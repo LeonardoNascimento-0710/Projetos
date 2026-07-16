@@ -22,3 +22,4 @@ C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\T
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio.Core\obj\Debug\net10.0\refint\TacticalStudio.Core.dll
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio.Core\obj\Debug\net10.0\TacticalStudio.Core.pdb
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio.Core\obj\Debug\net10.0\ref\TacticalStudio.Core.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio.Core\obj\Debug\net10.0\TacticalStudio.Core.vbproj.AssemblyReference.cache

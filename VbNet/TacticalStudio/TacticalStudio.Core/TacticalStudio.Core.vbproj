@@ -14,4 +14,8 @@
     <Folder Include="Objetos\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="PDFsharp-GDI" Version="6.2.4" />
+  </ItemGroup>
+
 </Project>

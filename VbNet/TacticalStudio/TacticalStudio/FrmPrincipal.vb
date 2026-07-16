@@ -1,30 +1,29 @@
 ﻿Imports System.Collections.Generic
 Imports System.IO
 Imports System.Text
+Imports System.Drawing.Imaging
+Imports System.Drawing.Printing
+Imports PdfSharp
+Imports PdfSharp.Drawing
+Imports PdfSharp.Pdf
 Imports TacticalStudio.Core.Enums
 Imports TacticalStudio.Core.Classes
-Imports System.Drawing.Imaging
 
 Public Class FrmPrincipal
 
     Private CampoCanvas As CampoTatico
 
-    Private _caminhoArquivoAtual As String =
-    String.Empty
+    Private _caminhoArquivoAtual As String = String.Empty
 
     Private _nomeExercicioAtual As String = "Novo exercício"
 
-    Private _categoriaExercicioAtual As String =
-    "Tático"
+    Private _categoriaExercicioAtual As String = "Tático"
 
-    Private _duracaoExercicioAtual As Integer =
-    30
+    Private _duracaoExercicioAtual As Integer = 30
 
-    Private _descricaoExercicioAtual As String =
-    String.Empty
+    Private _descricaoExercicioAtual As String = String.Empty
 
-    Private _observacoesExercicioAtual As String =
-    String.Empty
+    Private _observacoesExercicioAtual As String = String.Empty
 
     Private _assinaturaSalva As String = String.Empty
 
@@ -1359,9 +1358,23 @@ Public Class FrmPrincipal
 
         End If
 
-        Return MyBase.ProcessCmdKey(
-        msg,
-        keyData)
+        If modificadores = (Keys.Control Or Keys.Shift) AndAlso tecla = Keys.E Then
+
+            ExportarExercicioPdf()
+
+            Return True
+
+        End If
+
+        If modificadores = Keys.Control AndAlso tecla = Keys.P Then
+
+            VisualizarImpressaoExercicio()
+
+            Return True
+
+        End If
+
+        Return MyBase.ProcessCmdKey(msg, keyData)
 
     End Function
 
@@ -1378,7 +1391,7 @@ Public Class FrmPrincipal
         Dim painelArquivo As New FlowLayoutPanel With {
             .Name = "PnlArquivoDinamico",
             .Dock = DockStyle.Right,
-            .Width = 500,
+            .Width = 690,
             .FlowDirection = FlowDirection.LeftToRight,
             .WrapContents = False,
             .Padding = New Padding(5),
@@ -1394,6 +1407,10 @@ Public Class FrmPrincipal
         painelArquivo.Controls.Add(CriarBotaoArquivo("Exportar", AddressOf ExportarImagem_Click))
 
         painelArquivo.Controls.Add(CriarBotaoArquivo("Dados", AddressOf ConfiguracoesExercicio_Click))
+
+        painelArquivo.Controls.Add(CriarBotaoArquivo("PDF", AddressOf ExportarPdf_Click))
+
+        painelArquivo.Controls.Add(CriarBotaoArquivo("Imprimir", AddressOf ImprimirExercicio_Click))
 
         PnlSuperior.Controls.Add(painelArquivo)
 
@@ -1913,6 +1930,433 @@ Public Class FrmPrincipal
             _observacoesExercicioAtual)
 
     End Function
+
+    Private Sub ExportarPdf_Click(sender As Object, e As EventArgs)
+
+        ExportarExercicioPdf()
+
+    End Sub
+
+    Private Sub ImprimirExercicio_Click(sender As Object, e As EventArgs)
+
+        VisualizarImpressaoExercicio()
+
+    End Sub
+
+    Private Function PerguntarInclusaoCabecalho(
+    tituloJanela As String) As Boolean?
+
+        Dim resposta As DialogResult =
+            MessageBox.Show(
+                "Deseja incluir os dados do exercício?" &
+                Environment.NewLine &
+                Environment.NewLine &
+                "Sim: inclui nome, categoria, duração, " &
+                "descrição e observações." &
+                Environment.NewLine &
+                "Não: utiliza somente o campo.",
+                tituloJanela,
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question)
+
+        Select Case resposta
+
+            Case DialogResult.Yes
+
+                Return True
+
+            Case DialogResult.No
+
+                Return False
+
+            Case Else
+
+                Return Nothing
+
+        End Select
+
+    End Function
+
+    Private Sub ExportarExercicioPdf()
+
+        If CampoCanvas Is Nothing Then
+            Exit Sub
+        End If
+
+        Dim incluirCabecalho As Boolean? =
+            PerguntarInclusaoCabecalho(
+                "Exportar PDF")
+
+        If Not incluirCabecalho.HasValue Then
+
+            CampoCanvas.Focus()
+
+            Exit Sub
+
+        End If
+
+        Using dialogo As New SaveFileDialog()
+
+            dialogo.Title =
+                "Exportar exercício como PDF"
+
+            dialogo.Filter =
+                "Documento PDF (*.pdf)|*.pdf"
+
+            dialogo.DefaultExt =
+                "pdf"
+
+            dialogo.AddExtension =
+                True
+
+            dialogo.OverwritePrompt =
+                True
+
+            dialogo.FileName =
+                _nomeExercicioAtual &
+                ".pdf"
+
+            If dialogo.ShowDialog() <>
+               DialogResult.OK Then
+
+                CampoCanvas.Focus()
+
+                Exit Sub
+
+            End If
+
+            Try
+
+                Using imagemCampo As Bitmap =
+                    CampoCanvas.GerarImagemCampo(
+                        2560,
+                        incluirCabecalho.Value,
+                        _nomeExercicioAtual,
+                        _categoriaExercicioAtual,
+                        _duracaoExercicioAtual,
+                        _descricaoExercicioAtual,
+                        _observacoesExercicioAtual)
+
+                    CriarArquivoPdf(
+                        imagemCampo,
+                        dialogo.FileName)
+
+                End Using
+
+                MessageBox.Show(
+                    "PDF exportado com sucesso." &
+                    Environment.NewLine &
+                    Environment.NewLine &
+                    dialogo.FileName,
+                    "Exportação concluída",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information)
+
+            Catch ex As Exception
+
+                MessageBox.Show(
+                    "Não foi possível exportar o PDF." &
+                    Environment.NewLine &
+                    Environment.NewLine &
+                    ex.Message,
+                    "Erro na exportação",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error)
+
+            Finally
+
+                CampoCanvas.Focus()
+
+            End Try
+
+        End Using
+
+    End Sub
+
+    Private Sub CriarArquivoPdf(
+    imagemCampo As Bitmap,
+    caminhoDestino As String)
+
+        If imagemCampo Is Nothing Then
+
+            Throw New ArgumentNullException(
+                NameOf(imagemCampo))
+
+        End If
+
+        If String.IsNullOrWhiteSpace(
+            caminhoDestino) Then
+
+            Throw New ArgumentException(
+                "O caminho do PDF não foi informado.")
+
+        End If
+
+        Using documento As New PdfDocument()
+
+            documento.Info.Title =
+                _nomeExercicioAtual
+
+            documento.Info.Author =
+                "TacticalStudio"
+
+            documento.Info.Subject =
+                _categoriaExercicioAtual
+
+            Dim pagina As PdfPage =
+                documento.AddPage()
+
+            pagina.Size =
+                PageSize.A4
+
+            If imagemCampo.Width >=
+               imagemCampo.Height Then
+
+                pagina.Orientation =
+                    PageOrientation.Landscape
+
+            Else
+
+                pagina.Orientation =
+                    PageOrientation.Portrait
+
+            End If
+
+            Using fluxoImagem As New MemoryStream()
+
+                imagemCampo.Save(
+                    fluxoImagem,
+                    ImageFormat.Png)
+
+                fluxoImagem.Position =
+                    0
+
+                Using imagemPdf As XImage =
+                    XImage.FromStream(
+                        fluxoImagem)
+
+                    Using grafico As XGraphics =
+                        XGraphics.FromPdfPage(
+                            pagina)
+
+                        Dim margem As Double =
+                            24.0
+
+                        Dim larguraPagina As Double =
+                            pagina.Width.Point
+
+                        Dim alturaPagina As Double =
+                            pagina.Height.Point
+
+                        Dim larguraDisponivel As Double =
+                            larguraPagina -
+                            margem * 2.0
+
+                        Dim alturaDisponivel As Double =
+                            alturaPagina -
+                            margem * 2.0
+
+                        Dim escalaX As Double =
+                            larguraDisponivel /
+                            imagemPdf.PixelWidth
+
+                        Dim escalaY As Double =
+                            alturaDisponivel /
+                            imagemPdf.PixelHeight
+
+                        Dim escalaFinal As Double =
+                            Math.Min(
+                                escalaX,
+                                escalaY)
+
+                        Dim larguraFinal As Double =
+                            imagemPdf.PixelWidth *
+                            escalaFinal
+
+                        Dim alturaFinal As Double =
+                            imagemPdf.PixelHeight *
+                            escalaFinal
+
+                        Dim posicaoX As Double =
+                            (larguraPagina -
+                             larguraFinal) / 2.0
+
+                        Dim posicaoY As Double =
+                            (alturaPagina -
+                             alturaFinal) / 2.0
+
+                        grafico.DrawImage(
+                            imagemPdf,
+                            posicaoX,
+                            posicaoY,
+                            larguraFinal,
+                            alturaFinal)
+
+                    End Using
+
+                End Using
+
+            End Using
+
+            documento.Save(
+                caminhoDestino)
+
+        End Using
+
+    End Sub
+
+    Private Sub VisualizarImpressaoExercicio()
+
+        If CampoCanvas Is Nothing Then
+            Exit Sub
+        End If
+
+        Dim incluirCabecalho As Boolean? =
+            PerguntarInclusaoCabecalho(
+                "Imprimir exercício")
+
+        If Not incluirCabecalho.HasValue Then
+
+            CampoCanvas.Focus()
+
+            Exit Sub
+
+        End If
+
+        Try
+
+            Using imagemCampo As Bitmap =
+                CampoCanvas.GerarImagemCampo(
+                    2560,
+                    incluirCabecalho.Value,
+                    _nomeExercicioAtual,
+                    _categoriaExercicioAtual,
+                    _duracaoExercicioAtual,
+                    _descricaoExercicioAtual,
+                    _observacoesExercicioAtual)
+
+                Using documento As New PrintDocument()
+
+                    documento.DocumentName =
+                        _nomeExercicioAtual
+
+                    documento.DefaultPageSettings.Landscape =
+                        imagemCampo.Width >=
+                        imagemCampo.Height
+
+                    documento.DefaultPageSettings.Margins =
+                        New Margins(
+                            30,
+                            30,
+                            30,
+                            30)
+
+                    AddHandler documento.PrintPage,
+                        Sub(sender, evento)
+
+                            DesenharPaginaImpressao(
+                                evento,
+                                imagemCampo)
+
+                        End Sub
+
+                    Using visualizacao As New PrintPreviewDialog With {
+                        .Document = documento,
+                        .Width = 1200,
+                        .Height = 800,
+                        .UseAntiAlias = True,
+                        .StartPosition =
+                            FormStartPosition.CenterParent
+                    }
+
+                        visualizacao.ShowDialog(Me)
+
+                    End Using
+
+                End Using
+
+            End Using
+
+        Catch ex As Exception
+
+            MessageBox.Show(
+                "Não foi possível preparar a impressão." &
+                Environment.NewLine &
+                Environment.NewLine &
+                ex.Message,
+                "Erro na impressão",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error)
+
+        Finally
+
+            CampoCanvas.Focus()
+
+        End Try
+
+    End Sub
+
+    Private Sub DesenharPaginaImpressao(
+    evento As PrintPageEventArgs,
+    imagemCampo As Bitmap)
+
+        Dim areaImpressao As Rectangle =
+            evento.MarginBounds
+
+        Dim escalaX As Double =
+            areaImpressao.Width /
+            CDbl(imagemCampo.Width)
+
+        Dim escalaY As Double =
+            areaImpressao.Height /
+            CDbl(imagemCampo.Height)
+
+        Dim escalaFinal As Double =
+            Math.Min(
+                escalaX,
+                escalaY)
+
+        Dim larguraFinal As Integer =
+            CInt(
+                imagemCampo.Width *
+                escalaFinal)
+
+        Dim alturaFinal As Integer =
+            CInt(
+                imagemCampo.Height *
+                escalaFinal)
+
+        Dim posicaoX As Integer =
+            areaImpressao.Left +
+            (areaImpressao.Width -
+             larguraFinal) \ 2
+
+        Dim posicaoY As Integer =
+            areaImpressao.Top +
+            (areaImpressao.Height -
+             alturaFinal) \ 2
+
+        evento.Graphics.InterpolationMode =
+            Drawing2D.InterpolationMode.HighQualityBicubic
+
+        evento.Graphics.SmoothingMode =
+            Drawing2D.SmoothingMode.HighQuality
+
+        evento.Graphics.PixelOffsetMode =
+            Drawing2D.PixelOffsetMode.HighQuality
+
+        evento.Graphics.DrawImage(
+            imagemCampo,
+            New Rectangle(
+                posicaoX,
+                posicaoY,
+                larguraFinal,
+                alturaFinal))
+
+        evento.HasMorePages =
+            False
+
+    End Sub
 
 End Class
 

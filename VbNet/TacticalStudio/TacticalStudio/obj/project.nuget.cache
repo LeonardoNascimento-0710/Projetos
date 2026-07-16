@@ -1,8 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "G2uFVarecNk=",
+  "dgSpecHash": "ZR8A2lBWgOc=",
   "success": true,
   "projectFilePath": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\TacticalStudio.vbproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Administrador\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.2\\microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512",
+    "C:\\Users\\Administrador\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.3\\microsoft.extensions.logging.abstractions.8.0.3.nupkg.sha512",
+    "C:\\Users\\Administrador\\.nuget\\packages\\pdfsharp-gdi\\6.2.4\\pdfsharp-gdi.6.2.4.nupkg.sha512"
+  ],
   "logs": []
 }
