@@ -686,6 +686,141 @@ Public Class CampoTatico
 
 #Region "Pintura"
 
+    Public Function GerarImagemCampo(
+    Optional larguraImagem As Integer = 2560) As Bitmap
+
+        If larguraImagem < 800 Then
+            larguraImagem = 800
+        End If
+
+        If larguraImagem > 7680 Then
+            larguraImagem = 7680
+        End If
+
+        Dim campoAtual As RectangleF =
+        ObterRetanguloCampo()
+
+        If campoAtual.Width <= 1.0F OrElse
+       campoAtual.Height <= 1.0F Then
+
+            Throw New InvalidOperationException(
+            "O campo não possui tamanho válido para exportação.")
+
+        End If
+
+        Const margemImagem As Integer = 24
+
+        Dim larguraUtil As Integer =
+        larguraImagem -
+        margemImagem * 2
+
+        Dim escala As Single =
+        larguraUtil /
+        campoAtual.Width
+
+        Dim alturaUtil As Integer =
+        CInt(
+            Math.Ceiling(
+                campoAtual.Height *
+                escala))
+
+        Dim alturaImagem As Integer =
+        alturaUtil +
+        margemImagem * 2
+
+        Dim imagem As New Bitmap(
+        larguraImagem,
+        alturaImagem,
+        System.Drawing.Imaging.PixelFormat.Format32bppArgb)
+
+        Dim objetoSelecionadoAnterior As ObjetoCampo =
+        _objetoSelecionado
+
+        Try
+
+            'Impede que alças e bordas de seleção
+            'apareçam na imagem exportada.
+            _objetoSelecionado =
+            Nothing
+
+            Using g As Graphics =
+            Graphics.FromImage(imagem)
+
+                g.Clear(
+                Color.FromArgb(
+                    63,
+                    130,
+                    58))
+
+                g.SmoothingMode =
+                SmoothingMode.AntiAlias
+
+                g.PixelOffsetMode =
+                PixelOffsetMode.HighQuality
+
+                g.CompositingQuality =
+                CompositingQuality.HighQuality
+
+                g.InterpolationMode =
+                InterpolationMode.HighQualityBicubic
+
+                g.TextRenderingHint =
+                System.Drawing.Text.TextRenderingHint.AntiAliasGridFit
+
+                Dim deslocamentoX As Single =
+                margemImagem -
+                campoAtual.Left *
+                escala
+
+                Dim deslocamentoY As Single =
+                margemImagem -
+                campoAtual.Top *
+                escala
+
+                Using matriz As New Matrix(
+                escala,
+                0.0F,
+                0.0F,
+                escala,
+                deslocamentoX,
+                deslocamentoY)
+
+                    g.Transform =
+                    matriz
+
+                    DesenharGramado(
+                    g,
+                    campoAtual)
+
+                    DesenharMarcacoes(
+                    g,
+                    campoAtual)
+
+                    DesenharObjetos(
+                    g,
+                    campoAtual)
+
+                End Using
+
+            End Using
+
+        Catch
+
+            imagem.Dispose()
+
+            Throw
+
+        Finally
+
+            _objetoSelecionado =
+            objetoSelecionadoAnterior
+
+        End Try
+
+        Return imagem
+
+    End Function
+
     Protected Overrides Sub OnPaint(e As PaintEventArgs)
 
         MyBase.OnPaint(e)
@@ -1006,7 +1141,6 @@ Public Class CampoTatico
         End Using
 
     End Sub
-
 
 
 #End Region

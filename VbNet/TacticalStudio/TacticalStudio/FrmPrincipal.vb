@@ -3,6 +3,7 @@ Imports System.IO
 Imports System.Text
 Imports TacticalStudio.Core.Enums
 Imports TacticalStudio.Core.Classes
+Imports System.Drawing.Imaging
 
 Public Class FrmPrincipal
 
@@ -1234,9 +1235,7 @@ Public Class FrmPrincipal
 
     End Sub
 
-    Protected Overrides Function ProcessCmdKey(
-    ByRef msg As Message,
-    keyData As Keys) As Boolean
+    Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
 
         If CampoCanvas Is Nothing Then
 
@@ -1249,6 +1248,14 @@ Public Class FrmPrincipal
         Dim tecla As Keys = keyData And Keys.KeyCode
 
         Dim modificadores As Keys = keyData And Keys.Modifiers
+
+        If modificadores = Keys.Control AndAlso tecla = Keys.E Then
+
+            ExportarImagemCampo()
+
+            Return True
+
+        End If
 
         If modificadores = (Keys.Control Or Keys.Shift) AndAlso tecla = Keys.S Then
 
@@ -1364,7 +1371,7 @@ Public Class FrmPrincipal
         Dim painelArquivo As New FlowLayoutPanel With {
             .Name = "PnlArquivoDinamico",
             .Dock = DockStyle.Right,
-            .Width = 300,
+            .Width = 400,
             .FlowDirection = FlowDirection.LeftToRight,
             .WrapContents = False,
             .Padding = New Padding(5),
@@ -1385,6 +1392,8 @@ Public Class FrmPrincipal
             CriarBotaoArquivo(
                 "Salvar",
                 AddressOf SalvarExercicio_Click))
+
+        painelArquivo.Controls.Add(CriarBotaoArquivo("Exportar", AddressOf ExportarImagem_Click))
 
         PnlSuperior.Controls.Add(
             painelArquivo)
@@ -1445,6 +1454,88 @@ Public Class FrmPrincipal
         e As EventArgs)
 
         AbrirExercicio()
+
+    End Sub
+
+    Private Sub ExportarImagem_Click(
+    sender As Object,
+    e As EventArgs)
+
+        ExportarImagemCampo()
+
+    End Sub
+
+    Private Sub ExportarImagemCampo()
+
+        If CampoCanvas Is Nothing Then
+            Exit Sub
+        End If
+
+        Using dialogo As New SaveFileDialog()
+
+            dialogo.Title =
+            "Exportar campo como imagem"
+
+            dialogo.Filter =
+            "Imagem PNG (*.png)|*.png"
+
+            dialogo.DefaultExt =
+            "png"
+
+            dialogo.AddExtension =
+            True
+
+            dialogo.OverwritePrompt =
+            True
+
+            dialogo.FileName =
+            _nomeExercicioAtual &
+            ".png"
+
+            If dialogo.ShowDialog() <>
+           DialogResult.OK Then
+
+                Exit Sub
+
+            End If
+
+            Try
+
+                Using imagem As Bitmap =
+                CampoCanvas.GerarImagemCampo(
+                    2560)
+
+                    imagem.Save(
+                    dialogo.FileName,
+                    ImageFormat.Png)
+
+                End Using
+
+                MessageBox.Show(
+                "Imagem exportada com sucesso." &
+                Environment.NewLine &
+                Environment.NewLine &
+                dialogo.FileName,
+                "Exportação concluída",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information)
+
+                CampoCanvas.Focus()
+
+            Catch ex As Exception
+
+                MessageBox.Show(
+                "Não foi possível exportar a imagem." &
+                Environment.NewLine &
+                Environment.NewLine &
+                ex.Message,
+                "Erro na exportação",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error)
+
+            End Try
+
+        End Using
 
     End Sub
 
