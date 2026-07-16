@@ -702,3 +702,210 @@ Próxima etapa sugerida:
 - Implementar trazer para frente e enviar para trás;
 - Adicionar atalho Ctrl+D para duplicar;
 - Preparar a base para salvar e carregar exercícios.
+
+======================================================================
+22. ETAPA 14 - DUPLICAÇÃO E CONTROLE DE CAMADAS
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.14.0
+
+Arquivos alterados:
+- Controles\CampoTatico.vb
+- FrmPrincipal.vb
+
+Alterações realizadas:
+- Implementada duplicação do objeto selecionado;
+- Adicionado atalho Ctrl+D;
+- A cópia mantém todas as propriedades do objeto original;
+- Linhas e áreas preservam tamanho, inclinação e dimensões;
+- Objetos duplicados são deslocados para facilitar a visualização;
+- Implementado controle de ordem entre objetos da mesma camada;
+- Adicionadas ações para trazer para frente;
+- Adicionadas ações para enviar para trás;
+- Adicionados atalhos Ctrl+Shift+Seta para cima e para baixo;
+- Alterações de duplicação e camadas passaram a integrar o histórico.
+
+Resultado:
+- Objetos podem ser duplicados rapidamente;
+- A ordem visual pode ser ajustada sem misturar camadas incompatíveis;
+- Áreas continuam ao fundo;
+- Textos e marcadores mantêm suas camadas específicas;
+- Ctrl+Z e Ctrl+Y desfazem e refazem as ações.
+
+======================================================================
+23. ETAPA 15 - SALVAR, ABRIR E CRIAR EXERCÍCIOS
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.15.0
+
+Arquivos criados:
+- TacticalStudio.Core\Classes\ArquivoExercicio.vb
+
+Arquivos alterados:
+- Controles\CampoTatico.vb
+- FrmPrincipal.vb
+
+Alterações realizadas:
+- Implementado novo exercício;
+- Implementado salvamento em arquivo .tactical;
+- Adicionado suporte alternativo para arquivos .json;
+- Implementada abertura de exercícios salvos;
+- Criada estrutura de arquivo com versão de formato;
+- O nome do exercício passou a aparecer no título da janela;
+- Adicionada barra superior com Novo, Abrir e Salvar;
+- Adicionados atalhos Ctrl+N, Ctrl+O, Ctrl+S e Ctrl+Shift+S;
+- O estado completo do campo passou a ser exportado em JSON;
+- Exercícios abertos reiniciam corretamente o histórico;
+- Implementada validação de arquivo vazio ou incompatível.
+
+Correções:
+- Corrigido erro de objeto não suportado no histórico para Bola;
+- A captura dos objetos passou a usar objeto.GetType().Name;
+- O tratamento dos tipos passou a usar nomes fixos no Select Case;
+- A bola passou a ser salva e restaurada corretamente;
+- Corrigida reutilização do mesmo mecanismo de estado para histórico e arquivos;
+- Unificada a aplicação do estado do campo.
+
+Resultado:
+- Exercícios completos podem ser salvos e reabertos;
+- Jogadores, bolas, cones, gols, manequins, linhas, áreas, marcadores e textos são preservados;
+- Posições, cores, tamanhos e propriedades são restaurados;
+- O histórico continua funcionando após abrir um exercício;
+- O formato possui controle de versão para futuras atualizações.
+
+Próxima etapa sugerida:
+- Detectar alterações não salvas;
+- Exibir asterisco no título da janela;
+- Confirmar salvamento antes de novo, abrir ou fechar;
+- Implementar salvamento automático opcional;
+- Preparar exportação da prancheta como imagem.
+
+======================================================================
+24. ETAPA 16 - CONTROLE DE ALTERAÇÕES NÃO SALVAS
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.16.0
+
+Arquivos alterados:
+- Controles\CampoTatico.vb
+- FrmPrincipal.vb
+
+Alterações realizadas:
+- Implementada assinatura do estado atual do campo;
+- Adicionada detecção de alterações não salvas;
+- Adicionado asterisco no título da janela;
+- O asterisco é removido depois de salvar;
+- Ctrl+Z pode retornar o exercício ao estado salvo;
+- Ctrl+Y volta a marcar o exercício como alterado;
+- Adicionada confirmação antes de criar um novo exercício;
+- Adicionada confirmação antes de abrir outro exercício;
+- Adicionada confirmação antes de fechar o programa;
+- A confirmação permite salvar, descartar ou cancelar;
+- O salvamento passou a retornar sucesso ou cancelamento;
+- O título da janela acompanha o nome do exercício e seu estado.
+
+Resultado:
+- O usuário sabe quando existem alterações pendentes;
+- Alterações salvas não geram avisos desnecessários;
+- Novo, abrir e fechar não descartam trabalho sem confirmação;
+- Cancelar um salvamento também cancela a operação solicitada;
+- O estado salvo é reconhecido mesmo após desfazer alterações;
+- O fluxo de edição ficou mais seguro e consistente.
+
+Próxima etapa sugerida:
+- Exportar o campo como imagem PNG;
+- Definir resolução e qualidade da exportação;
+- Permitir exportar somente o campo, sem os painéis;
+- Preparar impressão e compartilhamento dos exercícios.
+
+======================================================================
+25. ETAPA 17 - EXPORTAÇÃO DO CAMPO COMO IMAGEM PNG
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.17.0
+
+Arquivos alterados:
+- Controles\CampoTatico.vb
+- FrmPrincipal.vb
+
+Alterações realizadas:
+- Implementada geração de imagem do campo tático;
+- Adicionada exportação em formato PNG;
+- A exportação utiliza alta resolução;
+- A altura da imagem é calculada automaticamente;
+- A proporção atual do campo é preservada;
+- Os painéis laterais e superiores não aparecem na imagem;
+- As alças e bordas de seleção são ocultadas;
+- A pré-visualização de ferramentas não aparece na exportação;
+- Adicionado botão Exportar na barra superior;
+- Adicionado atalho Ctrl+E;
+- A exportação não altera o estado salvo do exercício;
+- Adicionada confirmação visual após a conclusão.
+
+Resultado:
+- O exercício pode ser compartilhado como imagem;
+- Todos os objetos e propriedades visuais são preservados;
+- A imagem contém somente o campo e seus elementos;
+- O arquivo PNG possui qualidade adequada para apresentação e impressão;
+- O objeto selecionado continua selecionado depois da exportação.
+
+Próxima etapa sugerida:
+- Adicionar escolha de resolução da exportação;
+- Implementar fundo transparente opcional;
+- Preparar impressão do exercício;
+- Adicionar cabeçalho com nome e observações do treino;
+- Preparar exportação em PDF.
+
+======================================================================
+26. ETAPA 18 - CONFIGURAÇÕES DO EXERCÍCIO
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.18.0
+
+Arquivos criados:
+- FrmConfiguracoesExercicio.vb
+
+Arquivos alterados:
+- TacticalStudio.Core\Classes\ArquivoExercicio.vb
+- Controles\CampoTatico.vb
+- FrmPrincipal.vb
+
+Alterações realizadas:
+- Adicionado nome do exercício;
+- Adicionada categoria do exercício;
+- Adicionada duração em minutos;
+- Adicionada descrição;
+- Adicionadas observações;
+- Criada tela própria para edição dos dados;
+- Adicionado botão Dados na barra superior;
+- Adicionado atalho Ctrl+I;
+- Os dados passaram a ser salvos no arquivo .tactical;
+- Os dados são restaurados ao abrir o exercício;
+- Arquivos antigos continuam compatíveis;
+- Alterações nos dados passam a marcar o exercício como não salvo;
+- O nome configurado não é mais substituído pelo nome do arquivo;
+- Atualizado o formato do arquivo para versão 2.
+
+Correções:
+- Corrigidos avisos WF0100 nas propriedades públicas do formulário;
+- As propriedades passaram a usar Browsable(False);
+- As propriedades passaram a usar DesignerSerializationVisibility.Hidden;
+- Impedida a tentativa de serialização dessas propriedades pelo Designer.
+
+Resultado:
+- O exercício possui informações próprias além do campo;
+- Os dados permanecem salvos junto com o conteúdo tático;
+- O controle de alterações não salvas inclui os dados do exercício;
+- A tela de configurações funciona sem avisos do Designer;
+- A compatibilidade com arquivos anteriores foi preservada.
+
+Próxima etapa sugerida:
+- Exibir os dados do exercício na exportação;
+- Adicionar cabeçalho com nome, categoria e duração;
+- Permitir exportar imagem com ou sem cabeçalho;
+- Preparar impressão e exportação em PDF.
