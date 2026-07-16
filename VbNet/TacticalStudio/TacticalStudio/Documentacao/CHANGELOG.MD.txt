@@ -1085,3 +1085,63 @@ Próxima etapa sugerida:
 - Salvar preferências visuais;
 - Preparar atalhos personalizáveis;
 - Criar tela Sobre com versão do sistema.
+
+======================================================================
+31. ETAPA 23 - TEMA E IDENTIDADE VISUAL
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.23.0
+
+Arquivos criados:
+- InformacoesAplicacao.vb
+- FrmSobre.vb
+
+Arquivos alterados:
+- PreferenciasAplicacao.vb
+- Tema.vb
+- FrmPreferencias.vb
+- FrmConfiguracoesExercicio.vb
+- FrmPrincipal.vb
+
+Alterações realizadas:
+- Implementado tema escuro;
+- Implementado tema claro;
+- Adicionada escolha da cor principal da interface;
+- Adicionadas opções vermelho, azul, verde, roxo e laranja;
+- Tema e cor são aplicados imediatamente;
+- Tema e cor são salvos em preferencias.json;
+- As preferências visuais são restauradas ao iniciar;
+- A interface passou a utilizar cores dinâmicas do Tema;
+- Campos de entrada acompanham o tema atual;
+- Textos secundários acompanham o tema atual;
+- Botões e painéis são recriados com as novas cores;
+- Criada tela Sobre;
+- Adicionada exibição da versão 0.23.0;
+- Adicionadas informações gerais do TacticalStudio;
+- Criado botão Sobre na barra superior.
+
+Correções:
+- Corrigido problema em que o tema não era aplicado;
+- Corrigido problema em que o tema não era gravado;
+- Corrigida ordem de carregamento das preferências;
+- Corrigida cópia dos valores do formulário para as preferências;
+- Corrigida reaplicação do tema sem reiniciar;
+- Corrigida cor do texto nos botões da barra de arquivos;
+- Botões da barra agora usam Tema.Texto;
+- Adicionado UseVisualStyleBackColor=False nos botões dinâmicos.
+
+Resultado:
+- O TacticalStudio possui temas claro e escuro;
+- A identidade visual pode ser personalizada;
+- As escolhas permanecem salvas entre execuções;
+- A interface muda imediatamente após confirmar;
+- O tema não altera o estado salvo do exercício;
+- A barra de arquivos mantém contraste correto nos dois temas.
+
+Próxima etapa sugerida:
+- Implementar zoom do campo;
+- Adicionar panorâmica com o mouse;
+- Criar indicador de nível de zoom;
+- Adicionar atalhos de aproximação e afastamento;
+- Melhorar a navegação em exercícios grandes.

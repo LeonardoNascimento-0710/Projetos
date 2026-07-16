@@ -1,4 +1,5 @@
 ﻿Imports System.ComponentModel
+Imports Windows.Win32.UI
 
 Public Class FrmConfiguracoesExercicio
     Inherits Form
@@ -274,33 +275,19 @@ Public Class FrmConfiguracoesExercicio
 
     End Sub
 
-    Private Sub ConfigurarTextBox(
-        controle As TextBox,
-        esquerda As Integer,
-        topo As Integer,
-        largura As Integer,
-        altura As Integer)
+    Private Sub ConfigurarTextBox(controle As TextBox, esquerda As Integer, topo As Integer, largura As Integer, altura As Integer)
 
-        controle.Left =
-            esquerda
+        controle.Left = esquerda
 
-        controle.Top =
-            topo
+        controle.Top = topo
 
-        controle.Width =
-            largura
+        controle.Width = largura
 
-        controle.Height =
-            altura
+        controle.Height = altura
 
-        controle.BackColor =
-            Color.FromArgb(
-                50,
-                50,
-                50)
+        controle.BackColor = Tema.CampoEntrada
 
-        controle.ForeColor =
-            Color.White
+        controle.ForeColor = Tema.TextoCampo
 
         controle.BorderStyle =
             BorderStyle.FixedSingle
@@ -334,29 +321,19 @@ Public Class FrmConfiguracoesExercicio
 
     Private Sub ConfigurarComboCategoria()
 
-        CmbCategoria.Left =
-            20
+        CmbCategoria.Left = 20
 
-        CmbCategoria.Top =
-            150
+        CmbCategoria.Top = 150
 
-        CmbCategoria.Width =
-            230
+        CmbCategoria.Width = 230
 
-        CmbCategoria.Height =
-            30
+        CmbCategoria.Height = 30
 
-        CmbCategoria.DropDownStyle =
-            ComboBoxStyle.DropDown
+        CmbCategoria.DropDownStyle = ComboBoxStyle.DropDown
 
-        CmbCategoria.BackColor =
-            Color.FromArgb(
-                50,
-                50,
-                50)
+        CmbCategoria.BackColor = Tema.CampoEntrada
 
-        CmbCategoria.ForeColor =
-            Color.White
+        CmbCategoria.ForeColor = Tema.TextoCampo
 
         CmbCategoria.FlatStyle =
             FlatStyle.Flat
@@ -380,35 +357,23 @@ Public Class FrmConfiguracoesExercicio
 
     Private Sub ConfigurarDuracao()
 
-        NudDuracao.Left =
-            270
+        NudDuracao.Left = 270
 
-        NudDuracao.Top =
-            150
+        NudDuracao.Top = 150
 
-        NudDuracao.Width =
-            210
+        NudDuracao.Width = 210
 
-        NudDuracao.Height =
-            30
+        NudDuracao.Height = 30
 
-        NudDuracao.Minimum =
-            1D
+        NudDuracao.Minimum = 1D
 
-        NudDuracao.Maximum =
-            600D
+        NudDuracao.Maximum = 600D
 
-        NudDuracao.Value =
-            30D
+        NudDuracao.Value = 30D
 
-        NudDuracao.BackColor =
-            Color.FromArgb(
-                50,
-                50,
-                50)
+        NudDuracao.BackColor = Tema.CampoEntrada
 
-        NudDuracao.ForeColor =
-            Color.White
+        NudDuracao.ForeColor = Tema.TextoCampo
 
         NudDuracao.BorderStyle =
             BorderStyle.FixedSingle

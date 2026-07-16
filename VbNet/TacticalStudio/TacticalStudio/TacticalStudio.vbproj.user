@@ -16,5 +16,11 @@
     <Compile Update="FrmPrincipal.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="FrmSobre.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="InformacoesAplicacao.vb">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
 </Project>

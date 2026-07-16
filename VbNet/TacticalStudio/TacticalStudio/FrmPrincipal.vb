@@ -48,9 +48,18 @@ Public Class FrmPrincipal
 
 #End Region
 
-    Private Sub FrmPrincipal_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub FrmPrincipal_Load(
+    sender As Object,
+    e As EventArgs) Handles MyBase.Load
 
         KeyPreview = True
+
+        CarregarPreferencias()
+
+        NormalizarPreferencias()
+
+        Tema.AplicarPreferencias(
+        _preferencias)
 
         AplicarTema()
 
@@ -60,13 +69,13 @@ Public Class FrmPrincipal
 
         CriarBarraArquivo()
 
-        CarregarPreferencias()
-
         ConfigurarSalvamentoAutomatico()
 
         MarcarComoSalvo()
 
-        BeginInvoke(New MethodInvoker(AddressOf VerificarRecuperacaoSessao))
+        BeginInvoke(
+        New MethodInvoker(
+            AddressOf VerificarRecuperacaoSessao))
 
     End Sub
 
@@ -94,6 +103,8 @@ Public Class FrmPrincipal
 
             NormalizarPreferencias()
 
+            SalvarPreferencias()
+
             Exit Sub
 
         End If
@@ -105,10 +116,15 @@ Public Class FrmPrincipal
                 _caminhoPreferencias,
                 Encoding.UTF8)
 
+            Dim opcoes As New JsonSerializerOptions With {
+            .PropertyNameCaseInsensitive = True
+        }
+
             Dim preferenciasCarregadas As PreferenciasAplicacao =
             JsonSerializer.Deserialize(
                 Of PreferenciasAplicacao)(
-                conteudoJson)
+                conteudoJson,
+                opcoes)
 
             If preferenciasCarregadas IsNot Nothing Then
 
@@ -158,18 +174,58 @@ Public Class FrmPrincipal
 
         End If
 
+        If Not [Enum].IsDefined(
+    GetType(ModoTemaAplicacao),
+    _preferencias.ModoTema) Then
+
+            _preferencias.ModoTema =
+                ModoTemaAplicacao.Escuro
+
+        End If
+
+        Dim coresPermitidas() As Integer = {
+            Color.FromArgb(134, 29, 29).ToArgb(),
+            Color.FromArgb(35, 105, 190).ToArgb(),
+            Color.FromArgb(35, 145, 75).ToArgb(),
+            Color.FromArgb(110, 60, 170).ToArgb(),
+            Color.FromArgb(220, 105, 25).ToArgb()
+        }
+
+        If Array.IndexOf(
+            coresPermitidas,
+            _preferencias.CorPrincipalArgb) < 0 Then
+
+            _preferencias.CorPrincipalArgb =
+                Color.FromArgb(
+                    134,
+                    29,
+                    29).ToArgb()
+
+        End If
     End Sub
 
     Private Sub SalvarPreferencias()
 
-        If String.IsNullOrWhiteSpace(
-        _caminhoPreferencias) Then
-
-            Exit Sub
-
-        End If
-
         Try
+
+            If String.IsNullOrWhiteSpace(
+            _caminhoPreferencias) Then
+
+                Dim pastaAplicacao As String =
+                Path.Combine(
+                    Environment.GetFolderPath(
+                        Environment.SpecialFolder.LocalApplicationData),
+                    "TacticalStudio")
+
+                Directory.CreateDirectory(
+                pastaAplicacao)
+
+                _caminhoPreferencias =
+                Path.Combine(
+                    pastaAplicacao,
+                    "preferencias.json")
+
+            End If
 
             NormalizarPreferencias()
 
@@ -526,13 +582,19 @@ Public Class FrmPrincipal
     Private Sub AplicarTema()
 
         BackColor = Tema.Fundo
+
         ForeColor = Tema.Texto
+
         Font = Tema.FontePadrao
 
         PnlSuperior.BackColor = Tema.CorPrimaria
+
         PnlEsquerdo.BackColor = Tema.Painel
+
         PnlDireito.BackColor = Tema.Painel
+
         PnlInferior.BackColor = Tema.Painel
+
         PnlCentral.BackColor = Tema.Fundo
 
     End Sub
@@ -699,7 +761,7 @@ Public Class FrmPrincipal
             Tema.Borda
 
         botao.FlatAppearance.MouseOverBackColor =
-            Color.FromArgb(55, 55, 55)
+            Tema.PainelHover
 
         botao.FlatAppearance.MouseDownBackColor =
             Tema.CorPrimaria
@@ -1102,7 +1164,7 @@ Public Class FrmPrincipal
 
         Dim labelMensagem As New Label With {
             .Text = mensagem,
-            .ForeColor = Color.Silver,
+            .ForeColor = Tema.TextoSecundario,
             .Font = Tema.FontePadrao,
             .Width = largura,
             .Height = 55,
@@ -1119,8 +1181,8 @@ Public Class FrmPrincipal
 
         Dim combo As New ComboBox With {
             .DropDownStyle = ComboBoxStyle.DropDownList,
-            .BackColor = Color.FromArgb(50, 50, 50),
-            .ForeColor = Color.White,
+            .BackColor = Tema.CampoEntrada,
+            .ForeColor = Tema.TextoCampo,
             .FlatStyle = FlatStyle.Flat
         }
 
@@ -1149,8 +1211,8 @@ Public Class FrmPrincipal
                 Math.Min(maximo, valor)),
             .DecimalPlaces = casasDecimais,
             .Increment = incremento,
-            .BackColor = Color.FromArgb(50, 50, 50),
-            .ForeColor = Color.White,
+            .BackColor = Tema.CampoEntrada,
+            .ForeColor = Tema.TextoCampo,
             .BorderStyle = BorderStyle.FixedSingle
         }
 
@@ -1226,8 +1288,8 @@ Public Class FrmPrincipal
 
         Dim nome As New TextBox With {
             .Text = jogador.Nome,
-            .BackColor = Color.FromArgb(50, 50, 50),
-            .ForeColor = Color.White,
+            .BackColor = Tema.CampoEntrada,
+            .ForeColor = Tema.TextoCampo,
             .BorderStyle = BorderStyle.FixedSingle
         }
 
@@ -1530,8 +1592,8 @@ Public Class FrmPrincipal
         Dim texto As New TextBox With {
             .Text = marcador.Texto,
             .MaxLength = 5,
-            .BackColor = Color.FromArgb(50, 50, 50),
-            .ForeColor = Color.White,
+            .BackColor = Tema.CampoEntrada,
+            .ForeColor = Tema.TextoCampo,
             .BorderStyle = BorderStyle.FixedSingle
         }
 
@@ -1607,8 +1669,8 @@ Public Class FrmPrincipal
 
         Dim texto As New TextBox With {
             .Text = textoTatico.Texto,
-            .BackColor = Color.FromArgb(50, 50, 50),
-            .ForeColor = Color.White,
+            .BackColor = Tema.CampoEntrada,
+            .ForeColor = Tema.TextoCampo,
             .BorderStyle = BorderStyle.FixedSingle
         }
 
@@ -1873,7 +1935,7 @@ Public Class FrmPrincipal
         Dim painelArquivo As New FlowLayoutPanel With {
             .Name = "PnlArquivoDinamico",
             .Dock = DockStyle.Right,
-            .Width = 790,
+            .Width = 890,
             .FlowDirection = FlowDirection.LeftToRight,
             .WrapContents = False,
             .Padding = New Padding(5),
@@ -1896,9 +1958,23 @@ Public Class FrmPrincipal
 
         painelArquivo.Controls.Add(CriarBotaoArquivo("Opções", AddressOf Preferencias_Click))
 
+        painelArquivo.Controls.Add(CriarBotaoArquivo("Sobre", AddressOf Sobre_Click))
+
         PnlSuperior.Controls.Add(painelArquivo)
 
         painelArquivo.BringToFront()
+
+    End Sub
+
+    Private Sub Sobre_Click(sender As Object, e As EventArgs)
+
+        Using formulario As New FrmSobre()
+
+            formulario.ShowDialog(Me)
+
+        End Using
+
+        CampoCanvas.Focus()
 
     End Sub
 
@@ -1913,6 +1989,12 @@ Public Class FrmPrincipal
     Private Sub AbrirPreferencias()
 
         Using formulario As New FrmPreferencias()
+
+            formulario.ModoTema =
+            _preferencias.ModoTema
+
+            formulario.CorPrincipalArgb =
+            _preferencias.CorPrincipalArgb
 
             formulario.AutosaveAtivo =
             _preferencias.AutosaveAtivo
@@ -1932,6 +2014,13 @@ Public Class FrmPrincipal
 
             End If
 
+            'Primeiro copia os valores da janela.
+            _preferencias.ModoTema =
+            formulario.ModoTema
+
+            _preferencias.CorPrincipalArgb =
+            formulario.CorPrincipalArgb
+
             _preferencias.AutosaveAtivo =
             formulario.AutosaveAtivo
 
@@ -1943,7 +2032,14 @@ Public Class FrmPrincipal
 
             NormalizarPreferencias()
 
+            'Depois salva no arquivo.
             SalvarPreferencias()
+
+            'Depois aplica na interface.
+            Tema.AplicarPreferencias(
+            _preferencias)
+
+            ReaplicarTemaAplicacao()
 
             ConfigurarSalvamentoAutomatico()
 
@@ -1959,26 +2055,72 @@ Public Class FrmPrincipal
 
     End Sub
 
-    Private Function CriarBotaoArquivo(
-        texto As String,
-        acao As EventHandler) As Button
+    Private Sub ReaplicarTemaAplicacao()
+
+        SuspendLayout()
+
+        Try
+
+            AplicarTema()
+
+            If CampoCanvas IsNot Nothing Then
+
+                CampoCanvas.BackColor =
+                Tema.Fundo
+
+                CampoCanvas.Invalidate()
+
+            End If
+
+            CriarBarraFerramentas()
+
+            CriarBarraArquivo()
+
+            If CampoCanvas IsNot Nothing Then
+
+                MontarPainelPropriedades(
+                CampoCanvas.ObjetoSelecionadoAtual)
+
+            End If
+
+        Finally
+
+            ResumeLayout(True)
+
+        End Try
+
+        Invalidate(
+        True)
+
+        Refresh()
+
+    End Sub
+
+    Private Function CriarBotaoArquivo(texto As String, acao As EventHandler) As Button
 
         Dim botao As New Button With {
-            .Text = texto,
-            .Width = 88,
-            .Height = 34,
-            .Margin = New Padding(3),
-            .FlatStyle = FlatStyle.Flat,
-            .BackColor = Tema.Painel,
-            .ForeColor = Color.White,
-            .Cursor = Cursors.Hand
-        }
+        .Text = texto,
+        .Width = 88,
+        .Height = 34,
+        .Margin = New Padding(3),
+        .FlatStyle = FlatStyle.Flat,
+        .BackColor = Tema.Painel,
+        .ForeColor = Tema.Texto,
+        .Cursor = Cursors.Hand,
+        .UseVisualStyleBackColor = False
+    }
 
         botao.FlatAppearance.BorderColor =
-            Color.White
+        Tema.Borda
+
+        botao.FlatAppearance.MouseOverBackColor =
+        Tema.PainelHover
+
+        botao.FlatAppearance.MouseDownBackColor =
+        Tema.PainelHover
 
         AddHandler botao.Click,
-            acao
+        acao
 
         Return botao
 

@@ -1,11 +1,102 @@
 ﻿Imports System.ComponentModel
+Imports System.Drawing
 
 Public Class FrmPreferencias
     Inherits Form
 
+    Private ReadOnly CmbTema As New ComboBox()
+    Private ReadOnly CmbCorPrincipal As New ComboBox()
     Private ReadOnly ChkAutosave As New CheckBox()
     Private ReadOnly NudIntervalo As New NumericUpDown()
     Private ReadOnly CmbResolucao As New ComboBox()
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+        DesignerSerializationVisibility.Hidden)>
+    Public Property ModoTema As ModoTemaAplicacao
+
+        Get
+
+            If CmbTema.SelectedIndex = 1 Then
+                Return ModoTemaAplicacao.Claro
+            End If
+
+            Return ModoTemaAplicacao.Escuro
+
+        End Get
+
+        Set(value As ModoTemaAplicacao)
+
+            If value =
+               ModoTemaAplicacao.Claro Then
+
+                CmbTema.SelectedIndex = 1
+
+            Else
+
+                CmbTema.SelectedIndex = 0
+
+            End If
+
+        End Set
+
+    End Property
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+        DesignerSerializationVisibility.Hidden)>
+    Public Property CorPrincipalArgb As Integer
+
+        Get
+
+            Return ObterCorSelecionada().
+                ToArgb()
+
+        End Get
+
+        Set(value As Integer)
+
+            Dim cor As Color =
+                Color.FromArgb(value)
+
+            If cor.R = 35 AndAlso
+               cor.G = 105 AndAlso
+               cor.B = 190 Then
+
+                CmbCorPrincipal.SelectedItem =
+                    "Azul"
+
+            ElseIf cor.R = 35 AndAlso
+                   cor.G = 145 AndAlso
+                   cor.B = 75 Then
+
+                CmbCorPrincipal.SelectedItem =
+                    "Verde"
+
+            ElseIf cor.R = 110 AndAlso
+                   cor.G = 60 AndAlso
+                   cor.B = 170 Then
+
+                CmbCorPrincipal.SelectedItem =
+                    "Roxo"
+
+            ElseIf cor.R = 220 AndAlso
+                   cor.G = 105 AndAlso
+                   cor.B = 25 Then
+
+                CmbCorPrincipal.SelectedItem =
+                    "Laranja"
+
+            Else
+
+                CmbCorPrincipal.SelectedItem =
+                    "Vermelho TacticalStudio"
+
+            End If
+
+        End Set
+
+    End Property
 
     <Browsable(False)>
     <DesignerSerializationVisibility(
@@ -33,8 +124,7 @@ Public Class FrmPreferencias
     Public Property IntervaloAutosaveSegundos As Integer
 
         Get
-            Return CInt(
-                NudIntervalo.Value)
+            Return CInt(NudIntervalo.Value)
         End Get
 
         Set(value As Integer)
@@ -71,8 +161,7 @@ Public Class FrmPreferencias
 
         Set(value As Integer)
 
-            If CmbResolucao.Items.Contains(
-                value) Then
+            If CmbResolucao.Items.Contains(value) Then
 
                 CmbResolucao.SelectedItem =
                     value
@@ -99,19 +188,14 @@ Public Class FrmPreferencias
         FormBorderStyle =
             FormBorderStyle.FixedDialog
 
-        MaximizeBox =
-            False
-
-        MinimizeBox =
-            False
-
-        ShowInTaskbar =
-            False
+        MaximizeBox = False
+        MinimizeBox = False
+        ShowInTaskbar = False
 
         ClientSize =
             New Size(
                 500,
-                360)
+                520)
 
         BackColor =
             Tema.Fundo
@@ -134,8 +218,7 @@ Public Class FrmPreferencias
             .BackColor = Tema.Fundo
         }
 
-        Controls.Add(
-            painel)
+        Controls.Add(painel)
 
         Dim titulo As New Label With {
             .Text = "PREFERÊNCIAS",
@@ -150,32 +233,64 @@ Public Class FrmPreferencias
             .ForeColor = Tema.Texto
         }
 
+        painel.Controls.Add(titulo)
+
+        AdicionarLabel(
+            painel,
+            "Tema da interface",
+            20,
+            68)
+
+        ConfigurarCombo(
+            CmbTema,
+            20,
+            92)
+
+        CmbTema.Items.AddRange(
+            {
+                "Escuro",
+                "Claro"
+            })
+
+        CmbTema.SelectedIndex = 0
+
+        painel.Controls.Add(CmbTema)
+
+        AdicionarLabel(
+            painel,
+            "Cor principal",
+            20,
+            136)
+
+        ConfigurarCombo(
+            CmbCorPrincipal,
+            20,
+            160)
+
+        CmbCorPrincipal.Items.AddRange(
+            {
+                "Vermelho TacticalStudio",
+                "Azul",
+                "Verde",
+                "Roxo",
+                "Laranja"
+            })
+
+        CmbCorPrincipal.SelectedIndex = 0
+
         painel.Controls.Add(
-            titulo)
+            CmbCorPrincipal)
 
         ChkAutosave.Text =
             "Ativar salvamento automático"
 
-        ChkAutosave.Left =
-            20
-
-        ChkAutosave.Top =
-            72
-
-        ChkAutosave.Width =
-            440
-
-        ChkAutosave.Height =
-            28
-
-        ChkAutosave.Checked =
-            True
-
-        ChkAutosave.ForeColor =
-            Tema.Texto
-
-        ChkAutosave.BackColor =
-            Tema.Fundo
+        ChkAutosave.Left = 20
+        ChkAutosave.Top = 212
+        ChkAutosave.Width = 440
+        ChkAutosave.Height = 28
+        ChkAutosave.Checked = True
+        ChkAutosave.ForeColor = Tema.Texto
+        ChkAutosave.BackColor = Tema.Fundo
 
         AddHandler ChkAutosave.CheckedChanged,
             Sub(sender, e)
@@ -191,43 +306,19 @@ Public Class FrmPreferencias
             painel,
             "Intervalo do autosave em segundos",
             20,
-            116)
+            252)
 
-        NudIntervalo.Left =
-            20
-
-        NudIntervalo.Top =
-            140
-
-        NudIntervalo.Width =
-            440
-
-        NudIntervalo.Height =
-            30
-
-        NudIntervalo.Minimum =
-            30D
-
-        NudIntervalo.Maximum =
-            600D
-
-        NudIntervalo.Increment =
-            30D
-
-        NudIntervalo.Value =
-            60D
-
-        NudIntervalo.BackColor =
-            Color.FromArgb(
-                50,
-                50,
-                50)
-
-        NudIntervalo.ForeColor =
-            Color.White
-
-        NudIntervalo.BorderStyle =
-            BorderStyle.FixedSingle
+        NudIntervalo.Left = 20
+        NudIntervalo.Top = 276
+        NudIntervalo.Width = 440
+        NudIntervalo.Height = 30
+        NudIntervalo.Minimum = 30D
+        NudIntervalo.Maximum = 600D
+        NudIntervalo.Increment = 30D
+        NudIntervalo.Value = 60D
+        NudIntervalo.BackColor = Tema.CampoEntrada
+        NudIntervalo.ForeColor = Tema.TextoCampo
+        NudIntervalo.BorderStyle = BorderStyle.FixedSingle
 
         painel.Controls.Add(
             NudIntervalo)
@@ -236,34 +327,15 @@ Public Class FrmPreferencias
             painel,
             "Resolução padrão das exportações",
             20,
-            190)
+            322)
 
-        CmbResolucao.Left =
-            20
-
-        CmbResolucao.Top =
-            214
-
-        CmbResolucao.Width =
-            440
-
-        CmbResolucao.Height =
-            30
+        ConfigurarCombo(
+            CmbResolucao,
+            20,
+            346)
 
         CmbResolucao.DropDownStyle =
             ComboBoxStyle.DropDownList
-
-        CmbResolucao.BackColor =
-            Color.FromArgb(
-                50,
-                50,
-                50)
-
-        CmbResolucao.ForeColor =
-            Color.White
-
-        CmbResolucao.FlatStyle =
-            FlatStyle.Flat
 
         CmbResolucao.Items.AddRange(
             {
@@ -282,13 +354,13 @@ Public Class FrmPreferencias
 
         Dim explicacao As New Label With {
             .Text =
-                "Resoluções maiores geram imagens e PDFs com " &
-                "mais qualidade, mas também aumentam o tamanho do arquivo.",
+                "O tema e a cor são aplicados imediatamente " &
+                "após confirmar.",
             .Left = 20,
-            .Top = 252,
+            .Top = 390,
             .Width = 440,
-            .Height = 42,
-            .ForeColor = Color.Silver
+            .Height = 40,
+            .ForeColor = Tema.TextoSecundario
         }
 
         painel.Controls.Add(
@@ -297,7 +369,7 @@ Public Class FrmPreferencias
         Dim botaoCancelar As New Button With {
             .Text = "Cancelar",
             .Left = 250,
-            .Top = 304,
+            .Top = 458,
             .Width = 100,
             .Height = 38,
             .DialogResult = DialogResult.Cancel,
@@ -315,7 +387,7 @@ Public Class FrmPreferencias
         Dim botaoConfirmar As New Button With {
             .Text = "Confirmar",
             .Left = 360,
-            .Top = 304,
+            .Top = 458,
             .Width = 100,
             .Height = 38,
             .DialogResult = DialogResult.OK,
@@ -339,6 +411,70 @@ Public Class FrmPreferencias
         AtualizarEstadoAutosave()
 
     End Sub
+
+    Private Sub ConfigurarCombo(
+        combo As ComboBox,
+        esquerda As Integer,
+        topo As Integer)
+
+        combo.Left = esquerda
+        combo.Top = topo
+        combo.Width = 440
+        combo.Height = 30
+        combo.DropDownStyle =
+            ComboBoxStyle.DropDownList
+        combo.BackColor =
+            Tema.CampoEntrada
+        combo.ForeColor =
+            Tema.TextoCampo
+        combo.FlatStyle =
+            FlatStyle.Flat
+
+    End Sub
+
+    Private Function ObterCorSelecionada() As Color
+
+        Select Case CStr(
+            CmbCorPrincipal.SelectedItem)
+
+            Case "Azul"
+
+                Return Color.FromArgb(
+                    35,
+                    105,
+                    190)
+
+            Case "Verde"
+
+                Return Color.FromArgb(
+                    35,
+                    145,
+                    75)
+
+            Case "Roxo"
+
+                Return Color.FromArgb(
+                    110,
+                    60,
+                    170)
+
+            Case "Laranja"
+
+                Return Color.FromArgb(
+                    220,
+                    105,
+                    25)
+
+            Case Else
+
+                Return Color.FromArgb(
+                    134,
+                    29,
+                    29)
+
+        End Select
+
+    End Function
 
     Private Sub AtualizarEstadoAutosave()
 
