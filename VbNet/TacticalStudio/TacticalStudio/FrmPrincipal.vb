@@ -46,6 +46,8 @@ Public Class FrmPrincipal
 
     Private _caminhoPreferencias As String = String.Empty
 
+    Private LblZoom As Label
+
 #End Region
 
     Private Sub FrmPrincipal_Load(
@@ -68,6 +70,8 @@ Public Class FrmPrincipal
         CriarBarraFerramentas()
 
         CriarBarraArquivo()
+
+        CriarBarraZoom()
 
         ConfigurarSalvamentoAutomatico()
 
@@ -614,8 +618,144 @@ Public Class FrmPrincipal
         AddHandler CampoCanvas.HistoricoAlterado,
     AddressOf CampoCanvas_HistoricoAlterado
 
+        AddHandler CampoCanvas.VisualizacaoAlterada,
+    AddressOf CampoCanvas_VisualizacaoAlterada
+
         PnlCentral.Controls.Clear()
         PnlCentral.Controls.Add(CampoCanvas)
+
+    End Sub
+
+    Private Sub CampoCanvas_VisualizacaoAlterada(
+    zoomPercentual As Integer)
+
+        AtualizarIndicadorZoom(
+        zoomPercentual)
+
+    End Sub
+
+    Private Sub CriarBarraZoom()
+
+        PnlInferior.Controls.Clear()
+
+        PnlInferior.Height = 50
+        PnlInferior.Padding = New Padding(0)
+
+        Dim painelZoom As New FlowLayoutPanel With {
+    .Dock = DockStyle.Right,
+    .Width = 330,
+    .FlowDirection = FlowDirection.LeftToRight,
+    .WrapContents = False,
+    .AutoScroll = False,
+    .Padding = New Padding(5, 6, 5, 4),
+    .Margin = New Padding(0),
+    .BackColor = Tema.Painel
+}
+
+        Dim botaoDiminuir As Button =
+        CriarBotaoZoom(
+            "−",
+            42)
+
+        AddHandler botaoDiminuir.Click,
+        Sub(sender, e)
+
+            CampoCanvas.DiminuirZoom()
+            CampoCanvas.Focus()
+
+        End Sub
+
+        painelZoom.Controls.Add(
+        botaoDiminuir)
+
+        LblZoom =
+        New Label With {
+            .Text = "100%",
+            .Width = 70,
+            .Height = 32,
+            .Margin = New Padding(4, 0, 4, 0),
+            .ForeColor = Tema.Texto,
+            .BackColor = Tema.Painel,
+            .TextAlign =
+                ContentAlignment.MiddleCenter
+        }
+
+        painelZoom.Controls.Add(
+        LblZoom)
+
+        Dim botaoAumentar As Button =
+        CriarBotaoZoom(
+            "+",
+            42)
+
+        AddHandler botaoAumentar.Click,
+        Sub(sender, e)
+
+            CampoCanvas.AumentarZoom()
+            CampoCanvas.Focus()
+
+        End Sub
+
+        painelZoom.Controls.Add(
+        botaoAumentar)
+
+        Dim botaoAjustar As Button =
+        CriarBotaoZoom(
+            "Ajustar",
+            100)
+
+        AddHandler botaoAjustar.Click,
+        Sub(sender, e)
+
+            CampoCanvas.RestaurarVisualizacao()
+            CampoCanvas.Focus()
+
+        End Sub
+
+        painelZoom.Controls.Add(
+        botaoAjustar)
+
+        PnlInferior.Controls.Add(
+        painelZoom)
+
+        AtualizarIndicadorZoom(
+        CampoCanvas.ZoomPercentual)
+
+    End Sub
+
+    Private Function CriarBotaoZoom(texto As String, largura As Integer) As Button
+
+        Dim botao As New Button With {
+        .Text = texto,
+        .Width = largura,
+        .Height = 32,
+        .Margin = New Padding(3, 0, 3, 0),
+        .FlatStyle = FlatStyle.Flat,
+        .BackColor = Tema.Painel,
+        .ForeColor = Tema.Texto,
+        .Cursor = Cursors.Hand,
+        .UseVisualStyleBackColor = False
+    }
+
+        botao.FlatAppearance.BorderColor = Tema.Borda
+
+        botao.FlatAppearance.MouseOverBackColor = Tema.PainelHover
+
+        botao.FlatAppearance.MouseDownBackColor = Tema.PainelHover
+
+        Return botao
+
+    End Function
+
+    Private Sub AtualizarIndicadorZoom(zoomPercentual As Integer)
+
+        If LblZoom Is Nothing Then
+            Exit Sub
+        End If
+
+        LblZoom.Text =
+        zoomPercentual.ToString() &
+        "%"
 
     End Sub
 
@@ -1920,6 +2060,30 @@ Public Class FrmPrincipal
 
         End If
 
+        If modificadores = Keys.Control AndAlso (tecla = Keys.Oemplus OrElse tecla = Keys.Add) Then
+
+            CampoCanvas.AumentarZoom()
+
+            Return True
+
+        End If
+
+        If modificadores = Keys.Control AndAlso (tecla = Keys.OemMinus OrElse tecla = Keys.Subtract) Then
+
+            CampoCanvas.DiminuirZoom()
+
+            Return True
+
+        End If
+
+        If modificadores = Keys.Control AndAlso (tecla = Keys.D0 OrElse tecla = Keys.NumPad0) Then
+
+            CampoCanvas.RestaurarVisualizacao()
+
+            Return True
+
+        End If
+
         Return MyBase.ProcessCmdKey(msg, keyData)
 
     End Function
@@ -2075,6 +2239,8 @@ Public Class FrmPrincipal
             CriarBarraFerramentas()
 
             CriarBarraArquivo()
+
+            CriarBarraZoom()
 
             If CampoCanvas IsNot Nothing Then
 

@@ -1145,3 +1145,52 @@ Próxima etapa sugerida:
 - Criar indicador de nível de zoom;
 - Adicionar atalhos de aproximação e afastamento;
 - Melhorar a navegação em exercícios grandes.
+
+======================================================================
+32. ETAPA 24 - ZOOM E NAVEGAÇÃO DO CAMPO
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.24.0
+
+Arquivos alterados:
+- Controles\CampoTatico.vb
+- FrmPrincipal.vb
+
+Alterações realizadas:
+- Implementado zoom pelo scroll do mouse;
+- O zoom utiliza o ponto do cursor como referência;
+- Adicionados limites mínimo e máximo de zoom;
+- Implementada panorâmica com o botão do meio;
+- Implementada panorâmica com Espaço + arraste;
+- Adicionada conversão entre coordenadas de tela e do campo;
+- Seleção e movimentação continuam funcionando com zoom;
+- Redimensionamento de linhas e áreas funciona com zoom;
+- Criada barra inferior de controle;
+- Adicionados botões diminuir, aumentar e ajustar;
+- Adicionado indicador percentual de zoom;
+- Adicionados atalhos Ctrl++, Ctrl+- e Ctrl+0;
+- Zoom e panorâmica não alteram o exercício;
+- Exportações continuam utilizando o campo completo;
+- A barra de zoom acompanha os temas claro e escuro.
+
+Correções:
+- Corrigido corte dos botões na barra inferior;
+- A altura do painel inferior foi ajustada;
+- As margens verticais dos botões foram removidas;
+- O padding do painel de zoom foi corrigido;
+- O indicador de zoom passou a respeitar a altura disponível.
+
+Resultado:
+- O campo pode ser ampliado e navegado com precisão;
+- Objetos permanecem editáveis em qualquer nível de zoom;
+- A navegação ficou mais confortável em exercícios complexos;
+- A barra inferior exibe corretamente todos os controles;
+- A exportação permanece independente da visualização atual.
+
+Próxima etapa sugerida:
+- Implementar grade e alinhamento;
+- Adicionar encaixe automático em linhas e objetos;
+- Criar guias visuais;
+- Adicionar distribuição horizontal e vertical;
+- Melhorar a organização dos elementos do campo.

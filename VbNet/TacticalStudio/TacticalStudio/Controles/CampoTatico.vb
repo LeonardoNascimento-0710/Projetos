@@ -9,6 +9,8 @@ Imports System.Text.Json
 Public Class CampoTatico
     Inherits UserControl
 
+#Region "Variáveis"
+
     Private ReadOnly _objetos As New List(Of ObjetoCampo)
 
     Private _objetoSelecionado As ObjetoCampo
@@ -47,11 +49,12 @@ Public Class CampoTatico
     Private _houveAlteracaoManipulacao As Boolean
 
     Private Const RaioManipulador As Single = 8.0F
+
     Private Const TamanhoMinimoArea As Single = 20.0F
+
     Private Const ComprimentoMinimoLinha As Single = 15.0F
 
-    Private _ferramentaAtual As FerramentaCampo =
-    FerramentaCampo.Selecionar
+    Private _ferramentaAtual As FerramentaCampo = FerramentaCampo.Selecionar
 
     Private _criacaoEmAndamento As Boolean
 
@@ -59,14 +62,42 @@ Public Class CampoTatico
 
     Private _pontoPreviewTela As PointF
 
+    Private _zoomVisual As Single = 1.0F
+
+    Private _deslocamentoVisual As PointF = PointF.Empty
+
+    Private _panEmAndamento As Boolean
+
+    Private _pontoInicialPan As Point
+
+    Private _deslocamentoInicialPan As PointF
+
+    Private _espacoPressionado As Boolean
+
+    Private Const ZoomMinimo As Single = 0.5F
+
+    Private Const ZoomMaximo As Single = 3.0F
+
+    Private Const PassoZoom As Single = 0.1F
+
     Private Const MargemCampo As Single = 35.0F
+
     Private Const RaioJogador As Single = 18.0F
+
     Private Const RaioBola As Single = 10.0F
+
     Private Const RaioCone As Single = 14.0F
+
     Private Const LarguraBocaGol As Single = 44.0F
+
     Private Const ProfundidadeGol As Single = 22.0F
+
     Private Const LarguraManequim As Single = 26.0F
+
     Private Const AlturaManequim As Single = 50.0F
+
+#End Region
+
 
     Public Sub New()
 
@@ -90,18 +121,21 @@ Public Class CampoTatico
 
     End Sub
 
-    Public Event FerramentaAtualAlterada(
-    ferramenta As FerramentaCampo)
+#Region "Eventos"
 
-    Public Event ObjetoCriado(
-    objeto As ObjetoCampo)
+    Public Event FerramentaAtualAlterada(ferramenta As FerramentaCampo)
 
-    Public Event ObjetoSelecionadoAlterado(
-    objeto As ObjetoCampo)
+    Public Event ObjetoCriado(objeto As ObjetoCampo)
 
-    Public Event HistoricoAlterado(
-    podeDesfazer As Boolean,
-    podeRefazer As Boolean)
+    Public Event ObjetoSelecionadoAlterado(objeto As ObjetoCampo)
+
+    Public Event HistoricoAlterado(podeDesfazer As Boolean, podeRefazer As Boolean)
+
+    Public Event VisualizacaoAlterada(zoomPercentual As Integer)
+
+#End Region
+
+#Region "Propriedades"
 
     <Browsable(False)>
     <DesignerSerializationVisibility(
@@ -170,6 +204,23 @@ Public Class CampoTatico
         End Set
 
     End Property
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public ReadOnly Property ZoomPercentual As Integer
+
+        Get
+
+            Return CInt(
+            Math.Round(
+                _zoomVisual * 100.0F))
+
+        End Get
+
+    End Property
+
+#End Region
 
 #Region "Adicionar objetos"
 
@@ -686,8 +737,7 @@ Public Class CampoTatico
 
 #Region "Pintura"
 
-    Public Function GerarImagemCampo(
-    Optional larguraImagem As Integer = 2560) As Bitmap
+    Public Function GerarImagemCampo(Optional larguraImagem As Integer = 2560) As Bitmap
 
         Return GerarImagemCampo(
         larguraImagem,
@@ -1317,14 +1367,32 @@ Public Class CampoTatico
 
     End Sub
 
-    Protected Overrides Sub OnPaint(e As PaintEventArgs)
+    Protected Overrides Sub OnPaint(
+    e As PaintEventArgs)
 
         MyBase.OnPaint(e)
 
         e.Graphics.SmoothingMode = SmoothingMode.AntiAlias
+
         e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality
 
-        DesenharCampo(e.Graphics)
+        Dim estadoGrafico As GraphicsState = e.Graphics.Save()
+
+        Try
+
+            Using matriz As Matrix = ObterMatrizVisualizacao()
+
+                e.Graphics.Transform = matriz
+
+                DesenharCampo(e.Graphics)
+
+            End Using
+
+        Finally
+
+            e.Graphics.Restore(estadoGrafico)
+
+        End Try
 
     End Sub
 
@@ -4324,6 +4392,30 @@ Public Class CampoTatico
 
         Focus()
 
+        If e.Button = MouseButtons.Middle OrElse (_espacoPressionado AndAlso e.Button = MouseButtons.Left) Then
+
+            _panEmAndamento =
+        True
+
+            _pontoInicialPan =
+        e.Location
+
+            _deslocamentoInicialPan =
+        _deslocamentoVisual
+
+            Capture =
+        True
+
+            Cursor =
+        Cursors.SizeAll
+
+            Exit Sub
+
+        End If
+
+        e =
+    CriarEventoMouseMundo(e)
+
         Dim campo As RectangleF =
         ObterRetanguloCampo()
 
@@ -4478,19 +4570,36 @@ Public Class CampoTatico
 
         MyBase.OnMouseMove(e)
 
-        Dim campo As RectangleF =
-        ObterRetanguloCampo()
+        If _panEmAndamento Then
 
-        If FerramentaAtual <>
-       FerramentaCampo.Selecionar Then
+            Dim deltaX As Single = e.X - _pontoInicialPan.X
+
+            Dim deltaY As Single = e.Y - _pontoInicialPan.Y
+
+            _deslocamentoVisual = New PointF(_deslocamentoInicialPan.X + deltaX, _deslocamentoInicialPan.Y + deltaY)
+
+            LimitarDeslocamentoVisual()
+
+            Cursor = Cursors.SizeAll
+
+            Invalidate()
+
+            Exit Sub
+
+        End If
+
+        e =
+    CriarEventoMouseMundo(e)
+
+        Dim campo As RectangleF = ObterRetanguloCampo()
+
+        If FerramentaAtual <> FerramentaCampo.Selecionar Then
 
             Cursor = Cursors.Cross
 
             If _criacaoEmAndamento Then
 
-                _pontoPreviewTela =
-                New PointF(
-                    LimitarSingle(
+                _pontoPreviewTela = New PointF(LimitarSingle(
                         e.X,
                         campo.Left,
                         campo.Right),
@@ -4571,6 +4680,40 @@ Public Class CampoTatico
     e As MouseEventArgs)
 
         MyBase.OnMouseUp(e)
+
+        If _panEmAndamento Then
+
+            If e.Button = MouseButtons.Middle OrElse e.Button = MouseButtons.Left Then
+
+                _panEmAndamento =
+            False
+
+                Capture =
+            False
+
+                If _espacoPressionado Then
+
+                    Cursor =
+                Cursors.Hand
+
+                ElseIf FerramentaAtual =
+               FerramentaCampo.Selecionar Then
+
+                    Cursor =
+                Cursors.Default
+
+                Else
+
+                    Cursor =
+                Cursors.Cross
+
+                End If
+
+                Exit Sub
+
+            End If
+
+        End If
 
         If e.Button <> MouseButtons.Left Then
             Exit Sub
@@ -5155,6 +5298,23 @@ Public Class CampoTatico
 
         End If
 
+        If e.KeyCode = Keys.Space Then
+
+            _espacoPressionado =
+            True
+
+            If Not _panEmAndamento Then
+
+                Cursor =
+                Cursors.Hand
+
+            End If
+
+            e.Handled =
+            True
+
+        End If
+
         If e.KeyCode = Keys.Escape Then
 
             CancelarCriacao()
@@ -5164,6 +5324,40 @@ Public Class CampoTatico
 
             e.Handled = True
             e.SuppressKeyPress = True
+
+        End If
+
+    End Sub
+
+    Protected Overrides Sub OnKeyUp(
+    e As KeyEventArgs)
+
+        MyBase.OnKeyUp(e)
+
+        If e.KeyCode = Keys.Space Then
+
+            _espacoPressionado =
+            False
+
+            If Not _panEmAndamento Then
+
+                If FerramentaAtual =
+               FerramentaCampo.Selecionar Then
+
+                    Cursor =
+                    Cursors.Default
+
+                Else
+
+                    Cursor =
+                    Cursors.Cross
+
+                End If
+
+            End If
+
+            e.Handled =
+            True
 
         End If
 
@@ -5680,6 +5874,67 @@ Public Class CampoTatico
 
     End Sub
 
+    Protected Overrides Sub OnMouseWheel(e As MouseEventArgs)
+
+        MyBase.OnMouseWheel(e)
+
+        Focus()
+
+        Dim quantidadePassos As Single =
+        e.Delta /
+        120.0F
+
+        Dim novoZoom As Single =
+        _zoomVisual +
+        PassoZoom *
+        quantidadePassos
+
+        DefinirZoom(
+        novoZoom,
+        e.Location)
+
+    End Sub
+
+    Protected Overrides Function IsInputKey(keyData As Keys) As Boolean
+
+        Dim tecla As Keys =
+        keyData And Keys.KeyCode
+
+        If tecla = Keys.Space Then
+            Return True
+        End If
+
+        Return MyBase.IsInputKey(
+        keyData)
+
+    End Function
+
+    Protected Overrides Sub OnLostFocus(e As EventArgs)
+
+        MyBase.OnLostFocus(e)
+
+        _espacoPressionado =
+        False
+
+        If Not _panEmAndamento Then
+
+            If FerramentaAtual =
+           FerramentaCampo.Selecionar Then
+
+                Cursor =
+                Cursors.Default
+
+            Else
+
+                Cursor =
+                Cursors.Cross
+
+            End If
+
+        End If
+
+    End Sub
+
     Private Sub DeselecionarTodos()
 
         For Each objeto As ObjetoCampo In _objetos
@@ -5898,6 +6153,16 @@ Public Class CampoTatico
 
     End Function
 
+    Protected Overrides Sub OnResize(e As EventArgs)
+
+        MyBase.OnResize(e)
+
+        LimitarDeslocamentoVisual()
+
+        Invalidate()
+
+    End Sub
+
 #End Region
 
 #Region "Conversões"
@@ -6089,6 +6354,234 @@ Public Class CampoTatico
             LimitarPercentual(yPercentual))
 
     End Function
+
+#End Region
+
+#Region "Zoom e navegação"
+
+    Public Sub AumentarZoom()
+
+        Dim centro As New Point(
+            ClientSize.Width \ 2,
+            ClientSize.Height \ 2)
+
+        DefinirZoom(
+            _zoomVisual + PassoZoom,
+            centro)
+
+    End Sub
+
+    Public Sub DiminuirZoom()
+
+        Dim centro As New Point(
+            ClientSize.Width \ 2,
+            ClientSize.Height \ 2)
+
+        DefinirZoom(
+            _zoomVisual - PassoZoom,
+            centro)
+
+    End Sub
+
+    Public Sub RestaurarVisualizacao()
+
+        _zoomVisual =
+            1.0F
+
+        _deslocamentoVisual =
+            PointF.Empty
+
+        RaiseEvent VisualizacaoAlterada(
+            ZoomPercentual)
+
+        Invalidate()
+
+    End Sub
+
+    Private Sub DefinirZoom(
+    novoZoom As Single,
+    pontoFocoTela As Point)
+
+        novoZoom =
+            LimitarSingle(
+                novoZoom,
+                ZoomMinimo,
+                ZoomMaximo)
+
+        If Math.Abs(
+            novoZoom -
+            _zoomVisual) < 0.001F Then
+
+            Exit Sub
+
+        End If
+
+        Dim pontoMundo As PointF =
+            ConverterTelaParaMundo(
+                pontoFocoTela)
+
+        _zoomVisual =
+            novoZoom
+
+        Dim campoBase As RectangleF =
+            ObterRetanguloCampo()
+
+        Dim centroX As Single =
+            campoBase.Left +
+            campoBase.Width / 2.0F
+
+        Dim centroY As Single =
+            campoBase.Top +
+            campoBase.Height / 2.0F
+
+        _deslocamentoVisual.X =
+            pontoFocoTela.X -
+            centroX -
+            _zoomVisual *
+            (pontoMundo.X - centroX)
+
+        _deslocamentoVisual.Y =
+            pontoFocoTela.Y -
+            centroY -
+            _zoomVisual *
+            (pontoMundo.Y - centroY)
+
+        LimitarDeslocamentoVisual()
+
+        RaiseEvent VisualizacaoAlterada(
+            ZoomPercentual)
+
+        Invalidate()
+
+    End Sub
+
+    Private Function ObterMatrizVisualizacao() As Matrix
+
+        Dim campoBase As RectangleF =
+            ObterRetanguloCampo()
+
+        Dim centroX As Single =
+            campoBase.Left +
+            campoBase.Width / 2.0F
+
+        Dim centroY As Single =
+            campoBase.Top +
+            campoBase.Height / 2.0F
+
+        Dim deslocamentoX As Single =
+            centroX +
+            _deslocamentoVisual.X -
+            _zoomVisual * centroX
+
+        Dim deslocamentoY As Single =
+            centroY +
+            _deslocamentoVisual.Y -
+            _zoomVisual * centroY
+
+        Return New Matrix(
+            _zoomVisual,
+            0.0F,
+            0.0F,
+            _zoomVisual,
+            deslocamentoX,
+            deslocamentoY)
+
+    End Function
+
+    Private Function ConverterTelaParaMundo(
+    pontoTela As Point) As PointF
+
+        Dim pontos() As PointF = {
+            New PointF(
+                pontoTela.X,
+                pontoTela.Y)
+        }
+
+        Using matriz As Matrix =
+            ObterMatrizVisualizacao()
+
+            matriz.Invert()
+
+            matriz.TransformPoints(
+                pontos)
+
+        End Using
+
+        Return pontos(0)
+
+    End Function
+
+    Private Function CriarEventoMouseMundo(
+    evento As MouseEventArgs) As MouseEventArgs
+
+        Dim pontoMundo As PointF =
+            ConverterTelaParaMundo(
+                evento.Location)
+
+        Return New MouseEventArgs(
+            evento.Button,
+            evento.Clicks,
+            CInt(
+                Math.Round(
+                    pontoMundo.X)),
+            CInt(
+                Math.Round(
+                    pontoMundo.Y)),
+            evento.Delta)
+
+    End Function
+
+    Private Sub LimitarDeslocamentoVisual()
+
+        If _zoomVisual <= 1.0F Then
+
+            _deslocamentoVisual =
+                PointF.Empty
+
+            Exit Sub
+
+        End If
+
+        Dim campoBase As RectangleF =
+            ObterRetanguloCampo()
+
+        Dim centroX As Single =
+            campoBase.Left +
+            campoBase.Width / 2.0F
+
+        Dim centroY As Single =
+            campoBase.Top +
+            campoBase.Height / 2.0F
+
+        Dim limitePositivoX As Single =
+            (_zoomVisual - 1.0F) *
+            (centroX - campoBase.Left)
+
+        Dim limiteNegativoX As Single =
+            (_zoomVisual - 1.0F) *
+            (campoBase.Right - centroX)
+
+        Dim limitePositivoY As Single =
+            (_zoomVisual - 1.0F) *
+            (centroY - campoBase.Top)
+
+        Dim limiteNegativoY As Single =
+            (_zoomVisual - 1.0F) *
+            (campoBase.Bottom - centroY)
+
+        _deslocamentoVisual.X =
+            LimitarSingle(
+                _deslocamentoVisual.X,
+                -limiteNegativoX,
+                limitePositivoX)
+
+        _deslocamentoVisual.Y =
+            LimitarSingle(
+                _deslocamentoVisual.Y,
+                -limiteNegativoY,
+                limitePositivoY)
+
+    End Sub
 
 #End Region
 
