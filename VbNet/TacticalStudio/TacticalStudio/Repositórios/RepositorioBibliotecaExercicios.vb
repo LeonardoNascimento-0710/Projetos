@@ -1,6 +1,7 @@
 ﻿Imports System.IO
 Imports System.Text.Json
 Imports TacticalStudio.Core
+Imports System.Drawing.Imaging
 
 Public NotInheritable Class RepositorioBibliotecaExercicios
 
@@ -465,6 +466,247 @@ Public NotInheritable Class RepositorioBibliotecaExercicios
         Catch
 
             Return False
+
+        End Try
+
+    End Function
+
+#End Region
+
+#Region "Miniaturas"
+
+    Public Shared Function SalvarMiniatura(
+    idItem As String,
+    imagem As Image
+) As Boolean
+
+        If String.IsNullOrWhiteSpace(
+        idItem) OrElse
+       imagem Is Nothing Then
+
+            Return False
+
+        End If
+
+        Dim indice As IndiceBibliotecaExercicios =
+        CarregarIndice()
+
+        Dim itemEncontrado As ItemBibliotecaExercicio =
+        Nothing
+
+        For Each item As ItemBibliotecaExercicio
+        In indice.Itens
+
+            If item Is Nothing Then
+                Continue For
+            End If
+
+            If String.Equals(
+            item.Id,
+            idItem,
+            StringComparison.OrdinalIgnoreCase) Then
+
+                itemEncontrado =
+                item
+
+                Exit For
+
+            End If
+
+        Next
+
+        If itemEncontrado Is Nothing Then
+            Return False
+        End If
+
+        Try
+
+            If Not GarantirEstrutura() Then
+                Return False
+            End If
+
+            Dim nomeArquivoAnterior As String =
+            itemEncontrado.NomeArquivoMiniatura
+
+            Dim nomeArquivoNovo As String =
+            itemEncontrado.Id &
+            ".png"
+
+            Dim caminhoDestino As String =
+            Path.Combine(
+                ObterPastaMiniaturas(),
+                nomeArquivoNovo)
+
+            Dim caminhoTemporario As String =
+            caminhoDestino &
+            ".tmp"
+
+            Using copiaImagem As New Bitmap(
+            imagem.Width,
+            imagem.Height)
+
+                Using grafico As Graphics =
+                Graphics.FromImage(
+                    copiaImagem)
+
+                    grafico.DrawImage(
+                    imagem,
+                    New Rectangle(
+                        0,
+                        0,
+                        copiaImagem.Width,
+                        copiaImagem.Height))
+
+                End Using
+
+                copiaImagem.Save(
+                caminhoTemporario,
+                ImageFormat.Png)
+
+            End Using
+
+            File.Move(
+            caminhoTemporario,
+            caminhoDestino,
+            True)
+
+            itemEncontrado.NomeArquivoMiniatura =
+            nomeArquivoNovo
+
+            itemEncontrado.DataAtualizacaoUtc =
+            DateTime.UtcNow
+
+            If Not SalvarIndice(
+            indice) Then
+
+                TentarExcluirArquivo(
+                caminhoDestino)
+
+                Return False
+
+            End If
+
+            If Not String.IsNullOrWhiteSpace(
+            nomeArquivoAnterior) AndAlso
+           Not String.Equals(
+               nomeArquivoAnterior,
+               nomeArquivoNovo,
+               StringComparison.OrdinalIgnoreCase) Then
+
+                TentarExcluirArquivo(
+                Path.Combine(
+                    ObterPastaMiniaturas(),
+                    nomeArquivoAnterior))
+
+            End If
+
+            Return True
+
+        Catch
+
+            Return False
+
+        End Try
+
+    End Function
+
+    Public Shared Function RemoverMiniatura(
+    idItem As String
+) As Boolean
+
+        If String.IsNullOrWhiteSpace(
+        idItem) Then
+
+            Return False
+
+        End If
+
+        Dim indice As IndiceBibliotecaExercicios =
+        CarregarIndice()
+
+        Dim itemEncontrado As ItemBibliotecaExercicio =
+        Nothing
+
+        For Each item As ItemBibliotecaExercicio
+        In indice.Itens
+
+            If item Is Nothing Then
+                Continue For
+            End If
+
+            If String.Equals(
+            item.Id,
+            idItem,
+            StringComparison.OrdinalIgnoreCase) Then
+
+                itemEncontrado =
+                item
+
+                Exit For
+
+            End If
+
+        Next
+
+        If itemEncontrado Is Nothing Then
+            Return False
+        End If
+
+        Dim caminhoMiniatura As String =
+        ObterCaminhoMiniatura(
+            itemEncontrado)
+
+        itemEncontrado.NomeArquivoMiniatura =
+        String.Empty
+
+        itemEncontrado.DataAtualizacaoUtc =
+        DateTime.UtcNow
+
+        If Not SalvarIndice(
+        indice) Then
+
+            Return False
+
+        End If
+
+        TentarExcluirArquivo(
+        caminhoMiniatura)
+
+        Return True
+
+    End Function
+
+    Public Shared Function CarregarMiniatura(
+    item As ItemBibliotecaExercicio
+) As Bitmap
+
+        Dim caminhoMiniatura As String =
+        ObterCaminhoMiniatura(
+            item)
+
+        If String.IsNullOrWhiteSpace(
+        caminhoMiniatura) OrElse
+       Not File.Exists(
+           caminhoMiniatura) Then
+
+            Return Nothing
+
+        End If
+
+        Try
+
+            Using imagemArquivo As Image =
+            Image.FromFile(
+                caminhoMiniatura)
+
+                Return New Bitmap(
+                imagemArquivo)
+
+            End Using
+
+        Catch
+
+            Return Nothing
 
         End Try
 

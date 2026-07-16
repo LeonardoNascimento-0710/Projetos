@@ -1203,6 +1203,110 @@ Public Class CampoTatico
 
 #Region "Pintura"
 
+    Public Function GerarMiniaturaCampo(
+    Optional larguraMiniatura As Integer = 640
+) As Bitmap
+
+        If larguraMiniatura < 240 Then
+
+            larguraMiniatura =
+            240
+
+        End If
+
+        If larguraMiniatura > 1600 Then
+
+            larguraMiniatura =
+            1600
+
+        End If
+
+        'GerarImagemCampo exige no mínimo 800 pixels.
+        'Depois reduzimos para o tamanho da miniatura.
+        Using imagemOriginal As Bitmap =
+        GerarImagemCampo(
+            800)
+
+            If imagemOriginal Is Nothing OrElse
+           imagemOriginal.Width <= 0 OrElse
+           imagemOriginal.Height <= 0 Then
+
+                Throw New InvalidOperationException(
+                "Não foi possível gerar a imagem do campo.")
+
+            End If
+
+            Dim proporcao As Double =
+            imagemOriginal.Height /
+            CDbl(
+                imagemOriginal.Width)
+
+            Dim alturaMiniatura As Integer =
+            Math.Max(
+                1,
+                CInt(
+                    Math.Round(
+                        larguraMiniatura *
+                        proporcao)))
+
+            Dim miniatura As New Bitmap(
+            larguraMiniatura,
+            alturaMiniatura,
+            System.Drawing.Imaging.PixelFormat.Format32bppArgb)
+
+            Try
+
+                Using grafico As Graphics =
+                Graphics.FromImage(
+                    miniatura)
+
+                    grafico.Clear(
+                    Color.FromArgb(
+                        28,
+                        28,
+                        28))
+
+                    grafico.SmoothingMode =
+                    SmoothingMode.AntiAlias
+
+                    grafico.PixelOffsetMode =
+                    PixelOffsetMode.HighQuality
+
+                    grafico.CompositingQuality =
+                    CompositingQuality.HighQuality
+
+                    grafico.InterpolationMode =
+                    InterpolationMode.HighQualityBicubic
+
+                    grafico.DrawImage(
+                    imagemOriginal,
+                    New Rectangle(
+                        0,
+                        0,
+                        miniatura.Width,
+                        miniatura.Height),
+                    0,
+                    0,
+                    imagemOriginal.Width,
+                    imagemOriginal.Height,
+                    GraphicsUnit.Pixel)
+
+                End Using
+
+            Catch
+
+                miniatura.Dispose()
+
+                Throw
+
+            End Try
+
+            Return miniatura
+
+        End Using
+
+    End Function
+
     Public Function GerarImagemCampo(Optional larguraImagem As Integer = 2560) As Bitmap
 
         Return GerarImagemCampo(

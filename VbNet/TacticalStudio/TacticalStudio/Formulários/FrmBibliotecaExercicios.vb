@@ -37,6 +37,10 @@ Public Class FrmBibliotecaExercicios
 
     Private ReadOnly BtnExcluir As New Button()
 
+    Private ReadOnly PicMiniatura As New PictureBox()
+
+    Private ReadOnly LblMiniatura As New Label()
+
 #End Region
 
 #Region "Eventos públicos"
@@ -374,58 +378,179 @@ Public Class FrmBibliotecaExercicios
     End Sub
 
     Private Sub CriarLista(
-        painelPrincipal As TableLayoutPanel)
+    painelPrincipal As TableLayoutPanel)
+
+        Dim painelConteudo As New TableLayoutPanel With {
+        .Dock = DockStyle.Fill,
+        .ColumnCount = 2,
+        .RowCount = 1,
+        .Margin = New Padding(0),
+        .Padding = New Padding(0),
+        .BackColor = Tema.Fundo,
+        .GrowStyle = TableLayoutPanelGrowStyle.FixedSize
+    }
+
+        painelConteudo.ColumnStyles.Add(
+        New ColumnStyle(
+            SizeType.Percent,
+            68.0F))
+
+        painelConteudo.ColumnStyles.Add(
+        New ColumnStyle(
+            SizeType.Percent,
+            32.0F))
+
+        painelConteudo.RowStyles.Add(
+        New RowStyle(
+            SizeType.Percent,
+            100.0F))
+
+        '==================================================
+        ' LISTA DE EXERCÍCIOS
+        '==================================================
 
         LvExercicios.Dock =
-            DockStyle.Fill
+        DockStyle.Fill
 
         LvExercicios.Margin =
-            New Padding(0)
+        New Padding(
+            0,
+            0,
+            8,
+            0)
 
         LvExercicios.View =
-            View.Details
+        View.Details
 
         LvExercicios.FullRowSelect =
-            True
+        True
 
         LvExercicios.MultiSelect =
-            False
+        False
 
         LvExercicios.HideSelection =
-            False
+        False
 
         LvExercicios.GridLines =
-            True
+        True
 
         LvExercicios.HeaderStyle =
-            ColumnHeaderStyle.Nonclickable
+        ColumnHeaderStyle.Nonclickable
+
+        LvExercicios.Columns.Clear()
 
         LvExercicios.Columns.Add(
-            "Exercício",
-            350)
+        "Exercício",
+        280)
 
         LvExercicios.Columns.Add(
-            "Categoria",
-            190)
+        "Categoria",
+        150)
 
         LvExercicios.Columns.Add(
-            "Favorito",
-            90)
+        "Favorito",
+        80)
 
         LvExercicios.Columns.Add(
-            "Atualizado",
-            160)
+        "Atualizado",
+        135)
 
         AddHandler LvExercicios.SelectedIndexChanged,
-            AddressOf LvExercicios_SelectedIndexChanged
+        AddressOf LvExercicios_SelectedIndexChanged
 
         AddHandler LvExercicios.ItemActivate,
-            AddressOf LvExercicios_ItemActivate
+        AddressOf LvExercicios_ItemActivate
+
+        painelConteudo.Controls.Add(
+        LvExercicios,
+        0,
+        0)
+
+        '==================================================
+        ' PRÉ-VISUALIZAÇÃO
+        '==================================================
+
+        Dim painelMiniatura As New TableLayoutPanel With {
+        .Dock = DockStyle.Fill,
+        .ColumnCount = 1,
+        .RowCount = 2,
+        .Margin = New Padding(0),
+        .Padding = New Padding(0),
+        .BackColor = Tema.Painel
+    }
+
+        painelMiniatura.RowStyles.Add(
+        New RowStyle(
+            SizeType.Absolute,
+            34.0F))
+
+        painelMiniatura.RowStyles.Add(
+        New RowStyle(
+            SizeType.Percent,
+            100.0F))
+
+        LblMiniatura.Text =
+        "Pré-visualização"
+
+        LblMiniatura.Dock =
+        DockStyle.Fill
+
+        LblMiniatura.Margin =
+        New Padding(0)
+
+        LblMiniatura.Padding =
+        New Padding(
+            8,
+            0,
+            0,
+            0)
+
+        LblMiniatura.Font =
+        New Font(
+            Font,
+            FontStyle.Bold)
+
+        LblMiniatura.TextAlign =
+        ContentAlignment.MiddleLeft
+
+        painelMiniatura.Controls.Add(
+        LblMiniatura,
+        0,
+        0)
+
+        PicMiniatura.Dock =
+        DockStyle.Fill
+
+        PicMiniatura.Margin =
+        New Padding(
+            8,
+            0,
+            8,
+            8)
+
+        PicMiniatura.SizeMode =
+        PictureBoxSizeMode.Zoom
+
+        PicMiniatura.BorderStyle =
+        BorderStyle.FixedSingle
+
+        PicMiniatura.BackColor =
+        Tema.Fundo
+
+        painelMiniatura.Controls.Add(
+        PicMiniatura,
+        0,
+        1)
+
+        painelConteudo.Controls.Add(
+        painelMiniatura,
+        1,
+        0)
 
         painelPrincipal.Controls.Add(
-            LvExercicios,
-            0,
-            2)
+        painelConteudo,
+        0,
+        2)
 
     End Sub
 
@@ -1004,14 +1129,11 @@ Public Class FrmBibliotecaExercicios
 
         BtnAbrir.Enabled = ItemSelecionado IsNot Nothing
 
-        BtnEditar.Enabled =
-    ItemSelecionado IsNot Nothing
+        BtnEditar.Enabled = ItemSelecionado IsNot Nothing
 
-        BtnFavorito.Enabled =
-    ItemSelecionado IsNot Nothing
+        BtnFavorito.Enabled = ItemSelecionado IsNot Nothing
 
-        BtnExcluir.Enabled =
-    ItemSelecionado IsNot Nothing
+        BtnExcluir.Enabled = ItemSelecionado IsNot Nothing
 
         If ItemSelecionado Is Nothing Then
 
@@ -1029,6 +1151,8 @@ Public Class FrmBibliotecaExercicios
         "Adicionar favorito"
 
         End If
+
+        AtualizarMiniaturaSelecionada()
 
         If ItemSelecionado Is Nothing Then
 
@@ -1482,6 +1606,57 @@ Public Class FrmBibliotecaExercicios
 
     End Sub
 
+    Private Sub AtualizarMiniaturaSelecionada()
+
+        LiberarMiniaturaAtual()
+
+        If ItemSelecionado Is Nothing Then
+
+            LblMiniatura.Text =
+            "Pré-visualização"
+
+            Return
+
+        End If
+
+        Dim miniatura As Bitmap =
+        RepositorioBibliotecaExercicios.
+            CarregarMiniatura(
+                ItemSelecionado)
+
+        If miniatura Is Nothing Then
+
+            LblMiniatura.Text =
+            "Miniatura não disponível"
+
+            Return
+
+        End If
+
+        PicMiniatura.Image =
+        miniatura
+
+        LblMiniatura.Text =
+        "Pré-visualização — " &
+        ItemSelecionado.Nome
+
+    End Sub
+
+    Private Sub LiberarMiniaturaAtual()
+
+        Dim imagemAnterior As Image =
+        PicMiniatura.Image
+
+        PicMiniatura.Image =
+        Nothing
+
+        If imagemAnterior IsNot Nothing Then
+
+            imagemAnterior.Dispose()
+
+        End If
+
+    End Sub
 
 #End Region
 
@@ -1605,6 +1780,20 @@ Public Class FrmBibliotecaExercicios
 
 #End Region
 
+#Region "Encerramento"
+
+    Protected Overrides Sub OnFormClosed(
+    e As FormClosedEventArgs)
+
+        LiberarMiniaturaAtual()
+
+        MyBase.OnFormClosed(
+        e)
+
+    End Sub
+
+#End Region
+
 #Region "Tema"
 
     Public Sub AplicarTemaAtual()
@@ -1684,6 +1873,12 @@ Public Class FrmBibliotecaExercicios
         BtnExcluir.FlatAppearance.BorderColor = Tema.Borda
 
         BtnExcluir.FlatAppearance.MouseOverBackColor = Tema.PainelHover
+
+        PicMiniatura.BackColor = Tema.Fundo
+
+        LblMiniatura.BackColor = Tema.Painel
+
+        LblMiniatura.ForeColor = Tema.Texto
 
     End Sub
 

@@ -1668,3 +1668,147 @@ Próxima etapa sugerida:
 - Adicionar miniaturas de pré-visualização;
 - Permitir importar e exportar modelos;
 - Criar pesquisa e filtros na biblioteca.
+
+======================================================================
+41. ETAPA 33 - BIBLIOTECA DE EXERCÍCIOS
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.33.0
+
+Arquivos criados:
+- TacticalStudio.Core\Classes\ItemBibliotecaExercicio.vb
+- TacticalStudio.Core\Classes\IndiceBibliotecaExercicios.vb
+- RepositorioBibliotecaExercicios.vb
+- FrmBibliotecaExercicios.vb
+
+Arquivos alterados:
+- FrmPrincipal.vb
+- InformacoesAplicacao.vb
+
+Alterações realizadas:
+- Criado modelo de item da biblioteca;
+- Criado índice da biblioteca com versionamento de formato;
+- Criado repositório local em JSON;
+- Criada estrutura automática de pastas da biblioteca;
+- Implementado cadastro do exercício atual;
+- Implementada cópia segura dos arquivos .tactical;
+- Criada janela de biblioteca de exercícios;
+- Adicionada pesquisa por nome, descrição e categoria;
+- Adicionado filtro por categoria;
+- Adicionado filtro somente de favoritos;
+- Implementada ordenação com favoritos primeiro e atualização mais recente;
+- Adicionada visualização de descrição;
+- Implementado carregamento de exercícios da biblioteca;
+- Exercícios da biblioteca são abertos como cópia de trabalho;
+- O arquivo original armazenado na biblioteca permanece preservado;
+- Adicionado botão Biblioteca na barra principal;
+- Adicionado atalho Ctrl+Shift+B;
+- Adicionado botão para cadastrar o exercício atual;
+- Implementada edição de nome, descrição e categoria;
+- Implementada inclusão e remoção de favoritos;
+- Implementada exclusão de exercícios;
+- Implementada atualização da lista com F5;
+- Implementada validação da existência do arquivo antes da abertura;
+- Adicionado tratamento de arquivos e índices inválidos;
+- Atualizada a versão para 0.33.0.
+
+Estrutura criada:
+- %LocalAppData%\TacticalStudio\Biblioteca\biblioteca.json;
+- %LocalAppData%\TacticalStudio\Biblioteca\Exercicios;
+- %LocalAppData%\TacticalStudio\Biblioteca\Miniaturas.
+
+Comportamento:
+- O cadastro na biblioteca não altera o caminho do exercício atual;
+- O exercício é exportado para um arquivo temporário antes de ser copiado;
+- Arquivos temporários são removidos após o cadastro;
+- Itens favoritos aparecem antes dos demais;
+- Dentro de cada grupo, os mais recentes aparecem primeiro;
+- A pesquisa pode ser combinada com categoria e favoritos;
+- A exclusão remove o registro e o arquivo armazenado;
+- A edição de metadados não altera o conteúdo tático do exercício;
+- A biblioteca permanece disponível após reiniciar o sistema.
+
+Correções:
+- Centralizado o carregamento de exercícios em CarregarExercicioDoCaminho;
+- Removido tratamento duplicado de exceções em AbrirExercicio;
+- Mantida a confirmação de alterações não salvas antes da abertura;
+- Preservado o modelo original ao abrir exercícios da biblioteca;
+- Mantida compatibilidade com salvamento, recuperação e histórico.
+
+Resultado:
+- Exercícios podem ser organizados e reutilizados;
+- A biblioteca oferece pesquisa, categorias e favoritos;
+- Modelos armazenados ficam protegidos contra sobrescrita acidental;
+- Exercícios podem ser editados, favoritos ou excluídos pela mesma janela;
+- O fluxo de criação e reutilização ficou mais rápido.
+
+Próxima etapa sugerida:
+- Criar miniaturas de pré-visualização;
+- Implementar importação e exportação da biblioteca;
+- Adicionar categorias favoritas;
+- Criar ordenação configurável;
+- Permitir atualização do conteúdo de um item existente.
+
+======================================================================
+42. ETAPA 34 - MINIATURAS E PRÉ-VISUALIZAÇÃO
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.34.0
+
+Arquivos alterados:
+- RepositorioBibliotecaExercicios.vb
+- Controles\CampoTatico.vb
+- FrmPrincipal.vb
+- FrmBibliotecaExercicios.vb
+- InformacoesAplicacao.vb
+
+Alterações realizadas:
+- Implementado armazenamento de miniaturas em PNG;
+- Criada rotina para salvar, substituir, carregar e remover miniaturas;
+- Carregamento realizado sem manter o arquivo bloqueado pelo Windows;
+- Implementada geração de miniaturas pelo CampoTatico;
+- Mantida a proporção original do campo;
+- Aplicada redução com interpolação de alta qualidade;
+- Miniaturas respeitam o recorte ativo;
+- Elementos temporários e bordas de seleção não aparecem;
+- Miniatura criada automaticamente ao cadastrar um exercício;
+- Miniatura vinculada ao item no biblioteca.json;
+- Criada área de pré-visualização na biblioteca;
+- Pré-visualização atualizada ao trocar a seleção;
+- Adicionada indicação para exercícios sem miniatura;
+- Imagens liberadas ao trocar a seleção e fechar a janela;
+- Mantida a proporção durante o redimensionamento;
+- Atualizada a versão para 0.34.0.
+
+Estrutura utilizada:
+- %LocalAppData%\TacticalStudio\Biblioteca\Miniaturas;
+- Arquivos PNG nomeados com o identificador do exercício.
+
+Comportamento:
+- Novos exercícios recebem miniatura automaticamente;
+- Falhas na geração da miniatura não impedem o cadastro;
+- Exercícios antigos sem miniatura continuam funcionando;
+- A exclusão do item remove também sua miniatura;
+- A imagem não é deformada na pré-visualização.
+
+Correções e segurança:
+- A imagem carregada é clonada antes de fechar o arquivo;
+- Recursos gráficos são descartados corretamente;
+- A miniatura anterior é descartada ao trocar a seleção;
+- Falhas de leitura não interrompem a biblioteca;
+- Mantida compatibilidade com filtros, favoritos, edição e exclusão.
+
+Resultado:
+- A biblioteca agora permite identificar visualmente os exercícios;
+- A seleção de modelos ficou mais rápida;
+- O usuário pode revisar o campo antes de abrir o exercício;
+- A biblioteca ganhou aparência de catálogo visual.
+
+Próxima etapa sugerida:
+- Atualizar o conteúdo de um item existente;
+- Regenerar miniaturas após atualizações;
+- Importar e exportar a biblioteca;
+- Exibir exercícios em cartões;
+- Ordenar por nome, data e categoria.

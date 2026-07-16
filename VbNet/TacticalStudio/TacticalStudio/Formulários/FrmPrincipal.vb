@@ -4226,22 +4226,45 @@ Public Class FrmPrincipal
             If itemAdicionado Is Nothing Then
 
                 MessageBox.Show(
-                proprietario,
-                "Não foi possível adicionar o exercício à biblioteca.",
-                "Biblioteca de exercícios",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error)
+        proprietario,
+        "Não foi possível adicionar o exercício à biblioteca.",
+        "Biblioteca de exercícios",
+        MessageBoxButtons.OK,
+        MessageBoxIcon.Error)
 
                 Return Nothing
 
             End If
 
-            MessageBox.Show(
-            proprietario,
-            "O exercício foi adicionado à biblioteca com sucesso.",
-            "Biblioteca de exercícios",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Information)
+            Dim miniaturaSalva As Boolean =
+    SalvarMiniaturaBiblioteca(
+        itemAdicionado)
+
+            If miniaturaSalva Then
+
+                MessageBox.Show(
+        proprietario,
+        "O exercício foi adicionado à biblioteca com sucesso." &
+        Environment.NewLine &
+        Environment.NewLine &
+        "A miniatura de pré-visualização também foi criada.",
+        "Biblioteca de exercícios",
+        MessageBoxButtons.OK,
+        MessageBoxIcon.Information)
+
+            Else
+
+                MessageBox.Show(
+        proprietario,
+        "O exercício foi adicionado à biblioteca com sucesso." &
+        Environment.NewLine &
+        Environment.NewLine &
+        "Porém, não foi possível criar a miniatura de pré-visualização.",
+        "Biblioteca de exercícios",
+        MessageBoxButtons.OK,
+        MessageBoxIcon.Warning)
+
+            End If
 
             Return itemAdicionado
 
@@ -4274,6 +4297,44 @@ Public Class FrmPrincipal
             Catch
 
             End Try
+
+        End Try
+
+    End Function
+
+    Private Function SalvarMiniaturaBiblioteca(
+    item As ItemBibliotecaExercicio
+) As Boolean
+
+        If CampoCanvas Is Nothing OrElse
+       item Is Nothing OrElse
+       String.IsNullOrWhiteSpace(
+           item.Id) Then
+
+            Return False
+
+        End If
+
+        Try
+
+            Using miniatura As Bitmap =
+            CampoCanvas.GerarMiniaturaCampo(
+                640)
+
+                If miniatura Is Nothing Then
+                    Return False
+                End If
+
+                Return RepositorioBibliotecaExercicios.
+                SalvarMiniatura(
+                    item.Id,
+                    miniatura)
+
+            End Using
+
+        Catch
+
+            Return False
 
         End Try
 
