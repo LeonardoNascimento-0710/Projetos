@@ -1334,3 +1334,60 @@ Próxima etapa sugerida:
 - Permitir ocultar elementos;
 - Criar comandos de seleção por tipo;
 - Melhorar o gerenciamento de camadas.
+
+======================================================================
+36. ETAPA 28 - AGRUPAMENTO E BLOQUEIO DE OBJETOS
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.28.0
+
+Arquivos alterados:
+- TacticalStudio.Core\Classes\ObjetoCampo.vb
+- Controles\CampoTatico.vb
+- FrmPrincipal.vb
+- InformacoesAplicacao.vb
+
+Alterações realizadas:
+- Implementado agrupamento de objetos selecionados;
+- Implementado desagrupamento;
+- Ao clicar em um objeto agrupado, todo o grupo é selecionado;
+- Ctrl+clique adiciona ou remove grupos inteiros da seleção;
+- Grupos podem ser movidos como uma unidade;
+- Implementado bloqueio e desbloqueio de objetos;
+- Objetos bloqueados não podem ser movidos;
+- Objetos bloqueados não podem ser redimensionados;
+- Objetos bloqueados não podem ser alinhados ou distribuídos;
+- Objetos bloqueados não podem ser excluídos;
+- Adicionado indicador visual de bloqueio;
+- Agrupamento e bloqueio são salvos nos exercícios;
+- Agrupamento e bloqueio são restaurados ao abrir;
+- Agrupamento e bloqueio foram integrados ao histórico;
+- Duplicações de grupos geram novos grupos independentes;
+- Cópias são criadas desbloqueadas;
+- Adicionados atalhos Ctrl+J, Ctrl+Shift+J e Ctrl+L;
+- Atualizada a versão exibida para 0.28.0.
+
+Correções:
+- Corrigidas duplicações de métodos em CampoTatico.vb;
+- Restaurado o método ExisteObjetoBloqueadoNaSelecao;
+- Corrigido o campo TipoObjeto no histórico;
+- Corrigida a exclusão de objetos e grupos;
+- Corrigida a sincronização entre seleção individual e múltipla;
+- Adicionado aviso visual ao tentar manipular objetos bloqueados;
+- O sistema agora informa claramente como desbloquear a seleção;
+- Removida a dependência exclusiva de aviso sonoro.
+
+Resultado:
+- Objetos relacionados podem ser manipulados como grupos;
+- Elementos importantes podem ser protegidos contra alterações;
+- O usuário recebe um aviso claro quando uma ação é bloqueada;
+- Histórico, seleção múltipla, grade, zoom e exportação permanecem integrados;
+- O indicador de bloqueio aparece apenas na interface e não nas exportações.
+
+Próxima etapa sugerida:
+- Implementar gerenciamento de camadas;
+- Adicionar lista de objetos do exercício;
+- Permitir ocultar e exibir elementos;
+- Criar bloqueio e visibilidade pela lista;
+- Adicionar seleção por tipo de objeto.
