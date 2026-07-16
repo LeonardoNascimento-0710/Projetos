@@ -1454,3 +1454,66 @@ Próxima etapa sugerida:
 - Criar filtros avançados;
 - Adicionar ordenação por tipo, nome e camada;
 - Criar atalhos de visibilidade e bloqueio em lote.
+
+======================================================================
+38. ETAPA 30 - RECORTE E AMPLIAÇÃO DO CAMPO
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.30.0
+
+Arquivos alterados:
+- Controles\CampoTatico.vb
+- FrmPrincipal.vb
+- InformacoesAplicacao.vb
+
+Alterações realizadas:
+- Implementada seleção livre de uma região do campo;
+- O recorte funciona com clique e arraste, como a ferramenta de área;
+- A largura e a altura do recorte podem ser definidas livremente;
+- A região recortada passa a ocupar todo o espaço disponível do campo;
+- O recorte é não destrutivo;
+- Os objetos permanecem armazenados nas posições originais;
+- Adicionado modo de seleção de recorte;
+- Adicionada pré-visualização visual da área selecionada;
+- A região externa ao recorte é escurecida durante a seleção;
+- Adicionado painel de propriedades específico para o recorte;
+- Adicionado botão para selecionar nova área;
+- Adicionado botão para cancelar a seleção;
+- Adicionado botão para restaurar o campo inteiro;
+- O recorte permanece ativo ao trocar de ferramenta;
+- O recorte permanece ativo ao adicionar ou editar objetos;
+- PNG passa a exportar somente a parte recortada;
+- PDF passa a utilizar somente a parte recortada;
+- Impressão e visualização passam a utilizar somente a parte recortada;
+- O campo inteiro continua sendo exportado quando não existe recorte ativo;
+- O recorte não altera o histórico do exercício;
+- O recorte não marca o exercício como não salvo;
+- Adicionadas informações percentuais da região recortada no painel lateral.
+
+Correções:
+- Corrigido o comportamento travado do mouse durante o recorte;
+- Removida a obrigatoriedade de manter a proporção original durante a seleção;
+- Corrigida a variável local duplicada no OnMouseMove;
+- Corrigido o cancelamento do modo de recorte;
+- Limpar o recorte ficou separado de cancelar a seleção;
+- Corrigida a perda do recorte ao selecionar outra ferramenta;
+- Corrigida a perda do recorte ao adicionar elementos;
+- Ajustada a área mínima permitida para o recorte;
+- Corrigida a sincronização entre ferramenta, painel lateral e campo;
+- Mantida a exportação automática conforme o recorte ativo.
+
+Resultado:
+- O usuário pode trabalhar em qualquer região específica do campo;
+- A parte escolhida é ampliada para facilitar a edição;
+- Novos elementos podem ser adicionados sem restaurar o campo inteiro;
+- PNG, PDF e impressão mostram exatamente a região selecionada;
+- O campo completo pode ser restaurado a qualquer momento;
+- O fluxo de edição permanece integrado ao zoom, grade, seleção e histórico.
+
+Próxima etapa sugerida:
+- Implementar nomes personalizados para objetos;
+- Adicionar seleção por tipo no gerenciador;
+- Criar filtros avançados;
+- Adicionar ordenação por nome, tipo e camada;
+- Melhorar ações em lote no gerenciador de objetos.
