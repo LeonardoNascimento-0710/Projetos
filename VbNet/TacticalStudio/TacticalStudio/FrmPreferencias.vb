@@ -4,11 +4,27 @@ Imports System.Drawing
 Public Class FrmPreferencias
     Inherits Form
 
+#Region "Variaveis"
+
     Private ReadOnly CmbTema As New ComboBox()
+
     Private ReadOnly CmbCorPrincipal As New ComboBox()
+
     Private ReadOnly ChkAutosave As New CheckBox()
+
     Private ReadOnly NudIntervalo As New NumericUpDown()
+
     Private ReadOnly CmbResolucao As New ComboBox()
+
+    Private ReadOnly ChkGradeVisivel As New CheckBox()
+
+    Private ReadOnly ChkEncaixeGrade As New CheckBox()
+
+    Private ReadOnly CmbEspacamentoGrade As New ComboBox()
+
+#End Region
+
+#Region "Propriedades"
 
     <Browsable(False)>
     <DesignerSerializationVisibility(
@@ -177,6 +193,78 @@ Public Class FrmPreferencias
 
     End Property
 
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public Property GradeVisivel As Boolean
+
+        Get
+            Return ChkGradeVisivel.Checked
+        End Get
+
+        Set(value As Boolean)
+
+            ChkGradeVisivel.Checked =
+            value
+
+        End Set
+
+    End Property
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public Property EncaixeGradeAtivo As Boolean
+
+        Get
+            Return ChkEncaixeGrade.Checked
+        End Get
+
+        Set(value As Boolean)
+
+            ChkEncaixeGrade.Checked =
+            value
+
+        End Set
+
+    End Property
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public Property EspacamentoGradePercentual As Integer
+
+        Get
+
+            If CmbEspacamentoGrade.SelectedItem Is Nothing Then
+                Return 5
+            End If
+
+            Return CInt(
+            CmbEspacamentoGrade.SelectedItem)
+
+        End Get
+
+        Set(value As Integer)
+
+            If CmbEspacamentoGrade.Items.Contains(
+            value) Then
+
+                CmbEspacamentoGrade.SelectedItem =
+                value
+
+            Else
+
+                CmbEspacamentoGrade.SelectedItem =
+                5
+
+            End If
+
+        End Set
+
+    End Property
+
+#End Region
     Public Sub New()
 
         Text =
@@ -193,9 +281,9 @@ Public Class FrmPreferencias
         ShowInTaskbar = False
 
         ClientSize =
-            New Size(
-                500,
-                520)
+    New Size(
+        500,
+        690)
 
         BackColor =
             Tema.Fundo
@@ -349,15 +437,103 @@ Public Class FrmPreferencias
         CmbResolucao.SelectedItem =
             2560
 
+        Dim tituloGrade As New Label With {
+    .Text = "GRADE E ALINHAMENTO",
+    .Left = 20,
+    .Top = 398,
+    .Width = 440,
+    .Height = 26,
+    .Font = New Font(
+        "Segoe UI",
+        9.5F,
+        FontStyle.Bold),
+    .ForeColor = Tema.Texto
+}
+
+        painel.Controls.Add(
+    tituloGrade)
+
+        ChkGradeVisivel.Text =
+    "Exibir grade no campo"
+
+        ChkGradeVisivel.Left =
+    20
+
+        ChkGradeVisivel.Top =
+    430
+
+        ChkGradeVisivel.Width =
+    440
+
+        ChkGradeVisivel.Height =
+    28
+
+        ChkGradeVisivel.ForeColor =
+    Tema.Texto
+
+        ChkGradeVisivel.BackColor =
+    Tema.Fundo
+
+        painel.Controls.Add(
+    ChkGradeVisivel)
+
+        ChkEncaixeGrade.Text =
+    "Ativar encaixe automático na grade"
+
+        ChkEncaixeGrade.Left =
+    20
+
+        ChkEncaixeGrade.Top =
+    466
+
+        ChkEncaixeGrade.Width =
+    440
+
+        ChkEncaixeGrade.Height =
+    28
+
+        ChkEncaixeGrade.ForeColor =
+    Tema.Texto
+
+        ChkEncaixeGrade.BackColor =
+    Tema.Fundo
+
+        painel.Controls.Add(
+    ChkEncaixeGrade)
+
+        AdicionarLabel(
+    painel,
+    "Espaçamento da grade",
+    20,
+    504)
+
+        ConfigurarCombo(
+    CmbEspacamentoGrade,
+    20,
+    528)
+
+        CmbEspacamentoGrade.Items.AddRange(
+    {
+        2,
+        5,
+        10
+    })
+
+        CmbEspacamentoGrade.SelectedItem =
+    5
+
+        painel.Controls.Add(
+    CmbEspacamentoGrade)
+
         painel.Controls.Add(
             CmbResolucao)
 
         Dim explicacao As New Label With {
-            .Text =
-                "O tema e a cor são aplicados imediatamente " &
-                "após confirmar.",
+.Text =
+    "O encaixe mantém jogadores, linhas e áreas " &
+    "alinhados aos pontos da grade.",
             .Left = 20,
-            .Top = 390,
+            .Top = 574,
             .Width = 440,
             .Height = 40,
             .ForeColor = Tema.TextoSecundario
@@ -369,7 +545,7 @@ Public Class FrmPreferencias
         Dim botaoCancelar As New Button With {
             .Text = "Cancelar",
             .Left = 250,
-            .Top = 458,
+            .Top = 628,
             .Width = 100,
             .Height = 38,
             .DialogResult = DialogResult.Cancel,
@@ -387,7 +563,7 @@ Public Class FrmPreferencias
         Dim botaoConfirmar As New Button With {
             .Text = "Confirmar",
             .Left = 360,
-            .Top = 458,
+            .Top = 628,
             .Width = 100,
             .Height = 38,
             .DialogResult = DialogResult.OK,

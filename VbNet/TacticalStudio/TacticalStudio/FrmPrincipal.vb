@@ -206,6 +206,17 @@ Public Class FrmPrincipal
                     29).ToArgb()
 
         End If
+
+        Dim espacamentosPermitidos() As Integer = {2, 5, 10}
+
+        If Array.IndexOf(
+            espacamentosPermitidos,
+            _preferencias.EspacamentoGradePercentual) < 0 Then
+
+            _preferencias.EspacamentoGradePercentual =
+                5
+
+        End If
     End Sub
 
     Private Sub SalvarPreferencias()
@@ -624,6 +635,8 @@ Public Class FrmPrincipal
         PnlCentral.Controls.Clear()
         PnlCentral.Controls.Add(CampoCanvas)
 
+        AplicarPreferenciasGrade()
+
     End Sub
 
     Private Sub CampoCanvas_VisualizacaoAlterada(
@@ -640,6 +653,140 @@ Public Class FrmPrincipal
 
         PnlInferior.Height = 50
         PnlInferior.Padding = New Padding(0)
+
+        Dim painelGrade As New FlowLayoutPanel With {
+    .Dock = DockStyle.Left,
+    .Width = 390,
+    .FlowDirection =
+        FlowDirection.LeftToRight,
+    .WrapContents = False,
+    .AutoScroll = False,
+    .Padding = New Padding(
+        5,
+        6,
+        5,
+        4),
+    .Margin = New Padding(0),
+    .BackColor = Tema.Painel
+}
+
+        Dim botaoGrade As Button =
+    CriarBotaoZoom(
+        "Grade",
+        80)
+
+        AtualizarBotaoAlternancia(
+    botaoGrade,
+    CampoCanvas.GradeVisivel)
+
+        AddHandler botaoGrade.Click,
+    Sub(sender, e)
+
+        AlternarGrade()
+
+        AtualizarBotaoAlternancia(
+            botaoGrade,
+            CampoCanvas.GradeVisivel)
+
+    End Sub
+
+        painelGrade.Controls.Add(
+    botaoGrade)
+
+        Dim botaoEncaixe As Button =
+    CriarBotaoZoom(
+        "Encaixe",
+        90)
+
+        AtualizarBotaoAlternancia(
+    botaoEncaixe,
+    CampoCanvas.EncaixeGradeAtivo)
+
+        AddHandler botaoEncaixe.Click,
+    Sub(sender, e)
+
+        AlternarEncaixeGrade()
+
+        AtualizarBotaoAlternancia(
+            botaoEncaixe,
+            CampoCanvas.EncaixeGradeAtivo)
+
+    End Sub
+
+        painelGrade.Controls.Add(
+    botaoEncaixe)
+
+        Dim labelPasso As New Label With {
+    .Text = "Passo:",
+    .Width = 50,
+    .Height = 32,
+    .Margin = New Padding(
+        6,
+        0,
+        2,
+        0),
+    .ForeColor = Tema.Texto,
+    .BackColor = Tema.Painel,
+    .TextAlign =
+        ContentAlignment.MiddleCenter
+}
+
+        painelGrade.Controls.Add(
+    labelPasso)
+
+        Dim comboPasso As New ComboBox With {
+    .Width = 70,
+    .Height = 32,
+    .Margin = New Padding(
+        2,
+        1,
+        2,
+        0),
+    .DropDownStyle =
+        ComboBoxStyle.DropDownList,
+    .BackColor = Tema.CampoEntrada,
+    .ForeColor = Tema.TextoCampo,
+    .FlatStyle = FlatStyle.Flat
+}
+
+        comboPasso.Items.AddRange(
+    {
+        2,
+        5,
+        10
+    })
+
+        comboPasso.SelectedItem =
+    CampoCanvas.EspacamentoGradePercentual
+
+        AddHandler comboPasso.SelectedIndexChanged,
+    Sub(sender, e)
+
+        If comboPasso.SelectedItem Is Nothing Then
+            Exit Sub
+        End If
+
+        Dim passo As Integer =
+            CInt(
+                comboPasso.SelectedItem)
+
+        CampoCanvas.EspacamentoGradePercentual =
+            passo
+
+        _preferencias.EspacamentoGradePercentual =
+            passo
+
+        SalvarPreferencias()
+
+        CampoCanvas.Focus()
+
+    End Sub
+
+        painelGrade.Controls.Add(
+    comboPasso)
+
+        PnlInferior.Controls.Add(
+    painelGrade)
 
         Dim painelZoom As New FlowLayoutPanel With {
     .Dock = DockStyle.Right,
@@ -2084,6 +2231,26 @@ Public Class FrmPrincipal
 
         End If
 
+        If modificadores = (Keys.Control Or Keys.Shift) AndAlso tecla = Keys.G Then
+
+            AlternarEncaixeGrade()
+
+            CriarBarraZoom()
+
+            Return True
+
+        End If
+
+        If modificadores = Keys.Control AndAlso tecla = Keys.G Then
+
+            AlternarGrade()
+
+            CriarBarraZoom()
+
+            Return True
+
+        End If
+
         Return MyBase.ProcessCmdKey(msg, keyData)
 
     End Function
@@ -2154,20 +2321,21 @@ Public Class FrmPrincipal
 
         Using formulario As New FrmPreferencias()
 
-            formulario.ModoTema =
-            _preferencias.ModoTema
+            formulario.ModoTema = _preferencias.ModoTema
 
-            formulario.CorPrincipalArgb =
-            _preferencias.CorPrincipalArgb
+            formulario.CorPrincipalArgb = _preferencias.CorPrincipalArgb
 
-            formulario.AutosaveAtivo =
-            _preferencias.AutosaveAtivo
+            formulario.AutosaveAtivo = _preferencias.AutosaveAtivo
 
-            formulario.IntervaloAutosaveSegundos =
-            _preferencias.IntervaloAutosaveSegundos
+            formulario.IntervaloAutosaveSegundos = _preferencias.IntervaloAutosaveSegundos
 
-            formulario.ResolucaoExportacao =
-            _preferencias.ResolucaoExportacao
+            formulario.ResolucaoExportacao = _preferencias.ResolucaoExportacao
+
+            formulario.GradeVisivel = _preferencias.GradeVisivel
+
+            formulario.EncaixeGradeAtivo = _preferencias.EncaixeGradeAtivo
+
+            formulario.EspacamentoGradePercentual = _preferencias.EspacamentoGradePercentual
 
             If formulario.ShowDialog(Me) <>
            DialogResult.OK Then
@@ -2178,30 +2346,23 @@ Public Class FrmPrincipal
 
             End If
 
-            'Primeiro copia os valores da janela.
-            _preferencias.ModoTema =
-            formulario.ModoTema
+            _preferencias.ModoTema = formulario.ModoTema
 
-            _preferencias.CorPrincipalArgb =
-            formulario.CorPrincipalArgb
+            _preferencias.CorPrincipalArgb = formulario.CorPrincipalArgb
 
-            _preferencias.AutosaveAtivo =
-            formulario.AutosaveAtivo
+            _preferencias.AutosaveAtivo = formulario.AutosaveAtivo
 
-            _preferencias.IntervaloAutosaveSegundos =
-            formulario.IntervaloAutosaveSegundos
+            _preferencias.IntervaloAutosaveSegundos = formulario.IntervaloAutosaveSegundos
 
-            _preferencias.ResolucaoExportacao =
-            formulario.ResolucaoExportacao
+            _preferencias.ResolucaoExportacao = formulario.ResolucaoExportacao
 
             NormalizarPreferencias()
 
-            'Depois salva no arquivo.
             SalvarPreferencias()
 
-            'Depois aplica na interface.
-            Tema.AplicarPreferencias(
-            _preferencias)
+            Tema.AplicarPreferencias(_preferencias)
+
+            AplicarPreferenciasGrade()
 
             ReaplicarTemaAplicacao()
 
@@ -2216,6 +2377,56 @@ Public Class FrmPrincipal
             CampoCanvas.Focus()
 
         End Using
+
+    End Sub
+
+    Private Sub AtualizarBotaoAlternancia(botao As Button, ativo As Boolean)
+
+        If ativo Then
+
+            botao.BackColor = Tema.CorPrimaria
+
+            botao.ForeColor = Color.White
+
+            botao.FlatAppearance.BorderColor = Color.White
+
+        Else
+
+            botao.BackColor = Tema.Painel
+
+            botao.ForeColor = Tema.Texto
+
+            botao.FlatAppearance.BorderColor = Tema.Borda
+
+        End If
+
+    End Sub
+
+    Private Sub AlternarGrade()
+
+        CampoCanvas.GradeVisivel =
+        Not CampoCanvas.GradeVisivel
+
+        _preferencias.GradeVisivel =
+        CampoCanvas.GradeVisivel
+
+        SalvarPreferencias()
+
+        CampoCanvas.Focus()
+
+    End Sub
+
+    Private Sub AlternarEncaixeGrade()
+
+        CampoCanvas.EncaixeGradeAtivo =
+        Not CampoCanvas.EncaixeGradeAtivo
+
+        _preferencias.EncaixeGradeAtivo =
+        CampoCanvas.EncaixeGradeAtivo
+
+        SalvarPreferencias()
+
+        CampoCanvas.Focus()
 
     End Sub
 
@@ -2259,6 +2470,23 @@ Public Class FrmPrincipal
         True)
 
         Refresh()
+
+    End Sub
+
+    Private Sub AplicarPreferenciasGrade()
+
+        If CampoCanvas Is Nothing Then
+            Exit Sub
+        End If
+
+        CampoCanvas.GradeVisivel =
+        _preferencias.GradeVisivel
+
+        CampoCanvas.EncaixeGradeAtivo =
+        _preferencias.EncaixeGradeAtivo
+
+        CampoCanvas.EspacamentoGradePercentual =
+        _preferencias.EspacamentoGradePercentual
 
     End Sub
 

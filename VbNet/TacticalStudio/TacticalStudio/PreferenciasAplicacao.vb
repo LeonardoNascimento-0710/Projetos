@@ -9,22 +9,20 @@ End Enum
 
 Public Class PreferenciasAplicacao
 
-    Public Property AutosaveAtivo As Boolean =
-        True
+    Public Property AutosaveAtivo As Boolean = True
 
-    Public Property IntervaloAutosaveSegundos As Integer =
-        60
+    Public Property IntervaloAutosaveSegundos As Integer = 60
 
-    Public Property ResolucaoExportacao As Integer =
-        2560
+    Public Property ResolucaoExportacao As Integer = 2560
 
-    Public Property ModoTema As ModoTemaAplicacao =
-        ModoTemaAplicacao.Escuro
+    Public Property ModoTema As ModoTemaAplicacao = ModoTemaAplicacao.Escuro
 
-    Public Property CorPrincipalArgb As Integer =
-        Color.FromArgb(
-            134,
-            29,
-            29).ToArgb()
+    Public Property CorPrincipalArgb As Integer = Color.FromArgb(134, 29, 29).ToArgb()
+
+    Public Property GradeVisivel As Boolean = False
+
+    Public Property EncaixeGradeAtivo As Boolean = False
+
+    Public Property EspacamentoGradePercentual As Integer = 5
 
 End Class

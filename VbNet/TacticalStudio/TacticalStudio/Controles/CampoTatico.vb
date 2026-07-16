@@ -14,8 +14,11 @@ Public Class CampoTatico
     Private ReadOnly _objetos As New List(Of ObjetoCampo)
 
     Private _objetoSelecionado As ObjetoCampo
+
     Private _arrastando As Boolean
+
     Private _offsetMouse As PointF
+
     Private ReadOnly _historico As New List(Of String)()
 
     Private _indiceHistorico As Integer = -1
@@ -23,18 +26,6 @@ Public Class CampoTatico
     Private _restaurandoHistorico As Boolean
 
     Private Const LimiteHistorico As Integer = 100
-    Private Enum ModoManipulacaoCampo
-
-        Nenhum
-        MoverObjeto
-        LinhaInicio
-        LinhaFim
-        AreaSuperiorEsquerda
-        AreaSuperiorDireita
-        AreaInferiorEsquerda
-        AreaInferiorDireita
-
-    End Enum
 
     Private _modoManipulacao As ModoManipulacaoCampo = ModoManipulacaoCampo.Nenhum
 
@@ -96,7 +87,26 @@ Public Class CampoTatico
 
     Private Const AlturaManequim As Single = 50.0F
 
+    Private _gradeVisivel As Boolean = False
+
+    Private _encaixeGradeAtivo As Boolean = False
+
+    Private _espacamentoGradePercentual As Integer = 5
+
 #End Region
+
+    Private Enum ModoManipulacaoCampo
+
+        Nenhum
+        MoverObjeto
+        LinhaInicio
+        LinhaFim
+        AreaSuperiorEsquerda
+        AreaSuperiorDireita
+        AreaInferiorEsquerda
+        AreaInferiorDireita
+
+    End Enum
 
 
     Public Sub New()
@@ -217,6 +227,93 @@ Public Class CampoTatico
                 _zoomVisual * 100.0F))
 
         End Get
+
+    End Property
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public Property GradeVisivel As Boolean
+
+        Get
+            Return _gradeVisivel
+        End Get
+
+        Set(value As Boolean)
+
+            If _gradeVisivel = value Then
+                Exit Property
+            End If
+
+            _gradeVisivel =
+            value
+
+            Invalidate()
+
+        End Set
+
+    End Property
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public Property EncaixeGradeAtivo As Boolean
+
+        Get
+            Return _encaixeGradeAtivo
+        End Get
+
+        Set(value As Boolean)
+
+            If _encaixeGradeAtivo = value Then
+                Exit Property
+            End If
+
+            _encaixeGradeAtivo =
+            value
+
+            Invalidate()
+
+        End Set
+
+    End Property
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public Property EspacamentoGradePercentual As Integer
+
+        Get
+            Return _espacamentoGradePercentual
+        End Get
+
+        Set(value As Integer)
+
+            Dim valorSeguro As Integer =
+            5
+
+            If value = 2 OrElse
+           value = 5 OrElse
+           value = 10 Then
+
+                valorSeguro =
+                value
+
+            End If
+
+            If _espacamentoGradePercentual =
+           valorSeguro Then
+
+                Exit Property
+
+            End If
+
+            _espacamentoGradePercentual =
+            valorSeguro
+
+            Invalidate()
+
+        End Set
 
     End Property
 
@@ -503,16 +600,11 @@ Public Class CampoTatico
 
     End Function
 
-    Private Sub ExecutarFerramentaAtual(
-    localMouse As Point,
-    campo As RectangleF)
+    Private Sub ExecutarFerramentaAtual(localMouse As Point, campo As RectangleF)
 
-        Dim percentual As Posicao =
-        ConverterTelaParaPercentual(
-            New PointF(
-                localMouse.X,
-                localMouse.Y),
-            campo)
+        Dim percentual As Posicao = ConverterTelaParaPercentual(New PointF(localMouse.X, localMouse.Y), campo)
+
+        percentual = AjustarPosicaoNaGrade(percentual)
 
         Dim objetoCriado As ObjetoCampo = Nothing
 
@@ -1407,12 +1499,14 @@ Public Class CampoTatico
         End If
 
         DesenharGramado(g, campo)
+
+        DesenharGrade(g, campo)
+
         DesenharMarcacoes(g, campo)
+
         DesenharObjetos(g, campo)
 
-        DesenharPreVisualizacao(
-    g,
-    campo)
+        DesenharPreVisualizacao(g, campo)
 
     End Sub
 
@@ -1602,6 +1696,15 @@ Public Class CampoTatico
             _pontoPreviewTela.Y,
             campo.Top,
             campo.Bottom))
+
+        If _encaixeGradeAtivo Then
+
+            fim =
+        AjustarPontoTelaNaGrade(
+            fim,
+            campo)
+
+        End If
 
         Using caneta As New Pen(
         Color.Gold,
@@ -3180,6 +3283,111 @@ Public Class CampoTatico
         End Select
 
     End Function
+
+    Private Sub DesenharGrade(
+    g As Graphics,
+    campo As RectangleF)
+
+        If Not _gradeVisivel Then
+            Exit Sub
+        End If
+
+        Dim passo As Integer =
+        _espacamentoGradePercentual
+
+        If passo <= 0 Then
+            Exit Sub
+        End If
+
+        Dim espessuraSecundaria As Single =
+        0.8F /
+        Math.Max(
+            _zoomVisual,
+            0.5F)
+
+        Dim espessuraPrincipal As Single =
+        1.3F /
+        Math.Max(
+            _zoomVisual,
+            0.5F)
+
+        Using canetaSecundaria As New Pen(
+        Color.FromArgb(
+            65,
+            255,
+            255,
+            255),
+        espessuraSecundaria)
+
+            canetaSecundaria.DashStyle =
+            DashStyle.Dot
+
+            Using canetaPrincipal As New Pen(
+            Color.FromArgb(
+                115,
+                255,
+                255,
+                255),
+            espessuraPrincipal)
+
+                canetaPrincipal.DashStyle =
+                DashStyle.Dash
+
+                For valor As Integer =
+                passo To 99 Step passo
+
+                    Dim percentual As Single =
+                        valor / 100.0F
+
+                    Dim x As Single =
+                    campo.Left +
+                    campo.Width *
+                    percentual
+
+                    Dim y As Single =
+                    campo.Top +
+                    campo.Height *
+                    percentual
+
+                    Dim linhaPrincipal As Boolean =
+                    valor Mod (
+                        passo * 5) = 0
+
+                    Dim canetaAtual As Pen
+
+                    If linhaPrincipal Then
+
+                        canetaAtual =
+                        canetaPrincipal
+
+                    Else
+
+                        canetaAtual =
+                        canetaSecundaria
+
+                    End If
+
+                    g.DrawLine(
+                    canetaAtual,
+                    x,
+                    campo.Top,
+                    x,
+                    campo.Bottom)
+
+                    g.DrawLine(
+                    canetaAtual,
+                    campo.Left,
+                    y,
+                    campo.Right,
+                    y)
+
+                Next
+
+            End Using
+
+        End Using
+
+    End Sub
 
     Private Sub DesenharTextoTatico(
     g As Graphics,
@@ -4766,9 +4974,7 @@ Public Class CampoTatico
 
     End Sub
 
-    Private Sub MoverObjetoSelecionado(
-    localMouse As Point,
-    campo As RectangleF)
+    Private Sub MoverObjetoSelecionado(localMouse As Point, campo As RectangleF)
 
         If _objetoSelecionado Is Nothing Then
             Exit Sub
@@ -4783,12 +4989,7 @@ Public Class CampoTatico
 
         If TypeOf _objetoSelecionado Is LinhaTatica Then
 
-            MoverLinhaSelecionada(
-        DirectCast(
-            _objetoSelecionado,
-            LinhaTatica),
-        localMouse,
-        campo)
+            MoverLinhaSelecionada(DirectCast(_objetoSelecionado, LinhaTatica), localMouse, campo)
 
             Exit Sub
 
@@ -4796,26 +4997,17 @@ Public Class CampoTatico
 
         If TypeOf _objetoSelecionado Is AreaTatica Then
 
-            MoverAreaSelecionada(
-        DirectCast(
-            _objetoSelecionado,
-            AreaTatica),
-        localMouse,
-        campo)
+            MoverAreaSelecionada(DirectCast(_objetoSelecionado, AreaTatica), localMouse, campo)
 
             Exit Sub
 
         End If
 
-        Dim metadeTamanho As SizeF =
-        ObterMetadeTamanhoVisual(
-            _objetoSelecionado)
+        Dim metadeTamanho As SizeF = ObterMetadeTamanhoVisual(_objetoSelecionado)
 
-        Dim xTela As Single =
-        localMouse.X - _offsetMouse.X
+        Dim xTela As Single = localMouse.X - _offsetMouse.X
 
-        Dim yTela As Single =
-        localMouse.Y - _offsetMouse.Y
+        Dim yTela As Single = localMouse.Y - _offsetMouse.Y
 
         xTela = LimitarSingle(
         xTela,
@@ -4835,18 +5027,48 @@ Public Class CampoTatico
         ((yTela - campo.Top) /
         campo.Height) * 100.0
 
+        Dim novaPosicao As New Posicao(
+            xPercentual,
+            yPercentual)
+
+        novaPosicao =
+            AjustarPosicaoNaGrade(
+                novaPosicao)
+
+        Dim pontoAjustado As PointF =
+            ConverterPercentualParaTela(
+                novaPosicao,
+                campo)
+
+        pontoAjustado.X =
+            LimitarSingle(
+                pontoAjustado.X,
+                campo.Left +
+                metadeTamanho.Width,
+                campo.Right -
+                metadeTamanho.Width)
+
+        pontoAjustado.Y =
+            LimitarSingle(
+                pontoAjustado.Y,
+                campo.Top +
+                metadeTamanho.Height,
+                campo.Bottom -
+                metadeTamanho.Height)
+
+        novaPosicao =
+            ConverterTelaParaPercentual(
+                pontoAjustado,
+                campo)
+
         _objetoSelecionado.Posicao.X =
-        LimitarPercentual(xPercentual)
+            novaPosicao.X
 
         _objetoSelecionado.Posicao.Y =
-        LimitarPercentual(yPercentual)
-
+            novaPosicao.Y
     End Sub
 
-    Private Sub MoverLinhaSelecionada(
-    linha As LinhaTatica,
-    localMouse As Point,
-    campo As RectangleF)
+    Private Sub MoverLinhaSelecionada(linha As LinhaTatica, localMouse As Point, campo As RectangleF)
 
         Dim deltaX As Single =
         localMouse.X -
@@ -4905,6 +5127,8 @@ Public Class CampoTatico
         ConverterTelaParaPercentual(
             novoFim,
             campo)
+
+        AplicarEncaixeMovimentoDoisPontos(percentualInicio, percentualFim)
 
         linha.Posicao.X =
         percentualInicio.X
@@ -5164,10 +5388,7 @@ Public Class CampoTatico
 
     End Function
 
-    Private Sub MoverAreaSelecionada(
-    area As AreaTatica,
-    localMouse As Point,
-    campo As RectangleF)
+    Private Sub MoverAreaSelecionada(area As AreaTatica, localMouse As Point, campo As RectangleF)
 
         Dim pontoInicial As PointF =
         ConverterPercentualParaTela(
@@ -5233,15 +5454,11 @@ Public Class CampoTatico
         pontoFinal.X + deltaX,
         pontoFinal.Y + deltaY)
 
-        Dim percentualInicial As Posicao =
-        ConverterTelaParaPercentual(
-            novoInicial,
-            campo)
+        Dim percentualInicial As Posicao = ConverterTelaParaPercentual(novoInicial, campo)
 
-        Dim percentualFinal As Posicao =
-        ConverterTelaParaPercentual(
-            novoFinal,
-            campo)
+        Dim percentualFinal As Posicao = ConverterTelaParaPercentual(novoFinal, campo)
+
+        AplicarEncaixeMovimentoDoisPontos(percentualInicial, percentualFinal)
 
         area.Posicao.X =
         percentualInicial.X
@@ -5465,6 +5682,11 @@ Public Class CampoTatico
             localMouse.Y,
             campo.Top,
             campo.Bottom))
+
+        pontoTela =
+    AjustarPontoTelaNaGrade(
+        pontoTela,
+        campo)
 
         If TypeOf _objetoSelecionado Is LinhaTatica Then
 
@@ -6580,6 +6802,143 @@ Public Class CampoTatico
                 _deslocamentoVisual.Y,
                 -limiteNegativoY,
                 limitePositivoY)
+
+    End Sub
+
+#End Region
+
+#Region "Grade e encaixe"
+
+    Private Function AjustarValorNaGrade(
+    valor As Double) As Double
+
+        valor =
+            LimitarPercentual(
+                valor)
+
+        If Not _encaixeGradeAtivo Then
+            Return valor
+        End If
+
+        Dim passo As Double =
+            _espacamentoGradePercentual
+
+        Dim valorAjustado As Double =
+            Math.Round(
+                valor / passo,
+                MidpointRounding.AwayFromZero) *
+            passo
+
+        Return LimitarPercentual(
+            valorAjustado)
+
+    End Function
+
+    Private Function AjustarPosicaoNaGrade(
+        posicao As Posicao) As Posicao
+
+        Return New Posicao(
+            AjustarValorNaGrade(
+                posicao.X),
+            AjustarValorNaGrade(
+                posicao.Y))
+
+    End Function
+
+    Private Function AjustarPontoTelaNaGrade(
+        pontoTela As PointF,
+        campo As RectangleF) As PointF
+
+        If Not _encaixeGradeAtivo Then
+
+            Return pontoTela
+
+        End If
+
+        Dim percentual As Posicao =
+            ConverterTelaParaPercentual(
+                pontoTela,
+                campo)
+
+        percentual =
+            AjustarPosicaoNaGrade(
+                percentual)
+
+        Return ConverterPercentualParaTela(
+            percentual,
+            campo)
+
+    End Function
+
+    Private Sub AplicarEncaixeMovimentoDoisPontos(
+    pontoInicial As Posicao,
+    pontoFinal As Posicao)
+
+        If Not _encaixeGradeAtivo Then
+            Exit Sub
+        End If
+
+        Dim destinoX As Double =
+            AjustarValorNaGrade(
+                pontoInicial.X)
+
+        Dim destinoY As Double =
+            AjustarValorNaGrade(
+                pontoInicial.Y)
+
+        Dim deltaX As Double =
+            destinoX -
+            pontoInicial.X
+
+        Dim deltaY As Double =
+            destinoY -
+            pontoInicial.Y
+
+        Dim menorX As Double =
+            Math.Min(
+                pontoInicial.X,
+                pontoFinal.X)
+
+        Dim maiorX As Double =
+            Math.Max(
+                pontoInicial.X,
+                pontoFinal.X)
+
+        Dim menorY As Double =
+            Math.Min(
+                pontoInicial.Y,
+                pontoFinal.Y)
+
+        Dim maiorY As Double =
+            Math.Max(
+                pontoInicial.Y,
+                pontoFinal.Y)
+
+        deltaX =
+            Math.Max(
+                -menorX,
+                Math.Min(
+                    100.0 - maiorX,
+                    deltaX))
+
+        deltaY =
+            Math.Max(
+                -menorY,
+                Math.Min(
+                    100.0 - maiorY,
+                    deltaY))
+
+        pontoInicial.X +=
+            deltaX
+
+        pontoInicial.Y +=
+            deltaY
+
+        pontoFinal.X +=
+            deltaX
+
+        pontoFinal.Y +=
+            deltaY
 
     End Sub
 

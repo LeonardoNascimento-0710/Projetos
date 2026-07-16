@@ -1194,3 +1194,49 @@ Próxima etapa sugerida:
 - Criar guias visuais;
 - Adicionar distribuição horizontal e vertical;
 - Melhorar a organização dos elementos do campo.
+
+======================================================================
+33. ETAPA 25 - GRADE E ENCAIXE AUTOMÁTICO
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.25.0
+
+Arquivos alterados:
+- PreferenciasAplicacao.vb
+- FrmPreferencias.vb
+- Controles\CampoTatico.vb
+- FrmPrincipal.vb
+
+Alterações realizadas:
+- Implementada grade visual opcional;
+- Adicionados espaçamentos de 2%, 5% e 10%;
+- Implementado encaixe automático na grade;
+- O encaixe passou a funcionar na criação de objetos;
+- O encaixe passou a funcionar na movimentação;
+- O encaixe passou a funcionar no redimensionamento;
+- Linhas mantêm comprimento e inclinação ao serem movidas;
+- Áreas mantêm largura e altura ao serem movidas;
+- Pré-visualizações passam a respeitar o encaixe;
+- Adicionados controles de grade na barra inferior;
+- Adicionados botões Grade e Encaixe;
+- Adicionado seletor de passo da grade;
+- Adicionados atalhos Ctrl+G e Ctrl+Shift+G;
+- Grade, encaixe e espaçamento são salvos nas preferências;
+- As preferências são restauradas ao iniciar;
+- A grade não aparece nas exportações;
+- Alterações da grade não marcam o exercício como não salvo.
+
+Resultado:
+- Objetos podem ser organizados com maior precisão;
+- Jogadores, linhas e áreas ficam alinhados aos pontos da grade;
+- A criação e o redimensionamento ficaram mais previsíveis;
+- O encaixe funciona junto com o zoom;
+- As exportações continuam exibindo somente o conteúdo final do exercício.
+
+Próxima etapa sugerida:
+- Implementar seleção múltipla;
+- Permitir mover vários objetos juntos;
+- Adicionar alinhamento horizontal e vertical;
+- Adicionar distribuição uniforme;
+- Criar agrupamento e desagrupamento de elementos.
