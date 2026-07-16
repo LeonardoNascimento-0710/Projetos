@@ -102,6 +102,22 @@ Public Class CampoTatico
 
     Private _movendoGrupo As Boolean
 
+    Private _recorteAtivo As Boolean = False
+
+    Private _retanguloRecortePercentual As RectangleF = RectangleF.Empty
+
+    Private _modoSelecaoRecorte As Boolean = False
+
+    Private _desenhandoRecorte As Boolean = False
+
+    Private _pontoInicialRecorte As PointF
+
+    Private _pontoAtualRecorte As PointF
+
+    Private _recorteAnteriorAtivo As Boolean = False
+
+    Private _retanguloRecorteAnterior As RectangleF = RectangleF.Empty
+
 #End Region
 
     Private Enum ModoManipulacaoCampo
@@ -121,10 +137,8 @@ Public Class CampoTatico
 
         Public Property X As Double
         Public Property Y As Double
-
         Public Property XFinal As Double
         Public Property YFinal As Double
-
         Public Property PossuiPontoFinal As Boolean
 
     End Class
@@ -162,6 +176,8 @@ Public Class CampoTatico
     Public Event HistoricoAlterado(podeDesfazer As Boolean, podeRefazer As Boolean)
 
     Public Event VisualizacaoAlterada(zoomPercentual As Integer)
+
+    Public Event RecorteCampoAlterado()
 
     Public Event ObjetosAlterados()
 
@@ -288,9 +304,22 @@ Public Class CampoTatico
                 Exit Property
             End If
 
+            Dim manterRecorteAtivo As Boolean =
+                _recorteAtivo
+
+            Dim manterRetanguloRecorte As RectangleF =
+                _retanguloRecortePercentual
+
             _ferramentaAtual = value
 
             CancelarCriacao()
+
+            'Trocar de ferramenta nunca remove o recorte concluído.
+            _recorteAtivo =
+                manterRecorteAtivo
+
+            _retanguloRecortePercentual =
+                manterRetanguloRecorte
 
             If value = FerramentaCampo.Selecionar Then
                 Cursor = Cursors.Default
@@ -405,6 +434,39 @@ Public Class CampoTatico
             Invalidate()
 
         End Set
+
+    End Property
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public ReadOnly Property RecorteAtivo As Boolean
+
+        Get
+            Return _recorteAtivo
+        End Get
+
+    End Property
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public ReadOnly Property RetanguloRecortePercentual As RectangleF
+
+        Get
+            Return _retanguloRecortePercentual
+        End Get
+
+    End Property
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public ReadOnly Property ModoSelecaoRecorteAtivo As Boolean
+
+        Get
+            Return _modoSelecaoRecorte
+        End Get
 
     End Property
 
@@ -878,6 +940,12 @@ Public Class CampoTatico
     Private Sub SelecionarObjetoCriado(
         objeto As ObjetoCampo)
 
+        Dim manterRecorteAtivo As Boolean =
+            _recorteAtivo
+
+        Dim manterRetanguloRecorte As RectangleF =
+            _retanguloRecortePercentual
+
         SelecionarSomente(objeto)
 
         RaiseEvent ObjetoCriado(objeto)
@@ -885,6 +953,13 @@ Public Class CampoTatico
         NotificarSelecaoAlterada()
 
         RegistrarEstadoHistorico()
+
+        'Criar ou selecionar objetos não altera o recorte atual.
+        _recorteAtivo =
+            manterRecorteAtivo
+
+        _retanguloRecortePercentual =
+            manterRetanguloRecorte
 
         Invalidate()
 
@@ -953,143 +1028,178 @@ Public Class CampoTatico
         End If
 
         Dim campoAtual As RectangleF =
-        ObterRetanguloCampo()
+            ObterRetanguloCampo()
 
         If campoAtual.Width <= 1.0F OrElse
-       campoAtual.Height <= 1.0F Then
+           campoAtual.Height <= 1.0F Then
 
             Throw New InvalidOperationException(
-            "O campo não possui tamanho válido para exportação.")
+                "O campo não possui tamanho válido para exportação.")
+
+        End If
+
+        Dim origemExportacao As RectangleF =
+            ObterRetanguloOrigemRecorte(
+                campoAtual)
+
+        If origemExportacao.Width <= 1.0F OrElse
+           origemExportacao.Height <= 1.0F Then
+
+            origemExportacao =
+                campoAtual
 
         End If
 
         Dim margemImagem As Integer =
-        CInt(
-            Math.Max(
-                24.0,
-                larguraImagem * 0.0125))
+            CInt(
+                Math.Max(
+                    24.0,
+                    larguraImagem * 0.0125))
 
         Dim larguraUtil As Integer =
-        larguraImagem -
-        margemImagem * 2
+            larguraImagem -
+            margemImagem * 2
 
         Dim escalaCampo As Single =
-        CSng(
-            larguraUtil /
-            campoAtual.Width)
+            CSng(
+                larguraUtil /
+                origemExportacao.Width)
 
         Dim alturaCampo As Integer =
-        CInt(
-            Math.Ceiling(
-                campoAtual.Height *
-                escalaCampo))
+            CInt(
+                Math.Ceiling(
+                    origemExportacao.Height *
+                    escalaCampo))
 
         Dim alturaCabecalho As Integer = 0
 
         If incluirCabecalho Then
 
             alturaCabecalho =
-            CalcularAlturaCabecalho(
-                larguraImagem,
-                nomeExercicio,
-                categoria,
-                duracaoMinutos,
-                descricao,
-                observacoes)
-
-        End If
-
-        Dim alturaImagem As Integer =
-        alturaCabecalho +
-        alturaCampo +
-        margemImagem * 2
-
-        Dim imagem As New Bitmap(
-        larguraImagem,
-        alturaImagem,
-        System.Drawing.Imaging.PixelFormat.Format32bppArgb)
-
-        Dim objetoSelecionadoAnterior As ObjetoCampo =
-        _objetoSelecionado
-
-        Try
-
-            _objetoSelecionado =
-            Nothing
-
-            Using g As Graphics =
-            Graphics.FromImage(imagem)
-
-                g.Clear(
-                Color.FromArgb(
-                    28,
-                    28,
-                    28))
-
-                g.SmoothingMode =
-                SmoothingMode.AntiAlias
-
-                g.PixelOffsetMode =
-                PixelOffsetMode.HighQuality
-
-                g.CompositingQuality =
-                CompositingQuality.HighQuality
-
-                g.InterpolationMode =
-                InterpolationMode.HighQualityBicubic
-
-                g.TextRenderingHint =
-                System.Drawing.Text.TextRenderingHint.AntiAliasGridFit
-
-                If incluirCabecalho Then
-
-                    DesenharCabecalhoExportacao(
-                    g,
+                CalcularAlturaCabecalho(
                     larguraImagem,
-                    alturaCabecalho,
                     nomeExercicio,
                     categoria,
                     duracaoMinutos,
                     descricao,
                     observacoes)
 
+        End If
+
+        Dim alturaImagem As Integer =
+            alturaCabecalho +
+            alturaCampo +
+            margemImagem * 2
+
+        Dim imagem As New Bitmap(
+            larguraImagem,
+            alturaImagem,
+            System.Drawing.Imaging.PixelFormat.Format32bppArgb)
+
+        Dim objetoSelecionadoAnterior As ObjetoCampo =
+            _objetoSelecionado
+
+        Dim estadosSelecao As New Dictionary(
+            Of ObjetoCampo,
+            Boolean)()
+
+        For Each objeto As ObjetoCampo In _objetos
+
+            estadosSelecao(objeto) =
+                objeto.Selecionado
+
+            objeto.Selecionado =
+                False
+
+        Next
+
+        Try
+
+            _objetoSelecionado =
+                Nothing
+
+            Using g As Graphics =
+                Graphics.FromImage(
+                    imagem)
+
+                g.Clear(
+                    Color.FromArgb(
+                        28,
+                        28,
+                        28))
+
+                g.SmoothingMode =
+                    SmoothingMode.AntiAlias
+
+                g.PixelOffsetMode =
+                    PixelOffsetMode.HighQuality
+
+                g.CompositingQuality =
+                    CompositingQuality.HighQuality
+
+                g.InterpolationMode =
+                    InterpolationMode.HighQualityBicubic
+
+                g.TextRenderingHint =
+                    System.Drawing.Text.TextRenderingHint.AntiAliasGridFit
+
+                If incluirCabecalho Then
+
+                    DesenharCabecalhoExportacao(
+                        g,
+                        larguraImagem,
+                        alturaCabecalho,
+                        nomeExercicio,
+                        categoria,
+                        duracaoMinutos,
+                        descricao,
+                        observacoes)
+
                 End If
 
-                Dim deslocamentoX As Single =
-                margemImagem -
-                campoAtual.Left *
-                escalaCampo
+                Dim destinoCampo As New RectangleF(
+                    margemImagem,
+                    alturaCabecalho +
+                    margemImagem,
+                    larguraUtil,
+                    alturaCampo)
 
-                Dim deslocamentoY As Single =
-                alturaCabecalho +
-                margemImagem -
-                campoAtual.Top *
-                escalaCampo
+                Dim estadoGrafico As GraphicsState =
+                    g.Save()
 
-                Using matriz As New Matrix(
-                escalaCampo,
-                0.0F,
-                0.0F,
-                escalaCampo,
-                deslocamentoX,
-                deslocamentoY)
+                Try
 
-                    g.Transform =
-                    matriz
+                    g.SetClip(
+                        destinoCampo)
 
-                    DesenharGramado(
-                    g,
-                    campoAtual)
+                    Using matriz As Matrix =
+                        CriarMatrizMapeamento(
+                            origemExportacao,
+                            destinoCampo)
 
-                    DesenharMarcacoes(
-                    g,
-                    campoAtual)
+                        g.Transform =
+                            matriz
 
-                    DesenharObjetos(
-                    g,
-                    campoAtual)
+                        DesenharGramado(
+                            g,
+                            campoAtual)
 
-                End Using
+                        DesenharMarcacoes(
+                            g,
+                            campoAtual)
+
+                        DesenharObjetos(
+                            g,
+                            campoAtual)
+
+                    End Using
+
+                Finally
+
+                    g.Restore(
+                        estadoGrafico)
+
+                End Try
 
             End Using
 
@@ -1102,7 +1212,16 @@ Public Class CampoTatico
         Finally
 
             _objetoSelecionado =
-            objetoSelecionadoAnterior
+                objetoSelecionadoAnterior
+
+            For Each item As KeyValuePair(
+                Of ObjetoCampo,
+                Boolean) In estadosSelecao
+
+                item.Key.Selecionado =
+                    item.Value
+
+            Next
 
         End Try
 
@@ -1552,38 +1671,62 @@ Public Class CampoTatico
 
     End Sub
 
-    Protected Overrides Sub OnPaint(
-    e As PaintEventArgs)
+    Protected Overrides Sub OnPaint(e As PaintEventArgs)
 
         MyBase.OnPaint(e)
 
-        e.Graphics.SmoothingMode = SmoothingMode.AntiAlias
+        e.Graphics.Clear(
+            BackColor)
 
-        e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality
+        e.Graphics.SmoothingMode =
+            SmoothingMode.AntiAlias
 
-        Dim estadoGrafico As GraphicsState = e.Graphics.Save()
+        e.Graphics.PixelOffsetMode =
+            PixelOffsetMode.HighQuality
+
+        Dim campoTela As RectangleF =
+            ObterRetanguloCampo()
+
+        If campoTela.Width <= 0 OrElse
+           campoTela.Height <= 0 Then
+
+            Exit Sub
+
+        End If
+
+        Dim estadoGrafico As GraphicsState =
+            e.Graphics.Save()
 
         Try
 
-            Using matriz As Matrix = ObterMatrizVisualizacao()
+            e.Graphics.SetClip(
+                campoTela)
 
-                e.Graphics.Transform = matriz
+            Using matriz As Matrix =
+                ObterMatrizVisualizacao()
 
-                DesenharCampo(e.Graphics)
+                e.Graphics.Transform =
+                    matriz
+
+                DesenharCampo(
+                    e.Graphics)
+
+                DesenharPreVisualizacaoRecorte(
+                    e.Graphics,
+                    campoTela)
 
             End Using
 
         Finally
 
-            e.Graphics.Restore(estadoGrafico)
+            e.Graphics.Restore(
+                estadoGrafico)
 
         End Try
 
     End Sub
 
     Private Sub DesenharCampo(g As Graphics)
-
-        g.Clear(BackColor)
 
         Dim campo As RectangleF = ObterRetanguloCampo()
 
@@ -4691,6 +4834,8 @@ Public Class CampoTatico
 
         End If
 
+        LimparRecorteCampo()
+
         AplicarEstadoCampo(
         arquivo.Campo)
 
@@ -4702,8 +4847,10 @@ Public Class CampoTatico
 
     Public Sub NovoExercicio()
 
+        LimparRecorteCampo()
+
         AplicarEstadoCampo(
-        New EstadoCampo())
+            New EstadoCampo())
 
         ReiniciarHistorico()
 
@@ -4796,34 +4943,95 @@ Public Class CampoTatico
 
 #Region "Mouse"
 
-    Protected Overrides Sub OnMouseDown(
-        e As MouseEventArgs)
+    Protected Overrides Sub OnMouseDown(e As MouseEventArgs)
 
         MyBase.OnMouseDown(e)
 
         Focus()
 
-        If e.Button = MouseButtons.Middle OrElse
-           (_espacoPressionado AndAlso e.Button = MouseButtons.Left) Then
+        If _modoSelecaoRecorte Then
 
-            _panEmAndamento = True
-            _pontoInicialPan = e.Location
-            _deslocamentoInicialPan = _deslocamentoVisual
+            If e.Button = MouseButtons.Right Then
 
-            Capture = True
-            Cursor = Cursors.SizeAll
+                CancelarSelecaoRecorteCampo()
+
+                Exit Sub
+
+            End If
+
+            If e.Button <> MouseButtons.Left Then
+                Exit Sub
+            End If
+
+            Dim pontoMundo As PointF =
+                ConverterTelaParaMundo(
+                    e.Location)
+
+            Dim campoRecorte As RectangleF =
+                ObterRetanguloCampo()
+
+            If Not campoRecorte.Contains(
+                pontoMundo) Then
+
+                Exit Sub
+
+            End If
+
+            _desenhandoRecorte =
+                True
+
+            _pontoInicialRecorte =
+                pontoMundo
+
+            _pontoAtualRecorte =
+                pontoMundo
+
+            Capture =
+                True
+
+            Cursor =
+                Cursors.Cross
+
+            Invalidate()
 
             Exit Sub
 
         End If
 
-        e = CriarEventoMouseMundo(e)
+        If e.Button = MouseButtons.Middle OrElse
+           (_espacoPressionado AndAlso
+            e.Button = MouseButtons.Left) Then
 
-        Dim campo As RectangleF = ObterRetanguloCampo()
+            _panEmAndamento =
+                True
+
+            _pontoInicialPan =
+                e.Location
+
+            _deslocamentoInicialPan =
+                _deslocamentoVisual
+
+            Capture =
+                True
+
+            Cursor =
+                Cursors.SizeAll
+
+            Exit Sub
+
+        End If
+
+        e =
+            CriarEventoMouseMundo(
+                e)
+
+        Dim campo As RectangleF =
+            ObterRetanguloCampo()
 
         If e.Button = MouseButtons.Right Then
 
             CancelarCriacao()
+
             Exit Sub
 
         End If
@@ -4832,28 +5040,41 @@ Public Class CampoTatico
             Exit Sub
         End If
 
-        If Not campo.Contains(CSng(e.X), CSng(e.Y)) Then
+        If Not campo.Contains(
+            CSng(e.X),
+            CSng(e.Y)) Then
+
             Exit Sub
+
         End If
 
-        If FerramentaAtual <> FerramentaCampo.Selecionar Then
+        If FerramentaAtual <>
+           FerramentaCampo.Selecionar Then
 
-            ExecutarFerramentaAtual(e.Location, campo)
+            ExecutarFerramentaAtual(
+                e.Location,
+                campo)
+
             Exit Sub
 
         End If
 
         Dim selecaoAdicional As Boolean =
-            (ModifierKeys And Keys.Control) = Keys.Control OrElse
-            (ModifierKeys And Keys.Shift) = Keys.Shift
+            (ModifierKeys And Keys.Control) =
+            Keys.Control OrElse
+            (ModifierKeys And Keys.Shift) =
+            Keys.Shift
 
         If Not selecaoAdicional AndAlso
            _objetosSelecionados.Count = 1 Then
 
             Dim manipuladorAtual As ModoManipulacaoCampo =
-                LocalizarManipuladorSelecionado(e.Location, campo)
+                LocalizarManipuladorSelecionado(
+                    e.Location,
+                    campo)
 
-            If manipuladorAtual <> ModoManipulacaoCampo.Nenhum Then
+            If manipuladorAtual <>
+               ModoManipulacaoCampo.Nenhum Then
 
                 IniciarManipulacaoPorAlca(
                     manipuladorAtual,
@@ -4867,13 +5088,17 @@ Public Class CampoTatico
         End If
 
         Dim objetoClicado As ObjetoCampo =
-            LocalizarObjetoNaPosicao(e.Location, campo)
+            LocalizarObjetoNaPosicao(
+                e.Location,
+                campo)
 
         If selecaoAdicional Then
 
             If objetoClicado IsNot Nothing Then
 
-                AlternarSelecaoObjeto(objetoClicado)
+                AlternarSelecaoObjeto(
+                    objetoClicado)
+
                 NotificarSelecaoAlterada()
 
             End If
@@ -4886,34 +5111,45 @@ Public Class CampoTatico
 
             DeselecionarTodos()
 
-            _arrastando = False
-            _modoManipulacao = ModoManipulacaoCampo.Nenhum
+            _arrastando =
+                False
+
+            _modoManipulacao =
+                ModoManipulacaoCampo.Nenhum
 
             NotificarSelecaoAlterada()
 
-            Cursor = Cursors.Default
+            Cursor =
+                Cursors.Default
 
             Exit Sub
 
         End If
 
-        If Not ObjetoEstaSelecionado(objetoClicado) Then
+        If Not ObjetoEstaSelecionado(
+            objetoClicado) Then
 
-            SelecionarSomente(objetoClicado)
+            SelecionarSomente(
+                objetoClicado)
+
             NotificarSelecaoAlterada()
 
         Else
 
-            _objetoSelecionado = objetoClicado
+            _objetoSelecionado =
+                objetoClicado
 
         End If
 
         If _objetosSelecionados.Count = 1 Then
 
             Dim manipuladorNovo As ModoManipulacaoCampo =
-                LocalizarManipuladorSelecionado(e.Location, campo)
+                LocalizarManipuladorSelecionado(
+                    e.Location,
+                    campo)
 
-            If manipuladorNovo <> ModoManipulacaoCampo.Nenhum Then
+            If manipuladorNovo <>
+               ModoManipulacaoCampo.Nenhum Then
 
                 IniciarManipulacaoPorAlca(
                     manipuladorNovo,
@@ -4929,16 +5165,16 @@ Public Class CampoTatico
         If Not PodeManipularSelecao() Then
 
             _arrastando =
-        False
+                False
 
             _movendoGrupo =
-        False
+                False
 
             Capture =
-        False
+                False
 
             Cursor =
-        Cursors.No
+                Cursors.No
 
             Invalidate()
 
@@ -4948,74 +5184,135 @@ Public Class CampoTatico
 
         If _objetosSelecionados.Count > 1 Then
 
-            PrepararMovimentoGrupo(e.Location)
+            PrepararMovimentoGrupo(
+                e.Location)
 
         Else
 
-            _movendoGrupo = False
+            _movendoGrupo =
+                False
 
             If TypeOf _objetoSelecionado Is LinhaTatica Then
 
                 PrepararManipulacaoLinha(
-                    DirectCast(_objetoSelecionado, LinhaTatica),
+                    DirectCast(
+                        _objetoSelecionado,
+                        LinhaTatica),
                     e.Location,
                     campo)
 
             Else
 
                 Dim centro As PointF =
-                    ObterCentroObjetoTela(_objetoSelecionado, campo)
+                    ObterCentroObjetoTela(
+                        _objetoSelecionado,
+                        campo)
 
-                _offsetMouse = New PointF(
-                    e.X - centro.X,
-                    e.Y - centro.Y)
+                _offsetMouse =
+                    New PointF(
+                        e.X - centro.X,
+                        e.Y - centro.Y)
 
             End If
 
         End If
 
-        _houveAlteracaoManipulacao = False
-        _modoManipulacao = ModoManipulacaoCampo.MoverObjeto
-        _arrastando = True
+        _houveAlteracaoManipulacao =
+            False
 
-        Capture = True
-        Cursor = Cursors.SizeAll
+        _modoManipulacao =
+            ModoManipulacaoCampo.MoverObjeto
+
+        _arrastando =
+            True
+
+        Capture =
+            True
+
+        Cursor =
+            Cursors.SizeAll
 
         Invalidate()
 
     End Sub
 
-    Protected Overrides Sub OnMouseMove(
-        e As MouseEventArgs)
+    Protected Overrides Sub OnMouseMove(e As MouseEventArgs)
 
         MyBase.OnMouseMove(e)
 
-        If _panEmAndamento Then
+        If _modoSelecaoRecorte Then
 
-            Dim deltaX As Single = e.X - _pontoInicialPan.X
-            Dim deltaY As Single = e.Y - _pontoInicialPan.Y
+            Cursor =
+                Cursors.Cross
 
-            _deslocamentoVisual =
-                New PointF(
-                    _deslocamentoInicialPan.X + deltaX,
-                    _deslocamentoInicialPan.Y + deltaY)
+            If _desenhandoRecorte Then
 
-            LimitarDeslocamentoVisual()
+                Dim pontoMundo As PointF =
+                    ConverterTelaParaMundo(
+                        e.Location)
 
-            Cursor = Cursors.SizeAll
+                Dim campoRecorte As RectangleF =
+                    ObterRetanguloCampo()
 
-            Invalidate()
+                _pontoAtualRecorte =
+                    New PointF(
+                        LimitarSingle(
+                            pontoMundo.X,
+                            campoRecorte.Left,
+                            campoRecorte.Right),
+                        LimitarSingle(
+                            pontoMundo.Y,
+                            campoRecorte.Top,
+                            campoRecorte.Bottom))
+
+                Invalidate()
+
+            End If
+
             Exit Sub
 
         End If
 
-        e = CriarEventoMouseMundo(e)
+        If _panEmAndamento Then
 
-        Dim campo As RectangleF = ObterRetanguloCampo()
+            Dim deltaX As Single =
+                e.X -
+                _pontoInicialPan.X
 
-        If FerramentaAtual <> FerramentaCampo.Selecionar Then
+            Dim deltaY As Single =
+                e.Y -
+                _pontoInicialPan.Y
 
-            Cursor = Cursors.Cross
+            _deslocamentoVisual =
+                New PointF(
+                    _deslocamentoInicialPan.X +
+                    deltaX,
+                    _deslocamentoInicialPan.Y +
+                    deltaY)
+
+            LimitarDeslocamentoVisual()
+
+            Cursor =
+                Cursors.SizeAll
+
+            Invalidate()
+
+            Exit Sub
+
+        End If
+
+        e =
+            CriarEventoMouseMundo(
+                e)
+
+        Dim campo As RectangleF =
+            ObterRetanguloCampo()
+
+        If FerramentaAtual <>
+           FerramentaCampo.Selecionar Then
+
+            Cursor =
+                Cursors.Cross
 
             If _criacaoEmAndamento Then
 
@@ -5043,51 +5340,132 @@ Public Class CampoTatico
 
             If _movendoGrupo Then
 
-                MoverGrupoSelecionado(e.Location, campo)
+                MoverGrupoSelecionado(
+                    e.Location,
+                    campo)
 
             ElseIf _modoManipulacao =
                    ModoManipulacaoCampo.MoverObjeto Then
 
-                MoverObjetoSelecionado(e.Location, campo)
+                MoverObjetoSelecionado(
+                    e.Location,
+                    campo)
 
             Else
 
-                RedimensionarObjetoSelecionado(e.Location, campo)
+                RedimensionarObjetoSelecionado(
+                    e.Location,
+                    campo)
 
             End If
 
-            _houveAlteracaoManipulacao = True
+            _houveAlteracaoManipulacao =
+                True
 
             Invalidate()
+
             Exit Sub
 
         End If
 
         Dim manipulador As ModoManipulacaoCampo =
-            LocalizarManipuladorSelecionado(e.Location, campo)
+            LocalizarManipuladorSelecionado(
+                e.Location,
+                campo)
 
-        If manipulador <> ModoManipulacaoCampo.Nenhum Then
+        If manipulador <>
+           ModoManipulacaoCampo.Nenhum Then
 
-            Cursor = ObterCursorManipulador(manipulador)
+            Cursor =
+                ObterCursorManipulador(
+                    manipulador)
+
             Exit Sub
 
         End If
 
         Dim objetoSobMouse As ObjetoCampo =
-            LocalizarObjetoNaPosicao(e.Location, campo)
+            LocalizarObjetoNaPosicao(
+                e.Location,
+                campo)
 
         If objetoSobMouse IsNot Nothing Then
-            Cursor = Cursors.Hand
+
+            Cursor =
+                Cursors.Hand
+
         Else
-            Cursor = Cursors.Default
+
+            Cursor =
+                Cursors.Default
+
         End If
 
     End Sub
 
-    Protected Overrides Sub OnMouseUp(
-        e As MouseEventArgs)
+    Protected Overrides Sub OnMouseUp(e As MouseEventArgs)
 
         MyBase.OnMouseUp(e)
+
+        If _modoSelecaoRecorte Then
+
+            If _desenhandoRecorte AndAlso
+               e.Button = MouseButtons.Left Then
+
+                Dim pontoMundo As PointF =
+                    ConverterTelaParaMundo(
+                        e.Location)
+
+                Dim campoRecorte As RectangleF =
+                    ObterRetanguloCampo()
+
+                _pontoAtualRecorte =
+                    New PointF(
+                        LimitarSingle(
+                            pontoMundo.X,
+                            campoRecorte.Left,
+                            campoRecorte.Right),
+                        LimitarSingle(
+                            pontoMundo.Y,
+                            campoRecorte.Top,
+                            campoRecorte.Bottom))
+
+                _desenhandoRecorte =
+                    False
+
+                Capture =
+                    False
+
+                Dim retanguloRecorte As RectangleF =
+                    ObterRetanguloRecorteLivre(
+                        _pontoInicialRecorte,
+                        _pontoAtualRecorte,
+                        campoRecorte)
+
+                If retanguloRecorte.Width >=
+                   campoRecorte.Width * 0.02F AndAlso
+                   retanguloRecorte.Height >=
+                   campoRecorte.Height * 0.02F Then
+
+                    ConcluirSelecaoRecorteCampo(
+                        retanguloRecorte,
+                        campoRecorte)
+
+                Else
+
+                    Cursor =
+                        Cursors.Cross
+
+                    Invalidate()
+
+                End If
+
+            End If
+
+            Exit Sub
+
+        End If
+
 
         If _panEmAndamento Then
 
@@ -5697,12 +6075,30 @@ Public Class CampoTatico
 
         MyBase.OnKeyDown(e)
 
+        If e.KeyCode = Keys.Escape AndAlso
+           _modoSelecaoRecorte Then
+
+            CancelarSelecaoRecorteCampo()
+
+            e.Handled =
+                True
+
+            e.SuppressKeyPress =
+                True
+
+            Exit Sub
+
+        End If
+
         If e.KeyCode = Keys.Delete Then
 
             ExcluirSelecionado()
 
-            e.Handled = True
-            e.SuppressKeyPress = True
+            e.Handled =
+                True
+
+            e.SuppressKeyPress =
+                True
 
             Exit Sub
 
@@ -5711,17 +6107,17 @@ Public Class CampoTatico
         If e.KeyCode = Keys.Space Then
 
             _espacoPressionado =
-            True
+                True
 
             If Not _panEmAndamento Then
 
                 Cursor =
-                Cursors.Hand
+                    Cursors.Hand
 
             End If
 
             e.Handled =
-            True
+                True
 
         End If
 
@@ -5730,10 +6126,13 @@ Public Class CampoTatico
             CancelarCriacao()
 
             FerramentaAtual =
-            FerramentaCampo.Selecionar
+                FerramentaCampo.Selecionar
 
-            e.Handled = True
-            e.SuppressKeyPress = True
+            e.Handled =
+                True
+
+            e.SuppressKeyPress =
+                True
 
         End If
 
@@ -6312,18 +6711,22 @@ Public Class CampoTatico
 
         Focus()
 
+        If _modoSelecaoRecorte Then
+            Exit Sub
+        End If
+
         Dim quantidadePassos As Single =
-        e.Delta /
-        120.0F
+            e.Delta /
+            120.0F
 
         Dim novoZoom As Single =
-        _zoomVisual +
-        PassoZoom *
-        quantidadePassos
+            _zoomVisual +
+            PassoZoom *
+            quantidadePassos
 
         DefinirZoom(
-        novoZoom,
-        e.Location)
+            novoZoom,
+            e.Location)
 
     End Sub
 
@@ -7685,6 +8088,36 @@ Public Class CampoTatico
         Dim campoBase As RectangleF =
             ObterRetanguloCampo()
 
+        Dim origemVisual As RectangleF =
+            ObterRetanguloOrigemRecorte(
+                campoBase)
+
+        If origemVisual.Width <= 0 OrElse
+           origemVisual.Height <= 0 Then
+
+            origemVisual =
+                campoBase
+
+        End If
+
+        Dim escalaRecorteX As Single =
+            campoBase.Width /
+            origemVisual.Width
+
+        Dim escalaRecorteY As Single =
+            campoBase.Height /
+            origemVisual.Height
+
+        Dim deslocamentoRecorteX As Single =
+            campoBase.Left -
+            origemVisual.Left *
+            escalaRecorteX
+
+        Dim deslocamentoRecorteY As Single =
+            campoBase.Top -
+            origemVisual.Top *
+            escalaRecorteY
+
         Dim centroX As Single =
             campoBase.Left +
             campoBase.Width / 2.0F
@@ -7693,23 +8126,43 @@ Public Class CampoTatico
             campoBase.Top +
             campoBase.Height / 2.0F
 
-        Dim deslocamentoX As Single =
+        Dim deslocamentoZoomX As Single =
             centroX +
             _deslocamentoVisual.X -
-            _zoomVisual * centroX
+            _zoomVisual *
+            centroX
 
-        Dim deslocamentoY As Single =
+        Dim deslocamentoZoomY As Single =
             centroY +
             _deslocamentoVisual.Y -
-            _zoomVisual * centroY
+            _zoomVisual *
+            centroY
+
+        Dim escalaFinalX As Single =
+            escalaRecorteX *
+            _zoomVisual
+
+        Dim escalaFinalY As Single =
+            escalaRecorteY *
+            _zoomVisual
+
+        Dim deslocamentoFinalX As Single =
+            deslocamentoRecorteX *
+            _zoomVisual +
+            deslocamentoZoomX
+
+        Dim deslocamentoFinalY As Single =
+            deslocamentoRecorteY *
+            _zoomVisual +
+            deslocamentoZoomY
 
         Return New Matrix(
-            _zoomVisual,
+            escalaFinalX,
             0.0F,
             0.0F,
-            _zoomVisual,
-            deslocamentoX,
-            deslocamentoY)
+            escalaFinalY,
+            deslocamentoFinalX,
+            deslocamentoFinalY)
 
     End Function
 
@@ -8588,6 +9041,474 @@ Public Class CampoTatico
 
         FinalizarAlteracaoCamada(
             houveAlteracao)
+
+    End Sub
+
+#End Region
+
+#Region "Recorte do campo"
+
+    Public Sub IniciarSelecaoRecorteCampo()
+
+        _recorteAnteriorAtivo =
+            _recorteAtivo
+
+        _retanguloRecorteAnterior =
+            _retanguloRecortePercentual
+
+        _modoSelecaoRecorte =
+            True
+
+        _desenhandoRecorte =
+            False
+
+        _recorteAtivo =
+            False
+
+        _retanguloRecortePercentual =
+            RectangleF.Empty
+
+        _zoomVisual =
+            1.0F
+
+        _deslocamentoVisual =
+            PointF.Empty
+
+        FerramentaAtual =
+            FerramentaCampo.Selecionar
+
+        DeselecionarTodos()
+
+        NotificarSelecaoAlterada()
+
+        Cursor =
+            Cursors.Cross
+
+        RaiseEvent VisualizacaoAlterada(
+            ZoomPercentual)
+
+        RaiseEvent RecorteCampoAlterado()
+
+        Invalidate()
+
+    End Sub
+
+    Public Sub CancelarSelecaoRecorteCampo()
+
+        If Not _modoSelecaoRecorte Then
+            Exit Sub
+        End If
+
+        _modoSelecaoRecorte =
+            False
+
+        _desenhandoRecorte =
+            False
+
+        _recorteAtivo =
+            _recorteAnteriorAtivo
+
+        _retanguloRecortePercentual =
+            _retanguloRecorteAnterior
+
+        _recorteAnteriorAtivo =
+            False
+
+        _retanguloRecorteAnterior =
+            RectangleF.Empty
+
+        Capture =
+            False
+
+        Cursor =
+            Cursors.Default
+
+        RaiseEvent RecorteCampoAlterado()
+
+        Invalidate()
+
+    End Sub
+
+    Public Sub LimparRecorteCampo()
+
+        _modoSelecaoRecorte =
+            False
+
+        _desenhandoRecorte =
+            False
+
+        _recorteAtivo =
+            False
+
+        _retanguloRecortePercentual =
+            RectangleF.Empty
+
+        _recorteAnteriorAtivo =
+            False
+
+        _retanguloRecorteAnterior =
+            RectangleF.Empty
+
+        _zoomVisual =
+            1.0F
+
+        _deslocamentoVisual =
+            PointF.Empty
+
+        Capture =
+            False
+
+        Cursor =
+            Cursors.Default
+
+        RaiseEvent VisualizacaoAlterada(
+            ZoomPercentual)
+
+        RaiseEvent RecorteCampoAlterado()
+
+        Invalidate()
+
+    End Sub
+
+    Private Sub ConcluirSelecaoRecorteCampo(
+    retanguloTela As RectangleF,
+    campo As RectangleF)
+
+        _retanguloRecortePercentual =
+            ConverterRetanguloTelaParaPercentual(
+                retanguloTela,
+                campo)
+
+        _recorteAtivo =
+            Not _retanguloRecortePercentual.IsEmpty
+
+        _modoSelecaoRecorte =
+            False
+
+        _desenhandoRecorte =
+            False
+
+        _recorteAnteriorAtivo =
+            False
+
+        _retanguloRecorteAnterior =
+            RectangleF.Empty
+
+        _zoomVisual =
+            1.0F
+
+        _deslocamentoVisual =
+            PointF.Empty
+
+        Capture =
+            False
+
+        Cursor =
+            Cursors.Default
+
+        RaiseEvent VisualizacaoAlterada(
+            ZoomPercentual)
+
+        RaiseEvent RecorteCampoAlterado()
+
+        Invalidate()
+
+    End Sub
+
+    Private Function ObterRetanguloOrigemRecorte(
+    campo As RectangleF) As RectangleF
+
+        If Not _recorteAtivo OrElse
+           _retanguloRecortePercentual.IsEmpty Then
+
+            Return campo
+
+        End If
+
+        Dim esquerda As Single =
+            campo.Left +
+            campo.Width *
+            (_retanguloRecortePercentual.Left / 100.0F)
+
+        Dim topo As Single =
+            campo.Top +
+            campo.Height *
+            (_retanguloRecortePercentual.Top / 100.0F)
+
+        Dim direita As Single =
+            campo.Left +
+            campo.Width *
+            (_retanguloRecortePercentual.Right / 100.0F)
+
+        Dim inferior As Single =
+            campo.Top +
+            campo.Height *
+            (_retanguloRecortePercentual.Bottom / 100.0F)
+
+        Dim resultado As RectangleF =
+            RectangleF.FromLTRB(
+                esquerda,
+                topo,
+                direita,
+                inferior)
+
+        If resultado.Width <= 0 OrElse
+           resultado.Height <= 0 Then
+
+            Return campo
+
+        End If
+
+        Return resultado
+
+    End Function
+
+    Private Function CriarMatrizMapeamento(
+    origem As RectangleF,
+    destino As RectangleF) As Matrix
+
+        If origem.Width <= 0 OrElse
+           origem.Height <= 0 Then
+
+            Return New Matrix()
+
+        End If
+
+        Dim escalaX As Single =
+            destino.Width /
+            origem.Width
+
+        Dim escalaY As Single =
+            destino.Height /
+            origem.Height
+
+        Dim deslocamentoX As Single =
+            destino.Left -
+            origem.Left *
+            escalaX
+
+        Dim deslocamentoY As Single =
+            destino.Top -
+            origem.Top *
+            escalaY
+
+        Return New Matrix(
+            escalaX,
+            0.0F,
+            0.0F,
+            escalaY,
+            deslocamentoX,
+            deslocamentoY)
+
+    End Function
+
+    Private Function ObterRetanguloRecorteLivre(
+    pontoInicial As PointF,
+    pontoAtual As PointF,
+    campo As RectangleF) As RectangleF
+
+        If campo.Width <= 0 OrElse
+           campo.Height <= 0 Then
+
+            Return RectangleF.Empty
+
+        End If
+
+        Dim xInicial As Single =
+            LimitarSingle(
+                pontoInicial.X,
+                campo.Left,
+                campo.Right)
+
+        Dim yInicial As Single =
+            LimitarSingle(
+                pontoInicial.Y,
+                campo.Top,
+                campo.Bottom)
+
+        Dim xFinal As Single =
+            LimitarSingle(
+                pontoAtual.X,
+                campo.Left,
+                campo.Right)
+
+        Dim yFinal As Single =
+            LimitarSingle(
+                pontoAtual.Y,
+                campo.Top,
+                campo.Bottom)
+
+        Dim esquerda As Single =
+            Math.Min(
+                xInicial,
+                xFinal)
+
+        Dim topo As Single =
+            Math.Min(
+                yInicial,
+                yFinal)
+
+        Dim direita As Single =
+            Math.Max(
+                xInicial,
+                xFinal)
+
+        Dim inferior As Single =
+            Math.Max(
+                yInicial,
+                yFinal)
+
+        Return RectangleF.FromLTRB(
+            esquerda,
+            topo,
+            direita,
+            inferior)
+
+    End Function
+
+    Private Function ConverterRetanguloTelaParaPercentual(
+    retanguloTela As RectangleF,
+    campo As RectangleF) As RectangleF
+
+        Dim esquerda As Single =
+            CSng(
+                ((retanguloTela.Left -
+                  campo.Left) /
+                 campo.Width) *
+                100.0F)
+
+        Dim topo As Single =
+            CSng(
+                ((retanguloTela.Top -
+                  campo.Top) /
+                 campo.Height) *
+                100.0F)
+
+        Dim direita As Single =
+            CSng(
+                ((retanguloTela.Right -
+                  campo.Left) /
+                 campo.Width) *
+                100.0F)
+
+        Dim inferior As Single =
+            CSng(
+                ((retanguloTela.Bottom -
+                  campo.Top) /
+                 campo.Height) *
+                100.0F)
+
+        esquerda =
+            Math.Max(
+                0.0F,
+                Math.Min(
+                    100.0F,
+                    esquerda))
+
+        topo =
+            Math.Max(
+                0.0F,
+                Math.Min(
+                    100.0F,
+                    topo))
+
+        direita =
+            Math.Max(
+                0.0F,
+                Math.Min(
+                    100.0F,
+                    direita))
+
+        inferior =
+            Math.Max(
+                0.0F,
+                Math.Min(
+                    100.0F,
+                    inferior))
+
+        Return RectangleF.FromLTRB(
+            esquerda,
+            topo,
+            direita,
+            inferior)
+
+    End Function
+
+    Private Sub DesenharPreVisualizacaoRecorte(
+    g As Graphics,
+    campo As RectangleF)
+
+        If Not _modoSelecaoRecorte OrElse
+           Not _desenhandoRecorte Then
+
+            Exit Sub
+
+        End If
+
+        Dim retangulo As RectangleF =
+            ObterRetanguloRecorteLivre(
+                _pontoInicialRecorte,
+                _pontoAtualRecorte,
+                campo)
+
+        If retangulo.Width < 1.0F OrElse
+           retangulo.Height < 1.0F Then
+
+            Exit Sub
+
+        End If
+
+        Using regiaoExterna As New Region(campo)
+
+            regiaoExterna.Exclude(
+                retangulo)
+
+            Using sombra As New SolidBrush(
+                Color.FromArgb(
+                    115,
+                    0,
+                    0,
+                    0))
+
+                g.FillRegion(
+                    sombra,
+                    regiaoExterna)
+
+            End Using
+
+        End Using
+
+        Using preenchimento As New SolidBrush(
+            Color.FromArgb(
+                35,
+                255,
+                215,
+                0))
+
+            g.FillRectangle(
+                preenchimento,
+                retangulo)
+
+        End Using
+
+        Using caneta As New Pen(
+            Color.Gold,
+            2.0F /
+            Math.Max(
+                _zoomVisual,
+                0.5F))
+
+            caneta.DashStyle =
+                DashStyle.Dash
+
+            g.DrawRectangle(
+                caneta,
+                retangulo.X,
+                retangulo.Y,
+                retangulo.Width,
+                retangulo.Height)
+
+        End Using
 
     End Sub
 

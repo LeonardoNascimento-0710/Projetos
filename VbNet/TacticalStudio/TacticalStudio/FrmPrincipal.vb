@@ -50,6 +50,8 @@ Public Class FrmPrincipal
 
     Private _frmGerenciadorObjetos As FrmGerenciadorObjetos
 
+    Private _botaoRecortarCampo As Button
+
 #End Region
 
 #Region "Inicialização do formulário"
@@ -414,8 +416,16 @@ Public Class FrmPrincipal
 
             If CampoCanvas IsNot Nothing Then
 
-                MontarPainelPropriedades(
-                CampoCanvas.ObjetoSelecionadoAtual)
+                If CampoCanvas.ModoSelecaoRecorteAtivo Then
+
+                    MontarPainelRecorteCampo()
+
+                Else
+
+                    MontarPainelPropriedades(
+                        CampoCanvas.ObjetoSelecionadoAtual)
+
+                End If
 
             End If
 
@@ -770,6 +780,9 @@ Public Class FrmPrincipal
         AddHandler CampoCanvas.VisualizacaoAlterada,
     AddressOf CampoCanvas_VisualizacaoAlterada
 
+        AddHandler CampoCanvas.RecorteCampoAlterado,
+    AddressOf CampoCanvas_RecorteCampoAlterado
+
         PnlCentral.Controls.Clear()
         PnlCentral.Controls.Add(CampoCanvas)
 
@@ -787,15 +800,53 @@ Public Class FrmPrincipal
 
     Private Sub CampoCanvas_ObjetoSelecionadoAlterado(objeto As ObjetoCampo)
 
-        If CampoCanvas IsNot Nothing AndAlso CampoCanvas.QuantidadeObjetosSelecionados > 1 Then
+        If CampoCanvas IsNot Nothing AndAlso
+           CampoCanvas.ModoSelecaoRecorteAtivo Then
 
-            MontarPainelSelecaoMultipla(CampoCanvas.QuantidadeObjetosSelecionados)
+            MontarPainelRecorteCampo()
+
+            Exit Sub
+
+        End If
+
+        If CampoCanvas IsNot Nothing AndAlso
+           CampoCanvas.QuantidadeObjetosSelecionados > 1 Then
+
+            MontarPainelSelecaoMultipla(
+                CampoCanvas.QuantidadeObjetosSelecionados)
 
             Exit Sub
 
         End If
 
         MontarPainelPropriedades(objeto)
+
+    End Sub
+
+    Private Sub CampoCanvas_RecorteCampoAlterado()
+
+        AtualizarEstadoBotaoRecorte()
+
+        If CampoCanvas Is Nothing Then
+            Exit Sub
+        End If
+
+        If CampoCanvas.ModoSelecaoRecorteAtivo OrElse
+           CampoCanvas.RecorteAtivo Then
+
+            MontarPainelRecorteCampo()
+
+        ElseIf CampoCanvas.QuantidadeObjetosSelecionados > 1 Then
+
+            MontarPainelSelecaoMultipla(
+                CampoCanvas.QuantidadeObjetosSelecionados)
+
+        Else
+
+            MontarPainelPropriedades(
+                CampoCanvas.ObjetoSelecionadoAtual)
+
+        End If
 
     End Sub
 
@@ -1238,10 +1289,40 @@ Public Class FrmPrincipal
             "Texto",
             larguraBotao)
 
+        _botaoRecortarCampo = New Button With {
+            .Text = "Recortar campo",
+            .Width = larguraBotao,
+            .Height = 36,
+            .Margin = New Padding(0, 12, 0, 3),
+            .FlatStyle = FlatStyle.Flat,
+            .TextAlign = ContentAlignment.MiddleLeft,
+            .Cursor = Cursors.Cross,
+            .BackColor = Tema.Painel,
+            .ForeColor = Tema.Texto,
+            .UseVisualStyleBackColor = False
+        }
+
+        _botaoRecortarCampo.FlatAppearance.BorderColor =
+            Tema.CorPrimaria
+
+        _botaoRecortarCampo.FlatAppearance.MouseOverBackColor =
+            Tema.PainelHover
+
+        _botaoRecortarCampo.FlatAppearance.MouseDownBackColor =
+            Tema.CorPrimaria
+
+        AddHandler _botaoRecortarCampo.Click,
+            AddressOf RecortarCampo_Click
+
+        painelFerramentas.Controls.Add(
+            _botaoRecortarCampo)
+
         PnlEsquerdo.Controls.Add(painelFerramentas)
 
         AtualizarBotoesFerramentas(
             FerramentaCampo.Selecionar)
+
+        AtualizarEstadoBotaoRecorte()
 
     End Sub
 
@@ -1284,6 +1365,30 @@ Public Class FrmPrincipal
 
     End Sub
 
+    Private Sub RecortarCampo_Click(
+    sender As Object,
+    e As EventArgs)
+
+        If CampoCanvas Is Nothing Then
+            Exit Sub
+        End If
+
+        If CampoCanvas.ModoSelecaoRecorteAtivo Then
+
+            CampoCanvas.CancelarSelecaoRecorteCampo()
+
+        Else
+
+            CampoCanvas.IniciarSelecaoRecorteCampo()
+
+        End If
+
+        AtualizarEstadoBotaoRecorte()
+
+        CampoCanvas.Focus()
+
+    End Sub
+
     Private Sub BotaoFerramenta_Click(
     sender As Object,
     e As EventArgs)
@@ -1301,6 +1406,14 @@ Public Class FrmPrincipal
 
         Dim ferramenta As FerramentaCampo =
     CType(botao.Tag, FerramentaCampo)
+
+        If CampoCanvas.ModoSelecaoRecorteAtivo Then
+
+            CampoCanvas.CancelarSelecaoRecorteCampo()
+
+        End If
+
+        AtualizarEstadoBotaoRecorte()
 
         CampoCanvas.FerramentaAtual =
             ferramenta
@@ -1358,9 +1471,345 @@ Public Class FrmPrincipal
 
     End Sub
 
+    Private Sub AtualizarEstadoBotaoRecorte()
+
+        If _botaoRecortarCampo Is Nothing OrElse
+           CampoCanvas Is Nothing Then
+
+            Exit Sub
+
+        End If
+
+        Dim ativo As Boolean =
+            CampoCanvas.ModoSelecaoRecorteAtivo
+
+        If ativo Then
+
+            _botaoRecortarCampo.Text =
+                "Cancelar recorte"
+
+            _botaoRecortarCampo.BackColor =
+                Tema.CorPrimaria
+
+            _botaoRecortarCampo.ForeColor =
+                Color.White
+
+            _botaoRecortarCampo.FlatAppearance.BorderColor =
+                Color.White
+
+        Else
+
+            _botaoRecortarCampo.Text =
+                "Recortar campo"
+
+            _botaoRecortarCampo.BackColor =
+                Tema.Painel
+
+            _botaoRecortarCampo.ForeColor =
+                Tema.Texto
+
+            _botaoRecortarCampo.FlatAppearance.BorderColor =
+                Tema.CorPrimaria
+
+        End If
+
+    End Sub
+
 #End Region
 
 #Region "Painel de propriedades"
+
+    Private Sub MontarPainelRecorteCampo()
+
+        If CampoCanvas Is Nothing Then
+            Exit Sub
+        End If
+
+        PnlDireito.Controls.Clear()
+
+        Dim painel As New FlowLayoutPanel With {
+            .Dock = DockStyle.Fill,
+            .FlowDirection = FlowDirection.TopDown,
+            .WrapContents = False,
+            .AutoScroll = True,
+            .BackColor = Tema.Painel,
+            .Padding = New Padding(10)
+        }
+
+        PnlDireito.Controls.Add(
+            painel)
+
+        Dim largura As Integer =
+            Math.Max(
+                180,
+                PnlDireito.ClientSize.Width - 32)
+
+        Dim titulo As New Label With {
+            .Text = "RECORTE DO CAMPO",
+            .ForeColor = Tema.CorPrimaria,
+            .Font = New Font(
+                "Segoe UI",
+                11.0F,
+                FontStyle.Bold),
+            .Width = largura,
+            .Height = 36,
+            .TextAlign = ContentAlignment.MiddleLeft
+        }
+
+        painel.Controls.Add(
+            titulo)
+
+        Dim selecionando As Boolean =
+            CampoCanvas.ModoSelecaoRecorteAtivo
+
+        Dim statusTexto As String
+        Dim orientacaoTexto As String
+
+        If selecionando Then
+
+            statusTexto =
+                "Selecionando nova área..."
+
+            orientacaoTexto =
+                "Clique em um ponto do campo, mantenha o botão " &
+                "esquerdo pressionado e arraste livremente até " &
+                "formar a região desejada." &
+                Environment.NewLine &
+                Environment.NewLine &
+                "A largura e a altura podem ser escolhidas de " &
+                "forma independente, como na ferramenta de área." &
+                Environment.NewLine &
+                Environment.NewLine &
+                "Use o botão direito ou a tecla Esc para cancelar."
+
+        ElseIf CampoCanvas.RecorteAtivo Then
+
+            statusTexto =
+                "Recorte ativo"
+
+            orientacaoTexto =
+                "A região selecionada continuará ativa ao criar, " &
+                "mover ou editar os elementos do exercício." &
+                Environment.NewLine &
+                Environment.NewLine &
+                "PNG, PDF e impressão utilizarão somente essa área."
+
+        Else
+
+            statusTexto =
+                "Campo inteiro"
+
+            orientacaoTexto =
+                "Nenhuma região está recortada." &
+                Environment.NewLine &
+                Environment.NewLine &
+                "Clique em Selecionar nova área para criar um recorte."
+
+        End If
+
+        Dim status As New Label With {
+            .Text = statusTexto,
+            .ForeColor = If(
+                selecionando,
+                Color.Gold,
+                Tema.Texto),
+            .Font = New Font(
+                "Segoe UI",
+                9.5F,
+                FontStyle.Bold),
+            .Width = largura,
+            .Height = 30,
+            .TextAlign = ContentAlignment.MiddleLeft
+        }
+
+        painel.Controls.Add(
+            status)
+
+        Dim alturaOrientacao As Integer
+
+        If selecionando Then
+
+            alturaOrientacao =
+                150
+
+        ElseIf CampoCanvas.RecorteAtivo Then
+
+            alturaOrientacao =
+                100
+
+        Else
+
+            alturaOrientacao =
+                82
+
+        End If
+
+        Dim orientacao As New Label With {
+            .Text = orientacaoTexto,
+            .ForeColor = Tema.TextoSecundario,
+            .Font = Tema.FontePadrao,
+            .Width = largura,
+            .Height = alturaOrientacao,
+            .TextAlign = ContentAlignment.TopLeft
+        }
+
+        painel.Controls.Add(
+            orientacao)
+
+        If CampoCanvas.RecorteAtivo AndAlso
+           Not selecionando Then
+
+            Dim recorte As RectangleF =
+                CampoCanvas.RetanguloRecortePercentual
+
+            Dim detalhes As New Label With {
+                .Text =
+                    "Início X: " &
+                    recorte.Left.ToString("0.0") &
+                    "%" &
+                    Environment.NewLine &
+                    "Início Y: " &
+                    recorte.Top.ToString("0.0") &
+                    "%" &
+                    Environment.NewLine &
+                    "Largura: " &
+                    recorte.Width.ToString("0.0") &
+                    "%" &
+                    Environment.NewLine &
+                    "Altura: " &
+                    recorte.Height.ToString("0.0") &
+                    "%",
+                .ForeColor = Tema.Texto,
+                .Font = Tema.FontePadrao,
+                .Width = largura,
+                .Height = 92,
+                .Margin = New Padding(
+                    0,
+                    8,
+                    0,
+                    8),
+                .TextAlign = ContentAlignment.MiddleLeft
+            }
+
+            painel.Controls.Add(
+                detalhes)
+
+        End If
+
+        Dim botaoSelecionar As New Button With {
+            .Text = If(
+                selecionando,
+                "Cancelar seleção do recorte",
+                "Selecionar nova área"),
+            .Width = largura,
+            .Height = 38,
+            .Margin = New Padding(
+                0,
+                8,
+                0,
+                4),
+            .FlatStyle = FlatStyle.Flat,
+            .BackColor = If(
+                selecionando,
+                Tema.CorPrimaria,
+                Tema.Painel),
+            .ForeColor = If(
+                selecionando,
+                Color.White,
+                Tema.Texto),
+            .Cursor = Cursors.Hand,
+            .UseVisualStyleBackColor = False
+        }
+
+        botaoSelecionar.FlatAppearance.BorderColor =
+            If(
+                selecionando,
+                Color.White,
+                Tema.Borda)
+
+        botaoSelecionar.FlatAppearance.MouseOverBackColor =
+            Tema.PainelHover
+
+        AddHandler botaoSelecionar.Click,
+            Sub(sender, e)
+
+                If CampoCanvas.ModoSelecaoRecorteAtivo Then
+
+                    CampoCanvas.CancelarSelecaoRecorteCampo()
+
+                Else
+
+                    CampoCanvas.IniciarSelecaoRecorteCampo()
+
+                End If
+
+                CampoCanvas.Focus()
+
+            End Sub
+
+        painel.Controls.Add(
+            botaoSelecionar)
+
+        Dim botaoCampoInteiro As New Button With {
+            .Text = "Usar campo inteiro",
+            .Width = largura,
+            .Height = 38,
+            .Margin = New Padding(
+                0,
+                4,
+                0,
+                4),
+            .FlatStyle = FlatStyle.Flat,
+            .BackColor = Tema.Painel,
+            .ForeColor = Tema.Texto,
+            .Cursor = Cursors.Hand,
+            .UseVisualStyleBackColor = False,
+            .Enabled =
+                CampoCanvas.RecorteAtivo OrElse
+                selecionando
+        }
+
+        botaoCampoInteiro.FlatAppearance.BorderColor =
+            Tema.Borda
+
+        botaoCampoInteiro.FlatAppearance.MouseOverBackColor =
+            Tema.PainelHover
+
+        AddHandler botaoCampoInteiro.Click,
+            Sub(sender, e)
+
+                CampoCanvas.LimparRecorteCampo()
+
+                CampoCanvas.Focus()
+
+            End Sub
+
+        painel.Controls.Add(
+            botaoCampoInteiro)
+
+        Dim avisoExportacao As New Label With {
+            .Text =
+                "PNG, PDF e impressão seguem automaticamente " &
+                "o recorte ativo.",
+            .ForeColor = Tema.TextoSecundario,
+            .Font = New Font(
+                "Segoe UI",
+                8.5F,
+                FontStyle.Italic),
+            .Width = largura,
+            .Height = 58,
+            .Margin = New Padding(
+                0,
+                12,
+                0,
+                0),
+            .TextAlign = ContentAlignment.MiddleLeft
+        }
+
+        painel.Controls.Add(
+            avisoExportacao)
+
+    End Sub
 
     Private Sub MontarPainelPropriedades(
     objeto As ObjetoCampo)
@@ -3000,7 +3449,7 @@ Public Class FrmPrincipal
         Dim painelArquivo As New FlowLayoutPanel With {
             .Name = "PnlArquivoDinamico",
             .Dock = DockStyle.Right,
-            .Width = 980,
+            .Width = 1080,
             .FlowDirection = FlowDirection.LeftToRight,
             .WrapContents = False,
             .Padding = New Padding(5),
@@ -3025,11 +3474,36 @@ Public Class FrmPrincipal
 
         painelArquivo.Controls.Add(CriarBotaoArquivo("Objetos", AddressOf Objetos_Click))
 
+        Dim botaoCampoInteiro As Button =
+            CriarBotaoArquivo(
+                "Campo inteiro",
+                AddressOf CampoInteiro_Click)
+
+        botaoCampoInteiro.Width =
+            108
+
+        painelArquivo.Controls.Add(
+            botaoCampoInteiro)
+
         painelArquivo.Controls.Add(CriarBotaoArquivo("Sobre", AddressOf Sobre_Click))
 
         PnlSuperior.Controls.Add(painelArquivo)
 
         painelArquivo.BringToFront()
+
+    End Sub
+
+    Private Sub CampoInteiro_Click(
+    sender As Object,
+    e As EventArgs)
+
+        If CampoCanvas Is Nothing Then
+            Exit Sub
+        End If
+
+        CampoCanvas.LimparRecorteCampo()
+
+        CampoCanvas.Focus()
 
     End Sub
 

@@ -14,6 +14,7 @@
         Area
         Marcador
         Texto
+        RecortarCampo
 
     End Enum
 

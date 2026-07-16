@@ -17,8 +17,7 @@ Public Class FrmGerenciadorObjetos
     Private _atualizandoLista As Boolean
     Private _sincronizacaoPendente As Boolean
 
-    Public Sub New(
-    campo As CampoTatico)
+    Public Sub New(campo As CampoTatico)
 
         If campo Is Nothing Then
 
