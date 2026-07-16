@@ -10,6 +10,9 @@
     <Compile Update="FrmConfiguracoesExercicio.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="FrmPreferencias.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="FrmPrincipal.vb">
       <SubType>Form</SubType>
     </Compile>

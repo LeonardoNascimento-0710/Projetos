@@ -1,5 +1,6 @@
 ﻿Imports System.Collections.Generic
 Imports System.IO
+Imports System.Text.Json
 Imports System.Text
 Imports System.Drawing.Imaging
 Imports System.Drawing.Printing
@@ -10,6 +11,8 @@ Imports TacticalStudio.Core.Enums
 Imports TacticalStudio.Core.Classes
 
 Public Class FrmPrincipal
+
+#Region "Variáveis"
 
     Private CampoCanvas As CampoTatico
 
@@ -39,6 +42,12 @@ Public Class FrmPrincipal
 
     Private _processandoRecuperacao As Boolean
 
+    Private _preferencias As New PreferenciasAplicacao()
+
+    Private _caminhoPreferencias As String = String.Empty
+
+#End Region
+
     Private Sub FrmPrincipal_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         KeyPreview = True
@@ -51,11 +60,154 @@ Public Class FrmPrincipal
 
         CriarBarraArquivo()
 
+        CarregarPreferencias()
+
         ConfigurarSalvamentoAutomatico()
 
         MarcarComoSalvo()
 
         BeginInvoke(New MethodInvoker(AddressOf VerificarRecuperacaoSessao))
+
+    End Sub
+
+    Private Sub CarregarPreferencias()
+
+        Dim pastaAplicacao As String =
+        Path.Combine(
+            Environment.GetFolderPath(
+                Environment.SpecialFolder.LocalApplicationData),
+            "TacticalStudio")
+
+        Directory.CreateDirectory(
+        pastaAplicacao)
+
+        _caminhoPreferencias =
+        Path.Combine(
+            pastaAplicacao,
+            "preferencias.json")
+
+        _preferencias =
+        New PreferenciasAplicacao()
+
+        If Not File.Exists(
+        _caminhoPreferencias) Then
+
+            NormalizarPreferencias()
+
+            Exit Sub
+
+        End If
+
+        Try
+
+            Dim conteudoJson As String =
+            File.ReadAllText(
+                _caminhoPreferencias,
+                Encoding.UTF8)
+
+            Dim preferenciasCarregadas As PreferenciasAplicacao =
+            JsonSerializer.Deserialize(
+                Of PreferenciasAplicacao)(
+                conteudoJson)
+
+            If preferenciasCarregadas IsNot Nothing Then
+
+                _preferencias =
+                preferenciasCarregadas
+
+            End If
+
+        Catch ex As Exception
+
+            System.Diagnostics.Debug.WriteLine(
+            "Não foi possível carregar as preferências: " &
+            ex.Message)
+
+            _preferencias =
+            New PreferenciasAplicacao()
+
+        End Try
+
+        NormalizarPreferencias()
+
+    End Sub
+
+    Private Sub NormalizarPreferencias()
+
+        _preferencias.IntervaloAutosaveSegundos =
+        Math.Max(
+            30,
+            Math.Min(
+                600,
+                _preferencias.IntervaloAutosaveSegundos))
+
+        Dim resolucoesPermitidas() As Integer = {
+        1280,
+        1920,
+        2560,
+        3840,
+        5120
+    }
+
+        If Array.IndexOf(
+        resolucoesPermitidas,
+        _preferencias.ResolucaoExportacao) < 0 Then
+
+            _preferencias.ResolucaoExportacao =
+            2560
+
+        End If
+
+    End Sub
+
+    Private Sub SalvarPreferencias()
+
+        If String.IsNullOrWhiteSpace(
+        _caminhoPreferencias) Then
+
+            Exit Sub
+
+        End If
+
+        Try
+
+            NormalizarPreferencias()
+
+            Dim opcoes As New JsonSerializerOptions With {
+            .WriteIndented = True
+        }
+
+            Dim conteudoJson As String =
+            JsonSerializer.Serialize(
+                _preferencias,
+                opcoes)
+
+            Dim caminhoTemporario As String =
+            _caminhoPreferencias &
+            ".tmp"
+
+            File.WriteAllText(
+            caminhoTemporario,
+            conteudoJson,
+            New UTF8Encoding(False))
+
+            File.Move(
+            caminhoTemporario,
+            _caminhoPreferencias,
+            True)
+
+        Catch ex As Exception
+
+            MessageBox.Show(
+            "Não foi possível salvar as preferências." &
+            Environment.NewLine &
+            Environment.NewLine &
+            ex.Message,
+            "Preferências",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Error)
+
+        End Try
 
     End Sub
 
@@ -76,13 +228,30 @@ Public Class FrmPrincipal
             pastaAplicacao,
             "sessao_autosave.tactical")
 
+        _temporizadorAutosave.Stop()
+
+        RemoveHandler _temporizadorAutosave.Tick,
+        AddressOf TemporizadorAutosave_Tick
+
+        Dim intervaloSegundos As Integer =
+        Math.Max(
+            30,
+            Math.Min(
+                600,
+                _preferencias.IntervaloAutosaveSegundos))
+
         _temporizadorAutosave.Interval =
-        60000
+        intervaloSegundos *
+        1000
 
         AddHandler _temporizadorAutosave.Tick,
         AddressOf TemporizadorAutosave_Tick
 
-        _temporizadorAutosave.Start()
+        If _preferencias.AutosaveAtivo Then
+
+            _temporizadorAutosave.Start()
+
+        End If
 
     End Sub
 
@@ -93,6 +262,10 @@ Public Class FrmPrincipal
     End Sub
 
     Private Sub SalvarRecuperacaoAutomatica()
+
+        If Not _preferencias.AutosaveAtivo Then
+            Exit Sub
+        End If
 
         If CampoCanvas Is Nothing Then
             Exit Sub
@@ -1677,24 +1850,30 @@ Public Class FrmPrincipal
 
         End If
 
+        If modificadores = (Keys.Control Or Keys.Alt) AndAlso tecla = Keys.P Then
+
+            AbrirPreferencias()
+
+            Return True
+
+        End If
+
         Return MyBase.ProcessCmdKey(msg, keyData)
 
     End Function
 
     Private Sub CriarBarraArquivo()
 
-        If PnlSuperior.Controls.ContainsKey(
-            "PnlArquivoDinamico") Then
+        If PnlSuperior.Controls.ContainsKey("PnlArquivoDinamico") Then
 
-            PnlSuperior.Controls.RemoveByKey(
-                "PnlArquivoDinamico")
+            PnlSuperior.Controls.RemoveByKey("PnlArquivoDinamico")
 
         End If
 
         Dim painelArquivo As New FlowLayoutPanel With {
             .Name = "PnlArquivoDinamico",
             .Dock = DockStyle.Right,
-            .Width = 690,
+            .Width = 790,
             .FlowDirection = FlowDirection.LeftToRight,
             .WrapContents = False,
             .Padding = New Padding(5),
@@ -1715,9 +1894,68 @@ Public Class FrmPrincipal
 
         painelArquivo.Controls.Add(CriarBotaoArquivo("Imprimir", AddressOf ImprimirExercicio_Click))
 
+        painelArquivo.Controls.Add(CriarBotaoArquivo("Opções", AddressOf Preferencias_Click))
+
         PnlSuperior.Controls.Add(painelArquivo)
 
         painelArquivo.BringToFront()
+
+    End Sub
+
+    Private Sub Preferencias_Click(
+    sender As Object,
+    e As EventArgs)
+
+        AbrirPreferencias()
+
+    End Sub
+
+    Private Sub AbrirPreferencias()
+
+        Using formulario As New FrmPreferencias()
+
+            formulario.AutosaveAtivo =
+            _preferencias.AutosaveAtivo
+
+            formulario.IntervaloAutosaveSegundos =
+            _preferencias.IntervaloAutosaveSegundos
+
+            formulario.ResolucaoExportacao =
+            _preferencias.ResolucaoExportacao
+
+            If formulario.ShowDialog(Me) <>
+           DialogResult.OK Then
+
+                CampoCanvas.Focus()
+
+                Exit Sub
+
+            End If
+
+            _preferencias.AutosaveAtivo =
+            formulario.AutosaveAtivo
+
+            _preferencias.IntervaloAutosaveSegundos =
+            formulario.IntervaloAutosaveSegundos
+
+            _preferencias.ResolucaoExportacao =
+            formulario.ResolucaoExportacao
+
+            NormalizarPreferencias()
+
+            SalvarPreferencias()
+
+            ConfigurarSalvamentoAutomatico()
+
+            If Not _preferencias.AutosaveAtivo Then
+
+                ExcluirArquivoRecuperacao()
+
+            End If
+
+            CampoCanvas.Focus()
+
+        End Using
 
     End Sub
 
@@ -1858,7 +2096,7 @@ Public Class FrmPrincipal
 
                 Using imagem As Bitmap =
                 CampoCanvas.GerarImagemCampo(
-                    2560,
+                    _preferencias.ResolucaoExportacao,
                     incluirCabecalho,
                     _nomeExercicioAtual,
                     _categoriaExercicioAtual,
@@ -2356,7 +2594,7 @@ Public Class FrmPrincipal
 
                 Using imagemCampo As Bitmap =
                     CampoCanvas.GerarImagemCampo(
-                        2560,
+                        _preferencias.ResolucaoExportacao,
                         incluirCabecalho.Value,
                         _nomeExercicioAtual,
                         _categoriaExercicioAtual,
@@ -2554,7 +2792,7 @@ Public Class FrmPrincipal
 
             Using imagemCampo As Bitmap =
                 CampoCanvas.GerarImagemCampo(
-                    2560,
+                    _preferencias.ResolucaoExportacao,
                     incluirCabecalho.Value,
                     _nomeExercicioAtual,
                     _categoriaExercicioAtual,

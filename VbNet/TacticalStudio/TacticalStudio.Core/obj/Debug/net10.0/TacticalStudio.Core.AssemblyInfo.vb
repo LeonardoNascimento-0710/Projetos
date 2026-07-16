@@ -16,7 +16,7 @@ Imports System.Reflection
 <Assembly: System.Reflection.AssemblyCompanyAttribute("TacticalStudio.Core"),  _
  Assembly: System.Reflection.AssemblyConfigurationAttribute("Debug"),  _
  Assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0"),  _
- Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c6e1922bf0b959cb5f87e61ba7ff64676a9ed95c"),  _
+ Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+57802d834a81ee0600d64e4804f7eae9a65328aa"),  _
  Assembly: System.Reflection.AssemblyProductAttribute("TacticalStudio.Core"),  _
  Assembly: System.Reflection.AssemblyTitleAttribute("TacticalStudio.Core"),  _
  Assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")> 

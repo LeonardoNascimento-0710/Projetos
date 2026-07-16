@@ -1039,3 +1039,49 @@ Próxima etapa sugerida:
 - Adicionar opção para desativar o salvamento automático;
 - Salvar resolução padrão de exportação;
 - Preparar configurações gerais do TacticalStudio.
+
+======================================================================
+30. ETAPA 22 - PREFERÊNCIAS DO TACTICALSTUDIO
+======================================================================
+
+STATUS: CONCLUÍDA
+VERSÃO: v0.22.0
+
+Arquivos criados:
+- PreferenciasAplicacao.vb
+- FrmPreferencias.vb
+
+Arquivos alterados:
+- FrmPrincipal.vb
+
+Alterações realizadas:
+- Criada estrutura de preferências da aplicação;
+- Adicionada opção para ativar ou desativar o autosave;
+- Adicionada configuração do intervalo do autosave;
+- Adicionada escolha da resolução padrão das exportações;
+- As preferências são salvas em AppData Local;
+- As preferências são restauradas ao iniciar o TacticalStudio;
+- Criada tela própria de preferências;
+- Adicionado botão Opções na barra superior;
+- Adicionado atalho Ctrl+Alt+P;
+- O temporizador de autosave passa a respeitar as preferências;
+- O intervalo configurado é aplicado imediatamente;
+- O arquivo de recuperação é removido ao desativar o autosave;
+- PNG, PDF e impressão utilizam a resolução configurada;
+- Alterações nas preferências não marcam o exercício como não salvo;
+- Adicionada normalização de valores inválidos;
+- Evitada duplicação do evento Tick do temporizador.
+
+Resultado:
+- O usuário pode adaptar o TacticalStudio ao próprio fluxo de trabalho;
+- O autosave pode ser desativado ou ajustado;
+- A qualidade das exportações pode ser escolhida;
+- As configurações permanecem salvas entre execuções;
+- O arquivo .tactical continua independente das preferências gerais.
+
+Próxima etapa sugerida:
+- Adicionar tema claro e escuro;
+- Permitir escolher a cor principal da interface;
+- Salvar preferências visuais;
+- Preparar atalhos personalizáveis;
+- Criar tela Sobre com versão do sistema.

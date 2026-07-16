@@ -54,3 +54,4 @@ C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\T
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\PdfSharp.Snippets-gdi.dll
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\PdfSharp.System.dll
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\PdfSharp.WPFonts.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio\obj\Debug\net10.0-windows\TacticalStudio.FrmPreferencias.resources
