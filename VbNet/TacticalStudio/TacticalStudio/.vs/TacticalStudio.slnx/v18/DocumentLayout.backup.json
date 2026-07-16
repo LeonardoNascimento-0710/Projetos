@@ -31,8 +31,7 @@
               "ViewState": "AgIAAMUOAAAAAAAAAAArwCcQAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
               "WhenOpened": "2026-07-14T12:11:22.529Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -40,9 +39,9 @@
               "Title": "FrmPrincipal.vb",
               "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\FrmPrincipal.vb",
               "RelativeDocumentMoniker": "FrmPrincipal.vb",
-              "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\FrmPrincipal.vb*",
-              "RelativeToolTip": "FrmPrincipal.vb*",
-              "ViewState": "AgIAAEkHAAAAAAAAAAAQwDwJAAAAAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\FrmPrincipal.vb",
+              "RelativeToolTip": "FrmPrincipal.vb",
+              "ViewState": "AgIAADAIAAAAAAAAAAAowMEIAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
               "WhenOpened": "2026-07-14T12:16:37.605Z",
               "IsPinned": true,

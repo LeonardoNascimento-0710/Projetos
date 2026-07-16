@@ -31,6 +31,14 @@ Public Class FrmPrincipal
 
     Private ReadOnly _botoesFerramentas As New Dictionary(Of FerramentaCampo, Button)()
 
+    Private ReadOnly _temporizadorAutosave As New System.Windows.Forms.Timer()
+
+    Private _caminhoRecuperacao As String = String.Empty
+
+    Private _ultimaAssinaturaAutosave As String = String.Empty
+
+    Private _processandoRecuperacao As Boolean
+
     Private Sub FrmPrincipal_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         KeyPreview = True
@@ -43,7 +51,302 @@ Public Class FrmPrincipal
 
         CriarBarraArquivo()
 
+        ConfigurarSalvamentoAutomatico()
+
         MarcarComoSalvo()
+
+        BeginInvoke(New MethodInvoker(AddressOf VerificarRecuperacaoSessao))
+
+    End Sub
+
+    Private Sub ConfigurarSalvamentoAutomatico()
+
+        Dim pastaAplicacao As String =
+        Path.Combine(
+            Environment.GetFolderPath(
+                Environment.SpecialFolder.LocalApplicationData),
+            "TacticalStudio",
+            "Recuperacao")
+
+        Directory.CreateDirectory(
+        pastaAplicacao)
+
+        _caminhoRecuperacao =
+        Path.Combine(
+            pastaAplicacao,
+            "sessao_autosave.tactical")
+
+        _temporizadorAutosave.Interval =
+        60000
+
+        AddHandler _temporizadorAutosave.Tick,
+        AddressOf TemporizadorAutosave_Tick
+
+        _temporizadorAutosave.Start()
+
+    End Sub
+
+    Private Sub TemporizadorAutosave_Tick(sender As Object, e As EventArgs)
+
+        SalvarRecuperacaoAutomatica()
+
+    End Sub
+
+    Private Sub SalvarRecuperacaoAutomatica()
+
+        If CampoCanvas Is Nothing Then
+            Exit Sub
+        End If
+
+        If Not _alteracoesNaoSalvas Then
+            Exit Sub
+        End If
+
+        If String.IsNullOrWhiteSpace(
+        _caminhoRecuperacao) Then
+
+            Exit Sub
+
+        End If
+
+        Try
+
+            Dim assinaturaAtual As String =
+            ObterAssinaturaCompleta()
+
+            If File.Exists(
+            _caminhoRecuperacao) AndAlso
+           String.Equals(
+               assinaturaAtual,
+               _ultimaAssinaturaAutosave,
+               StringComparison.Ordinal) Then
+
+                Exit Sub
+
+            End If
+
+            Dim conteudoJson As String =
+            CampoCanvas.ExportarExercicioJson(
+                _nomeExercicioAtual,
+                _categoriaExercicioAtual,
+                _duracaoExercicioAtual,
+                _descricaoExercicioAtual,
+                _observacoesExercicioAtual)
+
+            Dim caminhoTemporario As String =
+            _caminhoRecuperacao &
+            ".tmp"
+
+            File.WriteAllText(
+            caminhoTemporario,
+            conteudoJson,
+            New UTF8Encoding(False))
+
+            File.Move(
+            caminhoTemporario,
+            _caminhoRecuperacao,
+            True)
+
+            _ultimaAssinaturaAutosave =
+            assinaturaAtual
+
+        Catch ex As Exception
+
+            System.Diagnostics.Debug.WriteLine(
+            "Falha no salvamento automático: " &
+            ex.Message)
+
+        End Try
+
+    End Sub
+
+    Private Sub ExcluirArquivoRecuperacao()
+
+        If String.IsNullOrWhiteSpace(
+        _caminhoRecuperacao) Then
+
+            Exit Sub
+
+        End If
+
+        Try
+
+            If File.Exists(
+            _caminhoRecuperacao) Then
+
+                File.Delete(
+                _caminhoRecuperacao)
+
+            End If
+
+            Dim caminhoTemporario As String =
+            _caminhoRecuperacao &
+            ".tmp"
+
+            If File.Exists(
+            caminhoTemporario) Then
+
+                File.Delete(
+                caminhoTemporario)
+
+            End If
+
+            _ultimaAssinaturaAutosave =
+            String.Empty
+
+        Catch ex As Exception
+
+            System.Diagnostics.Debug.WriteLine(
+            "Não foi possível excluir a recuperação: " &
+            ex.Message)
+
+        End Try
+
+    End Sub
+
+    Private Sub VerificarRecuperacaoSessao()
+
+        If CampoCanvas Is Nothing Then
+            Exit Sub
+        End If
+
+        If String.IsNullOrWhiteSpace(
+        _caminhoRecuperacao) Then
+
+            Exit Sub
+
+        End If
+
+        If Not File.Exists(
+        _caminhoRecuperacao) Then
+
+            Exit Sub
+
+        End If
+
+        Dim dataRecuperacao As String =
+        File.GetLastWriteTime(
+            _caminhoRecuperacao).
+            ToString(
+                "dd/MM/yyyy 'às' HH:mm")
+
+        Dim resposta As DialogResult =
+        MessageBox.Show(
+            "Foi encontrada uma sessão não finalizada do TacticalStudio." &
+            Environment.NewLine &
+            Environment.NewLine &
+            "Última recuperação: " &
+            dataRecuperacao &
+            Environment.NewLine &
+            Environment.NewLine &
+            "Deseja recuperar essa sessão?",
+            "Recuperação de sessão",
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question)
+
+        If resposta <> DialogResult.Yes Then
+
+            ExcluirArquivoRecuperacao()
+
+            Exit Sub
+
+        End If
+
+        _processandoRecuperacao =
+        True
+
+        Try
+
+            Dim conteudoJson As String =
+            File.ReadAllText(
+                _caminhoRecuperacao,
+                Encoding.UTF8)
+
+            Dim arquivo As ArquivoExercicio =
+            CampoCanvas.ImportarExercicioJson(
+                conteudoJson)
+
+            _caminhoArquivoAtual =
+            String.Empty
+
+            If String.IsNullOrWhiteSpace(
+            arquivo.Nome) Then
+
+                _nomeExercicioAtual =
+                "Exercício recuperado"
+
+            Else
+
+                _nomeExercicioAtual =
+                arquivo.Nome
+
+            End If
+
+            _categoriaExercicioAtual =
+            If(
+                String.IsNullOrWhiteSpace(
+                    arquivo.Categoria),
+                "Tático",
+                arquivo.Categoria)
+
+            _duracaoExercicioAtual =
+            Math.Max(
+                1,
+                arquivo.DuracaoMinutos)
+
+            _descricaoExercicioAtual =
+            If(
+                arquivo.Descricao,
+                String.Empty)
+
+            _observacoesExercicioAtual =
+            If(
+                arquivo.Observacoes,
+                String.Empty)
+
+            'A recuperação ainda não é considerada
+            'um salvamento manual.
+            _assinaturaSalva =
+            String.Empty
+
+            _alteracoesNaoSalvas =
+            True
+
+            _ultimaAssinaturaAutosave =
+            ObterAssinaturaCompleta()
+
+            AtualizarTituloJanela()
+
+            MessageBox.Show(
+            "A sessão foi recuperada com sucesso." &
+            Environment.NewLine &
+            Environment.NewLine &
+            "Use Ctrl+S para salvar o exercício.",
+            "Sessão recuperada",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information)
+
+            CampoCanvas.Focus()
+
+        Catch ex As Exception
+
+            MessageBox.Show(
+            "Não foi possível recuperar a sessão." &
+            Environment.NewLine &
+            Environment.NewLine &
+            ex.Message,
+            "Erro na recuperação",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Error)
+
+            ExcluirArquivoRecuperacao()
+
+        Finally
+
+            _processandoRecuperacao =
+            False
+
+        End Try
 
     End Sub
 
@@ -1468,6 +1771,8 @@ Public Class FrmPrincipal
 
         MarcarComoSalvo()
 
+        ExcluirArquivoRecuperacao()
+
         CampoCanvas.Focus()
 
     End Sub
@@ -1657,6 +1962,8 @@ Public Class FrmPrincipal
 
                 MarcarComoSalvo()
 
+                ExcluirArquivoRecuperacao()
+
                 CampoCanvas.Focus()
 
             Catch ex As Exception
@@ -1676,8 +1983,7 @@ Public Class FrmPrincipal
 
     End Sub
 
-    Private Function SalvarExercicio(
-    Optional salvarComo As Boolean = False) As Boolean
+    Private Function SalvarExercicio(Optional salvarComo As Boolean = False) As Boolean
 
         Dim caminhoDestino As String =
         _caminhoArquivoAtual
@@ -1726,6 +2032,8 @@ Public Class FrmPrincipal
             _caminhoArquivoAtual = caminhoDestino
 
             MarcarComoSalvo()
+
+            ExcluirArquivoRecuperacao()
 
             Return True
 
@@ -1803,6 +2111,12 @@ Public Class FrmPrincipal
 
         AtualizarTituloJanela()
 
+        If Not _alteracoesNaoSalvas AndAlso Not _processandoRecuperacao Then
+
+            ExcluirArquivoRecuperacao()
+
+        End If
+
     End Sub
 
     Private Function ConfirmarAlteracoesNaoSalvas() As Boolean
@@ -1841,15 +2155,28 @@ Public Class FrmPrincipal
 
     End Function
 
+    Protected Overrides Sub OnDeactivate(e As EventArgs)
+
+        MyBase.OnDeactivate(e)
+
+        SalvarRecuperacaoAutomatica()
+
+    End Sub
+
     Protected Overrides Sub OnFormClosing(e As FormClosingEventArgs)
 
         If Not ConfirmarAlteracoesNaoSalvas() Then
 
-            e.Cancel = True
+            e.Cancel =
+            True
 
             Return
 
         End If
+
+        _temporizadorAutosave.Stop()
+
+        ExcluirArquivoRecuperacao()
 
         MyBase.OnFormClosing(e)
 
