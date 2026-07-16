@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{41BF03F2-A3DF-9DBD-C8CA-C337C7716C7E}|TacticalStudio.vbproj|c:\\users\\administrador\\onedrive\\desktop\\projetos\\projetos\\vbnet\\tacticalstudio\\tacticalstudio\\frmconfiguracoesexercicio.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{41BF03F2-A3DF-9DBD-C8CA-C337C7716C7E}|TacticalStudio.vbproj|solutionrelative:frmconfiguracoesexercicio.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41BF03F2-A3DF-9DBD-C8CA-C337C7716C7E}|TacticalStudio.vbproj|c:\\users\\administrador\\onedrive\\desktop\\projetos\\projetos\\vbnet\\tacticalstudio\\tacticalstudio\\frmconfiguracoesexercicio.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
+      "RelativeMoniker": "D:0:0:{41BF03F2-A3DF-9DBD-C8CA-C337C7716C7E}|TacticalStudio.vbproj|solutionrelative:frmconfiguracoesexercicio.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{41BF03F2-A3DF-9DBD-C8CA-C337C7716C7E}|TacticalStudio.vbproj|c:\\users\\administrador\\onedrive\\desktop\\projetos\\projetos\\vbnet\\tacticalstudio\\tacticalstudio\\frmprincipal.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
       "RelativeMoniker": "D:0:0:{41BF03F2-A3DF-9DBD-C8CA-C337C7716C7E}|TacticalStudio.vbproj|solutionrelative:frmprincipal.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
     },
@@ -29,17 +37,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "CampoTatico.vb",
               "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\Controles\\CampoTatico.vb",
               "RelativeDocumentMoniker": "Controles\\CampoTatico.vb",
               "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\Controles\\CampoTatico.vb",
               "RelativeToolTip": "Controles\\CampoTatico.vb",
-              "ViewState": "AgIAAKUAAAAAAAAAAAAqwHgEAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABQAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
               "WhenOpened": "2026-07-14T12:11:22.529Z",
               "IsPinned": true,
@@ -47,13 +55,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "FrmPrincipal.vb",
               "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\FrmPrincipal.vb",
               "RelativeDocumentMoniker": "FrmPrincipal.vb",
               "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\FrmPrincipal.vb",
               "RelativeToolTip": "FrmPrincipal.vb",
-              "ViewState": "AgIAAFwEAAAAAAAAAAAAAOYEAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABUHAAAAAAAAAAAqwFsHAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
               "WhenOpened": "2026-07-14T12:16:37.605Z",
               "IsPinned": true,
@@ -65,19 +73,45 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
+              "Title": "FrmConfiguracoesExercicio.vb",
+              "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\FrmConfiguracoesExercicio.vb",
+              "RelativeDocumentMoniker": "FrmConfiguracoesExercicio.vb",
+              "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\FrmConfiguracoesExercicio.vb",
+              "RelativeToolTip": "FrmConfiguracoesExercicio.vb",
+              "ViewState": "AgIAAFIAAAAAAAAAAAAkwGEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2026-07-16T11:56:34.855Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FrmConfiguracoesExercicio.vb [Projeto]",
+              "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\FrmConfiguracoesExercicio.vb",
+              "RelativeDocumentMoniker": "FrmConfiguracoesExercicio.vb",
+              "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\FrmConfiguracoesExercicio.vb [Projeto]",
+              "RelativeToolTip": "FrmConfiguracoesExercicio.vb [Projeto]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2026-07-16T11:56:16.305Z",
+              "EditorCaption": " [Projeto]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "ArquivoExercicio.vb",
               "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio.Core\\Classes\\ArquivoExercicio.vb",
               "RelativeDocumentMoniker": "..\\TacticalStudio.Core\\Classes\\ArquivoExercicio.vb",
               "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio.Core\\Classes\\ArquivoExercicio.vb",
               "RelativeToolTip": "..\\TacticalStudio.Core\\Classes\\ArquivoExercicio.vb",
-              "ViewState": "AgIAAAIAAAAAAAAAAAAuwBQAAAANAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2026-07-15T11:39:40.02Z"
+              "WhenOpened": "2026-07-15T11:39:40.02Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "Tema.vb",
               "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\Themes\\Tema.vb",
               "RelativeDocumentMoniker": "Themes\\Tema.vb",
@@ -89,7 +123,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "FrmPrincipal.vb [Projeto]",
               "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\FrmPrincipal.vb",
               "RelativeDocumentMoniker": "FrmPrincipal.vb",

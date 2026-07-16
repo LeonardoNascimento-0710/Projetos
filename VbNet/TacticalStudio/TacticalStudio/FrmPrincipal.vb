@@ -14,6 +14,18 @@ Public Class FrmPrincipal
 
     Private _nomeExercicioAtual As String = "Novo exercício"
 
+    Private _categoriaExercicioAtual As String =
+    "Tático"
+
+    Private _duracaoExercicioAtual As Integer =
+    30
+
+    Private _descricaoExercicioAtual As String =
+    String.Empty
+
+    Private _observacoesExercicioAtual As String =
+    String.Empty
+
     Private _assinaturaSalva As String = String.Empty
 
     Private _alteracoesNaoSalvas As Boolean
@@ -1259,15 +1271,13 @@ Public Class FrmPrincipal
 
         If modificadores = (Keys.Control Or Keys.Shift) AndAlso tecla = Keys.S Then
 
-            SalvarExercicio(
-        True)
+            SalvarExercicio(True)
 
             Return True
 
         End If
 
-        If modificadores = Keys.Control AndAlso
-   tecla = Keys.S Then
+        If modificadores = Keys.Control AndAlso tecla = Keys.S Then
 
             SalvarExercicio()
 
@@ -1275,8 +1285,7 @@ Public Class FrmPrincipal
 
         End If
 
-        If modificadores = Keys.Control AndAlso
-   tecla = Keys.O Then
+        If modificadores = Keys.Control AndAlso tecla = Keys.O Then
 
             AbrirExercicio()
 
@@ -1284,8 +1293,7 @@ Public Class FrmPrincipal
 
         End If
 
-        If modificadores = Keys.Control AndAlso
-   tecla = Keys.N Then
+        If modificadores = Keys.Control AndAlso tecla = Keys.N Then
 
             NovoExercicio_Click(
         Me,
@@ -1295,8 +1303,7 @@ Public Class FrmPrincipal
 
         End If
 
-        If modificadores = Keys.Control AndAlso
-   tecla = Keys.D Then
+        If modificadores = Keys.Control AndAlso tecla = Keys.D Then
 
             CampoCanvas.DuplicarSelecionado()
 
@@ -1304,9 +1311,7 @@ Public Class FrmPrincipal
 
         End If
 
-        If modificadores =
-   (Keys.Control Or Keys.Shift) AndAlso
-   tecla = Keys.Up Then
+        If modificadores = (Keys.Control Or Keys.Shift) AndAlso tecla = Keys.Up Then
 
             CampoCanvas.TrazerParaFrente()
 
@@ -1314,9 +1319,7 @@ Public Class FrmPrincipal
 
         End If
 
-        If modificadores =
-   (Keys.Control Or Keys.Shift) AndAlso
-   tecla = Keys.Down Then
+        If modificadores = (Keys.Control Or Keys.Shift) AndAlso tecla = Keys.Down Then
 
             CampoCanvas.EnviarParaTras()
 
@@ -1324,8 +1327,7 @@ Public Class FrmPrincipal
 
         End If
 
-        If modificadores = Keys.Control AndAlso
-       tecla = Keys.Z Then
+        If modificadores = Keys.Control AndAlso tecla = Keys.Z Then
 
             CampoCanvas.Desfazer()
 
@@ -1333,8 +1335,7 @@ Public Class FrmPrincipal
 
         End If
 
-        If modificadores = Keys.Control AndAlso
-       tecla = Keys.Y Then
+        If modificadores = Keys.Control AndAlso tecla = Keys.Y Then
 
             CampoCanvas.Refazer()
 
@@ -1342,11 +1343,17 @@ Public Class FrmPrincipal
 
         End If
 
-        If modificadores =
-       (Keys.Control Or Keys.Shift) AndAlso
-       tecla = Keys.Z Then
+        If modificadores = (Keys.Control Or Keys.Shift) AndAlso tecla = Keys.Z Then
 
             CampoCanvas.Refazer()
+
+            Return True
+
+        End If
+
+        If modificadores = Keys.Control AndAlso tecla = Keys.I Then
+
+            AbrirConfiguracoesExercicio()
 
             Return True
 
@@ -1371,32 +1378,24 @@ Public Class FrmPrincipal
         Dim painelArquivo As New FlowLayoutPanel With {
             .Name = "PnlArquivoDinamico",
             .Dock = DockStyle.Right,
-            .Width = 400,
+            .Width = 500,
             .FlowDirection = FlowDirection.LeftToRight,
             .WrapContents = False,
             .Padding = New Padding(5),
             .BackColor = Tema.CorPrimaria
         }
 
-        painelArquivo.Controls.Add(
-            CriarBotaoArquivo(
-                "Novo",
-                AddressOf NovoExercicio_Click))
+        painelArquivo.Controls.Add(CriarBotaoArquivo("Novo", AddressOf NovoExercicio_Click))
 
-        painelArquivo.Controls.Add(
-            CriarBotaoArquivo(
-                "Abrir",
-                AddressOf AbrirExercicio_Click))
+        painelArquivo.Controls.Add(CriarBotaoArquivo("Abrir", AddressOf AbrirExercicio_Click))
 
-        painelArquivo.Controls.Add(
-            CriarBotaoArquivo(
-                "Salvar",
-                AddressOf SalvarExercicio_Click))
+        painelArquivo.Controls.Add(CriarBotaoArquivo("Salvar", AddressOf SalvarExercicio_Click))
 
         painelArquivo.Controls.Add(CriarBotaoArquivo("Exportar", AddressOf ExportarImagem_Click))
 
-        PnlSuperior.Controls.Add(
-            painelArquivo)
+        painelArquivo.Controls.Add(CriarBotaoArquivo("Dados", AddressOf ConfiguracoesExercicio_Click))
+
+        PnlSuperior.Controls.Add(painelArquivo)
 
         painelArquivo.BringToFront()
 
@@ -1440,8 +1439,15 @@ Public Class FrmPrincipal
         _caminhoArquivoAtual =
         String.Empty
 
-        _nomeExercicioAtual =
-        "Novo exercício"
+        _nomeExercicioAtual = "Novo exercício"
+
+        _categoriaExercicioAtual = "Tático"
+
+        _duracaoExercicioAtual = 30
+
+        _descricaoExercicioAtual = String.Empty
+
+        _observacoesExercicioAtual = String.Empty
 
         MarcarComoSalvo()
 
@@ -1563,11 +1569,9 @@ Public Class FrmPrincipal
                 "Arquivo JSON (*.json)|*.json|" &
                 "Todos os arquivos (*.*)|*.*"
 
-            dialogo.Multiselect =
-                False
+            dialogo.Multiselect = False
 
-            If dialogo.ShowDialog() <>
-               DialogResult.OK Then
+            If dialogo.ShowDialog() <> DialogResult.OK Then
 
                 Exit Sub
 
@@ -1575,20 +1579,29 @@ Public Class FrmPrincipal
 
             Try
 
-                Dim conteudoJson As String =
-                    File.ReadAllText(
-                        dialogo.FileName,
-                        Encoding.UTF8)
+                Dim conteudoJson As String = File.ReadAllText(dialogo.FileName, Encoding.UTF8)
 
-                CampoCanvas.ImportarExercicioJson(
-                    conteudoJson)
+                Dim arquivo As ArquivoExercicio = CampoCanvas.ImportarExercicioJson(conteudoJson)
 
-                _caminhoArquivoAtual =
-                    dialogo.FileName
+                _caminhoArquivoAtual = dialogo.FileName
 
-                _nomeExercicioAtual =
-                    Path.GetFileNameWithoutExtension(
-                        dialogo.FileName)
+                If String.IsNullOrWhiteSpace(arquivo.Nome) Then
+
+                    _nomeExercicioAtual = Path.GetFileNameWithoutExtension(dialogo.FileName)
+
+                Else
+
+                    _nomeExercicioAtual = arquivo.Nome
+
+                End If
+
+                _categoriaExercicioAtual = If(String.IsNullOrWhiteSpace(arquivo.Categoria), "Tático", arquivo.Categoria)
+
+                _duracaoExercicioAtual = Math.Max(1, arquivo.DuracaoMinutos)
+
+                _descricaoExercicioAtual = If(arquivo.Descricao, String.Empty)
+
+                _observacoesExercicioAtual = If(arquivo.Observacoes, String.Empty)
 
                 MarcarComoSalvo()
 
@@ -1640,15 +1653,13 @@ Public Class FrmPrincipal
                 _nomeExercicioAtual &
                 ".tactical"
 
-                If dialogo.ShowDialog() <>
-               DialogResult.OK Then
+                If dialogo.ShowDialog() <> DialogResult.OK Then
 
                     Return False
 
                 End If
 
-                caminhoDestino =
-                dialogo.FileName
+                caminhoDestino = dialogo.FileName
 
             End Using
 
@@ -1656,24 +1667,11 @@ Public Class FrmPrincipal
 
         Try
 
-            Dim nomeExercicio As String =
-            Path.GetFileNameWithoutExtension(
-                caminhoDestino)
+            Dim conteudoJson As String = CampoCanvas.ExportarExercicioJson(_nomeExercicioAtual, _categoriaExercicioAtual, _duracaoExercicioAtual, _descricaoExercicioAtual, _observacoesExercicioAtual)
 
-            Dim conteudoJson As String =
-            CampoCanvas.ExportarExercicioJson(
-                nomeExercicio)
+            File.WriteAllText(caminhoDestino, conteudoJson, New UTF8Encoding(False))
 
-            File.WriteAllText(
-            caminhoDestino,
-            conteudoJson,
-            New UTF8Encoding(False))
-
-            _caminhoArquivoAtual =
-            caminhoDestino
-
-            _nomeExercicioAtual =
-            nomeExercicio
+            _caminhoArquivoAtual = caminhoDestino
 
             MarcarComoSalvo()
 
@@ -1729,11 +1727,9 @@ Public Class FrmPrincipal
             Exit Sub
         End If
 
-        _assinaturaSalva =
-            CampoCanvas.ObterAssinaturaEstado()
+        _assinaturaSalva = ObterAssinaturaCompleta()
 
-        _alteracoesNaoSalvas =
-            False
+        _alteracoesNaoSalvas = False
 
         AtualizarTituloJanela()
 
@@ -1745,8 +1741,7 @@ Public Class FrmPrincipal
             Exit Sub
         End If
 
-        Dim assinaturaAtual As String =
-            CampoCanvas.ObterAssinaturaEstado()
+        Dim assinaturaAtual As String = ObterAssinaturaCompleta()
 
         _alteracoesNaoSalvas =
             Not String.Equals(
@@ -1808,5 +1803,81 @@ Public Class FrmPrincipal
 
     End Sub
 
+    Private Sub ConfiguracoesExercicio_Click(
+    sender As Object,
+    e As EventArgs)
+
+        AbrirConfiguracoesExercicio()
+
+    End Sub
+
+    Private Sub AbrirConfiguracoesExercicio()
+
+        Using formulario As New FrmConfiguracoesExercicio()
+
+            formulario.NomeExercicio =
+                _nomeExercicioAtual
+
+            formulario.CategoriaExercicio =
+                _categoriaExercicioAtual
+
+            formulario.DuracaoMinutos =
+                _duracaoExercicioAtual
+
+            formulario.DescricaoExercicio =
+                _descricaoExercicioAtual
+
+            formulario.ObservacoesExercicio =
+                _observacoesExercicioAtual
+
+            If formulario.ShowDialog(Me) <>
+               DialogResult.OK Then
+
+                CampoCanvas.Focus()
+
+                Exit Sub
+
+            End If
+
+            _nomeExercicioAtual =
+                formulario.NomeExercicio
+
+            _categoriaExercicioAtual =
+                formulario.CategoriaExercicio
+
+            _duracaoExercicioAtual =
+                formulario.DuracaoMinutos
+
+            _descricaoExercicioAtual =
+                formulario.DescricaoExercicio
+
+            _observacoesExercicioAtual =
+                formulario.ObservacoesExercicio
+
+            AtualizarEstadoAlteracoes()
+
+            CampoCanvas.Focus()
+
+        End Using
+
+    End Sub
+
+    Private Function ObterAssinaturaCompleta() As String
+
+        If CampoCanvas Is Nothing Then
+            Return String.Empty
+        End If
+
+        Return String.Join(
+            ChrW(30),
+            CampoCanvas.ObterAssinaturaEstado(),
+            _nomeExercicioAtual,
+            _categoriaExercicioAtual,
+            _duracaoExercicioAtual.ToString(),
+            _descricaoExercicioAtual,
+            _observacoesExercicioAtual)
+
+    End Function
 
 End Class
+

@@ -7,6 +7,9 @@
     <Compile Update="Controles\CampoTatico.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="FrmConfiguracoesExercicio.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="FrmPrincipal.vb">
       <SubType>Form</SubType>
     </Compile>

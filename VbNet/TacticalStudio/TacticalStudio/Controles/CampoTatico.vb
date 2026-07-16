@@ -3638,7 +3638,11 @@ Public Class CampoTatico
     End Sub
 
     Public Function ExportarExercicioJson(
-    nomeExercicio As String) As String
+    nomeExercicio As String,
+    categoria As String,
+    duracaoMinutos As Integer,
+    descricao As String,
+    observacoes As String) As String
 
         If String.IsNullOrWhiteSpace(
         nomeExercicio) Then
@@ -3648,9 +3652,32 @@ Public Class CampoTatico
 
         End If
 
+        If String.IsNullOrWhiteSpace(
+        categoria) Then
+
+            categoria =
+            "Tático"
+
+        End If
+
+        If duracaoMinutos < 1 Then
+
+            duracaoMinutos =
+            1
+
+        End If
+
         Dim arquivo As New ArquivoExercicio With {
-        .VersaoFormato = 1,
+        .VersaoFormato = 2,
         .Nome = nomeExercicio.Trim(),
+        .Categoria = categoria.Trim(),
+        .DuracaoMinutos = duracaoMinutos,
+        .Descricao = If(
+            descricao,
+            String.Empty),
+        .Observacoes = If(
+            observacoes,
+            String.Empty),
         .Campo = CapturarEstadoAtual()
     }
 
@@ -3664,8 +3691,8 @@ Public Class CampoTatico
 
     End Function
 
-    Public Sub ImportarExercicioJson(
-    conteudoJson As String)
+    Public Function ImportarExercicioJson(
+    conteudoJson As String) As ArquivoExercicio
 
         If String.IsNullOrWhiteSpace(
         conteudoJson) Then
@@ -3688,7 +3715,7 @@ Public Class CampoTatico
 
         End If
 
-        If arquivo.VersaoFormato > 1 Then
+        If arquivo.VersaoFormato > 2 Then
 
             Throw New System.IO.InvalidDataException(
             "Este exercício foi criado em uma versão mais recente do TacticalStudio.")
@@ -3700,7 +3727,9 @@ Public Class CampoTatico
 
         ReiniciarHistorico()
 
-    End Sub
+        Return arquivo
+
+    End Function
 
     Public Sub NovoExercicio()
 
