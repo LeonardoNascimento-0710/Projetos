@@ -16,6 +16,39 @@
 
         Public Property Bloqueado As Boolean = False
 
+        Public Property EscalaVisual As Single
+
+            Get
+
+                Return _escalaVisual
+
+            End Get
+
+            Set(value As Single)
+
+                If Single.IsNaN(value) OrElse
+           Single.IsInfinity(value) Then
+
+                    _escalaVisual =
+                1.0F
+
+                    Exit Property
+
+                End If
+
+                _escalaVisual =
+            Math.Max(
+                0.5F,
+                Math.Min(
+                    2.5F,
+                    value))
+
+            End Set
+
+        End Property
+
+        Private _escalaVisual As Single = 1.0F
+
         Public Sub New()
 
             Posicao = New Posicao()

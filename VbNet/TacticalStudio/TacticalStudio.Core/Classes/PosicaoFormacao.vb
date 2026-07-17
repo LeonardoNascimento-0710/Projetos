@@ -8,4 +8,6 @@
 
     Public Property YPercentual As Single
 
+    Public Property CorCamisaArgb As Integer = System.Drawing.Color.FromArgb(185, 35, 35).ToArgb()
+
 End Class

@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup />
   <ItemGroup>
     <Compile Update="Controles\CampoControle.vb">
       <SubType>UserControl</SubType>
@@ -7,25 +8,25 @@
     <Compile Update="Controles\CampoTatico.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Formulários\FrmBibliotecaExercicios.vb">
+    <Compile Update="Formularios\FrmBibliotecaExercicios.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Formulários\FrmConfiguracoesExercicio.vb">
+    <Compile Update="Formularios\FrmConfiguracoesExercicio.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Formulários\FrmFormacoes.vb">
+    <Compile Update="Formularios\FrmFormacoes.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Formulários\FrmGerenciadorObjetos.vb">
+    <Compile Update="Formularios\FrmGerenciadorObjetos.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Formulários\FrmPreferencias.vb">
+    <Compile Update="Formularios\FrmPreferencias.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Formulários\FrmPrincipal.vb">
+    <Compile Update="Formularios\FrmPrincipal.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Formulários\FrmSobre.vb">
+    <Compile Update="Formularios\FrmSobre.vb">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>

@@ -482,9 +482,12 @@ Public Class CampoTatico
         yPercentual As Double) As Jogador
 
         Dim jogador As New Jogador With {
-            .Numero = numero,
-            .Nome = nome
-        }
+    .Numero = numero,
+    .Nome = nome,
+    .Direcao = DirecaoJogador.Cima,
+    .Pose = PoseJogador.Parado,
+    .EscalaVisual = 1.0F
+}
 
         jogador.Posicao.X = LimitarPercentual(xPercentual)
         jogador.Posicao.Y = LimitarPercentual(yPercentual)
@@ -546,17 +549,18 @@ Public Class CampoTatico
                 "Jogador",
                 posicao.Nome.Trim())
 
+
             Dim xCampo As Single = 100.0F - posicao.YPercentual
 
             Dim yCampo As Single = posicao.XPercentual
 
             Dim jogador As Jogador = AdicionarJogador(posicao.Numero, nomeJogador, xCampo, yCampo)
 
-            jogadoresCriados.Add(
-            jogador)
+            jogador.CorCamisaArgb = posicao.CorCamisaArgb
 
-            objetosSelecionar.Add(
-            jogador)
+            jogadoresCriados.Add(jogador)
+
+            objetosSelecionar.Add(jogador)
 
         Next
 
@@ -691,8 +695,9 @@ Public Class CampoTatico
                 jogador.Posicao.Y),
         .YPercentual =
             100.0F -
-            CSng(
-                jogador.Posicao.X)
+            CSng(jogador.Posicao.X),
+            .CorCamisaArgb =
+    jogador.CorCamisaArgb
     })
 
         Next
@@ -2567,94 +2572,1043 @@ Public Class CampoTatico
     End Sub
 
     Private Sub DesenharJogador(
-        g As Graphics,
-        jogador As Jogador,
-        campo As RectangleF)
+    g As Graphics,
+    jogador As Jogador,
+    campo As RectangleF)
 
         Dim centro As PointF =
-            ConverterPercentualParaTela(
-                jogador.Posicao,
-                campo)
+        ConverterPercentualParaTela(
+            jogador.Posicao,
+            campo)
+
+        Dim escala As Single =
+        NormalizarEscalaVisual(
+            jogador.EscalaVisual)
+
+        '==================================================
+        ' SOMBRA NO GRAMADO
+        '==================================================
 
         Using sombra As New SolidBrush(
-            Color.FromArgb(80, 0, 0, 0))
+        Color.FromArgb(
+            75,
+            0,
+            0,
+            0))
 
             g.FillEllipse(
-                sombra,
-                centro.X - RaioJogador + 3.0F,
-                centro.Y - RaioJogador + 5.0F,
-                RaioJogador * 2.0F,
-                RaioJogador * 2.0F)
+            sombra,
+            centro.X -
+            13.0F *
+            escala,
+            centro.Y +
+            12.0F *
+            escala,
+            26.0F *
+            escala,
+            10.0F *
+            escala)
 
         End Using
 
-        Using pincelJogador As New SolidBrush(
-            Color.FromArgb(185, 35, 35))
+        Dim estadoGrafico As GraphicsState =
+        g.Save()
 
-            g.FillEllipse(
-                pincelJogador,
-                centro.X - RaioJogador,
-                centro.Y - RaioJogador,
-                RaioJogador * 2.0F,
-                RaioJogador * 2.0F)
+        Try
 
-        End Using
+            g.TranslateTransform(
+            centro.X,
+            centro.Y)
 
-        Using bordaJogador As New Pen(
-            Color.White,
-            2.0F)
+            g.RotateTransform(
+            ObterAnguloDirecaoJogador(
+                jogador.Direcao))
 
-            g.DrawEllipse(
-                bordaJogador,
-                centro.X - RaioJogador,
-                centro.Y - RaioJogador,
-                RaioJogador * 2.0F,
-                RaioJogador * 2.0F)
+            g.ScaleTransform(
+            escala,
+            escala)
 
-        End Using
+            DesenharSpriteVetorialJogador(
+            g,
+            jogador)
+
+        Finally
+
+            g.Restore(
+            estadoGrafico)
+
+        End Try
+
+        '==================================================
+        ' SELEÇÃO
+        '==================================================
 
         If jogador.Selecionado Then
 
             DesenharSelecao(
-                g,
-                centro,
-                RaioJogador)
+            g,
+            centro,
+            28.0F *
+            escala)
 
         End If
 
-        DesenharNumeroJogador(
-            g,
-            jogador,
-            centro)
+    End Sub
+
+    Private Function NormalizarEscalaVisual(
+    escala As Single) As Single
+
+        If Single.IsNaN(
+        escala) OrElse
+       Single.IsInfinity(
+           escala) Then
+
+            Return 1.0F
+
+        End If
+
+        Return Math.Max(
+        0.5F,
+        Math.Min(
+            2.5F,
+            escala))
+
+    End Function
+
+    Private Function ObterAnguloDirecaoJogador(
+    direcao As DirecaoJogador) As Single
+
+        Select Case direcao
+
+            Case DirecaoJogador.Cima
+
+                Return 0.0F
+
+            Case DirecaoJogador.CimaDireita
+
+                Return 45.0F
+
+            Case DirecaoJogador.Direita
+
+                Return 90.0F
+
+            Case DirecaoJogador.BaixoDireita
+
+                Return 135.0F
+
+            Case DirecaoJogador.Baixo
+
+                Return 180.0F
+
+            Case DirecaoJogador.BaixoEsquerda
+
+                Return 225.0F
+
+            Case DirecaoJogador.Esquerda
+
+                Return 270.0F
+
+            Case DirecaoJogador.CimaEsquerda
+
+                Return 315.0F
+
+            Case Else
+
+                Return 90.0F
+
+        End Select
+
+    End Function
+
+    Private Function ObterVetorDirecaoJogador(
+    direcao As DirecaoJogador) As PointF
+
+        Const diagonal As Single =
+        0.707106769F
+
+        Select Case direcao
+
+            Case DirecaoJogador.Direita
+
+                Return New PointF(
+                1.0F,
+                0.0F)
+
+            Case DirecaoJogador.BaixoDireita
+
+                Return New PointF(
+                diagonal,
+                diagonal)
+
+            Case DirecaoJogador.Baixo
+
+                Return New PointF(
+                0.0F,
+                1.0F)
+
+            Case DirecaoJogador.BaixoEsquerda
+
+                Return New PointF(
+                -diagonal,
+                diagonal)
+
+            Case DirecaoJogador.Esquerda
+
+                Return New PointF(
+                -1.0F,
+                0.0F)
+
+            Case DirecaoJogador.CimaEsquerda
+
+                Return New PointF(
+                -diagonal,
+                -diagonal)
+
+            Case DirecaoJogador.Cima
+
+                Return New PointF(
+                0.0F,
+                -1.0F)
+
+            Case DirecaoJogador.CimaDireita
+
+                Return New PointF(
+                diagonal,
+                -diagonal)
+
+            Case Else
+
+                Return New PointF(
+                1.0F,
+                0.0F)
+
+        End Select
+
+    End Function
+
+    Private Sub DesenharBracoJogador(
+    g As Graphics,
+    ombro As PointF,
+    mao As PointF,
+    corManga As Color,
+    corPele As Color)
+
+        Dim cotovelo As New PointF(
+        ombro.X +
+        (mao.X - ombro.X) *
+        0.52F,
+        ombro.Y +
+        (mao.Y - ombro.Y) *
+        0.52F)
+
+        Using canetaManga As New Pen(
+        corManga,
+        7.0F)
+
+            canetaManga.StartCap =
+            LineCap.Round
+
+            canetaManga.EndCap =
+            LineCap.Round
+
+            g.DrawLine(
+            canetaManga,
+            ombro,
+            cotovelo)
+
+        End Using
+
+        Using canetaPele As New Pen(
+        corPele,
+        4.0F)
+
+            canetaPele.StartCap =
+            LineCap.Round
+
+            canetaPele.EndCap =
+            LineCap.Round
+
+            g.DrawLine(
+            canetaPele,
+            cotovelo,
+            mao)
+
+        End Using
+
+        Using pincelMao As New SolidBrush(
+        corPele)
+
+            g.FillEllipse(
+            pincelMao,
+            mao.X - 2.3F,
+            mao.Y - 2.3F,
+            4.6F,
+            4.6F)
+
+        End Using
 
     End Sub
 
-    Private Sub DesenharNumeroJogador(
-        g As Graphics,
-        jogador As Jogador,
-        centro As PointF)
+    Private Sub DesenharPernaJogador(
+    g As Graphics,
+    quadril As PointF,
+    pe As PointF,
+    corPerna As Color,
+    corCalcado As Color)
 
-        Using fonte As New Font(
-            "Segoe UI",
-            9.0F,
-            FontStyle.Bold,
-            GraphicsUnit.Point)
+        Using canetaPerna As New Pen(
+        corPerna,
+        5.5F)
 
-            Using pincelTexto As New SolidBrush(
-                Color.White)
+            canetaPerna.StartCap =
+            LineCap.Round
 
-                Dim texto As String =
-                    jogador.Numero.ToString()
+            canetaPerna.EndCap =
+            LineCap.Round
 
-                Dim tamanho As SizeF =
-                    g.MeasureString(texto, fonte)
+            g.DrawLine(
+            canetaPerna,
+            quadril,
+            pe)
 
-                g.DrawString(
-                    texto,
-                    fonte,
-                    pincelTexto,
-                    centro.X - tamanho.Width / 2.0F,
-                    centro.Y - tamanho.Height / 2.0F)
+        End Using
+
+        Dim vetorX As Single =
+        pe.X -
+        quadril.X
+
+        Dim vetorY As Single =
+        pe.Y -
+        quadril.Y
+
+        Dim comprimento As Single =
+        CSng(
+            Math.Sqrt(
+                vetorX *
+                vetorX +
+                vetorY *
+                vetorY))
+
+        If comprimento <= 0.001F Then
+            Exit Sub
+        End If
+
+        vetorX /=
+        comprimento
+
+        vetorY /=
+        comprimento
+
+        Dim inicioCalcado As New PointF(
+        pe.X -
+        vetorX *
+        4.5F,
+        pe.Y -
+        vetorY *
+        4.5F)
+
+        Using canetaCalcado As New Pen(
+        corCalcado,
+        3.5F)
+
+            canetaCalcado.StartCap =
+            LineCap.Round
+
+            canetaCalcado.EndCap =
+            LineCap.Round
+
+            g.DrawLine(
+            canetaCalcado,
+            inicioCalcado,
+            pe)
+
+        End Using
+
+    End Sub
+
+    Private Sub DesenharSpriteVetorialJogador(
+    g As Graphics,
+    jogador As Jogador)
+
+        Dim corCamisa As Color =
+    ObterCorCamisaJogador(
+        jogador)
+
+        Dim corUniformeClara As Color =
+    AjustarLuminosidadeCor(
+        corCamisa,
+        1.25F)
+
+        Dim corUniformeEscura As Color =
+    AjustarLuminosidadeCor(
+        corCamisa,
+        0.52F)
+
+        Dim corShort As Color =
+        Color.FromArgb(
+            45,
+            45,
+            50)
+
+        Dim corPele As Color =
+        Color.FromArgb(
+            222,
+            168,
+            119)
+
+        Dim corPeleEscura As Color =
+        Color.FromArgb(
+            155,
+            99,
+            64)
+
+        Dim corCalcado As Color =
+        Color.FromArgb(
+            22,
+            22,
+            25)
+
+        Dim maoEsquerda As New PointF(
+        -13.0F,
+        5.0F)
+
+        Dim maoDireita As New PointF(
+        13.0F,
+        5.0F)
+
+        Dim peEsquerdo As New PointF(
+        -6.0F,
+        22.0F)
+
+        Dim peDireito As New PointF(
+        6.0F,
+        22.0F)
+
+        Dim centroCabecaY As Single =
+        -17.0F
+
+        Select Case jogador.Pose
+
+            Case PoseJogador.Correndo
+
+                maoEsquerda =
+                New PointF(
+                    -11.0F,
+                    -9.0F)
+
+                maoDireita =
+                New PointF(
+                    13.0F,
+                    11.0F)
+
+                peEsquerdo =
+                New PointF(
+                    -9.0F,
+                    24.0F)
+
+                peDireito =
+                New PointF(
+                    9.0F,
+                    16.0F)
+
+            Case PoseJogador.ComBola
+
+                maoEsquerda =
+                New PointF(
+                    -12.0F,
+                    3.0F)
+
+                maoDireita =
+                New PointF(
+                    11.0F,
+                    -2.0F)
+
+                peEsquerdo =
+                New PointF(
+                    -7.0F,
+                    22.0F)
+
+                peDireito =
+                New PointF(
+                    10.0F,
+                    18.0F)
+
+            Case PoseJogador.Passe
+
+                maoEsquerda =
+                New PointF(
+                    -15.0F,
+                    1.0F)
+
+                maoDireita =
+                New PointF(
+                    15.0F,
+                    1.0F)
+
+                peEsquerdo =
+                New PointF(
+                    -5.0F,
+                    22.0F)
+
+                peDireito =
+                New PointF(
+                    13.0F,
+                    16.0F)
+
+            Case PoseJogador.Chute
+
+                maoEsquerda =
+                New PointF(
+                    -16.0F,
+                    0.0F)
+
+                maoDireita =
+                New PointF(
+                    15.0F,
+                    3.0F)
+
+                peEsquerdo =
+                New PointF(
+                    -7.0F,
+                    23.0F)
+
+                peDireito =
+                New PointF(
+                    16.0F,
+                    10.0F)
+
+            Case PoseJogador.Cabeceio
+
+                maoEsquerda =
+                New PointF(
+                    -17.0F,
+                    -4.0F)
+
+                maoDireita =
+                New PointF(
+                    17.0F,
+                    -4.0F)
+
+                peEsquerdo =
+                New PointF(
+                    -7.0F,
+                    21.0F)
+
+                peDireito =
+                New PointF(
+                    7.0F,
+                    21.0F)
+
+                centroCabecaY =
+                -20.0F
+
+            Case PoseJogador.Marcacao
+
+                maoEsquerda =
+                New PointF(
+                    -18.0F,
+                    2.0F)
+
+                maoDireita =
+                New PointF(
+                    18.0F,
+                    2.0F)
+
+                peEsquerdo =
+                New PointF(
+                    -12.0F,
+                    21.0F)
+
+                peDireito =
+                New PointF(
+                    12.0F,
+                    21.0F)
+
+            Case PoseJogador.Goleiro
+
+                maoEsquerda =
+                New PointF(
+                    -22.0F,
+                    -5.0F)
+
+                maoDireita =
+                New PointF(
+                    22.0F,
+                    -5.0F)
+
+                peEsquerdo =
+                New PointF(
+                    -13.0F,
+                    22.0F)
+
+                peDireito =
+                New PointF(
+                    13.0F,
+                    22.0F)
+
+        End Select
+
+        '==================================================
+        ' PERNAS
+        '==================================================
+
+        DesenharPernaJogador(
+        g,
+        New PointF(
+            -4.0F,
+            9.0F),
+        peEsquerdo,
+        corShort,
+        corCalcado)
+
+        DesenharPernaJogador(
+        g,
+        New PointF(
+            4.0F,
+            9.0F),
+        peDireito,
+        corShort,
+        corCalcado)
+
+        '==================================================
+        ' BRAÇOS
+        '==================================================
+
+        DesenharBracoJogador(
+        g,
+        New PointF(
+            -7.0F,
+            -5.0F),
+        maoEsquerda,
+        corUniformeEscura,
+        corPele)
+
+        DesenharBracoJogador(
+        g,
+        New PointF(
+            7.0F,
+            -5.0F),
+        maoDireita,
+        corUniformeEscura,
+        corPele)
+
+        '==================================================
+        ' SHORT
+        '==================================================
+
+        Dim pontosShort() As PointF = {
+        New PointF(
+            -6.5F,
+            6.0F),
+        New PointF(
+            6.5F,
+            6.0F),
+        New PointF(
+            5.0F,
+            13.0F),
+        New PointF(
+            0.0F,
+            10.0F),
+        New PointF(
+            -5.0F,
+            13.0F)
+    }
+
+        Using pincelShort As New LinearGradientBrush(
+        New RectangleF(
+            -7.0F,
+            6.0F,
+            14.0F,
+            8.0F),
+        Color.FromArgb(
+            75,
+            75,
+            82),
+        corShort,
+        90.0F)
+
+            g.FillPolygon(
+            pincelShort,
+            pontosShort)
+
+        End Using
+
+        '==================================================
+        ' TORSO
+        '==================================================
+
+        Dim pontosTorso() As PointF = {
+        New PointF(
+            -8.5F,
+            -7.0F),
+        New PointF(
+            8.5F,
+            -7.0F),
+        New PointF(
+            7.0F,
+            6.0F),
+        New PointF(
+            4.5F,
+            10.0F),
+        New PointF(
+            -4.5F,
+            10.0F),
+        New PointF(
+            -7.0F,
+            6.0F)
+    }
+
+        Using caminhoTorso As New GraphicsPath()
+
+            caminhoTorso.AddPolygon(
+            pontosTorso)
+
+            Using pincelTorso As New LinearGradientBrush(
+            New RectangleF(
+                -9.0F,
+                -8.0F,
+                18.0F,
+                19.0F),
+            corUniformeClara,
+            corUniformeEscura,
+            90.0F)
+
+                g.FillPath(
+                pincelTorso,
+                caminhoTorso)
+
+            End Using
+
+            Using bordaTorso As New Pen(
+            Color.FromArgb(
+                230,
+                255,
+                255,
+                255),
+            1.4F)
+
+                bordaTorso.LineJoin =
+                LineJoin.Round
+
+                g.DrawPath(
+                bordaTorso,
+                caminhoTorso)
+
+            End Using
+
+        End Using
+
+        '==================================================
+        ' BRILHO DO UNIFORME
+        '==================================================
+
+        Using brilho As New SolidBrush(
+        Color.FromArgb(
+            55,
+            255,
+            255,
+            255))
+
+            g.FillEllipse(
+            brilho,
+            -5.5F,
+            -5.0F,
+            7.0F,
+            5.0F)
+
+        End Using
+
+        '==================================================
+        ' CABEÇA
+        '==================================================
+
+        Dim retanguloCabeca As New RectangleF(
+        -6.0F,
+        centroCabecaY - 6.0F,
+        12.0F,
+        12.0F)
+
+        Using pincelCabeca As New LinearGradientBrush(
+        retanguloCabeca,
+        Color.FromArgb(
+            245,
+            195,
+            145),
+        corPeleEscura,
+        90.0F)
+
+            g.FillEllipse(
+            pincelCabeca,
+            retanguloCabeca)
+
+        End Using
+
+        Using bordaCabeca As New Pen(
+        Color.FromArgb(
+            120,
+            65,
+            35),
+        1.2F)
+
+            g.DrawEllipse(
+            bordaCabeca,
+            retanguloCabeca)
+
+        End Using
+
+        'Cabelo na parte frontal da cabeça.
+        Using pincelCabelo As New SolidBrush(
+        Color.FromArgb(
+            45,
+            30,
+            24))
+
+            g.FillPie(
+            pincelCabelo,
+            retanguloCabeca,
+            180.0F,
+            180.0F)
+
+        End Using
+
+        '==================================================
+        ' NÚMERO
+        '==================================================
+
+        DesenharNumeroNaCamisa(g, jogador.Numero)
+
+        '==================================================
+        ' INDICAÇÃO DA POSE COM BOLA
+        '==================================================
+
+        If jogador.Pose =
+       PoseJogador.ComBola Then
+
+            Using pincelBola As New SolidBrush(
+            Color.WhiteSmoke)
+
+                g.FillEllipse(
+                pincelBola,
+                7.5F,
+                18.0F,
+                7.0F,
+                7.0F)
+
+            End Using
+
+            Using bordaBola As New Pen(
+            Color.FromArgb(
+                35,
+                35,
+                35),
+            1.0F)
+
+                g.DrawEllipse(
+                bordaBola,
+                7.5F,
+                18.0F,
+                7.0F,
+                7.0F)
+
+            End Using
+
+        End If
+
+    End Sub
+
+    Private Function ObterCorCamisaJogador(
+    jogador As Jogador) As Color
+
+        Dim corPadrao As Color =
+        Color.FromArgb(
+            185,
+            35,
+            35)
+
+        If jogador Is Nothing Then
+            Return corPadrao
+        End If
+
+        Try
+
+            Dim corSalva As Color =
+            Color.FromArgb(
+                jogador.CorCamisaArgb)
+
+            If corSalva.A = 0 Then
+                Return corPadrao
+            End If
+
+            Return Color.FromArgb(
+            255,
+            corSalva.R,
+            corSalva.G,
+            corSalva.B)
+
+        Catch
+
+            Return corPadrao
+
+        End Try
+
+    End Function
+
+    Private Function AjustarLuminosidadeCor(
+    cor As Color,
+    fator As Single) As Color
+
+        Dim vermelho As Integer =
+        CInt(
+            Math.Round(
+                cor.R *
+                fator))
+
+        Dim verde As Integer =
+        CInt(
+            Math.Round(
+                cor.G *
+                fator))
+
+        Dim azul As Integer =
+        CInt(
+            Math.Round(
+                cor.B *
+                fator))
+
+        vermelho =
+        Math.Max(
+            0,
+            Math.Min(
+                255,
+                vermelho))
+
+        verde =
+        Math.Max(
+            0,
+            Math.Min(
+                255,
+                verde))
+
+        azul =
+        Math.Max(
+            0,
+            Math.Min(
+                255,
+                azul))
+
+        Return Color.FromArgb(
+        255,
+        vermelho,
+        verde,
+        azul)
+
+    End Function
+
+    Private Sub DesenharNumeroNaCamisa(
+    g As Graphics,
+    numero As Integer)
+
+        If g Is Nothing Then
+            Exit Sub
+        End If
+
+        Dim textoNumero As String =
+        numero.ToString()
+
+        Dim tamanhoFonte As Single
+
+        Select Case textoNumero.Length
+
+            Case 1
+
+                tamanhoFonte =
+                7.5F
+
+            Case 2
+
+                tamanhoFonte =
+                5.8F
+
+            Case Else
+
+                tamanhoFonte =
+                4.8F
+
+        End Select
+
+        Dim retanguloNumero As New RectangleF(
+        -8.0F,
+        -5.5F,
+        16.0F,
+        12.5F)
+
+        Using fonteNumero As New Font(
+        "Segoe UI",
+        tamanhoFonte,
+        FontStyle.Bold,
+        GraphicsUnit.Point)
+
+            Using pincelSombra As New SolidBrush(
+            Color.FromArgb(
+                120,
+                0,
+                0,
+                0))
+
+                Using formato As New StringFormat With {
+                .Alignment =
+                    StringAlignment.Center,
+                .LineAlignment =
+                    StringAlignment.Center,
+                .Trimming =
+                    StringTrimming.None,
+                .FormatFlags =
+                    StringFormatFlags.NoWrap Or
+                    StringFormatFlags.NoClip
+            }
+
+                    Dim retanguloSombra As New RectangleF(
+                    retanguloNumero.X +
+                    0.5F,
+                    retanguloNumero.Y +
+                    0.7F,
+                    retanguloNumero.Width,
+                    retanguloNumero.Height)
+
+                    g.DrawString(
+                    textoNumero,
+                    fonteNumero,
+                    pincelSombra,
+                    retanguloSombra,
+                    formato)
+
+                End Using
+
+            End Using
+
+            Using pincelNumero As New SolidBrush(
+            Color.White)
+
+                Using formato As New StringFormat With {
+                .Alignment =
+                    StringAlignment.Center,
+                .LineAlignment =
+                    StringAlignment.Center,
+                .Trimming =
+                    StringTrimming.None,
+                .FormatFlags =
+                    StringFormatFlags.NoWrap Or
+                    StringFormatFlags.NoClip
+            }
+
+                    g.DrawString(
+                    textoNumero,
+                    fonteNumero,
+                    pincelNumero,
+                    retanguloNumero,
+                    formato)
+
+                End Using
 
             End Using
 
@@ -4701,32 +5655,34 @@ Public Class CampoTatico
 
     End Function
 
-    Private Function CapturarEstadoObjeto(
-        objeto As ObjetoCampo) As EstadoObjetoCampo
+    Private Function CapturarEstadoObjeto(objeto As ObjetoCampo) As EstadoObjetoCampo
 
         If objeto Is Nothing Then
 
             Throw New ArgumentNullException(
-                NameOf(objeto))
+            NameOf(objeto))
 
         End If
 
         Dim tipoObjeto As String =
-            objeto.GetType().Name
+        objeto.GetType().Name
 
         Dim estado As New EstadoObjetoCampo With {
-    .TipoObjeto = tipoObjeto,
-    .X = objeto.Posicao.X,
-    .Y = objeto.Posicao.Y,
-    .Visivel = objeto.Visivel,
-    .NomePersonalizado = If(
-        objeto.NomePersonalizado,
-        String.Empty),
-    .GrupoId = If(
-        objeto.GrupoId,
-        String.Empty),
-    .Bloqueado = objeto.Bloqueado
-}
+        .TipoObjeto = tipoObjeto,
+        .X = objeto.Posicao.X,
+        .Y = objeto.Posicao.Y,
+        .Visivel = objeto.Visivel,
+        .NomePersonalizado =
+            If(
+                objeto.NomePersonalizado,
+                String.Empty),
+        .GrupoId =
+            If(
+                objeto.GrupoId,
+                String.Empty),
+        .Bloqueado = objeto.Bloqueado,
+        .EscalaVisual = objeto.EscalaVisual
+    }
 
         Select Case tipoObjeto
 
@@ -4737,11 +5693,15 @@ Public Class CampoTatico
                     objeto,
                     Jogador)
 
-                estado.Numero =
-                objetoJogador.Numero
+                estado.Numero = objetoJogador.Numero
 
-                estado.Nome =
-                objetoJogador.Nome
+                estado.Nome = objetoJogador.Nome
+
+                estado.DirecaoDoJogador = objetoJogador.Direcao
+
+                estado.PoseDoJogador = objetoJogador.Pose
+
+                estado.CorCamisaJogadorArgb = objetoJogador.CorCamisaArgb
 
             Case "Bola"
 
@@ -4753,7 +5713,8 @@ Public Class CampoTatico
                     Cone)
 
                 estado.CorConeValor =
-                CInt(objetoCone.Cor)
+                CInt(
+                    objetoCone.Cor)
 
             Case "Gol"
 
@@ -4763,7 +5724,8 @@ Public Class CampoTatico
                     Gol)
 
                 estado.OrientacaoGolValor =
-                CInt(objetoGol.Orientacao)
+                CInt(
+                    objetoGol.Orientacao)
 
             Case "Manequim"
 
@@ -4773,7 +5735,8 @@ Public Class CampoTatico
                     Manequim)
 
                 estado.CorManequimValor =
-                CInt(objetoManequim.Cor)
+                CInt(
+                    objetoManequim.Cor)
 
             Case "LinhaTatica"
 
@@ -4789,10 +5752,12 @@ Public Class CampoTatico
                 objetoLinha.PosicaoFinal.Y
 
                 estado.TipoLinhaValor =
-                CInt(objetoLinha.Tipo)
+                CInt(
+                    objetoLinha.Tipo)
 
                 estado.CorLinhaValor =
-                CInt(objetoLinha.Cor)
+                CInt(
+                    objetoLinha.Cor)
 
                 estado.Espessura =
                 objetoLinha.Espessura
@@ -4811,7 +5776,8 @@ Public Class CampoTatico
                 objetoArea.PosicaoFinal.Y
 
                 estado.CorAreaValor =
-                CInt(objetoArea.Cor)
+                CInt(
+                    objetoArea.Cor)
 
                 estado.Espessura =
                 objetoArea.Espessura
@@ -4833,7 +5799,8 @@ Public Class CampoTatico
                 objetoMarcador.Texto
 
                 estado.CorMarcadorValor =
-                CInt(objetoMarcador.Cor)
+                CInt(
+                    objetoMarcador.Cor)
 
                 estado.Diametro =
                 objetoMarcador.Diametro
@@ -4849,7 +5816,8 @@ Public Class CampoTatico
                 objetoTexto.Texto
 
                 estado.CorTextoValor =
-                CInt(objetoTexto.Cor)
+                CInt(
+                    objetoTexto.Cor)
 
                 estado.TamanhoFonte =
                 objetoTexto.TamanhoFonte
@@ -4897,10 +5865,15 @@ Public Class CampoTatico
 
             Case "Jogador"
 
-                objeto = New Jogador With {
-            .Numero = estado.Numero,
-            .Nome = estado.Nome
-        }
+                objeto =
+    New Jogador With {
+        .Numero = estado.Numero,
+        .Nome = estado.Nome,
+        .Direcao = estado.DirecaoDoJogador,
+        .Pose = estado.PoseDoJogador,
+        .CorCamisaArgb =
+            estado.CorCamisaJogadorArgb
+    }
 
             Case "Bola"
 
@@ -5018,6 +5991,24 @@ Public Class CampoTatico
 
         objeto.Bloqueado =
     estado.Bloqueado
+
+        objeto.EscalaVisual =
+    estado.EscalaVisual
+
+        If TypeOf objeto Is Jogador Then
+
+            Dim jogador As Jogador =
+        DirectCast(
+            objeto,
+            Jogador)
+
+            jogador.Direcao =
+        estado.DirecaoDoJogador
+
+            jogador.Pose =
+        estado.PoseDoJogador
+
+        End If
 
         Return objeto
 
@@ -7898,9 +8889,7 @@ Public Class CampoTatico
 
         If TypeOf objeto Is Jogador Then
 
-            Return New SizeF(
-                RaioJogador,
-                RaioJogador)
+            Return RenderizadorSpritesTaticos.ObterMetadeTamanhoJogador(DirectCast(objeto, Jogador))
 
         End If
 
@@ -7989,9 +8978,10 @@ Public Class CampoTatico
 
     Private Function ObterRaioSelecao(
         objeto As ObjetoCampo) As Single
-
         If TypeOf objeto Is Jogador Then
-            Return RaioJogador + 5.0F
+
+            Return RenderizadorSpritesTaticos.ObterRaioSelecaoJogador(DirectCast(objeto, Jogador))
+
         End If
 
         If TypeOf objeto Is Bola Then
@@ -9358,9 +10348,7 @@ Public Class CampoTatico
 
     End Sub
 
-    Public Function RenomearObjeto(
-    objeto As ObjetoCampo,
-    novoNome As String) As Boolean
+    Public Function RenomearObjeto(objeto As ObjetoCampo, novoNome As String) As Boolean
 
         If objeto Is Nothing OrElse
        Not _objetos.Contains(
@@ -9420,6 +10408,245 @@ Public Class CampoTatico
         RegistrarEstadoHistorico()
 
         NotificarSelecaoAlterada()
+
+        Invalidate()
+
+        Return True
+
+    End Function
+
+    Public Function AlterarEscalaVisualSelecionados(
+    novaEscala As Single) As Boolean
+
+        If _objetosSelecionados.Count = 0 Then
+            Return False
+        End If
+
+        If Single.IsNaN(novaEscala) OrElse
+       Single.IsInfinity(novaEscala) Then
+
+            Return False
+
+        End If
+
+        Dim escalaNormalizada As Single =
+        Math.Max(
+            0.5F,
+            Math.Min(
+                2.5F,
+                novaEscala))
+
+        Dim houveAlteracao As Boolean =
+        False
+
+        For Each objeto As ObjetoCampo
+        In _objetosSelecionados
+
+            If objeto Is Nothing OrElse
+           objeto.Bloqueado Then
+
+                Continue For
+
+            End If
+
+            If Math.Abs(
+            objeto.EscalaVisual -
+            escalaNormalizada) < 0.001F Then
+
+                Continue For
+
+            End If
+
+            objeto.EscalaVisual =
+            escalaNormalizada
+
+            houveAlteracao =
+            True
+
+        Next
+
+        If Not houveAlteracao Then
+            Return False
+        End If
+
+        RegistrarEstadoHistorico()
+
+        RaiseEvent ObjetosAlterados()
+
+        Invalidate()
+
+        Return True
+
+    End Function
+
+    Public Function AlterarDirecaoJogadoresSelecionados(
+    novaDirecao As DirecaoJogador) As Boolean
+
+        If _objetosSelecionados.Count = 0 Then
+            Return False
+        End If
+
+        Dim houveAlteracao As Boolean =
+        False
+
+        For Each objeto As ObjetoCampo
+        In _objetosSelecionados
+
+            If objeto Is Nothing OrElse
+           objeto.Bloqueado OrElse
+           Not TypeOf objeto Is Jogador Then
+
+                Continue For
+
+            End If
+
+            Dim jogador As Jogador =
+            DirectCast(
+                objeto,
+                Jogador)
+
+            If jogador.Direcao =
+           novaDirecao Then
+
+                Continue For
+
+            End If
+
+            jogador.Direcao =
+            novaDirecao
+
+            houveAlteracao =
+            True
+
+        Next
+
+        If Not houveAlteracao Then
+            Return False
+        End If
+
+        RegistrarEstadoHistorico()
+
+        RaiseEvent ObjetosAlterados()
+
+        Invalidate()
+
+        Return True
+
+    End Function
+
+    Public Function AlterarCorCamisaJogadoresSelecionados(
+    novaCor As Color
+) As Boolean
+
+        If _objetosSelecionados.Count = 0 Then
+            Return False
+        End If
+
+        Dim corNormalizada As Color =
+        Color.FromArgb(
+            255,
+            novaCor.R,
+            novaCor.G,
+            novaCor.B)
+
+        Dim novoArgb As Integer =
+        corNormalizada.ToArgb()
+
+        Dim houveAlteracao As Boolean =
+        False
+
+        For Each objeto As ObjetoCampo
+        In _objetosSelecionados
+
+            If objeto Is Nothing OrElse
+           objeto.Bloqueado OrElse
+           Not TypeOf objeto Is Jogador Then
+
+                Continue For
+
+            End If
+
+            Dim jogador As Jogador =
+            DirectCast(
+                objeto,
+                Jogador)
+
+            If jogador.CorCamisaArgb =
+           novoArgb Then
+
+                Continue For
+
+            End If
+
+            jogador.CorCamisaArgb =
+            novoArgb
+
+            houveAlteracao =
+            True
+
+        Next
+
+        If Not houveAlteracao Then
+            Return False
+        End If
+
+        RegistrarEstadoHistorico()
+
+        RaiseEvent ObjetosAlterados()
+
+        Invalidate()
+
+        Return True
+
+    End Function
+    Public Function AlterarPoseJogadoresSelecionados(
+    novaPose As PoseJogador) As Boolean
+
+        If _objetosSelecionados.Count = 0 Then
+            Return False
+        End If
+
+        Dim houveAlteracao As Boolean =
+        False
+
+        For Each objeto As ObjetoCampo
+        In _objetosSelecionados
+
+            If objeto Is Nothing OrElse
+           objeto.Bloqueado OrElse
+           Not TypeOf objeto Is Jogador Then
+
+                Continue For
+
+            End If
+
+            Dim jogador As Jogador =
+            DirectCast(
+                objeto,
+                Jogador)
+
+            If jogador.Pose =
+           novaPose Then
+
+                Continue For
+
+            End If
+
+            jogador.Pose =
+            novaPose
+
+            houveAlteracao =
+            True
+
+        Next
+
+        If Not houveAlteracao Then
+            Return False
+        End If
+
+        RegistrarEstadoHistorico()
+
+        RaiseEvent ObjetosAlterados()
 
         Invalidate()
 
@@ -9552,6 +10779,127 @@ Public Class CampoTatico
         Invalidate()
 
     End Sub
+
+    Public Function AplicarRecortePredefinido(
+    tipoRecorte As TipoRecorteCampo) As Boolean
+
+        If tipoRecorte =
+       TipoRecorteCampo.CampoInteiro Then
+
+            LimparRecorteCampo()
+
+            Return True
+
+        End If
+
+        Dim novoRecorte As RectangleF
+
+        Select Case tipoRecorte
+
+            Case TipoRecorteCampo.MeioCampoEsquerdo
+
+                novoRecorte =
+                New RectangleF(
+                    0.0F,
+                    0.0F,
+                    50.0F,
+                    100.0F)
+
+            Case TipoRecorteCampo.MeioCampoDireito
+
+                novoRecorte =
+                New RectangleF(
+                    50.0F,
+                    0.0F,
+                    50.0F,
+                    100.0F)
+
+            Case TipoRecorteCampo.MetadeSuperior
+
+                novoRecorte =
+                New RectangleF(
+                    0.0F,
+                    0.0F,
+                    100.0F,
+                    50.0F)
+
+            Case TipoRecorteCampo.MetadeInferior
+
+                novoRecorte =
+                New RectangleF(
+                    0.0F,
+                    50.0F,
+                    100.0F,
+                    50.0F)
+
+            Case TipoRecorteCampo.TercoEsquerdo
+
+                novoRecorte =
+                New RectangleF(
+                    0.0F,
+                    0.0F,
+                    33.333F,
+                    100.0F)
+
+            Case TipoRecorteCampo.TercoCentral
+
+                novoRecorte =
+                New RectangleF(
+                    33.333F,
+                    0.0F,
+                    33.334F,
+                    100.0F)
+
+            Case TipoRecorteCampo.TercoDireito
+
+                novoRecorte =
+                New RectangleF(
+                    66.667F,
+                    0.0F,
+                    33.333F,
+                    100.0F)
+
+            Case TipoRecorteCampo.AreaEsquerda
+
+                novoRecorte =
+                New RectangleF(
+                    0.0F,
+                    18.0F,
+                    20.0F,
+                    64.0F)
+
+            Case TipoRecorteCampo.AreaDireita
+
+                novoRecorte =
+                New RectangleF(
+                    80.0F,
+                    18.0F,
+                    20.0F,
+                    64.0F)
+
+            Case Else
+
+                Return False
+
+        End Select
+
+        _modoSelecaoRecorte =
+        False
+
+        _desenhandoRecorte =
+        False
+
+        _recorteAtivo =
+        True
+
+        _retanguloRecortePercentual =
+        novoRecorte
+
+        Invalidate()
+
+        Return True
+
+    End Function
 
     Private Sub ConcluirSelecaoRecorteCampo(
     retanguloTela As RectangleF,

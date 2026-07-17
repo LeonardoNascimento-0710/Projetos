@@ -83,6 +83,73 @@ Public Class FrmGerenciadorObjetos
 
     End Sub
 
+    Protected Overrides Sub OnShown(
+        e As EventArgs)
+
+        MyBase.OnShown(
+            e)
+
+        CentralizarNoProprietario()
+
+    End Sub
+
+    Private Sub CentralizarNoProprietario()
+
+        Dim formularioProprietario As Form =
+            TryCast(
+                Owner,
+                Form)
+
+        If formularioProprietario Is Nothing Then
+
+            StartPosition =
+                FormStartPosition.CenterScreen
+
+            Return
+
+        End If
+
+        StartPosition =
+            FormStartPosition.Manual
+
+        Dim areaTrabalho As Rectangle =
+            Screen.FromControl(
+                formularioProprietario).
+            WorkingArea
+
+        Dim esquerda As Integer =
+            formularioProprietario.Left +
+            (formularioProprietario.Width -
+             Width) \ 2
+
+        Dim topo As Integer =
+            formularioProprietario.Top +
+            (formularioProprietario.Height -
+             Height) \ 2
+
+        esquerda =
+            Math.Max(
+                areaTrabalho.Left,
+                Math.Min(
+                    esquerda,
+                    areaTrabalho.Right -
+                    Width))
+
+        topo =
+            Math.Max(
+                areaTrabalho.Top,
+                Math.Min(
+                    topo,
+                    areaTrabalho.Bottom -
+                    Height))
+
+        Location =
+            New Point(
+                esquerda,
+                topo)
+
+    End Sub
+
     Private Sub CriarInterface()
 
         Dim painelPrincipal As New TableLayoutPanel With {
