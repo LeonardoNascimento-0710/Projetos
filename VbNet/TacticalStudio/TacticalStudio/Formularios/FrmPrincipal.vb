@@ -69,6 +69,8 @@ Public Class FrmPrincipal
 
     Private _versaoMontagemPropriedades As Integer
 
+    Private _painelConfiguracoesCampoAberto As Boolean
+
 #End Region
 
 #Region "Inicialização do formulário"
@@ -1145,9 +1147,9 @@ Public Class FrmPrincipal
 
             botao.BackColor = Tema.CorPrimaria
 
-            botao.ForeColor = Color.White
+            botao.ForeColor = Tema.TextoSobreCorPrimaria
 
-            botao.FlatAppearance.BorderColor = Color.White
+            botao.FlatAppearance.BorderColor = Tema.TextoSobreCorPrimaria
 
         Else
 
@@ -1327,7 +1329,7 @@ Public Class FrmPrincipal
             CriarGrupoFerramentas(
                 "OBJETOS",
                 larguraConteudo,
-                3)
+                4)
 
             grupoObjetos.Controls.Add(
             CriarBotaoFerramenta(
@@ -1363,6 +1365,20 @@ Public Class FrmPrincipal
                 "Manequim"),
             0,
             3)
+
+            Dim botaoLinhaObjetos As Button =
+                CriarBotaoFerramenta(
+                    FerramentaCampo.LinhaObjetos,
+                    "Linha de objetos / barreira")
+
+            grupoObjetos.Controls.Add(
+                botaoLinhaObjetos,
+                0,
+                4)
+
+            grupoObjetos.SetColumnSpan(
+                botaoLinhaObjetos,
+                2)
 
             painelFerramentas.Controls.Add(
             grupoObjetos)
@@ -1685,6 +1701,29 @@ Public Class FrmPrincipal
         Dim ferramenta As FerramentaCampo =
     CType(botao.Tag, FerramentaCampo)
 
+        If ferramenta =
+           FerramentaCampo.LinhaObjetos Then
+
+            Using configuracao As New FrmLinhaObjetos()
+
+                If configuracao.ShowDialog(Me) <>
+                   DialogResult.OK Then
+
+                    Exit Sub
+
+                End If
+
+                CampoCanvas.ConfigurarLinhaObjetos(
+                    configuracao.TipoSelecionado,
+                    configuracao.QuantidadeSelecionada,
+                    configuracao.OrientacaoSelecionada,
+                    configuracao.EscalaSelecionada,
+                    configuracao.AgruparAutomaticamente)
+
+            End Using
+
+        End If
+
         If CampoCanvas.ModoSelecaoRecorteAtivo Then
 
             CampoCanvas.CancelarSelecaoRecorteCampo()
@@ -1727,10 +1766,10 @@ Public Class FrmPrincipal
                     Tema.CorPrimaria
 
                 botao.ForeColor =
-                    Color.White
+                    Tema.TextoSobreCorPrimaria
 
                 botao.FlatAppearance.BorderColor =
-                    Color.White
+                    Tema.TextoSobreCorPrimaria
 
             Else
 
@@ -1770,10 +1809,10 @@ Public Class FrmPrincipal
                 Tema.CorPrimaria
 
             _botaoRecortarCampo.ForeColor =
-                Color.White
+                Tema.TextoSobreCorPrimaria
 
             _botaoRecortarCampo.FlatAppearance.BorderColor =
-                Color.White
+                Tema.TextoSobreCorPrimaria
 
         Else
 
@@ -1799,15 +1838,15 @@ Public Class FrmPrincipal
 
     Private Sub LimparPainelDireito()
 
+        _painelConfiguracoesCampoAberto = False
+
         PnlDireito.SuspendLayout()
 
         Try
 
-            _containerPainelPropriedades =
-                Nothing
+            _containerPainelPropriedades = Nothing
 
-            _painelConteudoPropriedades =
-                Nothing
+            _painelConteudoPropriedades = Nothing
 
             While PnlDireito.Controls.Count > 0
 
@@ -1842,7 +1881,6 @@ Public Class FrmPrincipal
 
     End Sub
 
-
     Private Sub MontarPainelRecorteCampo()
 
         If CampoCanvas Is Nothing Then
@@ -1851,189 +1889,501 @@ Public Class FrmPrincipal
 
         LimparPainelDireito()
 
+        _painelConfiguracoesCampoAberto = True
+
         Dim painel As New FlowLayoutPanel With {
-            .Dock = DockStyle.Fill,
-            .FlowDirection = FlowDirection.TopDown,
-            .WrapContents = False,
-            .AutoScroll = True,
-            .BackColor = Tema.Painel,
-            .Padding = New Padding(10)
-        }
+        .Dock = DockStyle.Fill,
+        .FlowDirection = FlowDirection.TopDown,
+        .WrapContents = False,
+        .AutoScroll = True,
+        .BackColor = Tema.Painel,
+        .Padding = New Padding(10)
+    }
 
         PnlDireito.Controls.Add(
-            painel)
+        painel)
 
         Dim largura As Integer =
-            Math.Max(
-                180,
-                PnlDireito.ClientSize.Width - 32)
+        Math.Max(
+            180,
+            PnlDireito.ClientSize.Width - 32)
 
         Dim titulo As New Label With {
-            .Text = "RECORTE DO CAMPO",
-            .ForeColor = Tema.CorPrimaria,
-            .Font = New Font(
-                "Segoe UI",
-                11.0F,
-                FontStyle.Bold),
-            .Width = largura,
-            .Height = 36,
-            .TextAlign = ContentAlignment.MiddleLeft
-        }
+        .Text = "CONFIGURAÇÕES DO CAMPO",
+        .ForeColor = Tema.CorPrimaria,
+        .Font = New Font(
+            "Segoe UI",
+            11.0F,
+            FontStyle.Bold),
+        .Width = largura,
+        .Height = 36,
+        .TextAlign = ContentAlignment.MiddleLeft
+    }
 
         painel.Controls.Add(
-            titulo)
+        titulo)
 
-        Dim cartaoCortesRapidos As FlowLayoutPanel =
-    CriarCartaoPropriedades(
-        "Cortes rápidos",
-        Color.FromArgb(
-            75,
-            36,
-            36))
+        '==================================================
+        ' CARTÃO: ESTILO DO CAMPO
+        '==================================================
 
-        Dim cmbCorteRapido As New ComboBox With {
-    .DropDownStyle =
-        ComboBoxStyle.DropDownList,
-    .FlatStyle =
-        FlatStyle.Flat
-}
+        Dim cartaoEstiloCampo As FlowLayoutPanel =
+        CriarCartaoPropriedades(
+            "Estilo do campo",
+            Color.FromArgb(
+                75,
+                36,
+                36))
 
-        cmbCorteRapido.Items.AddRange(
-    New Object() {
-        "Campo inteiro",
-        "Meio campo esquerdo",
-        "Meio campo direito",
-        "Metade superior",
-        "Metade inferior",
-        "Terço esquerdo",
-        "Terço central",
-        "Terço direito",
-        "Área esquerda",
-        "Área direita"
-    })
+        Dim cmbEstiloCampo As New ComboBox With {
+        .DropDownStyle =
+            ComboBoxStyle.DropDownList,
+        .FlatStyle =
+            FlatStyle.Flat
+    }
 
-        cmbCorteRapido.SelectedIndex =
-    0
+        cmbEstiloCampo.Items.AddRange(
+        New Object() {
+            "Clássico",
+            "Estádio",
+            "Treino",
+            "Noturno"
+        })
+
+        cmbEstiloCampo.SelectedIndex =
+        Math.Max(
+            0,
+            Math.Min(
+                3,
+                CInt(
+                    CampoCanvas.EstiloCampoAtual)))
 
         AdicionarCampoCartao(
-    cartaoCortesRapidos,
-    "Pré-definição",
-    cmbCorteRapido)
+        cartaoEstiloCampo,
+        "Visual",
+        cmbEstiloCampo)
+
+        Dim nudIntensidadeTextura As New NumericUpDown With {
+        .Minimum = 0D,
+        .Maximum = 100D,
+        .Increment = 5D,
+        .Value =
+            Math.Max(
+                0,
+                Math.Min(
+                    100,
+                    CampoCanvas.IntensidadeTexturaCampo)),
+        .TextAlign =
+            HorizontalAlignment.Center
+    }
+
+        AdicionarCampoCartao(
+        cartaoEstiloCampo,
+        "Intensidade da textura (%)",
+        nudIntensidadeTextura)
+
+        Dim chkFaixasGrama As New CheckBox With {
+        .Text = "Exibir faixas alternadas",
+        .Checked =
+            CampoCanvas.FaixasGramaAtivas,
+        .AutoSize = False,
+        .TextAlign =
+            ContentAlignment.MiddleLeft,
+        .BackColor =
+            Tema.CampoEntrada,
+        .ForeColor =
+            Tema.TextoCampo
+    }
+
+        AdicionarCampoCartao(
+        cartaoEstiloCampo,
+        "Faixas da grama",
+        chkFaixasGrama)
+
+        Dim chkSombrasCampo As New CheckBox With {
+        .Text = "Ativar iluminação e sombras",
+        .Checked =
+            CampoCanvas.SombrasCampoAtivas,
+        .AutoSize = False,
+        .TextAlign =
+            ContentAlignment.MiddleLeft,
+        .BackColor =
+            Tema.CampoEntrada,
+        .ForeColor =
+            Tema.TextoCampo
+    }
+
+        AdicionarCampoCartao(
+        cartaoEstiloCampo,
+        "Sombras",
+        chkSombrasCampo)
+
+        Dim aplicandoVisualCampo As Boolean = False
+
+        Dim aplicarVisualCampo As Action =
+        Sub()
+
+            If aplicandoVisualCampo Then
+                Exit Sub
+            End If
+
+            aplicandoVisualCampo = True
+
+            Try
+
+                CampoCanvas.AplicarConfiguracaoVisualCampo(
+                    CType(
+                        cmbEstiloCampo.SelectedIndex,
+                        EstiloVisualCampo),
+                    CInt(
+                        nudIntensidadeTextura.Value),
+                    chkFaixasGrama.Checked,
+                    chkSombrasCampo.Checked)
+
+            Finally
+
+                aplicandoVisualCampo = False
+
+            End Try
+
+        End Sub
+
+        AddHandler cmbEstiloCampo.SelectedIndexChanged,
+        Sub(sender, e)
+
+            aplicarVisualCampo()
+
+        End Sub
+
+        AddHandler nudIntensidadeTextura.ValueChanged,
+        Sub(sender, e)
+
+            aplicarVisualCampo()
+
+        End Sub
+
+        AddHandler chkFaixasGrama.CheckedChanged,
+        Sub(sender, e)
+
+            aplicarVisualCampo()
+
+        End Sub
+
+        AddHandler chkSombrasCampo.CheckedChanged,
+        Sub(sender, e)
+
+            aplicarVisualCampo()
+
+        End Sub
+
+        Dim btnAplicarEstiloCampo As New Button With {
+        .Text = "Aplicar visual do campo",
+        .Width =
+            Math.Max(
+                240,
+                cartaoEstiloCampo.Width - 20),
+        .Height = 38,
+        .Margin =
+            New Padding(
+                8,
+                8,
+                8,
+                0),
+        .FlatStyle =
+            FlatStyle.Flat,
+        .BackColor =
+            Tema.CorPrimaria,
+        .ForeColor =
+            Tema.TextoSobreCorPrimaria,
+        .Cursor =
+            Cursors.Hand,
+        .UseVisualStyleBackColor =
+            False
+    }
+
+        btnAplicarEstiloCampo.FlatAppearance.BorderColor =
+        Tema.Borda
+
+        btnAplicarEstiloCampo.FlatAppearance.MouseOverBackColor =
+        Tema.CorPrimariaHover
+
+        AddHandler btnAplicarEstiloCampo.Click,
+        Sub(sender, e)
+
+            aplicarVisualCampo()
+
+        End Sub
+
+        cartaoEstiloCampo.Controls.Add(
+        btnAplicarEstiloCampo)
+
+        painel.Controls.Add(
+        cartaoEstiloCampo)
+
+        '==================================================
+        ' CARTÃO: CORTES RÁPIDOS
+        '==================================================
+
+        Dim cartaoCortesRapidos As FlowLayoutPanel =
+        CriarCartaoPropriedades(
+            "Cortes rápidos",
+            Color.FromArgb(
+                75,
+                36,
+                36))
+
+        Dim cmbCorteRapido As New ComboBox With {
+        .DropDownStyle =
+            ComboBoxStyle.DropDownList,
+        .FlatStyle =
+            FlatStyle.Flat
+    }
+
+        cmbCorteRapido.Items.AddRange(
+        New Object() {
+            "Campo inteiro",
+            "Meio campo esquerdo",
+            "Meio campo direito",
+            "Metade superior",
+            "Metade inferior",
+            "Terço esquerdo",
+            "Terço central",
+            "Terço direito",
+            "Área esquerda",
+            "Área direita"
+        })
+
+        cmbCorteRapido.SelectedIndex = 0
+
+        AdicionarCampoCartao(
+        cartaoCortesRapidos,
+        "Pré-definição",
+        cmbCorteRapido)
+        Dim botaoCampoInteiro As Button = Nothing
 
         Dim btnAplicarCorte As New Button With {
-    .Text = "Aplicar corte",
-    .Width =
-        Math.Max(
-            240,
-            cartaoCortesRapidos.Width - 20),
-    .Height = 38,
-    .Margin =
-        New Padding(
-            8,
-            8,
-            8,
-            0),
-    .FlatStyle =
-        FlatStyle.Flat,
-    .BackColor =
-        Tema.CorPrimaria,
-    .ForeColor =
-        Color.White,
-    .Cursor =
-        Cursors.Hand,
-    .UseVisualStyleBackColor =
-        False
-}
+        .Text = "Aplicar corte",
+        .Width =
+            Math.Max(
+                240,
+                cartaoCortesRapidos.Width - 20),
+        .Height = 38,
+        .Margin =
+            New Padding(
+                8,
+                8,
+                8,
+                0),
+        .FlatStyle =
+            FlatStyle.Flat,
+        .BackColor =
+            Tema.CorPrimaria,
+        .ForeColor =
+            Tema.TextoSobreCorPrimaria,
+        .Cursor =
+            Cursors.Hand,
+        .UseVisualStyleBackColor =
+            False
+    }
 
         btnAplicarCorte.FlatAppearance.BorderColor =
-    Tema.Borda
+        Tema.Borda
 
         btnAplicarCorte.FlatAppearance.MouseOverBackColor =
-    Tema.PainelHover
+        Tema.CorPrimariaHover
 
         AddHandler btnAplicarCorte.Click,
-    Sub(sender, e)
+        Sub(sender, e)
 
-        Dim tipoRecorte As TipoRecorteCampo
+            Dim tipoRecorte As TipoRecorteCampo =
+                TipoRecorteCampo.CampoInteiro
 
-        Select Case cmbCorteRapido.SelectedIndex
+            Select Case cmbCorteRapido.SelectedIndex
 
-            Case 0
+                Case 0
 
-                tipoRecorte =
-                    TipoRecorteCampo.CampoInteiro
+                    tipoRecorte =
+                        TipoRecorteCampo.CampoInteiro
 
-            Case 1
+                Case 1
 
-                tipoRecorte =
-                    TipoRecorteCampo.MeioCampoEsquerdo
+                    tipoRecorte =
+                        TipoRecorteCampo.MeioCampoEsquerdo
 
-            Case 2
+                Case 2
 
-                tipoRecorte =
-                    TipoRecorteCampo.MeioCampoDireito
+                    tipoRecorte =
+                        TipoRecorteCampo.MeioCampoDireito
 
-            Case 3
+                Case 3
 
-                tipoRecorte =
-                    TipoRecorteCampo.MetadeSuperior
+                    tipoRecorte =
+                        TipoRecorteCampo.MetadeSuperior
 
-            Case 4
+                Case 4
 
-                tipoRecorte =
-                    TipoRecorteCampo.MetadeInferior
+                    tipoRecorte =
+                        TipoRecorteCampo.MetadeInferior
 
-            Case 5
+                Case 5
 
-                tipoRecorte =
-                    TipoRecorteCampo.TercoEsquerdo
+                    tipoRecorte =
+                        TipoRecorteCampo.TercoEsquerdo
 
-            Case 6
+                Case 6
 
-                tipoRecorte =
-                    TipoRecorteCampo.TercoCentral
+                    tipoRecorte =
+                        TipoRecorteCampo.TercoCentral
 
-            Case 7
+                Case 7
 
-                tipoRecorte =
-                    TipoRecorteCampo.TercoDireito
+                    tipoRecorte =
+                        TipoRecorteCampo.TercoDireito
 
-            Case 8
+                Case 8
 
-                tipoRecorte =
-                    TipoRecorteCampo.AreaEsquerda
+                    tipoRecorte =
+                        TipoRecorteCampo.AreaEsquerda
 
-            Case 9
+                Case 9
 
-                tipoRecorte =
-                    TipoRecorteCampo.AreaDireita
+                    tipoRecorte =
+                        TipoRecorteCampo.AreaDireita
 
-            Case Else
+                Case Else
 
+                    Exit Sub
+
+            End Select
+
+            Dim aplicou As Boolean =
+                CampoCanvas.AplicarRecortePredefinido(
+                    tipoRecorte)
+
+            If Not aplicou Then
                 Exit Sub
-
-        End Select
-
-        If CampoCanvas.
-            AplicarRecortePredefinido(
-                tipoRecorte) Then
+            End If
 
             AtualizarEstadoBotaoRecorte()
 
-            CampoCanvas.Focus()
+            botaoCampoInteiro.Enabled = CampoCanvas.RecorteAtivo
 
-        End If
-
-    End Sub
+        End Sub
 
         cartaoCortesRapidos.Controls.Add(
-    btnAplicarCorte)
+        btnAplicarCorte)
 
         painel.Controls.Add(
-    cartaoCortesRapidos)
+        cartaoCortesRapidos)
+
+        '==================================================
+        ' CARTÃO: ORIENTAÇÃO DOS JOGADORES
+        '==================================================
+
+        Dim cartaoOrientacaoTodos As FlowLayoutPanel =
+        CriarCartaoPropriedades(
+            "Orientação dos jogadores",
+            Color.FromArgb(
+                75,
+                36,
+                36))
+
+        Dim cmbOrientacaoTodos As ComboBox =
+        CriarComboOrientacaoVisual(
+            OrientacaoVisualJogador.Costas)
+
+        AdicionarCampoCartao(
+        cartaoOrientacaoTodos,
+        "Aplicar em todos os jogadores",
+        cmbOrientacaoTodos)
+
+        Dim btnAplicarOrientacaoTodos As New Button With {
+        .Text = "Alterar todos os jogadores",
+        .Width =
+            Math.Max(
+                240,
+                cartaoOrientacaoTodos.Width - 20),
+        .Height = 38,
+        .Margin =
+            New Padding(
+                8,
+                8,
+                8,
+                0),
+        .FlatStyle =
+            FlatStyle.Flat,
+        .BackColor =
+            Tema.Painel,
+        .ForeColor =
+            Tema.Texto,
+        .Cursor =
+            Cursors.Hand,
+        .UseVisualStyleBackColor =
+            False
+    }
+
+        btnAplicarOrientacaoTodos.FlatAppearance.BorderColor =
+        Tema.Borda
+
+        btnAplicarOrientacaoTodos.FlatAppearance.MouseOverBackColor =
+        Tema.PainelHover
+
+        AddHandler btnAplicarOrientacaoTodos.Click,
+        Sub(sender, e)
+
+            Dim possuiJogadores As Boolean = False
+
+            For Each objeto As ObjetoCampo
+                In CampoCanvas.ObjetosAtuais
+
+                If TypeOf objeto Is Jogador Then
+
+                    possuiJogadores = True
+
+                    Exit For
+
+                End If
+
+            Next
+
+            If Not possuiJogadores Then
+
+                MessageBox.Show(
+                    "O campo ainda não possui jogadores.",
+                    "Orientação dos jogadores",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information)
+
+                Exit Sub
+
+            End If
+
+            Dim alterou As Boolean =
+                CampoCanvas.
+                    AlterarOrientacaoVisualTodosJogadores(
+                        ObterOrientacaoVisualSelecionada(
+                            cmbOrientacaoTodos))
+
+            If Not alterou Then
+
+                MessageBox.Show(
+                    "Todos os jogadores já estão nessa orientação ou estão bloqueados.",
+                    "Orientação dos jogadores",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information)
+
+            End If
+
+        End Sub
+
+        cartaoOrientacaoTodos.Controls.Add(
+        btnAplicarOrientacaoTodos)
+
+        painel.Controls.Add(
+        cartaoOrientacaoTodos)
 
         Dim selecionando As Boolean =
-            CampoCanvas.ModoSelecaoRecorteAtivo
+        CampoCanvas.ModoSelecaoRecorteAtivo
 
         Dim statusTexto As String
         Dim orientacaoTexto As String
@@ -2041,443 +2391,478 @@ Public Class FrmPrincipal
         If selecionando Then
 
             statusTexto =
-                "Selecionando nova área..."
+            "Selecionando nova área..."
 
             orientacaoTexto =
-                "Clique em um ponto do campo, mantenha o botão " &
-                "esquerdo pressionado e arraste livremente até " &
-                "formar a região desejada." &
-                Environment.NewLine &
-                Environment.NewLine &
-                "A largura e a altura podem ser escolhidas de " &
-                "forma independente, como na ferramenta de área." &
-                Environment.NewLine &
-                Environment.NewLine &
-                "Use o botão direito ou a tecla Esc para cancelar."
+            "Clique em um ponto do campo, mantenha o botão " &
+            "esquerdo pressionado e arraste livremente até " &
+            "formar a região desejada." &
+            Environment.NewLine &
+            Environment.NewLine &
+            "A largura e a altura podem ser escolhidas de " &
+            "forma independente, como na ferramenta de área." &
+            Environment.NewLine &
+            Environment.NewLine &
+            "Use o botão direito ou a tecla Esc para cancelar."
 
         ElseIf CampoCanvas.RecorteAtivo Then
 
             statusTexto =
-                "Recorte ativo"
+            "Recorte ativo"
 
             orientacaoTexto =
-                "A região selecionada continuará ativa ao criar, " &
-                "mover ou editar os elementos do exercício." &
-                Environment.NewLine &
-                Environment.NewLine &
-                "PNG, PDF e impressão utilizarão somente essa área."
+            "A região selecionada continuará ativa ao criar, " &
+            "mover ou editar os elementos do exercício." &
+            Environment.NewLine &
+            Environment.NewLine &
+            "PNG, PDF e impressão utilizarão somente essa área."
 
         Else
 
             statusTexto =
-                "Campo inteiro"
+            "Campo inteiro"
 
             orientacaoTexto =
-                "Nenhuma região está recortada." &
-                Environment.NewLine &
-                Environment.NewLine &
-                "Clique em Selecionar nova área para criar um recorte."
+            "Nenhuma região está recortada." &
+            Environment.NewLine &
+            Environment.NewLine &
+            "Clique em Selecionar nova área para criar um recorte."
 
         End If
 
         Dim status As New Label With {
-            .Text = statusTexto,
-            .ForeColor = If(
+        .Text = statusTexto,
+        .ForeColor =
+            If(
                 selecionando,
                 Color.Gold,
                 Tema.Texto),
-            .Font = New Font(
-                "Segoe UI",
-                9.5F,
-                FontStyle.Bold),
-            .Width = largura,
-            .Height = 30,
-            .TextAlign = ContentAlignment.MiddleLeft
-        }
+        .Font = New Font(
+            "Segoe UI",
+            9.5F,
+            FontStyle.Bold),
+        .Width = largura,
+        .Height = 30,
+        .TextAlign =
+            ContentAlignment.MiddleLeft
+    }
 
         painel.Controls.Add(
-            status)
+        status)
 
         Dim alturaOrientacao As Integer
 
         If selecionando Then
 
-            alturaOrientacao =
-                150
+            alturaOrientacao = 150
 
         ElseIf CampoCanvas.RecorteAtivo Then
 
-            alturaOrientacao =
-                100
+            alturaOrientacao = 100
 
         Else
 
-            alturaOrientacao =
-                82
+            alturaOrientacao = 82
 
         End If
 
         Dim orientacao As New Label With {
-            .Text = orientacaoTexto,
-            .ForeColor = Tema.TextoSecundario,
-            .Font = Tema.FontePadrao,
-            .Width = largura,
-            .Height = alturaOrientacao,
-            .TextAlign = ContentAlignment.TopLeft
-        }
+        .Text = orientacaoTexto,
+        .ForeColor = Tema.TextoSecundario,
+        .Font = Tema.FontePadrao,
+        .Width = largura,
+        .Height = alturaOrientacao,
+        .TextAlign =
+            ContentAlignment.TopLeft
+    }
 
         painel.Controls.Add(
-            orientacao)
+        orientacao)
 
         If CampoCanvas.RecorteAtivo AndAlso
-           Not selecionando Then
+       Not selecionando Then
 
             Dim recorte As RectangleF =
-                CampoCanvas.RetanguloRecortePercentual
+            CampoCanvas.RetanguloRecortePercentual
 
             Dim detalhes As New Label With {
-                .Text =
-                    "Início X: " &
-                    recorte.Left.ToString("0.0") &
-                    "%" &
-                    Environment.NewLine &
-                    "Início Y: " &
-                    recorte.Top.ToString("0.0") &
-                    "%" &
-                    Environment.NewLine &
-                    "Largura: " &
-                    recorte.Width.ToString("0.0") &
-                    "%" &
-                    Environment.NewLine &
-                    "Altura: " &
-                    recorte.Height.ToString("0.0") &
-                    "%",
-                .ForeColor = Tema.Texto,
-                .Font = Tema.FontePadrao,
-                .Width = largura,
-                .Height = 92,
-                .Margin = New Padding(
+            .Text =
+                "Início X: " &
+                recorte.Left.ToString("0.0") &
+                "%" &
+                Environment.NewLine &
+                "Início Y: " &
+                recorte.Top.ToString("0.0") &
+                "%" &
+                Environment.NewLine &
+                "Largura: " &
+                recorte.Width.ToString("0.0") &
+                "%" &
+                Environment.NewLine &
+                "Altura: " &
+                recorte.Height.ToString("0.0") &
+                "%",
+            .ForeColor = Tema.Texto,
+            .Font = Tema.FontePadrao,
+            .Width = largura,
+            .Height = 92,
+            .Margin =
+                New Padding(
                     0,
                     8,
                     0,
                     8),
-                .TextAlign = ContentAlignment.MiddleLeft
-            }
+            .TextAlign =
+                ContentAlignment.MiddleLeft
+        }
 
             painel.Controls.Add(
-                detalhes)
+            detalhes)
 
         End If
 
         Dim botaoSelecionar As New Button With {
-            .Text = If(
+        .Text =
+            If(
                 selecionando,
                 "Cancelar seleção do recorte",
                 "Selecionar nova área"),
-            .Width = largura,
-            .Height = 38,
-            .Margin = New Padding(
+        .Width = largura,
+        .Height = 38,
+        .Margin =
+            New Padding(
                 0,
                 8,
                 0,
                 4),
-            .FlatStyle = FlatStyle.Flat,
-            .BackColor = If(
+        .FlatStyle =
+            FlatStyle.Flat,
+        .BackColor =
+            If(
                 selecionando,
                 Tema.CorPrimaria,
                 Tema.Painel),
-            .ForeColor = If(
-                selecionando,
-                Color.White,
-                Tema.Texto),
-            .Cursor = Cursors.Hand,
-            .UseVisualStyleBackColor = False
-        }
-
-        botaoSelecionar.FlatAppearance.BorderColor =
+        .ForeColor =
             If(
                 selecionando,
-                Color.White,
-                Tema.Borda)
+                Tema.TextoSobreCorPrimaria,
+                Tema.Texto),
+        .Cursor =
+            Cursors.Hand,
+        .UseVisualStyleBackColor =
+            False
+    }
+
+        botaoSelecionar.FlatAppearance.BorderColor =
+        If(
+            selecionando,
+            Tema.TextoSobreCorPrimaria,
+            Tema.Borda)
 
         botaoSelecionar.FlatAppearance.MouseOverBackColor =
-            Tema.PainelHover
+        Tema.PainelHover
 
         AddHandler botaoSelecionar.Click,
-            Sub(sender, e)
+        Sub(sender, e)
 
-                If CampoCanvas.ModoSelecaoRecorteAtivo Then
+            If CampoCanvas.ModoSelecaoRecorteAtivo Then
 
-                    CampoCanvas.CancelarSelecaoRecorteCampo()
+                CampoCanvas.CancelarSelecaoRecorteCampo()
 
-                Else
+            Else
 
-                    CampoCanvas.IniciarSelecaoRecorteCampo()
+                CampoCanvas.IniciarSelecaoRecorteCampo()
 
-                End If
+            End If
 
-                CampoCanvas.Focus()
+            CampoCanvas.Focus()
 
-            End Sub
+        End Sub
 
         painel.Controls.Add(
-            botaoSelecionar)
+        botaoSelecionar)
 
-        Dim botaoCampoInteiro As New Button With {
-            .Text = "Usar campo inteiro",
-            .Width = largura,
-            .Height = 38,
-            .Margin = New Padding(
+        botaoCampoInteiro =
+    New Button With {
+        .Text = "Usar campo inteiro",
+        .Width = largura,
+        .Height = 38,
+        .Margin =
+            New Padding(
                 0,
                 4,
                 0,
                 4),
-            .FlatStyle = FlatStyle.Flat,
-            .BackColor = Tema.Painel,
-            .ForeColor = Tema.Texto,
-            .Cursor = Cursors.Hand,
-            .UseVisualStyleBackColor = False,
-            .Enabled =
-                CampoCanvas.RecorteAtivo OrElse
-                selecionando
-        }
+        .FlatStyle =
+            FlatStyle.Flat,
+        .BackColor =
+            Tema.Painel,
+        .ForeColor =
+            Tema.Texto,
+        .Cursor =
+            Cursors.Hand,
+        .UseVisualStyleBackColor =
+            False,
+        .Enabled =
+            CampoCanvas.RecorteAtivo OrElse
+            selecionando
+    }
 
         botaoCampoInteiro.FlatAppearance.BorderColor =
-            Tema.Borda
+        Tema.Borda
 
         botaoCampoInteiro.FlatAppearance.MouseOverBackColor =
-            Tema.PainelHover
+        Tema.PainelHover
 
         AddHandler botaoCampoInteiro.Click,
-            Sub(sender, e)
+        Sub(sender, e)
 
-                CampoCanvas.LimparRecorteCampo()
+            CampoCanvas.LimparRecorteCampo()
 
-                CampoCanvas.Focus()
+            AtualizarEstadoBotaoRecorte()
 
-            End Sub
+            botaoCampoInteiro.Enabled =
+    False
+
+        End Sub
 
         painel.Controls.Add(
-            botaoCampoInteiro)
+        botaoCampoInteiro)
 
         Dim avisoExportacao As New Label With {
-            .Text =
-                "PNG, PDF e impressão seguem automaticamente " &
-                "o recorte ativo.",
-            .ForeColor = Tema.TextoSecundario,
-            .Font = New Font(
-                "Segoe UI",
-                8.5F,
-                FontStyle.Italic),
-            .Width = largura,
-            .Height = 58,
-            .Margin = New Padding(
+        .Text =
+            "PNG, PDF e impressão seguem automaticamente " &
+            "o recorte ativo.",
+        .ForeColor = Tema.TextoSecundario,
+        .Font = New Font(
+            "Segoe UI",
+            8.5F,
+            FontStyle.Italic),
+        .Width = largura,
+        .Height = 58,
+        .Margin =
+            New Padding(
                 0,
                 12,
                 0,
                 0),
-            .TextAlign = ContentAlignment.MiddleLeft
-        }
+        .TextAlign =
+            ContentAlignment.MiddleLeft
+    }
 
         painel.Controls.Add(
-            avisoExportacao)
+        avisoExportacao)
 
     End Sub
 
-    Private Sub MontarPainelPropriedades(
-        objeto As ObjetoCampo)
+    Private Sub MontarPainelPropriedades(objeto As ObjetoCampo)
 
-        _versaoMontagemPropriedades +=
-            1
+        If _painelConfiguracoesCampoAberto AndAlso
+   objeto Is Nothing Then
+
+            Exit Sub
+
+        End If
+
+        _painelConfiguracoesCampoAberto =
+    False
+
+        _versaoMontagemPropriedades += 1
 
         Dim versaoAtual As Integer =
-            _versaoMontagemPropriedades
+        _versaoMontagemPropriedades
 
-        _montandoPainelPropriedades =
-            True
+        _montandoPainelPropriedades = True
 
         LimparPainelDireito()
 
         PnlDireito.SuspendLayout()
 
-        Dim montagemConcluida As Boolean =
-            False
+        Dim montagemConcluida As Boolean = False
 
         Try
 
             _containerPainelPropriedades =
-                New Panel With {
-                    .Dock = DockStyle.Fill,
-                    .Padding = New Padding(0),
-                    .Margin = New Padding(0),
-                    .BackColor = Tema.Fundo,
-                    .AutoScroll = True,
-                    .Visible = False
-                }
-
-            Dim larguraDisponivel As Integer =
-                PnlDireito.ClientSize.Width -
-                SystemInformation.VerticalScrollBarWidth -
-                18
-
-            Dim larguraPainel As Integer =
-                Math.Max(
-                    240,
-                    Math.Min(
-                        380,
-                        larguraDisponivel))
-
-            _painelConteudoPropriedades =
-                New FlowLayoutPanel With {
-                    .AutoSize = False,
-                    .Width = larguraPainel,
-                    .Height = 1,
-                    .FlowDirection = FlowDirection.TopDown,
-                    .WrapContents = False,
-                    .Margin = New Padding(0),
-                    .Padding = New Padding(6),
-                    .BackColor = Tema.Fundo
-                }
-
-            AddHandler _containerPainelPropriedades.Resize,
-                AddressOf ContainerPainelPropriedades_Resize
-
-            _containerPainelPropriedades.Controls.Add(
-                _painelConteudoPropriedades)
-
-            PnlDireito.Controls.Add(
-                _containerPainelPropriedades)
-
-            Dim painel As FlowLayoutPanel =
-                _painelConteudoPropriedades
-
-            Dim largura As Integer =
-                Math.Max(
-                    210,
-                    painel.Width -
-                    painel.Padding.Horizontal)
-
-            Dim titulo As New Label With {
-                .Text = "PROPRIEDADES",
-                .ForeColor = Tema.Texto,
-                .BackColor = Tema.Fundo,
-                .Font = New Font(
-                    "Segoe UI",
-                    11.0F,
-                    FontStyle.Bold),
-                .Width = largura,
-                .Height = 32,
+            New Panel With {
+                .Dock = DockStyle.Fill,
+                .Padding = New Padding(0),
                 .Margin = New Padding(0),
-                .TextAlign = ContentAlignment.MiddleLeft
+                .BackColor = Tema.Fundo,
+                .AutoScroll = True,
+                .Visible = False
             }
 
+            Dim larguraDisponivel As Integer =
+            PnlDireito.ClientSize.Width -
+            SystemInformation.VerticalScrollBarWidth -
+            18
+
+            Dim larguraPainel As Integer =
+            Math.Max(
+                240,
+                Math.Min(
+                    380,
+                    larguraDisponivel))
+
+            _painelConteudoPropriedades =
+            New FlowLayoutPanel With {
+                .AutoSize = False,
+                .Width = larguraPainel,
+                .Height = 1,
+                .FlowDirection = FlowDirection.TopDown,
+                .WrapContents = False,
+                .Margin = New Padding(0),
+                .Padding = New Padding(6),
+                .BackColor = Tema.Fundo
+            }
+
+            AddHandler _containerPainelPropriedades.Resize,
+            AddressOf ContainerPainelPropriedades_Resize
+
+            _containerPainelPropriedades.Controls.Add(
+            _painelConteudoPropriedades)
+
+            PnlDireito.Controls.Add(
+            _containerPainelPropriedades)
+
+            Dim painel As FlowLayoutPanel =
+            _painelConteudoPropriedades
+
+            Dim largura As Integer =
+            Math.Max(
+                210,
+                painel.Width -
+                painel.Padding.Horizontal)
+
+            Dim titulo As New Label With {
+            .Text = "PROPRIEDADES",
+            .ForeColor = Tema.Texto,
+            .BackColor = Tema.Fundo,
+            .Font = New Font(
+                "Segoe UI",
+                11.0F,
+                FontStyle.Bold),
+            .Width = largura,
+            .Height = 32,
+            .Margin = New Padding(0),
+            .TextAlign = ContentAlignment.MiddleLeft
+        }
+
             painel.Controls.Add(
-                titulo)
+            titulo)
 
             If objeto Is Nothing Then
 
                 Dim mensagem As New Label With {
-                    .Text = "Nenhum objeto selecionado.",
-                    .ForeColor = Tema.TextoSecundario,
-                    .BackColor = Tema.Fundo,
-                    .Font = Tema.FontePadrao,
-                    .Width = largura,
-                    .Height = 50,
-                    .Margin = New Padding(0),
-                    .TextAlign = ContentAlignment.MiddleLeft
-                }
+                .Text = "Nenhum objeto selecionado.",
+                .ForeColor = Tema.TextoSecundario,
+                .BackColor = Tema.Fundo,
+                .Font = Tema.FontePadrao,
+                .Width = largura,
+                .Height = 50,
+                .Margin = New Padding(0),
+                .TextAlign = ContentAlignment.MiddleLeft
+            }
 
                 painel.Controls.Add(
-                    mensagem)
+                mensagem)
 
             Else
 
                 Dim tipoObjeto As New Label With {
-                    .Text = ObterNomeObjeto(objeto),
-                    .ForeColor = Tema.CorPrimaria,
-                    .BackColor = Tema.Fundo,
-                    .Font = New Font(
-                        "Segoe UI",
-                        10.0F,
-                        FontStyle.Bold),
-                    .Width = largura,
-                    .Height = 30,
-                    .Margin = New Padding(0),
-                    .TextAlign = ContentAlignment.MiddleLeft
-                }
+                .Text = ObterNomeObjeto(objeto),
+                .ForeColor = Tema.CorPrimaria,
+                .BackColor = Tema.Fundo,
+                .Font = New Font(
+                    "Segoe UI",
+                    10.0F,
+                    FontStyle.Bold),
+                .Width = largura,
+                .Height = 30,
+                .Margin = New Padding(0),
+                .TextAlign = ContentAlignment.MiddleLeft
+            }
 
                 painel.Controls.Add(
-                    tipoObjeto)
+                tipoObjeto)
 
                 If TypeOf objeto Is Jogador Then
 
                     MontarPropriedadesJogador(
-                        painel,
-                        DirectCast(
-                            objeto,
-                            Jogador))
+                    painel,
+                    DirectCast(
+                        objeto,
+                        Jogador))
 
                 ElseIf TypeOf objeto Is Bola Then
 
                     AdicionarMensagemPainel(
-                        painel,
-                        "A bola não possui propriedades editáveis no momento.")
+                    painel,
+                    "A bola não possui propriedades editáveis no momento.")
 
                 ElseIf TypeOf objeto Is Cone Then
 
                     MontarPropriedadesCone(
-                        painel,
-                        DirectCast(
-                            objeto,
-                            Cone))
+                    painel,
+                    DirectCast(
+                        objeto,
+                        Cone))
 
                 ElseIf TypeOf objeto Is Gol Then
 
                     MontarPropriedadesGol(
-                        painel,
-                        DirectCast(
-                            objeto,
-                            Gol))
+                    painel,
+                    DirectCast(
+                        objeto,
+                        Gol))
 
                 ElseIf TypeOf objeto Is Manequim Then
 
                     MontarPropriedadesManequim(
-                        painel,
-                        DirectCast(
-                            objeto,
-                            Manequim))
+                    painel,
+                    DirectCast(
+                        objeto,
+                        Manequim))
 
                 ElseIf TypeOf objeto Is LinhaTatica Then
 
                     MontarPropriedadesLinha(
-                        painel,
-                        DirectCast(
-                            objeto,
-                            LinhaTatica))
+                    painel,
+                    DirectCast(
+                        objeto,
+                        LinhaTatica))
 
                 ElseIf TypeOf objeto Is AreaTatica Then
 
                     MontarPropriedadesArea(
-                        painel,
-                        DirectCast(
-                            objeto,
-                            AreaTatica))
+                    painel,
+                    DirectCast(
+                        objeto,
+                        AreaTatica))
 
                 ElseIf TypeOf objeto Is MarcadorTatico Then
 
                     MontarPropriedadesMarcador(
-                        painel,
-                        DirectCast(
-                            objeto,
-                            MarcadorTatico))
+                    painel,
+                    DirectCast(
+                        objeto,
+                        MarcadorTatico))
 
                 ElseIf TypeOf objeto Is TextoTatico Then
 
                     MontarPropriedadesTexto(
+                    painel,
+                    DirectCast(
+                        objeto,
+                        TextoTatico))
+
+                End If
+
+                If Not TypeOf objeto Is Jogador Then
+
+                    MontarEscalaVisualObjeto(
                         painel,
-                        DirectCast(
-                            objeto,
-                            TextoTatico))
+                        objeto)
 
                 End If
 
@@ -2486,148 +2871,136 @@ Public Class FrmPrincipal
                 '==================================================
 
                 Dim cartaoAcoes As FlowLayoutPanel =
-                    CriarCartaoPropriedades(
-                        "Ações",
-                        Color.FromArgb(
-                            70,
-                            70,
-                            76))
+                CriarCartaoPropriedades(
+                    "Ações",
+                    Color.FromArgb(
+                        70,
+                        70,
+                        76))
 
                 AdicionarBotaoCartao(
-                    cartaoAcoes,
-                    CriarBotaoAcaoCartao(
-                        "Duplicar objeto  (Ctrl+D)",
-                        Sub()
+                cartaoAcoes,
+                CriarBotaoAcaoCartao(
+                    "Duplicar objeto  (Ctrl+D)",
+                    Sub()
 
-                            CampoCanvas.DuplicarSelecionado()
+                        CampoCanvas.DuplicarSelecionado()
 
-                        End Sub))
+                    End Sub))
 
                 AdicionarLinhaDuplaCartao(
-                    cartaoAcoes,
-                    CriarBotaoAcaoCartao(
-                        "Trazer para frente",
-                        Sub()
+                cartaoAcoes,
+                CriarBotaoAcaoCartao(
+                    "Trazer para frente",
+                    Sub()
 
-                            CampoCanvas.TrazerParaFrente()
+                        CampoCanvas.TrazerParaFrente()
 
-                        End Sub),
-                    CriarBotaoAcaoCartao(
-                        "Enviar para trás",
-                        Sub()
+                    End Sub),
+                CriarBotaoAcaoCartao(
+                    "Enviar para trás",
+                    Sub()
 
-                            CampoCanvas.EnviarParaTras()
+                        CampoCanvas.EnviarParaTras()
 
-                        End Sub))
+                    End Sub))
 
                 painel.Controls.Add(
-                    cartaoAcoes)
+                cartaoAcoes)
 
                 '==================================================
                 ' CARTÃO: PROTEÇÃO
                 '==================================================
 
-                Dim textoBloqueio As String
-
-                If CampoCanvas.SelecaoPossuiObjetoBloqueado Then
-
-                    textoBloqueio =
-                        "Desbloquear objeto  (Ctrl+L)"
-
-                Else
-
-                    textoBloqueio =
-                        "Bloquear objeto  (Ctrl+L)"
-
-                End If
+                Dim textoBloqueio As String =
+                If(
+                    objeto.Bloqueado,
+                    "Desbloquear objeto",
+                    "Bloquear objeto")
 
                 Dim cartaoProtecao As FlowLayoutPanel =
-                    CriarCartaoPropriedades(
-                        "Proteção",
-                        Color.FromArgb(
-                            92,
-                            65,
-                            24))
+                CriarCartaoPropriedades(
+                    "Proteção",
+                    Color.FromArgb(
+                        92,
+                        65,
+                        24))
 
                 AdicionarBotaoCartao(
-                    cartaoProtecao,
-                    CriarBotaoAcaoCartao(
-                        textoBloqueio,
-                        Sub()
+                cartaoProtecao,
+                CriarBotaoAcaoCartao(
+                    textoBloqueio,
+                    Sub()
 
-                            CampoCanvas.AlternarBloqueioSelecionados()
+                        CampoCanvas.AlternarBloqueioSelecionados()
 
-                        End Sub))
+                    End Sub))
 
                 painel.Controls.Add(
-                    cartaoProtecao)
+                cartaoProtecao)
 
                 '==================================================
                 ' CARTÃO: EXCLUSÃO
                 '==================================================
 
                 Dim cartaoExclusao As FlowLayoutPanel =
-                    CriarCartaoPropriedades(
-                        "Excluir",
-                        Tema.CorPrimaria)
+                CriarCartaoPropriedades(
+                    "Excluir",
+                    Tema.CorPrimaria)
 
                 AdicionarBotaoCartao(
-                    cartaoExclusao,
-                    CriarBotaoAcaoCartao(
-                        "Excluir objeto",
-                        Sub()
+                cartaoExclusao,
+                CriarBotaoAcaoCartao(
+                    "Excluir objeto",
+                    Sub()
 
-                            CampoCanvas.ExcluirSelecionado()
+                        CampoCanvas.ExcluirSelecionado()
 
-                        End Sub,
-                        True))
+                    End Sub,
+                    True))
 
                 painel.Controls.Add(
-                    cartaoExclusao)
+                cartaoExclusao)
 
             End If
-
 
             painel.PerformLayout()
 
             Dim tamanhoPreferido As Size =
-                painel.GetPreferredSize(
-                    New Size(
-                        painel.Width,
-                        0))
+            painel.GetPreferredSize(
+                New Size(
+                    painel.Width,
+                    0))
 
             painel.Height =
-                Math.Max(
-                    1,
-                    tamanhoPreferido.Height)
+            Math.Max(
+                1,
+                tamanhoPreferido.Height)
 
             _containerPainelPropriedades.AutoScrollPosition =
-                Point.Empty
+            Point.Empty
 
-            montagemConcluida =
-                True
+            montagemConcluida = True
 
         Finally
 
             PnlDireito.ResumeLayout(
-                True)
+            True)
 
-            _montandoPainelPropriedades =
-                False
+            _montandoPainelPropriedades = False
 
         End Try
 
         If montagemConcluida AndAlso
-           versaoAtual =
-           _versaoMontagemPropriedades Then
+       versaoAtual =
+       _versaoMontagemPropriedades Then
 
             CentralizarPainelPropriedades()
 
-            _containerPainelPropriedades.Visible =
-                True
+            _containerPainelPropriedades.Visible = True
 
             _containerPainelPropriedades.Invalidate(
-                True)
+            True)
 
         End If
 
@@ -2719,6 +3092,85 @@ Public Class FrmPrincipal
             valorAtual
 
         Return combo
+
+    End Function
+
+    Private Function CriarComboOrientacaoVisual(
+        valorAtual As OrientacaoVisualJogador
+    ) As ComboBox
+
+        Dim combo As New ComboBox With {
+            .DropDownStyle = ComboBoxStyle.DropDownList,
+            .BackColor = Tema.CampoEntrada,
+            .ForeColor = Tema.TextoCampo,
+            .FlatStyle = FlatStyle.Flat
+        }
+
+        combo.Items.AddRange(
+            New Object() {
+                "Costas",
+                "Frente",
+                "Lado direito",
+                "Lado esquerdo"
+            })
+
+        Select Case valorAtual
+
+            Case OrientacaoVisualJogador.Frente
+
+                combo.SelectedIndex =
+                    1
+
+            Case OrientacaoVisualJogador.Lado
+
+                combo.SelectedIndex =
+                    2
+
+            Case OrientacaoVisualJogador.LadoEsquerdo
+
+                combo.SelectedIndex =
+                    3
+
+            Case Else
+
+                combo.SelectedIndex =
+                    0
+
+        End Select
+
+        Return combo
+
+    End Function
+
+    Private Function ObterOrientacaoVisualSelecionada(
+        combo As ComboBox
+    ) As OrientacaoVisualJogador
+
+        If combo Is Nothing Then
+
+            Return OrientacaoVisualJogador.Costas
+
+        End If
+
+        Select Case combo.SelectedIndex
+
+            Case 1
+
+                Return OrientacaoVisualJogador.Frente
+
+            Case 2
+
+                Return OrientacaoVisualJogador.Lado
+
+            Case 3
+
+                Return OrientacaoVisualJogador.LadoEsquerdo
+
+            Case Else
+
+                Return OrientacaoVisualJogador.Costas
+
+        End Select
 
     End Function
 
@@ -2859,7 +3311,7 @@ Public Class FrmPrincipal
                 0,
                 0),
             .BackColor = corDestaque,
-            .ForeColor = Color.White,
+            .ForeColor = Tema.ObterCorTextoContraste(corDestaque),
             .Font = New Font(
                 "Segoe UI",
                 8.8F,
@@ -3015,7 +3467,7 @@ Public Class FrmPrincipal
         End If
 
         botao.FlatAppearance.MouseDownBackColor =
-            Tema.CorPrimaria
+            Tema.CorPrimariaPressionada
 
         AddHandler botao.Click,
             Sub(sender, e)
@@ -3236,6 +3688,57 @@ Public Class FrmPrincipal
 #End Region
 
 #Region "Propriedades dos objetos"
+
+    Private Sub MontarEscalaVisualObjeto(
+        painel As FlowLayoutPanel,
+        objeto As ObjetoCampo)
+
+        If painel Is Nothing OrElse
+           objeto Is Nothing Then
+
+            Exit Sub
+
+        End If
+
+        Dim cartaoTamanho As FlowLayoutPanel =
+            CriarCartaoPropriedades(
+                "Tamanho visual",
+                Color.FromArgb(
+                    60,
+                    70,
+                    88))
+
+        Dim escala As NumericUpDown =
+            CriarCampoNumerico(
+                0.5D,
+                2.5D,
+                CDec(
+                    objeto.EscalaVisual),
+                1,
+                0.1D)
+
+        escala.ThousandsSeparator =
+            False
+
+        AddHandler escala.ValueChanged,
+            Sub(sender, e)
+
+                CampoCanvas.
+                    AlterarEscalaVisualSelecionados(
+                        CSng(
+                            escala.Value))
+
+            End Sub
+
+        AdicionarCampoCartao(
+            cartaoTamanho,
+            "Escala do objeto",
+            escala)
+
+        painel.Controls.Add(
+            cartaoTamanho)
+
+    End Sub
 
     Private Sub MontarPropriedadesJogador(painel As FlowLayoutPanel, jogador As Jogador)
 
@@ -3464,31 +3967,24 @@ Public Class FrmPrincipal
     "Cor da camisa",
     painelCor)
 
-        Dim direcao As ComboBox =
-        CriarComboEnum(
-            GetType(
-                DirecaoJogador),
-            jogador.Direcao)
+        Dim orientacaoVisual As ComboBox =
+            CriarComboOrientacaoVisual(
+                jogador.OrientacaoVisual)
 
-        AddHandler direcao.SelectedIndexChanged,
-        Sub(sender, e)
+        AddHandler orientacaoVisual.SelectedIndexChanged,
+            Sub(sender, e)
 
-            If direcao.SelectedItem Is Nothing Then
-                Exit Sub
-            End If
+                CampoCanvas.
+                    AlterarOrientacaoVisualJogadoresSelecionados(
+                        ObterOrientacaoVisualSelecionada(
+                            orientacaoVisual))
 
-            CampoCanvas.
-                AlterarDirecaoJogadoresSelecionados(
-                    DirectCast(
-                        direcao.SelectedItem,
-                        DirecaoJogador))
-
-        End Sub
+            End Sub
 
         AdicionarCampoCartao(
         cartaoAparencia,
-        "Direção do jogador",
-        direcao)
+        "Orientação visual",
+        orientacaoVisual)
 
         Dim pose As ComboBox =
         CriarComboEnum(
@@ -4018,10 +4514,10 @@ Public Class FrmPrincipal
                 Tema.CorPrimaria
 
             botao.ForeColor =
-                Color.White
+                Tema.TextoSobreCorPrimaria
 
             botao.FlatAppearance.BorderColor =
-                Color.White
+                Tema.TextoSobreCorPrimaria
 
         Else
 
@@ -4126,6 +4622,55 @@ Public Class FrmPrincipal
 
         painel.Controls.Add(
             mensagem)
+
+        Dim tituloTamanho As New Label With {
+            .Text = "TAMANHO VISUAL",
+            .ForeColor = Tema.Texto,
+            .Font = New Font(
+                "Segoe UI",
+                9.0F,
+                FontStyle.Bold),
+            .Width = largura,
+            .Height = 28,
+            .Margin = New Padding(
+                0,
+                8,
+                0,
+                2),
+            .TextAlign =
+                ContentAlignment.MiddleLeft
+        }
+
+        painel.Controls.Add(
+            tituloTamanho)
+
+        Dim escalaSelecao As NumericUpDown =
+            CriarCampoNumerico(
+                0.5D,
+                2.5D,
+                CDec(
+                    CampoCanvas.
+                        EscalaVisualReferenciaSelecao),
+                1,
+                0.1D)
+
+        escalaSelecao.ThousandsSeparator =
+            False
+
+        AddHandler escalaSelecao.ValueChanged,
+            Sub(sender, e)
+
+                CampoCanvas.
+                    AlterarEscalaVisualSelecionados(
+                        CSng(
+                            escalaSelecao.Value))
+
+            End Sub
+
+        AdicionarCampoPainel(
+            painel,
+            "Aplicar o mesmo tamanho à seleção",
+            escalaSelecao)
 
         Dim tituloAlinhamento As New Label With {
             .Text = "ALINHAMENTO",
@@ -4751,7 +5296,7 @@ Public Class FrmPrincipal
             .Width = 190,
             .Height = 32,
             .Margin = New Padding(0, 0, 16, 0),
-            .ForeColor = Color.White,
+            .ForeColor = Tema.TextoSobreCorPrimaria,
             .BackColor = Tema.CorPrimaria,
             .Font = New Font(
                 "Segoe UI",
@@ -4894,7 +5439,7 @@ Public Class FrmPrincipal
         .Margin = New Padding(0, 0, 4, 0),
         .FlatStyle = FlatStyle.Flat,
         .BackColor = Tema.CorPrimaria,
-        .ForeColor = Color.WhiteSmoke,
+        .ForeColor = Tema.TextoSobreCorPrimaria,
         .Cursor = Cursors.Hand,
         .UseVisualStyleBackColor = False,
         .TextAlign = ContentAlignment.MiddleCenter
@@ -5029,7 +5574,7 @@ Public Class FrmPrincipal
                     CriarGrupoRibbon(
                         "CAMPO",
                         CriarBotaoRibbon(
-                            "Campo inteiro",
+                            "Ajustes Campo",
                             AddressOf CampoInteiro_Click,
                             120)))
 
@@ -5258,10 +5803,7 @@ Public Class FrmPrincipal
         .Height = 43,
         .Margin = New Padding(3, 0, 3, 0),
         .FlatStyle = FlatStyle.Flat,
-        .BackColor = Color.FromArgb(
-            43,
-            43,
-            43),
+        .BackColor = Tema.Painel,
         .ForeColor = Tema.Texto,
         .Cursor = Cursors.Hand,
         .UseVisualStyleBackColor = False,
@@ -5307,10 +5849,10 @@ Public Class FrmPrincipal
                 Tema.Fundo
 
                 botao.ForeColor =
-                Color.White
+                Tema.Texto
 
                 botao.FlatAppearance.BorderColor =
-                Color.White
+                Tema.CorPrimaria
 
             Else
 
@@ -5318,7 +5860,7 @@ Public Class FrmPrincipal
                 Tema.CorPrimaria
 
                 botao.ForeColor =
-                Color.WhiteSmoke
+                Tema.TextoSobreCorPrimaria
 
                 botao.FlatAppearance.BorderColor =
                 Tema.CorPrimaria
@@ -5359,12 +5901,15 @@ Public Class FrmPrincipal
             Exit Sub
         End If
 
-        Using formulario As New FrmFormacoes(CampoCanvas)
+        Using formulario As New FrmFormacoes(
+            CampoCanvas)
 
             Dim resultado As DialogResult =
-            formulario.ShowDialog(Me)
+                formulario.ShowDialog(
+                    Me)
 
-            If resultado <> DialogResult.OK Then
+            If resultado <>
+               DialogResult.OK Then
 
                 CampoCanvas.Focus()
 
@@ -5372,16 +5917,34 @@ Public Class FrmPrincipal
 
             End If
 
-            Dim formacao As ModeloFormacao =
-            formulario.FormacaoSelecionada
+            Dim formacaoMeuTime As ModeloFormacao =
+                Nothing
 
-            If formacao Is Nothing Then
+            Dim formacaoAdversario As ModeloFormacao =
+                Nothing
+
+            If formulario.AplicarMeuTime Then
+
+                formacaoMeuTime =
+                    formulario.FormacaoMeuTimeSelecionada
+
+            End If
+
+            If formulario.AplicarAdversario Then
+
+                formacaoAdversario =
+                    formulario.FormacaoAdversarioSelecionada
+
+            End If
+
+            If formacaoMeuTime Is Nothing AndAlso
+               formacaoAdversario Is Nothing Then
 
                 MessageBox.Show(
-                "Nenhuma formação foi selecionada.",
-                "Formações táticas",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information)
+                    "Nenhuma formação foi selecionada.",
+                    "Formações táticas",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information)
 
                 CampoCanvas.Focus()
 
@@ -5390,28 +5953,29 @@ Public Class FrmPrincipal
             End If
 
             Dim possuiJogadores As Boolean =
-            CampoPossuiJogadores()
+                CampoPossuiJogadores()
 
             Dim substituirJogadores As Boolean =
-            True
+                True
 
             If possuiJogadores Then
 
                 Dim resposta As DialogResult =
-                MessageBox.Show(
-                    "O campo já possui jogadores." &
-                    Environment.NewLine &
-                    Environment.NewLine &
-                    "Sim: substituir os jogadores existentes." &
-                    Environment.NewLine &
-                    "Não: manter os jogadores e adicionar a formação." &
-                    Environment.NewLine &
-                    "Cancelar: não aplicar a formação.",
-                    "Aplicar formação " & formacao.Nome,
-                    MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Question)
+                    MessageBox.Show(
+                        "O campo já possui jogadores." &
+                        Environment.NewLine &
+                        Environment.NewLine &
+                        "Sim: substituir todos os jogadores existentes." &
+                        Environment.NewLine &
+                        "Não: manter os jogadores e adicionar as formações." &
+                        Environment.NewLine &
+                        "Cancelar: não aplicar as formações.",
+                        "Aplicar formações defensivas",
+                        MessageBoxButtons.YesNoCancel,
+                        MessageBoxIcon.Question)
 
-                If resposta = DialogResult.Cancel Then
+                If resposta =
+                   DialogResult.Cancel Then
 
                     CampoCanvas.Focus()
 
@@ -5420,23 +5984,24 @@ Public Class FrmPrincipal
                 End If
 
                 substituirJogadores =
-                resposta = DialogResult.Yes
+                    resposta = DialogResult.Yes
 
             End If
 
             Dim jogadoresCriados As IReadOnlyList(Of Jogador) =
-            CampoCanvas.AplicarFormacao(
-                formacao,
-                substituirJogadores)
+                CampoCanvas.AplicarFormacoesDefensivas(
+                    formacaoMeuTime,
+                    formacaoAdversario,
+                    substituirJogadores)
 
             If jogadoresCriados Is Nothing OrElse
-           jogadoresCriados.Count = 0 Then
+               jogadoresCriados.Count = 0 Then
 
                 MessageBox.Show(
-                "Não foi possível adicionar os jogadores da formação.",
-                "Formações táticas",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning)
+                    "Não foi possível adicionar os jogadores das formações.",
+                    "Formações táticas",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning)
 
                 CampoCanvas.Focus()
 
@@ -5444,17 +6009,35 @@ Public Class FrmPrincipal
 
             End If
 
+            Dim equipesAplicadas As New List(Of String)()
+
+            If formacaoMeuTime IsNot Nothing Then
+
+                equipesAplicadas.Add(
+                    "Meu time: " &
+                    formacaoMeuTime.Nome)
+
+            End If
+
+            If formacaoAdversario IsNot Nothing Then
+
+                equipesAplicadas.Add(
+                    "Adversário: " &
+                    formacaoAdversario.Nome)
+
+            End If
+
             MessageBox.Show(
-            "Formação " &
-            formacao.Nome &
-            " aplicada com sucesso." &
-            Environment.NewLine &
-            Environment.NewLine &
-            jogadoresCriados.Count.ToString() &
-            " jogadores foram posicionados.",
-            "Formações táticas",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Information)
+                String.Join(
+                    Environment.NewLine,
+                    equipesAplicadas) &
+                Environment.NewLine &
+                Environment.NewLine &
+                jogadoresCriados.Count.ToString() &
+                " jogadores foram posicionados.",
+                "Formações táticas",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information)
 
             CampoCanvas.Focus()
 

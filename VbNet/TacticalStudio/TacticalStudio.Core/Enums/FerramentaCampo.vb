@@ -15,6 +15,7 @@
         Marcador
         Texto
         RecortarCampo
+        LinhaObjetos
 
     End Enum
 

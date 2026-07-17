@@ -20,6 +20,9 @@
     <Compile Update="Formularios\FrmGerenciadorObjetos.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Formularios\FrmLinhaObjetos.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Formularios\FrmPreferencias.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -27,6 +30,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Formularios\FrmSobre.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios\FrmSplash.vb">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>

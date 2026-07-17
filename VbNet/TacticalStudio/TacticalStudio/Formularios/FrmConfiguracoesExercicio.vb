@@ -256,11 +256,11 @@ Public Class FrmConfiguracoesExercicio
             .Height = 38,
             .FlatStyle = FlatStyle.Flat,
             .BackColor = Tema.CorPrimaria,
-            .ForeColor = Color.White
+            .ForeColor = Tema.TextoSobreCorPrimaria
         }
 
         botaoSalvar.FlatAppearance.BorderColor =
-            Color.White
+            Tema.TextoSobreCorPrimaria
 
         AddHandler botaoSalvar.Click,
             AddressOf Confirmar_Click

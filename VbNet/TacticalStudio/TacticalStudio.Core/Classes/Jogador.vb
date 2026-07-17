@@ -7,7 +7,11 @@
 
         Public Property Numero As Integer
 
+        'Mantida para compatibilidade com exercícios antigos.
         Public Property Direcao As DirecaoJogador = DirecaoJogador.Cima
+
+        Public Property OrientacaoVisual As OrientacaoVisualJogador =
+            OrientacaoVisualJogador.Costas
 
         Public Property Pose As PoseJogador = PoseJogador.Parado
 

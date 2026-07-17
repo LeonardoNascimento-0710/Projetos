@@ -8,7 +8,13 @@ Public Class FrmFormacoes
 
     Private ReadOnly _formacoes As New List(Of ModeloFormacao)()
 
-    Private ReadOnly CmbFormacao As New ComboBox()
+    Private ReadOnly CmbFormacaoMeuTime As New ComboBox()
+
+    Private ReadOnly CmbFormacaoAdversario As New ComboBox()
+
+    Private ReadOnly ChkAplicarMeuTime As New CheckBox()
+
+    Private ReadOnly ChkAplicarAdversario As New CheckBox()
 
     Private ReadOnly LblDescricao As New Label()
 
@@ -18,11 +24,13 @@ Public Class FrmFormacoes
 
     Private ReadOnly BtnCancelar As New Button()
 
-    Private ReadOnly _campo As CampoTatico
-
     Private ReadOnly BtnSalvarAtual As New Button()
 
     Private ReadOnly BtnExcluirPersonalizada As New Button()
+
+    Private ReadOnly _campo As CampoTatico
+
+    Private _comboAtivo As ComboBox
 
 #End Region
 
@@ -30,8 +38,30 @@ Public Class FrmFormacoes
 
     <System.ComponentModel.Browsable(False)>
     <System.ComponentModel.DesignerSerializationVisibility(
-    System.ComponentModel.DesignerSerializationVisibility.Hidden)>
+        System.ComponentModel.DesignerSerializationVisibility.Hidden)>
     Public Property FormacaoSelecionada As ModeloFormacao
+
+    <System.ComponentModel.Browsable(False)>
+    <System.ComponentModel.DesignerSerializationVisibility(
+        System.ComponentModel.DesignerSerializationVisibility.Hidden)>
+    Public Property FormacaoMeuTimeSelecionada As ModeloFormacao
+
+    <System.ComponentModel.Browsable(False)>
+    <System.ComponentModel.DesignerSerializationVisibility(
+        System.ComponentModel.DesignerSerializationVisibility.Hidden)>
+    Public Property FormacaoAdversarioSelecionada As ModeloFormacao
+
+    Public ReadOnly Property AplicarMeuTime As Boolean
+        Get
+            Return ChkAplicarMeuTime.Checked
+        End Get
+    End Property
+
+    Public ReadOnly Property AplicarAdversario As Boolean
+        Get
+            Return ChkAplicarAdversario.Checked
+        End Get
+    End Property
 
 #End Region
 
@@ -40,43 +70,43 @@ Public Class FrmFormacoes
     Public Sub New()
 
         Me.New(
-        Nothing)
+            Nothing)
 
     End Sub
 
     Public Sub New(
-    campo As CampoTatico)
+        campo As CampoTatico)
 
         _campo =
-        campo
+            campo
 
         Text =
-        "Formações táticas"
+            "Formações táticas"
 
         StartPosition =
-        FormStartPosition.CenterParent
+            FormStartPosition.CenterParent
 
         FormBorderStyle =
-        FormBorderStyle.FixedDialog
+            FormBorderStyle.FixedDialog
 
         MaximizeBox =
-        False
+            False
 
         MinimizeBox =
-        False
+            False
 
         ShowInTaskbar =
-        False
+            False
 
         ClientSize =
-        New Size(
-            760,
-            520)
+            New Size(
+                900,
+                590)
 
         MinimumSize =
-        New Size(
-            776,
-            559)
+            New Size(
+                916,
+                629)
 
         CriarInterface()
 
@@ -85,10 +115,10 @@ Public Class FrmFormacoes
         CarregarFormacoes()
 
         AcceptButton =
-        BtnAplicar
+            BtnAplicar
 
         CancelButton =
-        BtnCancelar
+            BtnCancelar
 
     End Sub
 
@@ -101,7 +131,7 @@ Public Class FrmFormacoes
         Dim painelPrincipal As New TableLayoutPanel With {
             .Dock = DockStyle.Fill,
             .ColumnCount = 1,
-            .RowCount = 5,
+            .RowCount = 4,
             .Padding = New Padding(14),
             .Margin = New Padding(0)
         }
@@ -109,17 +139,12 @@ Public Class FrmFormacoes
         painelPrincipal.RowStyles.Add(
             New RowStyle(
                 SizeType.Absolute,
-                32.0F))
+                155.0F))
 
         painelPrincipal.RowStyles.Add(
             New RowStyle(
                 SizeType.Absolute,
-                42.0F))
-
-        painelPrincipal.RowStyles.Add(
-            New RowStyle(
-                SizeType.Absolute,
-                72.0F))
+                78.0F))
 
         painelPrincipal.RowStyles.Add(
             New RowStyle(
@@ -129,49 +154,53 @@ Public Class FrmFormacoes
         painelPrincipal.RowStyles.Add(
             New RowStyle(
                 SizeType.Absolute,
-                52.0F))
+                54.0F))
 
         Controls.Add(
             painelPrincipal)
 
-        Dim labelTitulo As New Label With {
-            .Text = "Escolha uma formação:",
+        Dim painelEquipes As New TableLayoutPanel With {
             .Dock = DockStyle.Fill,
-            .Margin = New Padding(0),
-            .Font = New Font(
-                Font,
-                FontStyle.Bold),
-            .TextAlign = ContentAlignment.MiddleLeft
+            .ColumnCount = 2,
+            .RowCount = 1,
+            .Margin = New Padding(0, 0, 0, 10),
+            .Padding = New Padding(0)
         }
 
-        painelPrincipal.Controls.Add(
-            labelTitulo,
+        painelEquipes.ColumnStyles.Add(
+            New ColumnStyle(
+                SizeType.Percent,
+                50.0F))
+
+        painelEquipes.ColumnStyles.Add(
+            New ColumnStyle(
+                SizeType.Percent,
+                50.0F))
+
+        painelEquipes.Controls.Add(
+            CriarCartaoEquipe(
+                "MEU TIME",
+                "Defende o gol esquerdo e ataca para a direita.",
+                ChkAplicarMeuTime,
+                CmbFormacaoMeuTime,
+                New Padding(0, 0, 7, 0)),
             0,
             0)
 
-        CmbFormacao.Dock =
-            DockStyle.Fill
-
-        CmbFormacao.Margin =
-            New Padding(
-                0,
-                4,
-                0,
-                6)
-
-        CmbFormacao.DropDownStyle =
-            ComboBoxStyle.DropDownList
-
-        CmbFormacao.FlatStyle =
-            FlatStyle.Flat
-
-        AddHandler CmbFormacao.SelectedIndexChanged,
-            AddressOf CmbFormacao_SelectedIndexChanged
+        painelEquipes.Controls.Add(
+            CriarCartaoEquipe(
+                "ADVERSÁRIO",
+                "Defende o gol direito e ataca para a esquerda.",
+                ChkAplicarAdversario,
+                CmbFormacaoAdversario,
+                New Padding(7, 0, 0, 0)),
+            1,
+            0)
 
         painelPrincipal.Controls.Add(
-            CmbFormacao,
+            painelEquipes,
             0,
-            1)
+            0)
 
         LblDescricao.Dock =
             DockStyle.Fill
@@ -179,7 +208,7 @@ Public Class FrmFormacoes
         LblDescricao.Margin =
             New Padding(
                 0,
-                4,
+                0,
                 0,
                 8)
 
@@ -195,7 +224,7 @@ Public Class FrmFormacoes
         painelPrincipal.Controls.Add(
             LblDescricao,
             0,
-            2)
+            1)
 
         LvPosicoes.Dock =
             DockStyle.Fill
@@ -227,37 +256,33 @@ Public Class FrmFormacoes
 
         LvPosicoes.Columns.Add(
             "Posição",
-            260)
+            320)
 
         LvPosicoes.Columns.Add(
             "Horizontal",
-            120)
+            130)
 
         LvPosicoes.Columns.Add(
             "Vertical",
-            120)
+            130)
 
         painelPrincipal.Controls.Add(
             LvPosicoes,
             0,
-            3)
+            2)
 
         Dim painelBotoes As New FlowLayoutPanel With {
             .Dock = DockStyle.Fill,
             .FlowDirection = FlowDirection.RightToLeft,
             .WrapContents = False,
-            .Padding = New Padding(
-                0,
-                9,
-                0,
-                0),
+            .Padding = New Padding(0, 10, 0, 0),
             .Margin = New Padding(0)
         }
 
         ConfigurarBotao(
             BtnAplicar,
-            "Aplicar formação",
-            145)
+            "Aplicar formações",
+            150)
 
         AddHandler BtnAplicar.Click,
             AddressOf BtnAplicar_Click
@@ -268,7 +293,7 @@ Public Class FrmFormacoes
         ConfigurarBotao(
             BtnCancelar,
             "Cancelar",
-            110)
+            105)
 
         BtnCancelar.DialogResult =
             DialogResult.Cancel
@@ -280,33 +305,187 @@ Public Class FrmFormacoes
             BtnCancelar)
 
         ConfigurarBotao(
-    BtnExcluirPersonalizada,
-    "Excluir personalizada",
-    165)
+            BtnExcluirPersonalizada,
+            "Excluir personalizada",
+            165)
 
         AddHandler BtnExcluirPersonalizada.Click,
-    AddressOf BtnExcluirPersonalizada_Click
+            AddressOf BtnExcluirPersonalizada_Click
 
         painelBotoes.Controls.Add(
-    BtnExcluirPersonalizada)
+            BtnExcluirPersonalizada)
 
         ConfigurarBotao(
-    BtnSalvarAtual,
-    "Salvar formação atual",
-    175)
+            BtnSalvarAtual,
+            "Salvar formação atual",
+            175)
 
         AddHandler BtnSalvarAtual.Click,
-    AddressOf BtnSalvarAtual_Click
+            AddressOf BtnSalvarAtual_Click
 
         painelBotoes.Controls.Add(
-    BtnSalvarAtual)
+            BtnSalvarAtual)
 
         painelPrincipal.Controls.Add(
             painelBotoes,
             0,
-            4)
+            3)
+
+        AddHandler CmbFormacaoMeuTime.SelectedIndexChanged,
+            AddressOf CmbFormacaoMeuTime_SelectedIndexChanged
+
+        AddHandler CmbFormacaoAdversario.SelectedIndexChanged,
+            AddressOf CmbFormacaoAdversario_SelectedIndexChanged
+
+        AddHandler CmbFormacaoMeuTime.Enter,
+            Sub(sender, e)
+
+                _comboAtivo =
+                    CmbFormacaoMeuTime
+
+                AtualizarSelecoesEPreview(
+                    CmbFormacaoMeuTime)
+
+            End Sub
+
+        AddHandler CmbFormacaoAdversario.Enter,
+            Sub(sender, e)
+
+                _comboAtivo =
+                    CmbFormacaoAdversario
+
+                AtualizarSelecoesEPreview(
+                    CmbFormacaoAdversario)
+
+            End Sub
+
+        AddHandler ChkAplicarMeuTime.CheckedChanged,
+            Sub(sender, e)
+
+                AtualizarEstadoAplicacao()
+
+            End Sub
+
+        AddHandler ChkAplicarAdversario.CheckedChanged,
+            Sub(sender, e)
+
+                AtualizarEstadoAplicacao()
+
+            End Sub
 
     End Sub
+
+    Private Function CriarCartaoEquipe(
+        titulo As String,
+        descricao As String,
+        checkBoxAplicar As CheckBox,
+        comboFormacao As ComboBox,
+        margem As Padding
+    ) As Panel
+
+        Dim cartao As New Panel With {
+            .Dock = DockStyle.Fill,
+            .Margin = margem,
+            .Padding = New Padding(12),
+            .BorderStyle = BorderStyle.FixedSingle
+        }
+
+        Dim layout As New TableLayoutPanel With {
+            .Dock = DockStyle.Fill,
+            .ColumnCount = 1,
+            .RowCount = 4,
+            .Margin = New Padding(0),
+            .Padding = New Padding(0)
+        }
+
+        layout.RowStyles.Add(
+            New RowStyle(
+                SizeType.Absolute,
+                28.0F))
+
+        layout.RowStyles.Add(
+            New RowStyle(
+                SizeType.Absolute,
+                30.0F))
+
+        layout.RowStyles.Add(
+            New RowStyle(
+                SizeType.Absolute,
+                40.0F))
+
+        layout.RowStyles.Add(
+            New RowStyle(
+                SizeType.Percent,
+                100.0F))
+
+        cartao.Controls.Add(
+            layout)
+
+        Dim labelTitulo As New Label With {
+            .Text = titulo,
+            .Dock = DockStyle.Fill,
+            .Margin = New Padding(0),
+            .Font = New Font(
+                "Segoe UI",
+                10.0F,
+                FontStyle.Bold),
+            .TextAlign = ContentAlignment.MiddleLeft
+        }
+
+        layout.Controls.Add(
+            labelTitulo,
+            0,
+            0)
+
+        checkBoxAplicar.Text =
+            "Aplicar esta formação"
+
+        checkBoxAplicar.Dock =
+            DockStyle.Fill
+
+        checkBoxAplicar.Margin =
+            New Padding(0)
+
+        checkBoxAplicar.Checked =
+            True
+
+        layout.Controls.Add(
+            checkBoxAplicar,
+            0,
+            1)
+
+        comboFormacao.Dock =
+            DockStyle.Fill
+
+        comboFormacao.Margin =
+            New Padding(0, 4, 0, 4)
+
+        comboFormacao.DropDownStyle =
+            ComboBoxStyle.DropDownList
+
+        comboFormacao.FlatStyle =
+            FlatStyle.Flat
+
+        layout.Controls.Add(
+            comboFormacao,
+            0,
+            2)
+
+        Dim labelDescricao As New Label With {
+            .Text = descricao,
+            .Dock = DockStyle.Fill,
+            .Margin = New Padding(0),
+            .TextAlign = ContentAlignment.MiddleLeft
+        }
+
+        layout.Controls.Add(
+            labelDescricao,
+            0,
+            3)
+
+        Return cartao
+
+    End Function
 
     Private Sub ConfigurarBotao(
         botao As Button,
@@ -323,11 +502,7 @@ Public Class FrmFormacoes
             34
 
         botao.Margin =
-            New Padding(
-                6,
-                0,
-                0,
-                0)
+            New Padding(6, 0, 0, 0)
 
         botao.FlatStyle =
             FlatStyle.Flat
@@ -345,154 +520,273 @@ Public Class FrmFormacoes
 #Region "Formações"
 
     Private Sub CarregarFormacoes(
-    Optional idSelecionar As String = Nothing)
+        Optional idSelecionar As String = Nothing)
 
         _formacoes.Clear()
 
-        CmbFormacao.Items.Clear()
+        CmbFormacaoMeuTime.Items.Clear()
+
+        CmbFormacaoAdversario.Items.Clear()
 
         Dim formacoesPadrao As List(Of ModeloFormacao) =
-        Formacoes.ObterTodas()
+            Formacoes.ObterTodas()
 
         If formacoesPadrao IsNot Nothing Then
 
             For Each formacao As ModeloFormacao
-            In formacoesPadrao
+                In formacoesPadrao
 
                 AdicionarFormacaoNaLista(
-                formacao)
+                    formacao)
 
             Next
 
         End If
 
         Dim formacoesPersonalizadas As List(Of ModeloFormacao) =
-        RepositorioFormacoesPersonalizadas.CarregarTodas()
+            RepositorioFormacoesPersonalizadas.CarregarTodas()
 
         If formacoesPersonalizadas IsNot Nothing Then
 
             For Each formacao As ModeloFormacao
-            In formacoesPersonalizadas
+                In formacoesPersonalizadas
 
                 AdicionarFormacaoNaLista(
-                formacao)
+                    formacao)
 
             Next
 
         End If
 
-        If CmbFormacao.Items.Count = 0 Then
+        If _formacoes.Count = 0 Then
 
             FormacaoSelecionada =
-            Nothing
+                Nothing
+
+            FormacaoMeuTimeSelecionada =
+                Nothing
+
+            FormacaoAdversarioSelecionada =
+                Nothing
 
             LblDescricao.Text =
-            "Nenhuma formação disponível."
+                "Nenhuma formação disponível."
 
             LvPosicoes.Items.Clear()
 
             BtnAplicar.Enabled =
-            False
+                False
 
             BtnExcluirPersonalizada.Enabled =
-            False
+                False
 
             Exit Sub
 
         End If
 
         Dim indiceSelecionar As Integer =
-        0
+            ObterIndiceFormacao(
+                idSelecionar)
 
-        If Not String.IsNullOrWhiteSpace(
-        idSelecionar) Then
+        If indiceSelecionar < 0 Then
 
-            For indice As Integer =
-            0 To _formacoes.Count - 1
-
-                If String.Equals(
-                _formacoes(indice).Id,
-                idSelecionar,
-                StringComparison.OrdinalIgnoreCase) Then
-
-                    indiceSelecionar =
-                    indice
-
-                    Exit For
-
-                End If
-
-            Next
+            indiceSelecionar =
+                ObterIndiceFormacao(
+                    "4-3-3")
 
         End If
 
-        CmbFormacao.SelectedIndex =
-        indiceSelecionar
+        If indiceSelecionar < 0 Then
+            indiceSelecionar = 0
+        End If
+
+        CmbFormacaoMeuTime.SelectedIndex =
+            indiceSelecionar
+
+        CmbFormacaoAdversario.SelectedIndex =
+            indiceSelecionar
+
+        _comboAtivo =
+            CmbFormacaoMeuTime
+
+        AtualizarSelecoesEPreview(
+            CmbFormacaoMeuTime)
 
     End Sub
 
     Private Sub AdicionarFormacaoNaLista(
-    formacao As ModeloFormacao)
+        formacao As ModeloFormacao)
 
         If formacao Is Nothing Then
             Exit Sub
         End If
 
         _formacoes.Add(
-        formacao)
+            formacao)
 
         Dim nomeExibicao As String =
-        formacao.Nome
+            formacao.Nome
 
         If FormacaoEhPersonalizada(
-        formacao) Then
+            formacao) Then
 
             nomeExibicao &=
-            " — Personalizada"
+                " — Personalizada"
 
         End If
 
-        CmbFormacao.Items.Add(
-        nomeExibicao)
+        CmbFormacaoMeuTime.Items.Add(
+            nomeExibicao)
+
+        CmbFormacaoAdversario.Items.Add(
+            nomeExibicao)
 
     End Sub
 
-    Private Sub AtualizarFormacaoSelecionada()
+    Private Function ObterIndiceFormacao(
+        idFormacao As String
+    ) As Integer
+
+        If String.IsNullOrWhiteSpace(
+            idFormacao) Then
+
+            Return -1
+
+        End If
+
+        For indice As Integer =
+            0 To _formacoes.Count - 1
+
+            If String.Equals(
+                _formacoes(indice).Id,
+                idFormacao,
+                StringComparison.OrdinalIgnoreCase) Then
+
+                Return indice
+
+            End If
+
+        Next
+
+        Return -1
+
+    End Function
+
+    Private Function ObterFormacaoCombo(
+        combo As ComboBox
+    ) As ModeloFormacao
+
+        If combo Is Nothing Then
+            Return Nothing
+        End If
 
         Dim indice As Integer =
-            CmbFormacao.SelectedIndex
+            combo.SelectedIndex
 
-        If indice < 0 OrElse indice >= _formacoes.Count Then
+        If indice < 0 OrElse
+           indice >= _formacoes.Count Then
 
-            FormacaoSelecionada = Nothing
+            Return Nothing
 
-            LblDescricao.Text = String.Empty
+        End If
+
+        Return _formacoes(indice)
+
+    End Function
+
+    Private Sub AtualizarSelecoesEPreview(
+        comboOrigem As ComboBox)
+
+        FormacaoMeuTimeSelecionada =
+            ObterFormacaoCombo(
+                CmbFormacaoMeuTime)
+
+        FormacaoAdversarioSelecionada =
+            ObterFormacaoCombo(
+                CmbFormacaoAdversario)
+
+        If comboOrigem Is Nothing Then
+
+            comboOrigem =
+                _comboAtivo
+
+        End If
+
+        If comboOrigem Is Nothing Then
+
+            comboOrigem =
+                CmbFormacaoMeuTime
+
+        End If
+
+        _comboAtivo =
+            comboOrigem
+
+        FormacaoSelecionada =
+            ObterFormacaoCombo(
+                comboOrigem)
+
+        If FormacaoSelecionada Is Nothing Then
+
+            LblDescricao.Text =
+                String.Empty
 
             LvPosicoes.Items.Clear()
 
-            BtnAplicar.Enabled = False
+        Else
 
-            BtnExcluirPersonalizada.Enabled = False
+            Dim ladoTexto As String
 
-            Exit Sub
+            If comboOrigem Is
+               CmbFormacaoAdversario Then
+
+                ladoTexto =
+                    "Prévia do adversário — defesa no lado direito."
+
+            Else
+
+                ladoTexto =
+                    "Prévia do meu time — defesa no lado esquerdo."
+
+            End If
+
+            LblDescricao.Text =
+                ladoTexto &
+                Environment.NewLine &
+                FormacaoSelecionada.Descricao
+
+            AtualizarListaPosicoes(
+                FormacaoSelecionada)
 
         End If
 
-        FormacaoSelecionada = _formacoes(indice)
+        BtnExcluirPersonalizada.Enabled =
+            FormacaoEhPersonalizada(
+                FormacaoSelecionada)
 
-        BtnAplicar.Enabled = FormacaoSelecionada IsNot Nothing
+        AtualizarEstadoAplicacao()
 
-        BtnExcluirPersonalizada.Enabled = FormacaoEhPersonalizada(FormacaoSelecionada)
+    End Sub
 
-        If FormacaoSelecionada Is Nothing Then
-            Exit Sub
-        End If
+    Private Sub AtualizarEstadoAplicacao()
 
-        LblDescricao.Text =
-            FormacaoSelecionada.Descricao
+        Dim meuTimeValido As Boolean =
+            ChkAplicarMeuTime.Checked AndAlso
+            FormacaoMeuTimeSelecionada IsNot Nothing
 
-        AtualizarListaPosicoes(
-            FormacaoSelecionada)
+        Dim adversarioValido As Boolean =
+            ChkAplicarAdversario.Checked AndAlso
+            FormacaoAdversarioSelecionada IsNot Nothing
+
+        BtnAplicar.Enabled =
+            meuTimeValido OrElse
+            adversarioValido
+
+        CmbFormacaoMeuTime.Enabled =
+            ChkAplicarMeuTime.Checked
+
+        CmbFormacaoAdversario.Enabled =
+            ChkAplicarAdversario.Checked
 
     End Sub
 
@@ -552,227 +846,228 @@ Public Class FrmFormacoes
     End Sub
 
     Private Function FormacaoEhPersonalizada(
-    formacao As ModeloFormacao) As Boolean
+        formacao As ModeloFormacao
+    ) As Boolean
 
         If formacao Is Nothing Then
             Return False
         End If
 
         Return Not String.IsNullOrWhiteSpace(
-               formacao.Id) AndAlso
-           formacao.Id.StartsWith(
-               "personalizada-",
-               StringComparison.OrdinalIgnoreCase)
+                   formacao.Id) AndAlso
+               formacao.Id.StartsWith(
+                   "personalizada-",
+                   StringComparison.OrdinalIgnoreCase)
 
     End Function
 
     Private Function SolicitarDadosFormacao(
-    ByRef nome As String,
-    ByRef descricao As String,
-    ByRef usarSomenteSelecionados As Boolean
-) As Boolean
+        ByRef nome As String,
+        ByRef descricao As String,
+        ByRef usarSomenteSelecionados As Boolean
+    ) As Boolean
 
         Using formulario As New Form()
 
             formulario.Text =
-            "Salvar formação atual"
+                "Salvar formação atual"
 
             formulario.StartPosition =
-            FormStartPosition.CenterParent
+                FormStartPosition.CenterParent
 
             formulario.FormBorderStyle =
-            FormBorderStyle.FixedDialog
+                FormBorderStyle.FixedDialog
 
             formulario.MaximizeBox =
-            False
+                False
 
             formulario.MinimizeBox =
-            False
+                False
 
             formulario.ShowInTaskbar =
-            False
+                False
 
             formulario.ClientSize =
-            New Size(
-                500,
-                285)
+                New Size(
+                    500,
+                    285)
 
             formulario.BackColor =
-            Tema.Fundo
+                Tema.Fundo
 
             formulario.ForeColor =
-            Tema.Texto
+                Tema.Texto
 
             Dim painel As New TableLayoutPanel With {
-            .Dock = DockStyle.Fill,
-            .ColumnCount = 1,
-            .RowCount = 6,
-            .Padding = New Padding(14)
-        }
+                .Dock = DockStyle.Fill,
+                .ColumnCount = 1,
+                .RowCount = 6,
+                .Padding = New Padding(14)
+            }
 
             painel.RowStyles.Add(
-            New RowStyle(
-                SizeType.Absolute,
-                28.0F))
+                New RowStyle(
+                    SizeType.Absolute,
+                    28.0F))
 
             painel.RowStyles.Add(
-            New RowStyle(
-                SizeType.Absolute,
-                38.0F))
+                New RowStyle(
+                    SizeType.Absolute,
+                    38.0F))
 
             painel.RowStyles.Add(
-            New RowStyle(
-                SizeType.Absolute,
-                28.0F))
+                New RowStyle(
+                    SizeType.Absolute,
+                    28.0F))
 
             painel.RowStyles.Add(
-            New RowStyle(
-                SizeType.Percent,
-                100.0F))
+                New RowStyle(
+                    SizeType.Percent,
+                    100.0F))
 
             painel.RowStyles.Add(
-            New RowStyle(
-                SizeType.Absolute,
-                38.0F))
+                New RowStyle(
+                    SizeType.Absolute,
+                    38.0F))
 
             painel.RowStyles.Add(
-            New RowStyle(
-                SizeType.Absolute,
-                48.0F))
+                New RowStyle(
+                    SizeType.Absolute,
+                    48.0F))
 
             formulario.Controls.Add(
-            painel)
+                painel)
 
             Dim labelNome As New Label With {
-            .Text = "Nome da formação:",
-            .Dock = DockStyle.Fill,
-            .TextAlign = ContentAlignment.MiddleLeft
-        }
+                .Text = "Nome da formação:",
+                .Dock = DockStyle.Fill,
+                .TextAlign = ContentAlignment.MiddleLeft
+            }
 
             painel.Controls.Add(
-            labelNome,
-            0,
-            0)
+                labelNome,
+                0,
+                0)
 
             Dim txtNome As New TextBox With {
-            .Dock = DockStyle.Fill,
-            .MaxLength = 80,
-            .Text = "Minha formação",
-            .BackColor = Tema.CampoEntrada,
-            .ForeColor = Tema.TextoCampo
-        }
+                .Dock = DockStyle.Fill,
+                .MaxLength = 80,
+                .Text = "Minha formação",
+                .BackColor = Tema.CampoEntrada,
+                .ForeColor = Tema.TextoCampo
+            }
 
             painel.Controls.Add(
-            txtNome,
-            0,
-            1)
+                txtNome,
+                0,
+                1)
 
             Dim labelDescricao As New Label With {
-            .Text = "Descrição:",
-            .Dock = DockStyle.Fill,
-            .TextAlign = ContentAlignment.MiddleLeft
-        }
+                .Text = "Descrição:",
+                .Dock = DockStyle.Fill,
+                .TextAlign = ContentAlignment.MiddleLeft
+            }
 
             painel.Controls.Add(
-            labelDescricao,
-            0,
-            2)
+                labelDescricao,
+                0,
+                2)
 
             Dim txtDescricao As New TextBox With {
-            .Dock = DockStyle.Fill,
-            .Multiline = True,
-            .ScrollBars = ScrollBars.Vertical,
-            .MaxLength = 250,
-            .BackColor = Tema.CampoEntrada,
-            .ForeColor = Tema.TextoCampo
-        }
+                .Dock = DockStyle.Fill,
+                .Multiline = True,
+                .ScrollBars = ScrollBars.Vertical,
+                .MaxLength = 250,
+                .BackColor = Tema.CampoEntrada,
+                .ForeColor = Tema.TextoCampo
+            }
 
             painel.Controls.Add(
-            txtDescricao,
-            0,
-            3)
+                txtDescricao,
+                0,
+                3)
 
             Dim chkSelecionados As New CheckBox With {
-            .Text = "Salvar somente os jogadores selecionados",
-            .Dock = DockStyle.Fill,
-            .Checked = False,
-            .ForeColor = Tema.Texto
-        }
+                .Text = "Salvar somente os jogadores selecionados",
+                .Dock = DockStyle.Fill,
+                .Checked = False,
+                .ForeColor = Tema.Texto
+            }
 
             painel.Controls.Add(
-            chkSelecionados,
-            0,
-            4)
+                chkSelecionados,
+                0,
+                4)
 
             Dim painelBotoes As New FlowLayoutPanel With {
-            .Dock = DockStyle.Fill,
-            .FlowDirection = FlowDirection.RightToLeft,
-            .WrapContents = False,
-            .Padding = New Padding(0, 8, 0, 0)
-        }
+                .Dock = DockStyle.Fill,
+                .FlowDirection = FlowDirection.RightToLeft,
+                .WrapContents = False,
+                .Padding = New Padding(0, 8, 0, 0)
+            }
 
             Dim btnConfirmar As New Button With {
-            .Text = "Salvar",
-            .Width = 110,
-            .Height = 32,
-            .DialogResult = DialogResult.OK,
-            .FlatStyle = FlatStyle.Flat,
-            .BackColor = Tema.Painel,
-            .ForeColor = Tema.Texto
-        }
+                .Text = "Salvar",
+                .Width = 110,
+                .Height = 32,
+                .DialogResult = DialogResult.OK,
+                .FlatStyle = FlatStyle.Flat,
+                .BackColor = Tema.Painel,
+                .ForeColor = Tema.Texto
+            }
 
             btnConfirmar.FlatAppearance.BorderColor =
-            Tema.Borda
+                Tema.Borda
 
             Dim btnCancelarDialogo As New Button With {
-            .Text = "Cancelar",
-            .Width = 110,
-            .Height = 32,
-            .DialogResult = DialogResult.Cancel,
-            .FlatStyle = FlatStyle.Flat,
-            .BackColor = Tema.Painel,
-            .ForeColor = Tema.Texto
-        }
+                .Text = "Cancelar",
+                .Width = 110,
+                .Height = 32,
+                .DialogResult = DialogResult.Cancel,
+                .FlatStyle = FlatStyle.Flat,
+                .BackColor = Tema.Painel,
+                .ForeColor = Tema.Texto
+            }
 
             btnCancelarDialogo.FlatAppearance.BorderColor =
-            Tema.Borda
+                Tema.Borda
 
             painelBotoes.Controls.Add(
-            btnConfirmar)
+                btnConfirmar)
 
             painelBotoes.Controls.Add(
-            btnCancelarDialogo)
+                btnCancelarDialogo)
 
             painel.Controls.Add(
-            painelBotoes,
-            0,
-            5)
+                painelBotoes,
+                0,
+                5)
 
             formulario.AcceptButton =
-            btnConfirmar
+                btnConfirmar
 
             formulario.CancelButton =
-            btnCancelarDialogo
+                btnCancelarDialogo
 
             txtNome.SelectAll()
 
             txtNome.Focus()
 
             If formulario.ShowDialog(Me) <>
-           DialogResult.OK Then
+               DialogResult.OK Then
 
                 Return False
 
             End If
 
             nome =
-            txtNome.Text.Trim()
+                txtNome.Text.Trim()
 
             descricao =
-            txtDescricao.Text.Trim()
+                txtDescricao.Text.Trim()
 
             usarSomenteSelecionados =
-            chkSelecionados.Checked
+                chkSelecionados.Checked
 
             Return True
 
@@ -785,124 +1080,128 @@ Public Class FrmFormacoes
         If _campo Is Nothing Then
 
             MessageBox.Show(
-            "O campo tático não está disponível.",
-            "Salvar formação",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Warning)
+                "O campo tático não está disponível.",
+                "Salvar formação",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning)
 
             Exit Sub
 
         End If
 
         Dim nome As String =
-        String.Empty
+            String.Empty
 
         Dim descricao As String =
-        String.Empty
+            String.Empty
 
         Dim usarSomenteSelecionados As Boolean =
-        False
+            False
 
         If Not SolicitarDadosFormacao(
-        nome,
-        descricao,
-        usarSomenteSelecionados) Then
+            nome,
+            descricao,
+            usarSomenteSelecionados) Then
 
             Exit Sub
 
         End If
 
         Dim modelo As ModeloFormacao =
-        _campo.CriarModeloFormacaoAtual(
-            nome,
-            descricao,
-            usarSomenteSelecionados)
+            _campo.CriarModeloFormacaoAtual(
+                nome,
+                descricao,
+                usarSomenteSelecionados)
 
         If modelo Is Nothing Then
 
             Dim mensagem As String =
-            "Nenhum jogador foi encontrado no campo."
+                "Nenhum jogador foi encontrado no campo."
 
             If usarSomenteSelecionados Then
 
                 mensagem =
-                "Nenhum jogador selecionado foi encontrado."
+                    "Nenhum jogador selecionado foi encontrado."
 
             End If
 
             MessageBox.Show(
-            mensagem,
-            "Salvar formação",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Information)
+                mensagem,
+                "Salvar formação",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information)
 
             Exit Sub
 
         End If
 
         If Not RepositorioFormacoesPersonalizadas.Adicionar(
-        modelo) Then
+            modelo) Then
 
             MessageBox.Show(
-            "Não foi possível salvar a formação personalizada.",
-            "Salvar formação",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Error)
+                "Não foi possível salvar a formação personalizada.",
+                "Salvar formação",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error)
 
             Exit Sub
 
         End If
 
         CarregarFormacoes(
-        modelo.Id)
+            modelo.Id)
 
         MessageBox.Show(
-        "A formação foi salva com sucesso.",
-        "Salvar formação",
-        MessageBoxButtons.OK,
-        MessageBoxIcon.Information)
+            "A formação foi salva com sucesso.",
+            "Salvar formação",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information)
 
     End Sub
+
     Private Sub ExcluirFormacaoPersonalizada()
 
         Dim formacao As ModeloFormacao =
-        FormacaoSelecionada
+            FormacaoSelecionada
 
         If Not FormacaoEhPersonalizada(
-        formacao) Then
+            formacao) Then
 
             MessageBox.Show(
-            "Somente formações personalizadas podem ser excluídas.",
-            "Excluir formação",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Information)
+                "Somente formações personalizadas podem ser excluídas.",
+                "Excluir formação",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information)
 
             Exit Sub
 
         End If
 
         Dim resposta As DialogResult =
-        MessageBox.Show(
-            "Deseja excluir a formação personalizada """ &
-            formacao.Nome &
-            """?",
-            "Excluir formação",
-            MessageBoxButtons.YesNo,
-            MessageBoxIcon.Warning,
-            MessageBoxDefaultButton.Button2)
+            MessageBox.Show(
+                "Deseja excluir a formação personalizada """ &
+                formacao.Nome &
+                """?",
+                "Excluir formação",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning,
+                MessageBoxDefaultButton.Button2)
 
-        If resposta <> DialogResult.Yes Then
+        If resposta <>
+           DialogResult.Yes Then
+
             Exit Sub
+
         End If
 
         If Not RepositorioFormacoesPersonalizadas.Remover(
-        formacao.Id) Then
+            formacao.Id) Then
 
             MessageBox.Show(
-            "Não foi possível excluir a formação.",
-            "Excluir formação",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Error)
+                "Não foi possível excluir a formação.",
+                "Excluir formação",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error)
 
             Exit Sub
 
@@ -912,16 +1211,25 @@ Public Class FrmFormacoes
 
     End Sub
 
-
 #End Region
 
 #Region "Eventos"
 
-    Private Sub CmbFormacao_SelectedIndexChanged(
+    Private Sub CmbFormacaoMeuTime_SelectedIndexChanged(
         sender As Object,
         e As EventArgs)
 
-        AtualizarFormacaoSelecionada()
+        AtualizarSelecoesEPreview(
+            CmbFormacaoMeuTime)
+
+    End Sub
+
+    Private Sub CmbFormacaoAdversario_SelectedIndexChanged(
+        sender As Object,
+        e As EventArgs)
+
+        AtualizarSelecoesEPreview(
+            CmbFormacaoAdversario)
 
     End Sub
 
@@ -929,10 +1237,37 @@ Public Class FrmFormacoes
         sender As Object,
         e As EventArgs)
 
-        If FormacaoSelecionada Is Nothing Then
+        If Not AplicarMeuTime AndAlso
+           Not AplicarAdversario Then
 
             MessageBox.Show(
-                "Selecione uma formação.",
+                "Marque pelo menos uma equipe para aplicar a formação.",
+                "Formações táticas",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information)
+
+            Exit Sub
+
+        End If
+
+        If AplicarMeuTime AndAlso
+           FormacaoMeuTimeSelecionada Is Nothing Then
+
+            MessageBox.Show(
+                "Selecione a formação do seu time.",
+                "Formações táticas",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information)
+
+            Exit Sub
+
+        End If
+
+        If AplicarAdversario AndAlso
+           FormacaoAdversarioSelecionada Is Nothing Then
+
+            MessageBox.Show(
+                "Selecione a formação do adversário.",
                 "Formações táticas",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information)
@@ -960,16 +1295,16 @@ Public Class FrmFormacoes
     End Sub
 
     Private Sub BtnSalvarAtual_Click(
-    sender As Object,
-    e As EventArgs)
+        sender As Object,
+        e As EventArgs)
 
         SalvarFormacaoAtual()
 
     End Sub
 
     Private Sub BtnExcluirPersonalizada_Click(
-    sender As Object,
-    e As EventArgs)
+        sender As Object,
+        e As EventArgs)
 
         ExcluirFormacaoPersonalizada()
 
@@ -987,10 +1322,19 @@ Public Class FrmFormacoes
         ForeColor =
             Tema.Texto
 
-        CmbFormacao.BackColor =
+        AplicarTemaRecursivo(
+            Me)
+
+        CmbFormacaoMeuTime.BackColor =
             Tema.CampoEntrada
 
-        CmbFormacao.ForeColor =
+        CmbFormacaoMeuTime.ForeColor =
+            Tema.TextoCampo
+
+        CmbFormacaoAdversario.BackColor =
+            Tema.CampoEntrada
+
+        CmbFormacaoAdversario.ForeColor =
             Tema.TextoCampo
 
         LblDescricao.BackColor =
@@ -1005,52 +1349,71 @@ Public Class FrmFormacoes
         LvPosicoes.ForeColor =
             Tema.TextoCampo
 
-        BtnAplicar.BackColor =
+        ConfigurarTemaBotao(
+            BtnAplicar)
+
+        ConfigurarTemaBotao(
+            BtnCancelar)
+
+        ConfigurarTemaBotao(
+            BtnSalvarAtual)
+
+        ConfigurarTemaBotao(
+            BtnExcluirPersonalizada)
+
+    End Sub
+
+    Private Sub AplicarTemaRecursivo(
+        controlePai As Control)
+
+        If controlePai Is Nothing Then
+            Exit Sub
+        End If
+
+        For Each controle As Control
+            In controlePai.Controls
+
+            If TypeOf controle Is Panel OrElse
+               TypeOf controle Is TableLayoutPanel OrElse
+               TypeOf controle Is FlowLayoutPanel Then
+
+                controle.BackColor =
+                    Tema.Painel
+
+            End If
+
+            If TypeOf controle Is Label OrElse
+               TypeOf controle Is CheckBox Then
+
+                controle.ForeColor =
+                    Tema.Texto
+
+            End If
+
+            If controle.HasChildren Then
+
+                AplicarTemaRecursivo(
+                    controle)
+
+            End If
+
+        Next
+
+    End Sub
+
+    Private Sub ConfigurarTemaBotao(
+        botao As Button)
+
+        botao.BackColor =
             Tema.Painel
 
-        BtnAplicar.ForeColor =
+        botao.ForeColor =
             Tema.Texto
 
-        BtnAplicar.FlatAppearance.BorderColor =
+        botao.FlatAppearance.BorderColor =
             Tema.Borda
 
-        BtnAplicar.FlatAppearance.MouseOverBackColor =
-            Tema.PainelHover
-
-        BtnCancelar.BackColor =
-            Tema.Painel
-
-        BtnCancelar.ForeColor =
-            Tema.Texto
-
-        BtnCancelar.FlatAppearance.BorderColor =
-            Tema.Borda
-
-        BtnCancelar.FlatAppearance.MouseOverBackColor =
-            Tema.PainelHover
-
-        BtnSalvarAtual.BackColor =
-    Tema.Painel
-
-        BtnSalvarAtual.ForeColor =
-            Tema.Texto
-
-        BtnSalvarAtual.FlatAppearance.BorderColor =
-            Tema.Borda
-
-        BtnSalvarAtual.FlatAppearance.MouseOverBackColor =
-            Tema.PainelHover
-
-        BtnExcluirPersonalizada.BackColor =
-            Tema.Painel
-
-        BtnExcluirPersonalizada.ForeColor =
-            Tema.Texto
-
-        BtnExcluirPersonalizada.FlatAppearance.BorderColor =
-            Tema.Borda
-
-        BtnExcluirPersonalizada.FlatAppearance.MouseOverBackColor =
+        botao.FlatAppearance.MouseOverBackColor =
             Tema.PainelHover
 
     End Sub

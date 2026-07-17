@@ -3,8 +3,9 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows</TargetFramework>
-    <StartupObject>Sub Main</StartupObject>
+    <StartupObject>TacticalStudio.My.MyApplication</StartupObject>
     <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationIcon>Assets\Icones\IconeOrbit.ico</ApplicationIcon>
     <MyType>WindowsForms</MyType>
   </PropertyGroup>
 
@@ -41,6 +42,31 @@
     <Folder Include="Resources\" />
     <Folder Include="Documentacao\" />
     <Folder Include="Views\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Include="Assets\Jogadores\**\*.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Jogadores\LEIA-ME.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\Icones\IconeOrbit.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Icones\LogoOrbitSplash.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Icones\IconeOrbit.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Icones\IconOrbit.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

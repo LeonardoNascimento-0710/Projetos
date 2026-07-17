@@ -2,7 +2,7 @@
 
     Public Class ArquivoExercicio
 
-        Public Property VersaoFormato As Integer = 2
+        Public Property VersaoFormato As Integer = 4
 
         Public Property Nome As String =
             "Novo exercício"

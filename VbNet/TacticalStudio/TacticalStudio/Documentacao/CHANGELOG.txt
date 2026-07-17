@@ -1,4 +1,4 @@
-TACTICALSTUDIO
+﻿TACTICALSTUDIO
 DOCUMENTAÇÃO DE ALTERAÇÕES DO PROJETO
 
 Projeto: TacticalStudio
@@ -1812,3 +1812,18 @@ Próxima etapa sugerida:
 - Importar e exportar a biblioteca;
 - Exibir exercícios em cartões;
 - Ordenar por nome, data e categoria.
+
+
+======================================================================
+AJUSTE - MODO CLARO E CONTRASTE DA INTERFACE
+======================================================================
+
+STATUS: CONCLUÍDO
+
+Alterações realizadas:
+- Corrigido o texto da aba ativa da Ribbon no modo claro;
+- Removido o fundo escuro fixo dos botões da Ribbon;
+- Criado cálculo automático de contraste para a cor principal;
+- Corrigidas letras de botões destacados, abas, cartões e alternâncias;
+- Adicionadas cores próprias para hover e clique da cor principal;
+- Mantidos os estilos do campo, objetos e exportações sem alteração.

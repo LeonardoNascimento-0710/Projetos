@@ -571,11 +571,11 @@ Public Class FrmPreferencias
             .DialogResult = DialogResult.OK,
             .FlatStyle = FlatStyle.Flat,
             .BackColor = Tema.CorPrimaria,
-            .ForeColor = Color.White
+            .ForeColor = Tema.TextoSobreCorPrimaria
         }
 
         botaoConfirmar.FlatAppearance.BorderColor =
-            Color.White
+            Tema.TextoSobreCorPrimaria
 
         painel.Controls.Add(
             botaoConfirmar)

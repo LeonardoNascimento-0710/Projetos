@@ -966,10 +966,10 @@ Public Class FrmGerenciadorObjetos
                 Tema.CorPrimaria
 
             botao.ForeColor =
-                Color.White
+                Tema.TextoSobreCorPrimaria
 
             botao.FlatAppearance.BorderColor =
-                Color.White
+                Tema.TextoSobreCorPrimaria
 
         Else
 
@@ -1229,10 +1229,10 @@ Public Class FrmGerenciadorObjetos
                         Tema.CorPrimaria
 
                     botao.ForeColor =
-                        Color.White
+                        Tema.TextoSobreCorPrimaria
 
                     botao.FlatAppearance.BorderColor =
-                        Color.White
+                        Tema.TextoSobreCorPrimaria
 
                 Else
 
@@ -2026,12 +2026,12 @@ Public Class FrmGerenciadorObjetos
                 .DialogResult = DialogResult.OK,
                 .FlatStyle = FlatStyle.Flat,
                 .BackColor = Tema.CorPrimaria,
-                .ForeColor = Color.White,
+                .ForeColor = Tema.TextoSobreCorPrimaria,
                 .UseVisualStyleBackColor = False
             }
 
             botaoConfirmar.FlatAppearance.BorderColor =
-                Color.White
+                Tema.TextoSobreCorPrimaria
 
             formulario.Controls.Add(
                 botaoConfirmar)

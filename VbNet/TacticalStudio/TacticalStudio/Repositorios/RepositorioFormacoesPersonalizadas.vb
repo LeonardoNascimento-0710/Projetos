@@ -358,7 +358,11 @@ Public NotInheritable Class RepositorioFormacoesPersonalizadas
                             posicao.XPercentual),
                     .YPercentual =
                         LimitarPercentual(
-                            posicao.YPercentual)
+                            posicao.YPercentual),
+                    .OrientacaoVisual =
+                        posicao.OrientacaoVisual,
+                    .CorCamisaArgb =
+                        posicao.CorCamisaArgb
                 })
 
         Next

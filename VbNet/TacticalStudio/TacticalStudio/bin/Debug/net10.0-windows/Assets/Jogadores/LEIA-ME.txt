@@ -1,0 +1,16 @@
+TACTICALSTUDIO - SPRITES DE JOGADORES
+
+Cada orientação possui duas imagens por pose:
+- *_Base.png: pele, cabelo, shorts, pernas, chuteiras e bola.
+- *_Camisa.png: máscara em tons de cinza que recebe a cor escolhida no programa.
+
+Regras para substituir os arquivos:
+1. PNG 256 x 256 com fundo transparente.
+2. Personagem centralizado e pés na mesma altura.
+3. A Base não deve conter camisa/mangas.
+4. A Camisa deve conter apenas camisa/mangas em branco e tons de cinza.
+5. Preserve exatamente os nomes dos arquivos.
+6. O número é desenhado pelo TacticalStudio e não deve fazer parte do PNG.
+
+Orientações: Costas, Frente, Lado (direito) e LadoEsquerdo.
+Poses: Parado, Correndo, ComBola, Passe, Chute, Cabeceio, Marcacao e Goleiro.

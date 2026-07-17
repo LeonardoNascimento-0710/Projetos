@@ -115,10 +115,10 @@
             .DialogResult = DialogResult.OK,
             .FlatStyle = FlatStyle.Flat,
             .BackColor = Tema.CorPrimaria,
-            .ForeColor = Color.White
+            .ForeColor = Tema.TextoSobreCorPrimaria
         }
 
-        botaoFechar.FlatAppearance.BorderColor = Color.White
+        botaoFechar.FlatAppearance.BorderColor = Tema.TextoSobreCorPrimaria
 
         painel.Controls.Add(botaoFechar)
 

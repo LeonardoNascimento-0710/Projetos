@@ -68,6 +68,100 @@ Public NotInheritable Class Tema
 
     End Property
 
+
+    Public Shared Function ObterCorTextoContraste(
+        corFundo As Color) As Color
+
+        Dim luminancia As Double =
+            (0.2126R * corFundo.R) +
+            (0.7152R * corFundo.G) +
+            (0.0722R * corFundo.B)
+
+        If luminancia >= 160.0R Then
+
+            Return Color.FromArgb(
+                24,
+                24,
+                24)
+
+        End If
+
+        Return Color.White
+
+    End Function
+
+    Public Shared ReadOnly Property TextoSobreCorPrimaria As Color
+
+        Get
+            Return ObterCorTextoContraste(
+                _corPrimaria)
+        End Get
+
+    End Property
+
+    Public Shared ReadOnly Property CorPrimariaHover As Color
+
+        Get
+
+            Dim fator As Double =
+                If(
+                    ObterCorTextoContraste(_corPrimaria) = Color.White,
+                    1.16R,
+                    0.84R)
+
+            Return AjustarLuminosidade(
+                _corPrimaria,
+                fator)
+
+        End Get
+
+    End Property
+
+    Public Shared ReadOnly Property CorPrimariaPressionada As Color
+
+        Get
+
+            Return AjustarLuminosidade(
+                _corPrimaria,
+                0.72R)
+
+        End Get
+
+    End Property
+
+    Private Shared Function AjustarLuminosidade(
+        cor As Color,
+        fator As Double) As Color
+
+        Dim vermelho As Integer =
+            Math.Max(
+                0,
+                Math.Min(
+                    255,
+                    CInt(Math.Round(cor.R * fator))))
+
+        Dim verde As Integer =
+            Math.Max(
+                0,
+                Math.Min(
+                    255,
+                    CInt(Math.Round(cor.G * fator))))
+
+        Dim azul As Integer =
+            Math.Max(
+                0,
+                Math.Min(
+                    255,
+                    CInt(Math.Round(cor.B * fator))))
+
+        Return Color.FromArgb(
+            255,
+            vermelho,
+            verde,
+            azul)
+
+    End Function
+
     Public Shared ReadOnly Property Fundo As Color
 
         Get
