@@ -22,6 +22,7 @@ Partial Class FrmPrincipal
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FrmPrincipal))
         PnlSuperior = New Panel()
         PnlInferior = New Panel()
         PnlEsquerdo = New Panel()
@@ -34,60 +35,55 @@ Partial Class FrmPrincipal
         PnlSuperior.BackColor = Color.FromArgb(CByte(28), CByte(28), CByte(28))
         PnlSuperior.Dock = DockStyle.Top
         PnlSuperior.Location = New Point(0, 0)
-        PnlSuperior.Margin = New Padding(3, 4, 3, 4)
         PnlSuperior.Name = "PnlSuperior"
-        PnlSuperior.Size = New Size(987, 93)
+        PnlSuperior.Size = New Size(864, 70)
         PnlSuperior.TabIndex = 0
         ' 
         ' PnlInferior
         ' 
         PnlInferior.Dock = DockStyle.Bottom
-        PnlInferior.Location = New Point(0, 841)
-        PnlInferior.Margin = New Padding(3, 4, 3, 4)
+        PnlInferior.Location = New Point(0, 631)
         PnlInferior.Name = "PnlInferior"
-        PnlInferior.Size = New Size(987, 40)
+        PnlInferior.Size = New Size(864, 30)
         PnlInferior.TabIndex = 1
         ' 
         ' PnlEsquerdo
         ' 
         PnlEsquerdo.Dock = DockStyle.Left
-        PnlEsquerdo.Location = New Point(0, 93)
-        PnlEsquerdo.Margin = New Padding(3, 4, 3, 4)
+        PnlEsquerdo.Location = New Point(0, 70)
         PnlEsquerdo.Name = "PnlEsquerdo"
-        PnlEsquerdo.Size = New Size(297, 748)
+        PnlEsquerdo.Size = New Size(260, 561)
         PnlEsquerdo.TabIndex = 2
         ' 
         ' PnlDireito
         ' 
         PnlDireito.Dock = DockStyle.Right
-        PnlDireito.Location = New Point(987, 0)
-        PnlDireito.Margin = New Padding(3, 4, 3, 4)
+        PnlDireito.Location = New Point(864, 0)
         PnlDireito.Name = "PnlDireito"
-        PnlDireito.Size = New Size(366, 881)
+        PnlDireito.Size = New Size(320, 661)
         PnlDireito.TabIndex = 3
         ' 
         ' PnlCentral
         ' 
         PnlCentral.BackColor = Color.Gray
         PnlCentral.Dock = DockStyle.Fill
-        PnlCentral.Location = New Point(297, 93)
-        PnlCentral.Margin = New Padding(3, 4, 3, 4)
+        PnlCentral.Location = New Point(260, 70)
         PnlCentral.Name = "PnlCentral"
-        PnlCentral.Size = New Size(690, 748)
+        PnlCentral.Size = New Size(604, 561)
         PnlCentral.TabIndex = 4
         ' 
         ' FrmPrincipal
         ' 
-        AutoScaleDimensions = New SizeF(8F, 20F)
+        AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.FromArgb(CByte(28), CByte(28), CByte(28))
-        ClientSize = New Size(1353, 881)
+        ClientSize = New Size(1184, 661)
         Controls.Add(PnlCentral)
         Controls.Add(PnlEsquerdo)
         Controls.Add(PnlSuperior)
         Controls.Add(PnlInferior)
         Controls.Add(PnlDireito)
-        Margin = New Padding(3, 4, 3, 4)
+        Icon = CType(resources.GetObject("$this.Icon"), Icon)
         Name = "FrmPrincipal"
         Text = "Tactical Studio"
         WindowState = FormWindowState.Maximized

@@ -65,7 +65,6 @@ C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\T
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\Assets\Jogadores\LEIA-ME.txt
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\Assets\Icones\IconeOrbit.jpg
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\Assets\Icones\LogoOrbitSplash.png
-C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\Assets\Icones\IconeOrbit.ico
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\Assets\Icones\IconOrbit.ico
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\TacticalStudio.exe
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\TacticalStudio.deps.json
@@ -107,3 +106,4 @@ C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\T
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio\obj\Debug\net10.0-windows\TacticalStudio.pdb
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio\obj\Debug\net10.0-windows\TacticalStudio.genruntimeconfig.cache
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio\obj\Debug\net10.0-windows\ref\TacticalStudio.dll
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\TacticalStudio\TacticalStudio\bin\Debug\net10.0-windows\IconOrbit.ico
