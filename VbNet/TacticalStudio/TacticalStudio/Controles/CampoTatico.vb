@@ -119,6 +119,18 @@ Public Class CampoTatico
     Private _sombrasCampoAtivas As Boolean =
         True
 
+    Private _usarMetricasReais As Boolean =
+        False
+
+    Private _comprimentoCampoMetros As Double =
+        105.0R
+
+    Private _larguraCampoMetros As Double =
+        68.0R
+
+    Private _exibirMetricasNoCampo As Boolean =
+        True
+
 
     Private ReadOnly _objetosSelecionados As New List(Of ObjetoCampo)()
 
@@ -528,6 +540,106 @@ Public Class CampoTatico
         End Get
 
     End Property
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public ReadOnly Property UsarMetricasReais As Boolean
+
+        Get
+            Return _usarMetricasReais
+        End Get
+
+    End Property
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public ReadOnly Property ComprimentoCampoMetros As Double
+
+        Get
+            Return _comprimentoCampoMetros
+        End Get
+
+    End Property
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public ReadOnly Property LarguraCampoMetros As Double
+
+        Get
+            Return _larguraCampoMetros
+        End Get
+
+    End Property
+
+    <Browsable(False)>
+    <DesignerSerializationVisibility(
+    DesignerSerializationVisibility.Hidden)>
+    Public ReadOnly Property ExibirMetricasNoCampo As Boolean
+
+        Get
+            Return _exibirMetricasNoCampo
+        End Get
+
+    End Property
+
+    Public Function AplicarConfiguracaoMetricasReais(
+        usarMetricas As Boolean,
+        comprimentoMetros As Double,
+        larguraMetros As Double,
+        exibirNoCampo As Boolean
+    ) As Boolean
+
+        Dim comprimentoSeguro As Double =
+            Math.Max(
+                1.0R,
+                Math.Min(
+                    500.0R,
+                    comprimentoMetros))
+
+        Dim larguraSegura As Double =
+            Math.Max(
+                1.0R,
+                Math.Min(
+                    500.0R,
+                    larguraMetros))
+
+        If _usarMetricasReais = usarMetricas AndAlso
+           Math.Abs(
+               _comprimentoCampoMetros -
+               comprimentoSeguro) < 0.0001R AndAlso
+           Math.Abs(
+               _larguraCampoMetros -
+               larguraSegura) < 0.0001R AndAlso
+           _exibirMetricasNoCampo = exibirNoCampo Then
+
+            Return False
+
+        End If
+
+        _usarMetricasReais =
+            usarMetricas
+
+        _comprimentoCampoMetros =
+            comprimentoSeguro
+
+        _larguraCampoMetros =
+            larguraSegura
+
+        _exibirMetricasNoCampo =
+            exibirNoCampo
+
+        Invalidate()
+
+        RegistrarEstadoHistorico()
+
+        RaiseEvent ObjetosAlterados()
+
+        Return True
+
+    End Function
 
     Public Function AplicarConfiguracaoVisualCampo(
         estilo As EstiloVisualCampo,
@@ -3960,6 +4072,15 @@ Public Class CampoTatico
 
         Next
 
+        If _usarMetricasReais AndAlso
+           _exibirMetricasNoCampo Then
+
+            DesenharMetricasReais(
+                g,
+                campo)
+
+        End If
+
     End Sub
 
     Private Sub DesenharJogador(
@@ -5988,55 +6109,55 @@ Public Class CampoTatico
                 -centro.X,
                 -centro.Y)
 
-        Using sombra As New SolidBrush(
+            Using sombra As New SolidBrush(
             Color.FromArgb(90, 0, 0, 0))
 
-            g.FillEllipse(
+                g.FillEllipse(
                 sombra,
                 centro.X - RaioBola + 2.0F,
                 centro.Y - RaioBola + 3.0F,
                 RaioBola * 2.0F,
                 RaioBola * 2.0F)
 
-        End Using
+            End Using
 
-        Using pincelBola As New SolidBrush(
+            Using pincelBola As New SolidBrush(
             Color.WhiteSmoke)
 
-            g.FillEllipse(
+                g.FillEllipse(
                 pincelBola,
                 centro.X - RaioBola,
                 centro.Y - RaioBola,
                 RaioBola * 2.0F,
                 RaioBola * 2.0F)
 
-        End Using
+            End Using
 
-        Using bordaBola As New Pen(
+            Using bordaBola As New Pen(
             Color.FromArgb(35, 35, 35),
             1.5F)
 
-            g.DrawEllipse(
+                g.DrawEllipse(
                 bordaBola,
                 centro.X - RaioBola,
                 centro.Y - RaioBola,
                 RaioBola * 2.0F,
                 RaioBola * 2.0F)
 
-        End Using
+            End Using
 
-        DesenharDetalhesBola(
+            DesenharDetalhesBola(
             g,
             centro)
 
-        If bola.Selecionado Then
+            If bola.Selecionado Then
 
-            DesenharSelecao(
+                DesenharSelecao(
                 g,
                 centro,
                 RaioBola)
 
-        End If
+            End If
 
 
         Finally
@@ -6121,111 +6242,111 @@ Public Class CampoTatico
                 -centro.X,
                 -centro.Y)
 
-        Dim corCone As Color =
+            Dim corCone As Color =
         ObterCorCone(cone.Cor)
 
-        Dim largura As Single = 18.0F
-        Dim altura As Single = 24.0F
+            Dim largura As Single = 18.0F
+            Dim altura As Single = 24.0F
 
-        Dim topo As New PointF(
+            Dim topo As New PointF(
         centro.X,
         centro.Y - altura / 2.0F)
 
-        Dim inferiorEsquerdo As New PointF(
+            Dim inferiorEsquerdo As New PointF(
         centro.X - largura / 2.0F,
         centro.Y + altura / 2.0F - 4.0F)
 
-        Dim inferiorDireito As New PointF(
+            Dim inferiorDireito As New PointF(
         centro.X + largura / 2.0F,
         centro.Y + altura / 2.0F - 4.0F)
 
-        Dim pontosCone() As PointF = {
+            Dim pontosCone() As PointF = {
         topo,
         inferiorDireito,
         inferiorEsquerdo
     }
 
-        Using sombra As New SolidBrush(
+            Using sombra As New SolidBrush(
         Color.FromArgb(80, 0, 0, 0))
 
-            g.FillEllipse(
+                g.FillEllipse(
             sombra,
             centro.X - 12.0F,
             centro.Y + 7.0F,
             24.0F,
             7.0F)
 
-        End Using
+            End Using
 
-        Using pincelCone As New SolidBrush(corCone)
+            Using pincelCone As New SolidBrush(corCone)
 
-            g.FillPolygon(
+                g.FillPolygon(
             pincelCone,
             pontosCone)
 
-        End Using
+            End Using
 
-        Using borda As New Pen(
+            Using borda As New Pen(
         Color.FromArgb(90, 60, 30),
         1.5F)
 
-            g.DrawPolygon(
+                g.DrawPolygon(
             borda,
             pontosCone)
 
-        End Using
+            End Using
 
-        Using pincelFaixa As New SolidBrush(
+            Using pincelFaixa As New SolidBrush(
         Color.FromArgb(220, 255, 255, 255))
 
-            Dim faixa As New RectangleF(
+                Dim faixa As New RectangleF(
             centro.X - 6.0F,
             centro.Y,
             12.0F,
             4.0F)
 
-            g.FillRectangle(
+                g.FillRectangle(
             pincelFaixa,
             faixa)
 
-        End Using
+            End Using
 
-        Using pincelBase As New SolidBrush(
+            Using pincelBase As New SolidBrush(
         Color.FromArgb(
             corCone.R,
             corCone.G,
             corCone.B))
 
-            g.FillRectangle(
+                g.FillRectangle(
             pincelBase,
             centro.X - 12.0F,
             centro.Y + 8.0F,
             24.0F,
             5.0F)
 
-        End Using
+            End Using
 
-        Using bordaBase As New Pen(
+            Using bordaBase As New Pen(
         Color.FromArgb(90, 60, 30),
         1.2F)
 
-            g.DrawRectangle(
+                g.DrawRectangle(
             bordaBase,
             centro.X - 12.0F,
             centro.Y + 8.0F,
             24.0F,
             5.0F)
 
-        End Using
+            End Using
 
-        If cone.Selecionado Then
+            If cone.Selecionado Then
 
-            DesenharSelecao(
+                DesenharSelecao(
             g,
             centro,
             RaioCone)
 
-        End If
+            End If
 
 
         Finally
@@ -6295,115 +6416,115 @@ Public Class CampoTatico
                 -centro.X,
                 -centro.Y)
 
-        Dim pontos() As PointF =
+            Dim pontos() As PointF =
         ObterPontosGol(
             centro,
             gol.Orientacao)
 
-        Dim frente1 As PointF = pontos(0)
-        Dim frente2 As PointF = pontos(1)
-        Dim fundo1 As PointF = pontos(2)
-        Dim fundo2 As PointF = pontos(3)
+            Dim frente1 As PointF = pontos(0)
+            Dim frente2 As PointF = pontos(1)
+            Dim fundo1 As PointF = pontos(2)
+            Dim fundo2 As PointF = pontos(3)
 
-        Dim poligono() As PointF = {
+            Dim poligono() As PointF = {
         frente1,
         frente2,
         fundo2,
         fundo1
     }
 
-        Dim sombra() As PointF = {
+            Dim sombra() As PointF = {
         New PointF(frente1.X + 3.0F, frente1.Y + 4.0F),
         New PointF(frente2.X + 3.0F, frente2.Y + 4.0F),
         New PointF(fundo2.X + 3.0F, fundo2.Y + 4.0F),
         New PointF(fundo1.X + 3.0F, fundo1.Y + 4.0F)
     }
 
-        Using pincelSombra As New SolidBrush(
+            Using pincelSombra As New SolidBrush(
         Color.FromArgb(65, 0, 0, 0))
 
-            g.FillPolygon(
+                g.FillPolygon(
             pincelSombra,
             sombra)
 
-        End Using
+            End Using
 
-        Using pincelRede As New SolidBrush(
+            Using pincelRede As New SolidBrush(
         Color.FromArgb(45, 245, 245, 245))
 
-            g.FillPolygon(
+                g.FillPolygon(
             pincelRede,
             poligono)
 
-        End Using
+            End Using
 
-        DesenharRedeGol(
+            DesenharRedeGol(
         g,
         frente1,
         frente2,
         fundo1,
         fundo2)
 
-        Using canetaEstrutura As New Pen(
+            Using canetaEstrutura As New Pen(
         Color.WhiteSmoke,
         3.0F)
 
-            canetaEstrutura.LineJoin =
+                canetaEstrutura.LineJoin =
             LineJoin.Round
 
-            g.DrawLine(
+                g.DrawLine(
             canetaEstrutura,
             frente1,
             frente2)
 
-            g.DrawLine(
+                g.DrawLine(
             canetaEstrutura,
             frente1,
             fundo1)
 
-            g.DrawLine(
+                g.DrawLine(
             canetaEstrutura,
             frente2,
             fundo2)
 
-            g.DrawLine(
+                g.DrawLine(
             canetaEstrutura,
             fundo1,
             fundo2)
 
-        End Using
+            End Using
 
-        Using pincelTrave As New SolidBrush(
+            Using pincelTrave As New SolidBrush(
         Color.White)
 
-            g.FillEllipse(
+                g.FillEllipse(
             pincelTrave,
             frente1.X - 3.0F,
             frente1.Y - 3.0F,
             6.0F,
             6.0F)
 
-            g.FillEllipse(
+                g.FillEllipse(
             pincelTrave,
             frente2.X - 3.0F,
             frente2.Y - 3.0F,
             6.0F,
             6.0F)
 
-        End Using
+            End Using
 
-        If gol.Selecionado Then
+            If gol.Selecionado Then
 
-            Dim areaGol As RectangleF =
+                Dim areaGol As RectangleF =
             ObterRetanguloGol(
                 centro,
                 gol.Orientacao)
 
-            DesenharSelecaoRetangular(
+                DesenharSelecaoRetangular(
             g,
             areaGol)
 
-        End If
+            End If
 
 
         Finally
@@ -6639,95 +6760,95 @@ Public Class CampoTatico
                 -centro.X,
                 -centro.Y)
 
-        Dim corPrincipal As Color =
+            Dim corPrincipal As Color =
         ObterCorManequim(manequim.Cor)
 
-        Dim topo As Single =
+            Dim topo As Single =
         centro.Y - AlturaManequim / 2.0F
 
-        Dim baseY As Single =
+            Dim baseY As Single =
         centro.Y + AlturaManequim / 2.0F
 
-        Dim centroCabeca As New PointF(
+            Dim centroCabeca As New PointF(
         centro.X,
         topo + 7.0F)
 
-        Dim ombroY As Single =
+            Dim ombroY As Single =
         topo + 15.0F
 
-        Dim cinturaY As Single =
+            Dim cinturaY As Single =
         centro.Y + 5.0F
 
-        Dim inicioPernasY As Single =
+            Dim inicioPernasY As Single =
         cinturaY + 2.0F
 
-        Dim finalPernasY As Single =
+            Dim finalPernasY As Single =
         baseY - 7.0F
 
-        Using sombra As New SolidBrush(
+            Using sombra As New SolidBrush(
         Color.FromArgb(70, 0, 0, 0))
 
-            g.FillEllipse(
+                g.FillEllipse(
             sombra,
             centro.X - 16.0F,
             baseY - 3.0F,
             32.0F,
             9.0F)
 
-        End Using
+            End Using
 
-        Using pincelBase As New SolidBrush(
+            Using pincelBase As New SolidBrush(
         Color.FromArgb(55, 55, 55))
 
-            g.FillEllipse(
+                g.FillEllipse(
             pincelBase,
             centro.X - 15.0F,
             baseY - 6.0F,
             30.0F,
             9.0F)
 
-        End Using
+            End Using
 
-        Using canetaBase As New Pen(
+            Using canetaBase As New Pen(
         Color.FromArgb(25, 25, 25),
         1.5F)
 
-            g.DrawEllipse(
+                g.DrawEllipse(
             canetaBase,
             centro.X - 15.0F,
             baseY - 6.0F,
             30.0F,
             9.0F)
 
-        End Using
+            End Using
 
-        Using canetaPernas As New Pen(
+            Using canetaPernas As New Pen(
         corPrincipal,
         5.0F)
 
-            canetaPernas.StartCap =
+                canetaPernas.StartCap =
             LineCap.Round
 
-            canetaPernas.EndCap =
+                canetaPernas.EndCap =
             LineCap.Round
 
-            g.DrawLine(
+                g.DrawLine(
             canetaPernas,
             centro.X - 3.0F,
             inicioPernasY,
             centro.X - 7.0F,
             finalPernasY)
 
-            g.DrawLine(
+                g.DrawLine(
             canetaPernas,
             centro.X + 3.0F,
             inicioPernasY,
             centro.X + 7.0F,
             finalPernasY)
 
-        End Using
+            End Using
 
-        Dim pontosTorso() As PointF = {
+            Dim pontosTorso() As PointF = {
         New PointF(
             centro.X - LarguraManequim / 2.0F,
             ombroY),
@@ -6748,83 +6869,83 @@ Public Class CampoTatico
             cinturaY)
     }
 
-        Using pincelTorso As New SolidBrush(
+            Using pincelTorso As New SolidBrush(
         corPrincipal)
 
-            g.FillPolygon(
+                g.FillPolygon(
             pincelTorso,
             pontosTorso)
 
-        End Using
+            End Using
 
-        Using canetaContorno As New Pen(
+            Using canetaContorno As New Pen(
         Color.FromArgb(100, 75, 35),
         1.5F)
 
-            canetaContorno.LineJoin =
+                canetaContorno.LineJoin =
             LineJoin.Round
 
-            g.DrawPolygon(
+                g.DrawPolygon(
             canetaContorno,
             pontosTorso)
 
-        End Using
+            End Using
 
-        Using pincelCabeca As New SolidBrush(
+            Using pincelCabeca As New SolidBrush(
         corPrincipal)
 
-            g.FillEllipse(
+                g.FillEllipse(
             pincelCabeca,
             centroCabeca.X - 6.5F,
             centroCabeca.Y - 6.5F,
             13.0F,
             13.0F)
 
-        End Using
+            End Using
 
-        Using canetaCabeca As New Pen(
+            Using canetaCabeca As New Pen(
         Color.FromArgb(100, 75, 35),
         1.5F)
 
-            g.DrawEllipse(
+                g.DrawEllipse(
             canetaCabeca,
             centroCabeca.X - 6.5F,
             centroCabeca.Y - 6.5F,
             13.0F,
             13.0F)
 
-        End Using
+            End Using
 
-        Using canetaDetalhes As New Pen(
+            Using canetaDetalhes As New Pen(
         Color.FromArgb(115, 90, 45),
         1.2F)
 
-            g.DrawLine(
+                g.DrawLine(
             canetaDetalhes,
             centro.X - 8.0F,
             ombroY + 7.0F,
             centro.X + 8.0F,
             ombroY + 7.0F)
 
-            g.DrawLine(
+                g.DrawLine(
             canetaDetalhes,
             centro.X - 6.0F,
             cinturaY - 4.0F,
             centro.X + 6.0F,
             cinturaY - 4.0F)
 
-        End Using
+            End Using
 
-        If manequim.Selecionado Then
+            If manequim.Selecionado Then
 
-            Dim area As RectangleF =
+                Dim area As RectangleF =
             ObterRetanguloManequim(centro)
 
-            DesenharSelecaoRetangular(
+                DesenharSelecaoRetangular(
             g,
             area)
 
-        End If
+            End If
 
 
         Finally
@@ -7246,103 +7367,103 @@ Public Class CampoTatico
                 -centro.X,
                 -centro.Y)
 
-        Dim raio As Single =
+            Dim raio As Single =
         marcador.Diametro / 2.0F
 
-        Dim corFundo As Color =
+            Dim corFundo As Color =
         ObterCorMarcador(
             marcador.Cor)
 
-        Dim corTexto As Color =
+            Dim corTexto As Color =
         ObterCorTextoMarcador(
             marcador.Cor)
 
-        Using pincelSombra As New SolidBrush(
+            Using pincelSombra As New SolidBrush(
         Color.FromArgb(85, 0, 0, 0))
 
-            g.FillEllipse(
+                g.FillEllipse(
             pincelSombra,
             centro.X - raio + 3.0F,
             centro.Y - raio + 4.0F,
             marcador.Diametro,
             marcador.Diametro)
 
-        End Using
+            End Using
 
-        Using pincelFundo As New SolidBrush(
+            Using pincelFundo As New SolidBrush(
         corFundo)
 
-            g.FillEllipse(
+                g.FillEllipse(
             pincelFundo,
             centro.X - raio,
             centro.Y - raio,
             marcador.Diametro,
             marcador.Diametro)
 
-        End Using
+            End Using
 
-        Using canetaBorda As New Pen(
+            Using canetaBorda As New Pen(
         Color.FromArgb(210, 30, 30, 30),
         2.0F)
 
-            g.DrawEllipse(
+                g.DrawEllipse(
             canetaBorda,
             centro.X - raio,
             centro.Y - raio,
             marcador.Diametro,
             marcador.Diametro)
 
-        End Using
+            End Using
 
-        Dim tamanhoFonte As Single =
+            Dim tamanhoFonte As Single =
         Math.Max(
             9.0F,
             marcador.Diametro * 0.38F)
 
-        Using fonte As New Font(
+            Using fonte As New Font(
         "Segoe UI",
         tamanhoFonte,
         FontStyle.Bold,
         GraphicsUnit.Pixel)
 
-            Using pincelTexto As New SolidBrush(
+                Using pincelTexto As New SolidBrush(
             corTexto)
 
-                Using formato As New StringFormat()
+                    Using formato As New StringFormat()
 
-                    formato.Alignment =
+                        formato.Alignment =
                     StringAlignment.Center
 
-                    formato.LineAlignment =
+                        formato.LineAlignment =
                     StringAlignment.Center
 
-                    Dim areaTexto As New RectangleF(
+                        Dim areaTexto As New RectangleF(
                     centro.X - raio,
                     centro.Y - raio,
                     marcador.Diametro,
                     marcador.Diametro)
 
-                    g.DrawString(
+                        g.DrawString(
                     marcador.Texto,
                     fonte,
                     pincelTexto,
                     areaTexto,
                     formato)
 
+                    End Using
+
                 End Using
 
             End Using
 
-        End Using
+            If marcador.Selecionado Then
 
-        If marcador.Selecionado Then
-
-            DesenharSelecao(
+                DesenharSelecao(
             g,
             centro,
             raio)
 
-        End If
+            End If
 
 
         Finally
@@ -7510,6 +7631,473 @@ Public Class CampoTatico
 
     End Sub
 
+    Private Sub DesenharMetricasReais(
+    g As Graphics,
+    campo As RectangleF)
+
+        If g Is Nothing OrElse
+       campo.Width <= 1.0F OrElse
+       campo.Height <= 1.0F Then
+
+            Exit Sub
+
+        End If
+
+        For Each objeto As ObjetoCampo In _objetos
+
+            If objeto Is Nothing OrElse
+   Not objeto.Visivel OrElse
+   Not objeto.ExibirMetrica OrElse
+   TypeOf objeto Is TextoTatico Then
+
+                Continue For
+
+            End If
+            Dim textoMetrica As String =
+            String.Empty
+
+            Dim posicaoEtiqueta As PointF =
+            PointF.Empty
+
+            '==================================================
+            ' LINHA TÁTICA
+            '==================================================
+
+            If TypeOf objeto Is LinhaTatica Then
+
+                Dim linha As LinhaTatica =
+                DirectCast(
+                    objeto,
+                    LinhaTatica)
+
+                Dim inicio As PointF =
+                ConverterPercentualParaTela(
+                    linha.Posicao,
+                    campo)
+
+                Dim fim As PointF =
+                ConverterPercentualParaTela(
+                    linha.PosicaoFinal,
+                    campo)
+
+                textoMetrica =
+                FormatarMedidaReal(
+                    CalcularDistanciaReal(
+                        linha.Posicao,
+                        linha.PosicaoFinal))
+
+                posicaoEtiqueta =
+                New PointF(
+                    (inicio.X + fim.X) / 2.0F,
+                    (inicio.Y + fim.Y) / 2.0F - 12.0F)
+
+                '==================================================
+                ' ÁREA TÁTICA
+                '==================================================
+
+            ElseIf TypeOf objeto Is AreaTatica Then
+
+                Dim area As AreaTatica =
+                DirectCast(
+                    objeto,
+                    AreaTatica)
+
+                Dim larguraReal As Double =
+                Math.Abs(
+                    area.PosicaoFinal.X -
+                    area.Posicao.X) /
+                100.0R *
+                _comprimentoCampoMetros
+
+                Dim alturaReal As Double =
+                Math.Abs(
+                    area.PosicaoFinal.Y -
+                    area.Posicao.Y) /
+                100.0R *
+                _larguraCampoMetros
+
+                Dim areaMetrosQuadrados As Double =
+                larguraReal *
+                alturaReal
+
+                Dim retanguloArea As RectangleF =
+                ObterRetanguloArea(
+                    area,
+                    campo)
+
+                If retanguloArea.Width <= 1.0F OrElse
+               retanguloArea.Height <= 1.0F Then
+
+                    Continue For
+
+                End If
+
+                Dim textoLargura As String =
+    FormatarMedidaReal(
+        larguraReal)
+
+                Dim textoAltura As String =
+    FormatarMedidaReal(
+        alturaReal)
+
+                Dim centroX As Single =
+    retanguloArea.Left +
+    retanguloArea.Width / 2.0F
+
+                Dim centroY As Single =
+    retanguloArea.Top +
+    retanguloArea.Height / 2.0F
+
+                ' Medida horizontal somente na parte superior
+                DesenharEtiquetaMetrica(
+    g,
+    textoLargura,
+    New PointF(
+        centroX,
+        retanguloArea.Top - 14.0F),
+    campo)
+
+                ' Medida vertical somente no lado esquerdo
+                DesenharEtiquetaMetrica(
+    g,
+    textoAltura,
+    New PointF(
+        retanguloArea.Left - 18.0F,
+        centroY),
+    campo)
+
+                Continue For
+
+                '==================================================
+                ' DEMAIS OBJETOS
+                '==================================================
+
+            Else
+
+                Dim dimensoesReais As SizeF =
+                ObterDimensoesReaisObjeto(
+                    objeto)
+
+                textoMetrica =
+                FormatarMedidaReal(
+                    dimensoesReais.Width) &
+                " x " &
+                FormatarMedidaReal(
+                    dimensoesReais.Height)
+
+                Dim centroObjeto As PointF =
+                ConverterPercentualParaTela(
+                    objeto.Posicao,
+                    campo)
+
+                Dim metadeTamanhoVisual As SizeF =
+                ObterMetadeTamanhoVisual(
+                    objeto)
+
+                posicaoEtiqueta =
+                New PointF(
+                    centroObjeto.X,
+                    centroObjeto.Y +
+                    metadeTamanhoVisual.Height +
+                    13.0F)
+
+            End If
+
+            '==================================================
+            ' ETIQUETA PADRÃO
+            '==================================================
+
+            If Not String.IsNullOrWhiteSpace(
+            textoMetrica) Then
+
+                DesenharEtiquetaMetrica(
+                g,
+                textoMetrica,
+                posicaoEtiqueta,
+                campo)
+
+            End If
+
+        Next
+
+    End Sub
+
+    Private Function ObterDimensoesReaisObjeto(
+        objeto As ObjetoCampo) As SizeF
+
+        If objeto Is Nothing Then
+
+            Return SizeF.Empty
+
+        End If
+
+        Dim escala As Single =
+            NormalizarEscalaVisual(
+                objeto.EscalaVisual)
+
+        If TypeOf objeto Is Jogador Then
+
+            Return New SizeF(
+                0.65F * escala,
+                1.8F * escala)
+
+        End If
+
+        If TypeOf objeto Is Bola Then
+
+            Return New SizeF(
+                0.22F * escala,
+                0.22F * escala)
+
+        End If
+
+        If TypeOf objeto Is Cone Then
+
+            Return New SizeF(
+                0.3F * escala,
+                0.3F * escala)
+
+        End If
+
+        If TypeOf objeto Is Gol Then
+
+            Dim gol As Gol =
+                DirectCast(
+                    objeto,
+                    Gol)
+
+            If gol.Orientacao =
+               OrientacaoGol.Esquerda OrElse
+               gol.Orientacao =
+               OrientacaoGol.Direita Then
+
+                Return New SizeF(
+                    2.0F * escala,
+                    7.32F * escala)
+
+            End If
+
+            Return New SizeF(
+                7.32F * escala,
+                2.0F * escala)
+
+        End If
+
+        If TypeOf objeto Is Manequim Then
+
+            Return New SizeF(
+                0.6F * escala,
+                1.8F * escala)
+
+        End If
+
+        If TypeOf objeto Is MarcadorTatico Then
+
+            Dim marcador As MarcadorTatico =
+                DirectCast(
+                    objeto,
+                    MarcadorTatico)
+
+            Dim diametroMetros As Single =
+                Math.Max(
+                    0.1F,
+                    marcador.Diametro /
+                    44.0F *
+                    0.5F) *
+                escala
+
+            Return New SizeF(
+                diametroMetros,
+                diametroMetros)
+
+        End If
+
+        Return New SizeF(
+            0.5F * escala,
+            0.5F * escala)
+
+    End Function
+
+    Private Function CalcularDistanciaReal(
+        inicio As Posicao,
+        fim As Posicao) As Double
+
+        If inicio Is Nothing OrElse
+           fim Is Nothing Then
+
+            Return 0.0R
+
+        End If
+
+        Dim distanciaX As Double =
+            (fim.X - inicio.X) /
+            100.0R *
+            _comprimentoCampoMetros
+
+        Dim distanciaY As Double =
+            (fim.Y - inicio.Y) /
+            100.0R *
+            _larguraCampoMetros
+
+        Return Math.Sqrt(
+            distanciaX * distanciaX +
+            distanciaY * distanciaY)
+
+    End Function
+
+    Private Function FormatarMedidaReal(
+        metros As Double) As String
+
+        metros =
+            Math.Max(
+                0.0R,
+                metros)
+
+        If metros < 1.0R Then
+
+            Dim centimetros As Double =
+                Math.Round(
+                    metros * 100.0R,
+                    0,
+                    MidpointRounding.AwayFromZero)
+
+            Return centimetros.ToString(
+                "0") &
+                " cm"
+
+        End If
+
+        Return metros.ToString(
+            "0.00") &
+            " m"
+
+    End Function
+
+    Private Sub DesenharEtiquetaMetrica(
+        g As Graphics,
+        texto As String,
+        centro As PointF,
+        campo As RectangleF)
+
+        If String.IsNullOrWhiteSpace(
+            texto) Then
+
+            Exit Sub
+
+        End If
+
+        Using fonte As New Font(
+            "Segoe UI",
+            10.0F,
+            FontStyle.Bold,
+            GraphicsUnit.Pixel)
+
+            Using formato As New StringFormat()
+
+                formato.Alignment =
+                    StringAlignment.Center
+
+                formato.LineAlignment =
+                    StringAlignment.Center
+
+                formato.FormatFlags =
+                    StringFormatFlags.NoWrap
+
+                Dim tamanhoTexto As SizeF =
+                    g.MeasureString(
+                        texto,
+                        fonte,
+                        PointF.Empty,
+                        formato)
+
+                Dim larguraEtiqueta As Single =
+                    tamanhoTexto.Width +
+                    12.0F
+
+                Dim alturaEtiqueta As Single =
+                    tamanhoTexto.Height +
+                    6.0F
+
+                Dim x As Single =
+                    centro.X -
+                    larguraEtiqueta / 2.0F
+
+                Dim y As Single =
+                    centro.Y -
+                    alturaEtiqueta / 2.0F
+
+                x =
+                    Math.Max(
+                        campo.Left + 3.0F,
+                        Math.Min(
+                            campo.Right -
+                            larguraEtiqueta -
+                            3.0F,
+                            x))
+
+                y =
+                    Math.Max(
+                        campo.Top + 3.0F,
+                        Math.Min(
+                            campo.Bottom -
+                            alturaEtiqueta -
+                            3.0F,
+                            y))
+
+                Dim retangulo As New RectangleF(
+                    x,
+                    y,
+                    larguraEtiqueta,
+                    alturaEtiqueta)
+
+                Using fundo As New SolidBrush(
+                    Color.FromArgb(
+                        205,
+                        20,
+                        20,
+                        20))
+
+                    g.FillRectangle(
+                        fundo,
+                        retangulo)
+
+                End Using
+
+                Using borda As New Pen(
+                    Color.FromArgb(
+                        220,
+                        255,
+                        255,
+                        255),
+                    1.0F)
+
+                    g.DrawRectangle(
+                        borda,
+                        retangulo.X,
+                        retangulo.Y,
+                        retangulo.Width,
+                        retangulo.Height)
+
+                End Using
+
+                Using pincelTexto As New SolidBrush(
+                    Color.White)
+
+                    g.DrawString(
+                        texto,
+                        fonte,
+                        pincelTexto,
+                        retangulo,
+                        formato)
+
+                End Using
+
+            End Using
+
+        End Using
+
+    End Sub
+
     Private Sub DesenharTextoTatico(
     g As Graphics,
     texto As TextoTatico,
@@ -7523,7 +8111,8 @@ Public Class CampoTatico
         Dim retangulo As RectangleF =
         ObterRetanguloTextoTatico(
             centro,
-            texto)
+            texto,
+            campo)
 
         Dim corTexto As Color =
         ObterCorTextoTatico(
@@ -7570,36 +8159,58 @@ Public Class CampoTatico
 
             End If
 
-            Dim areaTexto As Rectangle =
-            Rectangle.Round(retangulo)
+            Dim areaTexto As New RectangleF(
+                retangulo.X + 8.0F,
+                retangulo.Y + 5.0F,
+                Math.Max(
+                    1.0F,
+                    retangulo.Width - 16.0F),
+                Math.Max(
+                    1.0F,
+                    retangulo.Height - 10.0F))
 
-            Dim formato As TextFormatFlags =
-            TextFormatFlags.HorizontalCenter Or
-            TextFormatFlags.VerticalCenter Or
-            TextFormatFlags.SingleLine Or
-            TextFormatFlags.NoPadding
+            Using formato As StringFormat =
+                CriarFormatoTextoTatico()
 
-            Dim areaSombra As New Rectangle(
-            areaTexto.X + 1,
-            areaTexto.Y + 1,
-            areaTexto.Width,
-            areaTexto.Height)
+                Using pincelSombraTexto As New SolidBrush(
+                    Color.FromArgb(
+                        185,
+                        0,
+                        0,
+                        0))
 
-            TextRenderer.DrawText(
-            g,
-            texto.Texto,
-            fonte,
-            areaSombra,
-            Color.FromArgb(185, 0, 0, 0),
-            formato)
+                    Dim areaSombra As New RectangleF(
+                        areaTexto.X + 1.0F,
+                        areaTexto.Y + 1.0F,
+                        areaTexto.Width,
+                        areaTexto.Height)
 
-            TextRenderer.DrawText(
-            g,
-            texto.Texto,
-            fonte,
-            areaTexto,
-            corTexto,
-            formato)
+                    g.DrawString(
+                        If(
+                            texto.Texto,
+                            String.Empty),
+                        fonte,
+                        pincelSombraTexto,
+                        areaSombra,
+                        formato)
+
+                End Using
+
+                Using pincelTexto As New SolidBrush(
+                    corTexto)
+
+                    g.DrawString(
+                        If(
+                            texto.Texto,
+                            String.Empty),
+                        fonte,
+                        pincelTexto,
+                        areaTexto,
+                        formato)
+
+                End Using
+
+            End Using
 
         End Using
 
@@ -7612,6 +8223,26 @@ Public Class CampoTatico
         End If
 
     End Sub
+
+    Private Function CriarFormatoTextoTatico() As StringFormat
+
+        Dim formato As New StringFormat()
+
+        formato.Alignment =
+            StringAlignment.Center
+
+        formato.LineAlignment =
+            StringAlignment.Center
+
+        formato.Trimming =
+            StringTrimming.EllipsisWord
+
+        formato.FormatFlags =
+            StringFormatFlags.LineLimit
+
+        Return formato
+
+    End Function
 
     Private Function CriarFonteTextoTatico(
     texto As TextoTatico) As Font
@@ -7638,22 +8269,90 @@ Public Class CampoTatico
     Private Function ObterTamanhoTextoTatico(
     texto As TextoTatico) As SizeF
 
+        Dim campo As RectangleF =
+            ObterRetanguloCampo()
+
+        Return ObterTamanhoTextoTatico(
+            texto,
+            Math.Max(
+                120.0F,
+                campo.Width * 0.55F),
+            Math.Max(
+                60.0F,
+                campo.Height - 8.0F))
+
+    End Function
+
+    Private Function ObterTamanhoTextoTatico(
+        texto As TextoTatico,
+        larguraMaxima As Single,
+        alturaMaxima As Single) As SizeF
+
+        larguraMaxima =
+            Math.Max(
+                80.0F,
+                larguraMaxima)
+
+        alturaMaxima =
+            Math.Max(
+                40.0F,
+                alturaMaxima)
+
         Using fonte As Font =
         CriarFonteTextoTatico(texto)
 
-            Dim tamanho As Size =
-            TextRenderer.MeasureText(
-                texto.Texto,
-                fonte,
-                New Size(
-                    Integer.MaxValue,
-                    Integer.MaxValue),
-                TextFormatFlags.SingleLine Or
-                TextFormatFlags.NoPadding)
+            Using imagemMedicao As New Bitmap(
+                1,
+                1)
 
-            Return New SizeF(
-            tamanho.Width + 16.0F,
-            tamanho.Height + 10.0F)
+                Using graficoMedicao As Graphics =
+                    Graphics.FromImage(
+                        imagemMedicao)
+
+                    graficoMedicao.TextRenderingHint =
+                        System.Drawing.Text.TextRenderingHint.AntiAliasGridFit
+
+                    Using formato As StringFormat =
+                        CriarFormatoTextoTatico()
+
+                        Dim larguraConteudo As Single =
+                            Math.Max(
+                                60.0F,
+                                larguraMaxima -
+                                16.0F)
+
+                        Dim alturaConteudo As Single =
+                            Math.Max(
+                                20.0F,
+                                alturaMaxima -
+                                10.0F)
+
+                        Dim tamanho As SizeF =
+                            graficoMedicao.MeasureString(
+                                If(
+                                    texto.Texto,
+                                    String.Empty),
+                                fonte,
+                                New SizeF(
+                                    larguraConteudo,
+                                    alturaConteudo),
+                                formato)
+
+                        Return New SizeF(
+                            Math.Min(
+                                larguraMaxima,
+                                tamanho.Width +
+                                16.0F),
+                            Math.Min(
+                                alturaMaxima,
+                                tamanho.Height +
+                                10.0F))
+
+                    End Using
+
+                End Using
+
+            End Using
 
         End Using
 
@@ -7663,14 +8362,72 @@ Public Class CampoTatico
     centro As PointF,
     texto As TextoTatico) As RectangleF
 
+        Return ObterRetanguloTextoTatico(
+            centro,
+            texto,
+            ObterRetanguloCampo())
+
+    End Function
+
+    Private Function ObterRetanguloTextoTatico(
+        centro As PointF,
+        texto As TextoTatico,
+        campo As RectangleF) As RectangleF
+
+        Dim margem As Single =
+            4.0F
+
+        Dim larguraMaxima As Single =
+            Math.Max(
+                80.0F,
+                Math.Min(
+                    campo.Width -
+                    margem * 2.0F,
+                    campo.Width * 0.55F))
+
+        Dim alturaMaxima As Single =
+            Math.Max(
+                40.0F,
+                campo.Height -
+                margem * 2.0F)
+
         Dim tamanho As SizeF =
-        ObterTamanhoTextoTatico(texto)
+        ObterTamanhoTextoTatico(
+            texto,
+            larguraMaxima,
+            alturaMaxima)
+
+        Dim x As Single =
+            centro.X -
+            tamanho.Width / 2.0F
+
+        Dim y As Single =
+            centro.Y -
+            tamanho.Height / 2.0F
+
+        x =
+            Math.Max(
+                campo.Left + margem,
+                Math.Min(
+                    campo.Right -
+                    tamanho.Width -
+                    margem,
+                    x))
+
+        y =
+            Math.Max(
+                campo.Top + margem,
+                Math.Min(
+                    campo.Bottom -
+                    tamanho.Height -
+                    margem,
+                    y))
 
         Return New RectangleF(
-        centro.X - tamanho.Width / 2.0F,
-        centro.Y - tamanho.Height / 2.0F,
-        tamanho.Width,
-        tamanho.Height)
+            x,
+            y,
+            tamanho.Width,
+            tamanho.Height)
 
     End Function
 
@@ -8142,7 +8899,15 @@ Public Class CampoTatico
             .FaixasGramaVisiveis =
                 _faixasGramaVisiveis,
             .SombrasCampoAtivas =
-                _sombrasCampoAtivas
+                _sombrasCampoAtivas,
+            .UsarMetricasReais =
+                _usarMetricasReais,
+            .ComprimentoCampoMetros =
+                _comprimentoCampoMetros,
+            .LarguraCampoMetros =
+                _larguraCampoMetros,
+            .ExibirMetricasNoCampo =
+                _exibirMetricasNoCampo
         }
 
         For Each objeto As ObjetoCampo In _objetos
@@ -8189,7 +8954,8 @@ Public Class CampoTatico
                 objeto.GrupoId,
                 String.Empty),
         .Bloqueado = objeto.Bloqueado,
-        .EscalaVisual = objeto.EscalaVisual
+.ExibirMetrica = objeto.ExibirMetrica,
+.EscalaVisual = objeto.EscalaVisual
     }
 
         Select Case tipoObjeto
@@ -8505,6 +9271,9 @@ Public Class CampoTatico
         objeto.Bloqueado =
     estado.Bloqueado
 
+        objeto.ExibirMetrica =
+    estado.ExibirMetrica
+
         objeto.EscalaVisual =
     estado.EscalaVisual
 
@@ -8801,6 +9570,26 @@ Public Class CampoTatico
 
             _sombrasCampoAtivas =
                 estadoCampo.SombrasCampoAtivas
+
+            _usarMetricasReais =
+                estadoCampo.UsarMetricasReais
+
+            _comprimentoCampoMetros =
+                Math.Max(
+                    1.0R,
+                    Math.Min(
+                        500.0R,
+                        estadoCampo.ComprimentoCampoMetros))
+
+            _larguraCampoMetros =
+                Math.Max(
+                    1.0R,
+                    Math.Min(
+                        500.0R,
+                        estadoCampo.LarguraCampoMetros))
+
+            _exibirMetricasNoCampo =
+                estadoCampo.ExibirMetricasNoCampo
 
             _objetos.Clear()
 
@@ -9772,7 +10561,8 @@ Public Class CampoTatico
             Dim area As RectangleF =
         ObterRetanguloTextoTatico(
             centro,
-            texto)
+            texto,
+            campo)
 
             area.Inflate(
         4.0F,

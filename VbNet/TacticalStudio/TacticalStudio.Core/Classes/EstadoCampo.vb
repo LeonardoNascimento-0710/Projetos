@@ -19,6 +19,18 @@ Namespace Classes
         Public Property SombrasCampoAtivas As Boolean =
             True
 
+        Public Property UsarMetricasReais As Boolean =
+            False
+
+        Public Property ComprimentoCampoMetros As Double =
+            105.0R
+
+        Public Property LarguraCampoMetros As Double =
+            68.0R
+
+        Public Property ExibirMetricasNoCampo As Boolean =
+            True
+
         Public Sub New()
 
             Objetos =

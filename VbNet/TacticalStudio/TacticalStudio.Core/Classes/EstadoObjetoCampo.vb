@@ -16,7 +16,6 @@
         Public Property CorConeValor As Integer
         Public Property OrientacaoGolValor As Integer
         Public Property CorManequimValor As Integer
-        'Direção antiga mantida para abrir arquivos da versão 2.
         Public Property DirecaoDoJogador As DirecaoJogador = DirecaoJogador.Cima
         Public Property OrientacaoVisualDoJogador As OrientacaoVisualJogador =
             OrientacaoVisualJogador.Costas
@@ -36,6 +35,8 @@
         Public Property FundoVisivel As Boolean
         Public Property GrupoId As String = String.Empty
         Public Property Bloqueado As Boolean = False
+
+        Public Property ExibirMetrica As Boolean = True
 
     End Class
 

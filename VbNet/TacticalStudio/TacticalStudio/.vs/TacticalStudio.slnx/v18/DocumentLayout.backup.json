@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{41BF03F2-A3DF-9DBD-C8CA-C337C7716C7E}|TacticalStudio.vbproj|c:\\users\\administrador\\onedrive\\desktop\\projetos\\projetos\\vbnet\\tacticalstudio\\tacticalstudio\\formularios\\frmprincipal.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{41BF03F2-A3DF-9DBD-C8CA-C337C7716C7E}|TacticalStudio.vbproj|solutionrelative:formularios\\frmprincipal.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{41BF03F2-A3DF-9DBD-C8CA-C337C7716C7E}|TacticalStudio.vbproj|c:\\users\\administrador\\onedrive\\desktop\\projetos\\projetos\\vbnet\\tacticalstudio\\tacticalstudio\\formularios\\frmprincipal.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
       "RelativeMoniker": "D:0:0:{41BF03F2-A3DF-9DBD-C8CA-C337C7716C7E}|TacticalStudio.vbproj|solutionrelative:formularios\\frmprincipal.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
     }
@@ -27,13 +31,26 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "FrmPrincipal.vb",
+              "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\Formularios\\FrmPrincipal.vb",
+              "RelativeDocumentMoniker": "Formularios\\FrmPrincipal.vb",
+              "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\Formularios\\FrmPrincipal.vb*",
+              "RelativeToolTip": "Formularios\\FrmPrincipal.vb*",
+              "ViewState": "AgIAAOYLAAAAAAAAAAAYwAIMAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2026-07-17T19:23:57.277Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "FrmPrincipal.vb [Projeto]",
               "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\Formularios\\FrmPrincipal.vb",
               "RelativeDocumentMoniker": "Formularios\\FrmPrincipal.vb",
-              "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\Formularios\\FrmPrincipal.vb [Projeto]",
-              "RelativeToolTip": "Formularios\\FrmPrincipal.vb [Projeto]",
+              "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\TacticalStudio\\TacticalStudio\\Formularios\\FrmPrincipal.vb [Projeto]*",
+              "RelativeToolTip": "Formularios\\FrmPrincipal.vb [Projeto]*",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2026-07-17T17:02:33.424Z",
+              "WhenOpened": "2026-07-17T19:23:49.99Z",
               "EditorCaption": " [Projeto]"
             }
           ]

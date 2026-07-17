@@ -10,6 +10,8 @@
 
         Public Property Selecionado As Boolean
 
+        Public Property ExibirMetrica As Boolean = True
+
         Public Property NomePersonalizado As String = String.Empty
 
         Public Property GrupoId As String = String.Empty
@@ -17,6 +19,8 @@
         Public Property Bloqueado As Boolean = False
 
         Public Property EscalaVisual As Single
+
+
 
             Get
 

@@ -2121,6 +2121,169 @@ Public Class FrmPrincipal
         cartaoEstiloCampo)
 
         '==================================================
+        ' CARTÃO: MÉTRICAS REAIS
+        '==================================================
+
+        Dim cartaoMetricasReais As FlowLayoutPanel =
+        CriarCartaoPropriedades(
+            "Métricas reais",
+            Color.FromArgb(
+                75,
+                36,
+                36))
+
+        Dim chkUsarMetricasReais As New CheckBox With {
+        .Text = "Utilizar medidas reais",
+        .Checked =
+            CampoCanvas.UsarMetricasReais,
+        .AutoSize = False,
+        .TextAlign =
+            ContentAlignment.MiddleLeft,
+        .BackColor =
+            Tema.CampoEntrada,
+        .ForeColor =
+            Tema.TextoCampo
+    }
+
+        AdicionarCampoCartao(
+        cartaoMetricasReais,
+        "Medição do campo",
+        chkUsarMetricasReais)
+
+        Dim nudComprimentoCampo As New NumericUpDown With {
+        .Minimum = 1D,
+        .Maximum = 500D,
+        .Increment = 0.5D,
+        .DecimalPlaces = 2,
+        .Value =
+            CDec(
+                Math.Max(
+                    1.0R,
+                    Math.Min(
+                        500.0R,
+                        CampoCanvas.ComprimentoCampoMetros))),
+        .TextAlign =
+            HorizontalAlignment.Center
+    }
+
+        AdicionarCampoCartao(
+        cartaoMetricasReais,
+        "Comprimento do campo (m)",
+        nudComprimentoCampo)
+
+        Dim nudLarguraCampo As New NumericUpDown With {
+        .Minimum = 1D,
+        .Maximum = 500D,
+        .Increment = 0.5D,
+        .DecimalPlaces = 2,
+        .Value =
+            CDec(
+                Math.Max(
+                    1.0R,
+                    Math.Min(
+                        500.0R,
+                        CampoCanvas.LarguraCampoMetros))),
+        .TextAlign =
+            HorizontalAlignment.Center
+    }
+
+        AdicionarCampoCartao(
+        cartaoMetricasReais,
+        "Largura do campo (m)",
+        nudLarguraCampo)
+
+        Dim chkExibirMetricasCampo As New CheckBox With {
+        .Text = "Exibir medidas nos objetos",
+        .Checked =
+            CampoCanvas.ExibirMetricasNoCampo,
+        .AutoSize = False,
+        .TextAlign =
+            ContentAlignment.MiddleLeft,
+        .BackColor =
+            Tema.CampoEntrada,
+        .ForeColor =
+            Tema.TextoCampo
+    }
+
+        AdicionarCampoCartao(
+        cartaoMetricasReais,
+        "Exibição",
+        chkExibirMetricasCampo)
+
+        Dim atualizarHabilitacaoMetricas As Action =
+        Sub()
+
+            nudComprimentoCampo.Enabled =
+                chkUsarMetricasReais.Checked
+
+            nudLarguraCampo.Enabled =
+                chkUsarMetricasReais.Checked
+
+            chkExibirMetricasCampo.Enabled =
+                chkUsarMetricasReais.Checked
+
+        End Sub
+
+        AddHandler chkUsarMetricasReais.CheckedChanged,
+        Sub(sender, e)
+
+            atualizarHabilitacaoMetricas()
+
+        End Sub
+
+        atualizarHabilitacaoMetricas()
+
+        Dim btnAplicarMetricas As New Button With {
+        .Text = "Aplicar métricas reais",
+        .Width =
+            Math.Max(
+                240,
+                cartaoMetricasReais.Width - 20),
+        .Height = 38,
+        .Margin =
+            New Padding(
+                8,
+                8,
+                8,
+                0),
+        .FlatStyle =
+            FlatStyle.Flat,
+        .BackColor =
+            Tema.CorPrimaria,
+        .ForeColor =
+            Tema.TextoSobreCorPrimaria,
+        .Cursor =
+            Cursors.Hand,
+        .UseVisualStyleBackColor =
+            False
+    }
+
+        btnAplicarMetricas.FlatAppearance.BorderColor =
+        Tema.Borda
+
+        btnAplicarMetricas.FlatAppearance.MouseOverBackColor =
+        Tema.CorPrimariaHover
+
+        AddHandler btnAplicarMetricas.Click,
+        Sub(sender, e)
+
+            CampoCanvas.AplicarConfiguracaoMetricasReais(
+                chkUsarMetricasReais.Checked,
+                CDbl(
+                    nudComprimentoCampo.Value),
+                CDbl(
+                    nudLarguraCampo.Value),
+                chkExibirMetricasCampo.Checked)
+
+        End Sub
+
+        cartaoMetricasReais.Controls.Add(
+        btnAplicarMetricas)
+
+        painel.Controls.Add(
+        cartaoMetricasReais)
+
+        '==================================================
         ' CARTÃO: CORTES RÁPIDOS
         '==================================================
 
@@ -2855,6 +3018,59 @@ Public Class FrmPrincipal
                     DirectCast(
                         objeto,
                         TextoTatico))
+
+                End If
+
+                '==================================================
+                ' CARTÃO: MÉTRICA DO OBJETO
+                '==================================================
+
+                If Not TypeOf objeto Is TextoTatico Then
+
+                    Dim cartaoMetrica As FlowLayoutPanel =
+        CriarCartaoPropriedades(
+            "Métrica",
+            Color.FromArgb(
+                45,
+                85,
+                70))
+
+                    Dim chkExibirMetrica As New CheckBox With {
+        .Text = "Exibir métrica deste objeto",
+        .Checked = objeto.ExibirMetrica,
+        .AutoSize = False,
+        .TextAlign =
+            ContentAlignment.MiddleLeft,
+        .BackColor =
+            Tema.CampoEntrada,
+        .ForeColor =
+            Tema.TextoCampo
+    }
+
+                    AddHandler chkExibirMetrica.CheckedChanged,
+        Sub(sender, e)
+
+            If objeto.ExibirMetrica =
+               chkExibirMetrica.Checked Then
+
+                Exit Sub
+
+            End If
+
+            objeto.ExibirMetrica =
+                chkExibirMetrica.Checked
+
+            CampoCanvas.RegistrarAlteracaoExterna()
+
+        End Sub
+
+                    AdicionarCampoCartao(
+        cartaoMetrica,
+        "Exibição",
+        chkExibirMetrica)
+
+                    painel.Controls.Add(
+        cartaoMetrica)
 
                 End If
 
