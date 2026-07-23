@@ -1,0 +1,154 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\PlayerPromocional\\PlayerPromocional\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A6944057-71E4-8DC2-59B0-76795F64E67A}|PlayerPromocional.vbproj|c:\\users\\administrador\\onedrive\\desktop\\projetos\\projetos\\vbnet\\playerpromocional\\playerpromocional\\formularios\\frmlogin.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{A6944057-71E4-8DC2-59B0-76795F64E67A}|PlayerPromocional.vbproj|solutionrelative:formularios\\frmlogin.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A6944057-71E4-8DC2-59B0-76795F64E67A}|PlayerPromocional.vbproj|c:\\users\\administrador\\onedrive\\desktop\\projetos\\projetos\\vbnet\\playerpromocional\\playerpromocional\\formularios\\frmacessoadmin.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{A6944057-71E4-8DC2-59B0-76795F64E67A}|PlayerPromocional.vbproj|solutionrelative:formularios\\frmacessoadmin.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A6944057-71E4-8DC2-59B0-76795F64E67A}|PlayerPromocional.vbproj|c:\\users\\administrador\\onedrive\\desktop\\projetos\\projetos\\vbnet\\playerpromocional\\playerpromocional\\formularios\\frmgeradorlicencas.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{A6944057-71E4-8DC2-59B0-76795F64E67A}|PlayerPromocional.vbproj|solutionrelative:formularios\\frmgeradorlicencas.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A6944057-71E4-8DC2-59B0-76795F64E67A}|PlayerPromocional.vbproj|c:\\users\\administrador\\onedrive\\desktop\\projetos\\projetos\\vbnet\\playerpromocional\\playerpromocional\\formularios\\frmsplash.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{A6944057-71E4-8DC2-59B0-76795F64E67A}|PlayerPromocional.vbproj|solutionrelative:formularios\\frmsplash.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A6944057-71E4-8DC2-59B0-76795F64E67A}|PlayerPromocional.vbproj|c:\\users\\administrador\\onedrive\\desktop\\projetos\\projetos\\vbnet\\playerpromocional\\playerpromocional\\formularios\\frmlogin.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
+      "RelativeMoniker": "D:0:0:{A6944057-71E4-8DC2-59B0-76795F64E67A}|PlayerPromocional.vbproj|solutionrelative:formularios\\frmlogin.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A6944057-71E4-8DC2-59B0-76795F64E67A}|PlayerPromocional.vbproj|c:\\users\\administrador\\onedrive\\desktop\\projetos\\projetos\\vbnet\\playerpromocional\\playerpromocional\\formularios\\frmprincipal.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{A6944057-71E4-8DC2-59B0-76795F64E67A}|PlayerPromocional.vbproj|solutionrelative:formularios\\frmprincipal.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A6944057-71E4-8DC2-59B0-76795F64E67A}|PlayerPromocional.vbproj|c:\\users\\administrador\\onedrive\\desktop\\projetos\\projetos\\vbnet\\playerpromocional\\playerpromocional\\formularios\\frmprincipal.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
+      "RelativeMoniker": "D:0:0:{A6944057-71E4-8DC2-59B0-76795F64E67A}|PlayerPromocional.vbproj|solutionrelative:formularios\\frmprincipal.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A6944057-71E4-8DC2-59B0-76795F64E67A}|PlayerPromocional.vbproj|c:\\users\\administrador\\onedrive\\desktop\\projetos\\projetos\\vbnet\\playerpromocional\\playerpromocional\\formularios\\frmanunciosgravados.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{A6944057-71E4-8DC2-59B0-76795F64E67A}|PlayerPromocional.vbproj|solutionrelative:formularios\\frmanunciosgravados.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "FrmGeradorLicencas.vb",
+              "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\PlayerPromocional\\PlayerPromocional\\Formularios\\FrmGeradorLicencas.vb",
+              "RelativeDocumentMoniker": "Formularios\\FrmGeradorLicencas.vb",
+              "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\PlayerPromocional\\PlayerPromocional\\Formularios\\FrmGeradorLicencas.vb",
+              "RelativeToolTip": "Formularios\\FrmGeradorLicencas.vb",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2026-07-21T19:27:32.703Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FrmAcessoAdmin.vb",
+              "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\PlayerPromocional\\PlayerPromocional\\Formularios\\FrmAcessoAdmin.vb",
+              "RelativeDocumentMoniker": "Formularios\\FrmAcessoAdmin.vb",
+              "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\PlayerPromocional\\PlayerPromocional\\Formularios\\FrmAcessoAdmin.vb",
+              "RelativeToolTip": "Formularios\\FrmAcessoAdmin.vb",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAE8CAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2026-07-21T19:25:42.575Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "FrmSplash.vb",
+              "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\PlayerPromocional\\PlayerPromocional\\Formularios\\FrmSplash.vb",
+              "RelativeDocumentMoniker": "Formularios\\FrmSplash.vb",
+              "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\PlayerPromocional\\PlayerPromocional\\Formularios\\FrmSplash.vb",
+              "RelativeToolTip": "Formularios\\FrmSplash.vb",
+              "ViewState": "AgIAAPMCAAAAAAAAAAAAwAADAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2026-07-21T19:12:02.886Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FrmLogin.vb",
+              "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\PlayerPromocional\\PlayerPromocional\\Formularios\\FrmLogin.vb",
+              "RelativeDocumentMoniker": "Formularios\\FrmLogin.vb",
+              "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\PlayerPromocional\\PlayerPromocional\\Formularios\\FrmLogin.vb",
+              "RelativeToolTip": "Formularios\\FrmLogin.vb",
+              "ViewState": "AgIAANADAAAAAAAAAAAAAOgDAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2026-07-21T19:10:41.95Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "FrmLogin.vb [Projeto]",
+              "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\PlayerPromocional\\PlayerPromocional\\Formularios\\FrmLogin.vb",
+              "RelativeDocumentMoniker": "Formularios\\FrmLogin.vb",
+              "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\PlayerPromocional\\PlayerPromocional\\Formularios\\FrmLogin.vb [Projeto]",
+              "RelativeToolTip": "Formularios\\FrmLogin.vb [Projeto]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2026-07-21T19:09:47.967Z",
+              "EditorCaption": " [Projeto]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "FrmAnunciosGravados.vb",
+              "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\PlayerPromocional\\PlayerPromocional\\Formularios\\FrmAnunciosGravados.vb",
+              "RelativeDocumentMoniker": "Formularios\\FrmAnunciosGravados.vb",
+              "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\PlayerPromocional\\PlayerPromocional\\Formularios\\FrmAnunciosGravados.vb",
+              "RelativeToolTip": "Formularios\\FrmAnunciosGravados.vb",
+              "ViewState": "AgIAADkCAAAAAAAAAAAAwGQCAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2026-07-21T18:13:37.62Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "FrmPrincipal.vb [Projeto]",
+              "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\PlayerPromocional\\PlayerPromocional\\Formularios\\FrmPrincipal.vb",
+              "RelativeDocumentMoniker": "Formularios\\FrmPrincipal.vb",
+              "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\PlayerPromocional\\PlayerPromocional\\Formularios\\FrmPrincipal.vb [Projeto]",
+              "RelativeToolTip": "Formularios\\FrmPrincipal.vb [Projeto]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2026-07-21T17:24:01.798Z",
+              "EditorCaption": " [Projeto]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "FrmPrincipal.vb",
+              "DocumentMoniker": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\PlayerPromocional\\PlayerPromocional\\Formularios\\FrmPrincipal.vb",
+              "RelativeDocumentMoniker": "Formularios\\FrmPrincipal.vb",
+              "ToolTip": "C:\\Users\\Administrador\\OneDrive\\Desktop\\Projetos\\Projetos\\VbNet\\PlayerPromocional\\PlayerPromocional\\Formularios\\FrmPrincipal.vb",
+              "RelativeToolTip": "Formularios\\FrmPrincipal.vb",
+              "ViewState": "AgIAAFgAAAAAAAAAAAAAAGcAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2026-07-21T16:23:30.565Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

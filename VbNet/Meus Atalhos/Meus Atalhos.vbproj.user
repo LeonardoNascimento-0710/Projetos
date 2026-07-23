@@ -13,6 +13,9 @@
     <Compile Update="Downloads\FrmDownloadsConversor.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="FrmSplash.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Geral\FrmMeusAuxiliares.vb">
       <SubType>Form</SubType>
     </Compile>

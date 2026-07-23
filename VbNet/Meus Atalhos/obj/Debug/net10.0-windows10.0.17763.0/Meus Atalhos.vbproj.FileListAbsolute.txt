@@ -88,3 +88,4 @@ C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\runtimes\win-x86\native\QuestPdfSkia.dll
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\bin\Debug\net10.0-windows10.0.17763.0\runtimes\win-x86\native\qpdf.dll
 C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\obj\Debug\net10.0-windows10.0.17763.0\Meus_Atalhos.FrmDownloadsConversor.resources
+C:\Users\Administrador\OneDrive\Desktop\Projetos\Projetos\VbNet\Meus Atalhos\obj\Debug\net10.0-windows10.0.17763.0\Meus_Atalhos.FrmSplash.resources

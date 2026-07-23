@@ -16,7 +16,7 @@ Imports System.Reflection
 <Assembly: System.Reflection.AssemblyCompanyAttribute("Meus Atalhos"),  _
  Assembly: System.Reflection.AssemblyConfigurationAttribute("Debug"),  _
  Assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0"),  _
- Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1e9b20ba2ad5493942d82162d1a696306f21ee8c"),  _
+ Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e1b81704fe87b8277e59d66d6b79d0354409f837"),  _
  Assembly: System.Reflection.AssemblyProductAttribute("Meus Atalhos"),  _
  Assembly: System.Reflection.AssemblyTitleAttribute("Meus Atalhos"),  _
  Assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0"),  _
