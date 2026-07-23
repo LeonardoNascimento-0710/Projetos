@@ -16,7 +16,7 @@ Imports System.Reflection
 <Assembly: System.Reflection.AssemblyCompanyAttribute("PlayerPromocional"),  _
  Assembly: System.Reflection.AssemblyConfigurationAttribute("Debug"),  _
  Assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0"),  _
- Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6a0905c6dda3092fbb8774e11b0e8502aa3f423b"),  _
+ Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3eea4337d435592329d13198743499747d7a5be7"),  _
  Assembly: System.Reflection.AssemblyProductAttribute("PlayerPromocional"),  _
  Assembly: System.Reflection.AssemblyTitleAttribute("PlayerPromocional"),  _
  Assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0"),  _
