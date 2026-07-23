@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -6,12 +6,8 @@
     <StartupObject>PlayerPromocional.My.MyApplication</StartupObject>
     <UseWindowsForms>true</UseWindowsForms>
     <MyType>WindowsForms</MyType>
-    <ApplicationIcon>bin\Debug\net10.0-windows\Assets\Icones\IconOrbit.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\Icones\PlayerPromocional.ico</ApplicationIcon>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Include="bin\Debug\net10.0-windows\Assets\Icones\IconOrbit.ico" />
-  </ItemGroup>
 
   <ItemGroup>
     <Import Include="System.Data" />
@@ -21,6 +17,18 @@
 
   <ItemGroup>
     <PackageReference Include="NAudio" Version="2.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\Icones\LogoOrbitSplash.png">
+      <LogicalName>PlayerPromocional.Assets.Icones.LogoOrbitSplash.png</LogicalName>
+    </EmbeddedResource>
+    <Content Include="Assets\Icones\IconePlayer.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Splash\SplashPlayerPromocional.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

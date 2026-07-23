@@ -1,4 +1,5 @@
-Imports System.Drawing
+﻿Imports System.Drawing
+Imports System.Drawing.Drawing2D
 Imports System.IO
 Imports System.Reflection
 Imports System.Windows.Forms
@@ -11,7 +12,11 @@ Public Class FrmSplash
     Private _barraFundo As Panel
     Private _barraProgresso As Panel
     Private _lblCarregando As Label
-    Private _picLogo As PictureBox
+    Private _picSplash As PictureBox
+    Private _picLogoMini As PictureBox
+    Private _lblTitulo As Label
+    Private _lblSubtitulo As Label
+    Private _lblAutor As Label
     Private fluxoIniciado As Boolean = False
     Private _progressoAtual As Integer
     Private _formPrincipalAberto As Boolean
@@ -30,67 +35,36 @@ Public Class FrmSplash
         Me.SuspendLayout()
 
         Me.FormBorderStyle =
-            FormBorderStyle.None
+        FormBorderStyle.None
 
         Me.StartPosition =
-            FormStartPosition.CenterScreen
+        FormStartPosition.CenterScreen
 
         Me.ClientSize =
-            New Size(
-                800,
-                500)
+        New Size(
+            1000,
+            625)
 
         Me.BackColor =
-            Color.FromArgb(
-                248,
-                248,
-                248)
+        Color.FromArgb(
+            12,
+            12,
+            12)
 
         Me.ShowInTaskbar =
-            False
+        False
 
         Me.TopMost =
-            True
+        True
 
         Me.DoubleBuffered =
-            True
+        True
 
         Me.ResumeLayout(
-            False)
+        False)
 
     End Sub
 
-    Private Sub AbrirLoginEPrincipal()
-
-        If fluxoIniciado Then
-            Exit Sub
-        End If
-
-        fluxoIniciado = True
-
-        Me.Hide()
-
-        Using frmLogin As New FrmLogin()
-
-            If frmLogin.ShowDialog() <>
-           DialogResult.OK Then
-
-                Me.Close()
-                Exit Sub
-
-            End If
-
-        End Using
-
-        Using frmPrincipal As New FrmPrincipal()
-
-            frmPrincipal.ShowDialog()
-
-        End Using
-
-        Me.Close()
-
-    End Sub
     Private Sub MontarInterface()
 
         Me.SuspendLayout()
@@ -99,216 +73,81 @@ Public Class FrmSplash
 
             Me.Controls.Clear()
 
-            '==================================================
-            ' FUNDO PRINCIPAL
-            '==================================================
-
             Dim painelFundo As New Panel With {
-                .Dock = DockStyle.Fill,
-                .BackColor = Color.FromArgb(
-                    248,
-                    248,
-                    248)
-            }
+            .Dock = DockStyle.Fill,
+            .BackColor = Color.FromArgb(
+                12,
+                12,
+                12)
+        }
 
             Me.Controls.Add(
-                painelFundo)
+            painelFundo)
 
             '==================================================
             ' FAIXA SUPERIOR
             '==================================================
 
             Dim faixaSuperior As New Panel With {
-                .Dock = DockStyle.Top,
-                .Height = 5,
-                .BackColor = Color.FromArgb(
-                    145,
-                    25,
-                    25)
-            }
+            .Dock = DockStyle.Top,
+            .Height = 5,
+            .BackColor = Color.FromArgb(
+                145,
+                25,
+                25)
+        }
 
             painelFundo.Controls.Add(
-                faixaSuperior)
+            faixaSuperior)
 
             '==================================================
             ' RODAPÉ
             '==================================================
 
             Dim faixaInferior As New Panel With {
-                .Dock = DockStyle.Bottom,
-                .Height = 78,
-                .BackColor = Color.FromArgb(
-                    24,
-                    24,
-                    24)
-            }
+            .Dock = DockStyle.Bottom,
+            .Height = 100,
+            .BackColor = Color.FromArgb(
+                18,
+                18,
+                18)
+        }
 
             painelFundo.Controls.Add(
-                faixaInferior)
+            faixaInferior)
 
             _barraFundo =
-                New Panel With {
-                    .Dock = DockStyle.Bottom,
-                    .Height = 7,
-                    .BackColor = Color.FromArgb(
-                        68,
-                        68,
-                        68)
-                }
+            New Panel With {
+                .Dock = DockStyle.Bottom,
+                .Height = 8,
+                .BackColor = Color.FromArgb(
+                    55,
+                    55,
+                    55)
+            }
 
             faixaInferior.Controls.Add(
-                _barraFundo)
+            _barraFundo)
 
             _barraProgresso =
-                New Panel With {
-                    .Dock = DockStyle.Left,
-                    .Width = 0,
-                    .BackColor = Color.FromArgb(
-                        145,
-                        25,
-                        25)
-                }
+            New Panel With {
+                .Dock = DockStyle.Left,
+                .Width = 0,
+                .BackColor = Color.FromArgb(
+                    178,
+                    35,
+                    46)
+            }
 
             _barraFundo.Controls.Add(
-                _barraProgresso)
+            _barraProgresso)
 
             _lblCarregando =
-                New Label With {
-                    .Text =
-                        "Inicializando Player Promocional...",
-                    .ForeColor =
-                        Color.White,
-                    .BackColor =
-                        Color.Transparent,
-                    .Font =
-                        New Font(
-                            "Segoe UI",
-                            10.0F,
-                            FontStyle.Regular),
-                    .Dock =
-                        DockStyle.Left,
-                    .Width =
-                        390,
-                    .Padding =
-                        New Padding(
-                            18,
-                            0,
-                            0,
-                            7),
-                    .TextAlign =
-                        ContentAlignment.MiddleLeft
-                }
-
-            faixaInferior.Controls.Add(
-                _lblCarregando)
-
-            Dim lblVersao As New Label With {
+            New Label With {
                 .Text =
-                    "Versão " &
-                    ObterVersaoLimpa(),
+                    "Inicializando Player Promocional...",
                 .ForeColor =
-                    Color.Gainsboro,
-                .BackColor =
-                    Color.Transparent,
-                .Font =
-                    New Font(
-                        "Segoe UI",
-                        9.5F,
-                        FontStyle.Regular),
-                .Dock =
-                    DockStyle.Right,
-                .Width =
-                    190,
-                .Padding =
-                    New Padding(
-                        0,
-                        0,
-                        18,
-                        7),
-                .TextAlign =
-                    ContentAlignment.MiddleRight
-            }
-
-            faixaInferior.Controls.Add(
-                lblVersao)
-
-            _barraFundo.BringToFront()
-
-            '==================================================
-            ' LOGO DA ORBIT
-            '==================================================
-
-            _picLogo =
-    New PictureBox With {
-        .Image =
-            CarregarLogoOrbit(),
-        .SizeMode =
-            PictureBoxSizeMode.Zoom,
-        .BackColor =
-            Color.Transparent,
-        .Location =
-            New Point(
-                0,
-                38),
-        .Size =
-            New Size(
-                190,
-                230),
-        .Anchor =
-            AnchorStyles.Top Or
-            AnchorStyles.Left Or
-            AnchorStyles.Right
-    }
-
-            painelFundo.Controls.Add(
-                _picLogo)
-
-            '==================================================
-            ' NOME DO SISTEMA
-            '==================================================
-
-            Dim lblSistema As New Label With {
-                .Text =
-                    "Player Promocional",
-                .ForeColor =
-                    Color.FromArgb(
-                        20,
-                        20,
-                        20),
-                .BackColor =
-                    Color.Transparent,
-                .Font =
-                    New Font(
-                        "Segoe UI",
-                        21.0F,
-                        FontStyle.Bold),
-                .Location =
-                    New Point(
-                        0,
-                        292),
-                .Size =
-                    New Size(
-                        200,
-                        48),
-                .Anchor =
-                    AnchorStyles.Top Or
-                    AnchorStyles.Left Or
-                    AnchorStyles.Right,
-                .TextAlign =
-                    ContentAlignment.MiddleCenter
-            }
-
-            painelFundo.Controls.Add(
-                lblSistema)
-
-            Dim lblDescricao As New Label With {
-                .Text =
-                    "Atalhos e recuros para auxiliar no dia a dia",
-                .ForeColor =
-                    Color.FromArgb(
-                        75,
-                        75,
-                        75),
+                    Color.White,
                 .BackColor =
                     Color.Transparent,
                 .Font =
@@ -318,32 +157,114 @@ Public Class FrmSplash
                         FontStyle.Regular),
                 .Location =
                     New Point(
-                        0,
-                        339),
+                        20,
+                        62),
                 .Size =
                     New Size(
-                        200,
-                        28),
-                .Anchor =
-                    AnchorStyles.Top Or
-                    AnchorStyles.Left Or
-                    AnchorStyles.Right,
+                        420,
+                        24),
                 .TextAlign =
-                    ContentAlignment.MiddleCenter
+                    ContentAlignment.MiddleLeft
             }
 
-            painelFundo.Controls.Add(
-                lblDescricao)
+            faixaInferior.Controls.Add(
+            _lblCarregando)
 
-            Dim lblEmpresa As New Label With {
+            Dim lblVersao As New Label With {
+            .Text =
+                "Versão " & ObterVersaoLimpa(),
+            .ForeColor =
+                Color.Gainsboro,
+            .BackColor =
+                Color.Transparent,
+            .Font =
+                New Font(
+                    "Segoe UI",
+                    9.5F,
+                    FontStyle.Regular),
+            .Location =
+                New Point(
+                    780,
+                    62),
+            .Size =
+                New Size(
+                    200,
+                    24),
+            .TextAlign =
+                ContentAlignment.MiddleRight
+        }
+
+            faixaInferior.Controls.Add(
+            lblVersao)
+
+            _lblTitulo =
+            New Label With {
                 .Text =
-                    "Desenvolvido por ORBIT  •  " &
-                    "Tecnologia que gira em torno do futuro.",
+                    "PLAYER PROMOCIONAL",
+                .ForeColor =
+                    Color.White,
+                .BackColor =
+                    Color.Transparent,
+                .Font =
+                    New Font(
+                        "Segoe UI",
+                        20.0F,
+                        FontStyle.Bold),
+                .Location =
+                    New Point(
+                        20,
+                        8),
+                .Size =
+                    New Size(
+                        520,
+                        34),
+                .TextAlign =
+                    ContentAlignment.MiddleLeft
+            }
+
+            faixaInferior.Controls.Add(
+            _lblTitulo)
+
+            _lblSubtitulo =
+            New Label With {
+                .Text =
+                    "Áudio inteligente para promoções",
                 .ForeColor =
                     Color.FromArgb(
-                        105,
-                        105,
-                        105),
+                        220,
+                        220,
+                        220),
+                .BackColor =
+                    Color.Transparent,
+                .Font =
+                    New Font(
+                        "Segoe UI",
+                        10.5F,
+                        FontStyle.Regular),
+                .Location =
+                    New Point(
+                        22,
+                        36),
+                .Size =
+                    New Size(
+                        360,
+                        22),
+                .TextAlign =
+                    ContentAlignment.MiddleLeft
+            }
+
+            faixaInferior.Controls.Add(
+            _lblSubtitulo)
+
+            _lblAutor =
+            New Label With {
+                .Text =
+                    "Desenvolvido por OrbitVerso",
+                .ForeColor =
+                    Color.FromArgb(
+                        190,
+                        190,
+                        190),
                 .BackColor =
                     Color.Transparent,
                 .Font =
@@ -353,45 +274,192 @@ Public Class FrmSplash
                         FontStyle.Regular),
                 .Location =
                     New Point(
-                        0,
-                        380),
+                        600,
+                        18),
                 .Size =
                     New Size(
-                        200,
-                        28),
-                .Anchor =
-                    AnchorStyles.Top Or
-                    AnchorStyles.Left Or
-                    AnchorStyles.Right,
+                        380,
+                        22),
                 .TextAlign =
-                    ContentAlignment.MiddleCenter
+                    ContentAlignment.MiddleRight
+            }
+
+            faixaInferior.Controls.Add(
+            _lblAutor)
+
+            Dim lblEmpresa As New Label With {
+            .Text =
+                "Orbit / Player Promocional",
+            .ForeColor =
+                Color.FromArgb(
+                    150,
+                    150,
+                    150),
+            .BackColor =
+                Color.Transparent,
+            .Font =
+                New Font(
+                    "Segoe UI",
+                    9.0F,
+                    FontStyle.Regular),
+            .Location =
+                New Point(
+                    600,
+                    40),
+            .Size =
+                New Size(
+                    380,
+                    18),
+            .TextAlign =
+                ContentAlignment.MiddleRight
+        }
+
+            faixaInferior.Controls.Add(
+            lblEmpresa)
+
+            '==================================================
+            ' IMAGEM DO SPLASH
+            '==================================================
+
+            Dim painelImagem As New Panel With {
+                .Dock = DockStyle.Fill,
+                .Padding = New Padding(
+                    20,
+                    20,
+                    20,
+                    10),
+                .BackColor = Color.FromArgb(
+                    12,
+                    12,
+                    12)
             }
 
             painelFundo.Controls.Add(
-                lblEmpresa)
+                painelImagem)
+
+            '==================================================
+            ' IMAGEM PRINCIPAL
+            '==================================================
+
+            _picSplash =
+                New PictureBox With {
+                    .Dock = DockStyle.Fill,
+                    .Image = CarregarImagemSplash(),
+                    .SizeMode = PictureBoxSizeMode.Zoom,
+                    .BackColor = Color.FromArgb(
+                        12,
+                        12,
+                        12)
+                }
+
+            painelImagem.Controls.Add(
+                _picSplash)
+
+            '==================================================
+            ' LOGO ORBIT PEQUENA
+            '==================================================
+
+            _picLogoMini =
+    New PictureBox With {
+        .Image = CarregarLogoOrbitSplash(),
+        .SizeMode = PictureBoxSizeMode.Zoom,
+        .BackColor = Color.Transparent,
+        .Size = New Size(
+            120,
+            55),
+        .Location = New Point(
+            35,
+            -18),
+        .Anchor =
+            AnchorStyles.Top Or
+            AnchorStyles.Right
+    }
+
+            _picSplash.Controls.Add(
+    _picLogoMini)
+
+            _picLogoMini.BringToFront()
 
         Finally
 
             Me.ResumeLayout(
-                True)
+            True)
 
         End Try
 
     End Sub
 
-    Private Function CarregarLogoOrbit() As Image
+    Private Function CarregarImagemSplash() As Image
+
+        Dim caminhoSplash As String =
+        Path.Combine(
+            AppDomain.CurrentDomain.BaseDirectory,
+            "Assets",
+            "Splash",
+            "SplashPlayerPromocional.png")
+
+        If Not File.Exists(caminhoSplash) Then
+            Return CriarImagemSplashAusente()
+        End If
+
+        Try
+            Using imagemOriginal As Image =
+            Image.FromFile(caminhoSplash)
+
+                Return New Bitmap(imagemOriginal)
+            End Using
+        Catch
+            Return CriarImagemSplashAusente()
+        End Try
+
+    End Function
+
+    Private Function CarregarLogoOrbitSplash() As Image
+
+        Const nomeRecurso As String =
+            "PlayerPromocional.Assets.Icones.LogoOrbitSplash.png"
+
+        Try
+
+            Dim assemblyAtual As Assembly =
+                Assembly.GetExecutingAssembly()
+
+            Using fluxoLogo As Stream =
+                assemblyAtual.GetManifestResourceStream(
+                    nomeRecurso)
+
+                If fluxoLogo IsNot Nothing Then
+
+                    Using imagemOriginal As Image =
+                        Image.FromStream(
+                            fluxoLogo)
+
+                        Return New Bitmap(
+                            imagemOriginal)
+
+                    End Using
+
+                End If
+
+            End Using
+
+        Catch
+
+            'Tenta carregar pelo arquivo físico abaixo.
+
+        End Try
 
         Dim caminhoLogo As String =
             Path.Combine(
-                AppDomain.CurrentDomain.BaseDirectory,
+                AppContext.BaseDirectory,
                 "Assets",
                 "Icones",
-                "IconeOrbit.jpg")
+                "LogoOrbitSplash.png")
 
         If Not File.Exists(
             caminhoLogo) Then
 
-            Return CriarImagemLogoAusente()
+            Return Nothing
 
         End If
 
@@ -401,181 +469,68 @@ Public Class FrmSplash
                 Image.FromFile(
                     caminhoLogo)
 
-                Using bitmapOriginal As New Bitmap(
+                Return New Bitmap(
                     imagemOriginal)
-
-                    Return RecortarMargensClaras(
-                        bitmapOriginal)
-
-                End Using
 
             End Using
 
         Catch
 
-            Return CriarImagemLogoAusente()
+            Return Nothing
 
         End Try
 
     End Function
 
-    Private Function RecortarMargensClaras(
-        imagem As Bitmap) As Bitmap
+    Private Function CriarImagemSplashAusente() As Image
 
-        If imagem Is Nothing Then
-            Return Nothing
-        End If
-
-        Dim menorX As Integer =
-            imagem.Width
-
-        Dim menorY As Integer =
-            imagem.Height
-
-        Dim maiorX As Integer =
-            -1
-
-        Dim maiorY As Integer =
-            -1
-
-        For y As Integer =
-            0 To imagem.Height - 1
-
-            For x As Integer =
-                0 To imagem.Width - 1
-
-                Dim corPixel As Color =
-                    imagem.GetPixel(
-                        x,
-                        y)
-
-                Dim pixelClaro As Boolean =
-                    corPixel.R >= 242 AndAlso
-                    corPixel.G >= 242 AndAlso
-                    corPixel.B >= 242
-
-                If corPixel.A > 10 AndAlso
-                   Not pixelClaro Then
-
-                    menorX =
-                        Math.Min(
-                            menorX,
-                            x)
-
-                    menorY =
-                        Math.Min(
-                            menorY,
-                            y)
-
-                    maiorX =
-                        Math.Max(
-                            maiorX,
-                            x)
-
-                    maiorY =
-                        Math.Max(
-                            maiorY,
-                            y)
-
-                End If
-
-            Next
-
-        Next
-
-        If maiorX < menorX OrElse
-           maiorY < menorY Then
-
-            Return New Bitmap(
-                imagem)
-
-        End If
-
-        Dim margemHorizontal As Integer =
-            25
-
-        Dim margemVertical As Integer =
-            20
-
-        menorX =
-            Math.Max(
-                0,
-                menorX -
-                margemHorizontal)
-
-        menorY =
-            Math.Max(
-                0,
-                menorY -
-                margemVertical)
-
-        maiorX =
-            Math.Min(
-                imagem.Width - 1,
-                maiorX +
-                margemHorizontal)
-
-        maiorY =
-            Math.Min(
-                imagem.Height - 1,
-                maiorY +
-                margemVertical)
-
-        Dim areaRecorte As New Rectangle(
-            menorX,
-            menorY,
-            maiorX - menorX + 1,
-            maiorY - menorY + 1)
-
-        Return imagem.Clone(
-            areaRecorte,
-            Imaging.PixelFormat.Format32bppArgb)
-
-    End Function
-
-    Private Function CriarImagemLogoAusente() As Image
-
-        Dim imagem As New Bitmap(
-            620,
-            190)
+        Dim imagem As New Bitmap(1000, 525)
 
         Using g As Graphics =
-            Graphics.FromImage(
-                imagem)
+        Graphics.FromImage(imagem)
 
             g.Clear(
-                Color.FromArgb(
-                    248,
-                    248,
-                    248))
+            Color.FromArgb(
+                15,
+                15,
+                15))
 
-            Using fonte As New Font(
+            Using fonteTitulo As New Font(
+            "Segoe UI",
+            28.0F,
+            FontStyle.Bold)
+
+                Using fonteSub As New Font(
                 "Segoe UI",
-                28.0F,
-                FontStyle.Bold)
+                14.0F,
+                FontStyle.Regular)
 
-                Using pincel As New SolidBrush(
+                    Using pincelVermelho As New SolidBrush(
                     Color.FromArgb(
-                        145,
-                        25,
-                        25))
+                        178,
+                        35,
+                        46))
 
-                    Dim texto As String =
-                        "ORBIT"
+                        Using pincelBranco As New SolidBrush(
+                        Color.White)
 
-                    Dim tamanhoTexto As SizeF =
-                        g.MeasureString(
-                            texto,
-                            fonte)
+                            g.DrawString(
+                            "PLAYER PROMOCIONAL",
+                            fonteTitulo,
+                            pincelBranco,
+                            50,
+                            180)
 
-                    g.DrawString(
-                        texto,
-                        fonte,
-                        pincel,
-                        (imagem.Width -
-                         tamanhoTexto.Width) / 2.0F,
-                        (imagem.Height -
-                         tamanhoTexto.Height) / 2.0F)
+                            g.DrawString(
+                            "Áudio inteligente para promoções",
+                            fonteSub,
+                            pincelVermelho,
+                            54,
+                            235)
+
+                        End Using
+
+                    End Using
 
                 End Using
 
@@ -666,12 +621,12 @@ Public Class FrmSplash
             Case 40 To 59
 
                 _lblCarregando.Text =
-                    "Preparando Playlists..."
+                    "Preparando playlists e promoções..."
 
             Case 60 To 79
 
                 _lblCarregando.Text =
-                    "Carregando recursos visuais..."
+                    "Carregando recursos de áudio..."
 
             Case 80 To 99
 
@@ -751,23 +706,6 @@ Public Class FrmSplash
 
         Try
 
-            Dim frmPrincipal As New FrmPrincipal()
-
-            AddHandler frmPrincipal.FormClosed,
-                Sub(sender, e)
-
-                    If Not Me.IsDisposed Then
-
-                        Me.Close()
-
-                    End If
-
-                End Sub
-
-            Me.Hide()
-
-            TmrAbrir.Stop()
-
             AbrirLoginEPrincipal()
 
         Catch ex As Exception
@@ -792,19 +730,61 @@ Public Class FrmSplash
 
     End Sub
 
+    Private Sub AbrirLoginEPrincipal()
+
+        If fluxoIniciado Then
+            Exit Sub
+        End If
+
+        fluxoIniciado = True
+
+        Me.Hide()
+
+        Using frmLogin As New FrmLogin()
+
+            If frmLogin.ShowDialog() <>
+               DialogResult.OK Then
+
+                Me.Close()
+                Exit Sub
+
+            End If
+
+        End Using
+
+        Using frmPrincipal As New FrmPrincipal()
+
+            frmPrincipal.ShowDialog()
+
+        End Using
+
+        Me.Close()
+
+    End Sub
+
     Private Sub FrmSplash_FormClosed(
         sender As Object,
         e As FormClosedEventArgs) Handles Me.FormClosed
 
         TmrAbrir.Stop()
 
-        If _picLogo IsNot Nothing AndAlso
-           _picLogo.Image IsNot Nothing Then
+        If _picSplash IsNot Nothing AndAlso
+   _picSplash.Image IsNot Nothing Then
 
-            _picLogo.Image.Dispose()
+            _picSplash.Image.Dispose()
 
-            _picLogo.Image =
-                Nothing
+            _picSplash.Image =
+        Nothing
+
+        End If
+
+        If _picLogoMini IsNot Nothing AndAlso
+   _picLogoMini.Image IsNot Nothing Then
+
+            _picLogoMini.Image.Dispose()
+
+            _picLogoMini.Image =
+        Nothing
 
         End If
 

@@ -1,0 +1,7 @@
+CORREÇÃO DA LOGO ORBIT NO SPLASH
+
+A logo agora é incorporada ao executável como recurso embutido.
+Também foi corrigido o posicionamento para o canto superior direito,
+independentemente do momento em que o painel é redimensionado.
+
+Abra PlayerPromocional.slnx e use Compilar > Recompilar Solução.
